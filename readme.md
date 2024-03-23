@@ -1,6 +1,10 @@
 # ESLint++
 
-TODO
+## TODO
+
+- guidelines file format
+  - add support for organizing rules by h1 sections
+- linter engine
 
 ## License
 

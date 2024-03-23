@@ -1,6 +1,6 @@
-# Guidelines
+# Project Guidelines
 
-- [Guidelines](#guidelines)
+- [Project Guidelines](#project-guidelines)
   - [Be consistent with identifier casing](#be-consistent-with-identifier-casing)
   - [Format comments like sentences](#format-comments-like-sentences)
   - [Prefer using Array.at when indexing from the end of an array](#prefer-using-arrayat-when-indexing-from-the-end-of-an-array)
