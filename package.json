@@ -17,8 +17,7 @@
     "test": "run-s test:*",
     "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
     "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "test:typecheck": "tsc --noEmit",
-    "test:unit": "vitest run"
+    "test:typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@sindresorhus/slugify": "^2.2.1",
