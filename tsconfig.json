@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ESNext"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "useDefineForClassFields": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // transpiling w/ TS
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",
+    "sourceMap": true
+
+    // not transpiling w/ TS
+    // "module": "ESNext",
+    // "moduleResolution": "Bundler",
+    // "noEmit": true
+
+    // library
+    // "declaration": true
+
+    // monorepo lib
+    // "composite": true,
+    // "declarationMap": true
+  },
+  "include": ["src", "bin"]
+}

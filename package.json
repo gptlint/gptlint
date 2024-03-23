@@ -1,0 +1,79 @@
+{
+  "name": "eslintpp",
+  "type": "module",
+  "description": "TODO",
+  "author": "Travis Fischer <travis@transitivebullsh.it>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "transitive-bullshit/eslint++"
+  },
+  "packageManager": "pnpm@8.14.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "test": "run-s test:*",
+    "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
+    "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "test:typecheck": "tsc --noEmit",
+    "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "@sindresorhus/slugify": "^2.2.1",
+    "cleye": "^1.3.2",
+    "mdast-util-to-markdown": "^2.1.0",
+    "mdast-util-to-string": "^4.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "tiny-invariant": "^1.3.3",
+    "type-fest": "^4.12.0",
+    "unified": "^11.0.4",
+    "unist-util-find-all-between": "^2.1.0",
+    "unist-util-inspect": "^8.0.0",
+    "unist-util-visit": "^5.0.0"
+  },
+  "devDependencies": {
+    "@dexaai/eslint-config": "^1.3.0",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/mdast": "^4.0.3",
+    "@types/node": "^20.11.28",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6",
+    "vitest": "^1.4.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --ignore-unknown --write"
+    ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@dexaai/eslint-config",
+      "@dexaai/eslint-config/node"
+    ],
+    "rules": {
+      "no-console": "off",
+      "simple-import-sort/imports": "off",
+      "@typescript-eslint/naming-convention": "off",
+      "import/consistent-type-specifier-style": "off",
+      "@typescript-eslint/array-type": "off",
+      "@typescript-eslint/no-inferrable-types": "off",
+      "import/order": "off"
+    },
+    "ignorePatterns": [
+      "scripts/",
+      "dist/",
+      "node_modules/"
+    ]
+  }
+}
