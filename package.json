@@ -1,12 +1,12 @@
 {
-  "name": "eslintpp",
+  "name": "eslint-plus-plus",
   "type": "module",
   "description": "TODO",
   "author": "Travis Fischer <travis@transitivebullsh.it>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "transitive-bullshit/eslint++"
+    "url": "transitive-bullshit/eslint-plus-plus"
   },
   "packageManager": "pnpm@8.14.1",
   "engines": {
