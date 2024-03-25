@@ -11,22 +11,22 @@ Prefer usage of Edges and Nodes in GraphQL Lists
 
 ## Usage Examples
 
-# Incorrect
+### Incorrect
 
 ```graphql
+type Item {
+  id: ID
+  name: String
+}
+
 type Query {
   items: [Item]
   requiredItems: [Item!]
   nestedRequireItems: [Item!]!
 }
-
-type Item {
-  id: ID
-  name: String
-}
 ```
 
-# Correct
+### Correct
 
 ```graphql
 type Item {

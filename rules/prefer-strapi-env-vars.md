@@ -12,29 +12,30 @@ Suggest & Fix usage of process.env variables in favor of Strapi environment vari
 
 ## Usage Examples
 
-# Incorrect
+### Incorrect
 
 ```ts
 export default ({ env }) => ({
   auth: {
-    secret: process.env['ADMIN_JWT_SECRET'],
+    secret: process.env['ADMIN_JWT_SECRET']
   }
-});
+})
 ```
 
 ```ts
 export default ({ env }) => ({
   auth: {
-    secret: process.env.ADMIN_JWT_SECRET,
-  },
-});
+    secret: process.env.ADMIN_JWT_SECRET
+  }
+})
 ```
 
-# Correct
+### Correct
+
 ```ts
 export default ({ env }) => ({
   auth: {
-    secret: env('ADMIN_JWT_SECRET'),
-  },
-});
+    secret: env('ADMIN_JWT_SECRET')
+  }
+})
 ```

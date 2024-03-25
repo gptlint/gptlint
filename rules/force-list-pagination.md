@@ -12,7 +12,7 @@ Force the use of pagination for all lists in GraphQL
 
 ## Usage Examples
 
-# Incorrect
+### Incorrect
 
 ```graphql
 type Query {
@@ -22,7 +22,7 @@ type Query {
 }
 ```
 
-# Correct
+### Correct
 
 ```graphql
 type ListPaginationInput {

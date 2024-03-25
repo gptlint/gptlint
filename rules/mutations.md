@@ -21,7 +21,8 @@ Disallow empty arguments for mutation Enforcing naming conventions for mutation 
 }
 ```
 
-# Incorrect
+### Incorrect
+
 ```graphql
 type Mutation {
   setMessage(message: SetMessageInput, other: String): String
@@ -37,7 +38,8 @@ type Mutation {
 }
 ```
 
-# Correct
+### Correct
+
 ```graphql
 type Mutation {
   setMessage(input: SetMessageInput): SetMessageResponse

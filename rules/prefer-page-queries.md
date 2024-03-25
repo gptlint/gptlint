@@ -11,7 +11,7 @@ Warn on usage of the /utils/api.ts file in favor of creating a page query in the
 
 ## Usage Examples
 
-# Incorrect
+### Incorrect
 
 `/utils/api.ts`
 
@@ -31,7 +31,7 @@ export const get<queryName>Data = async (
 };
 ```
 
-# Correct
+### Correct
 
 `/utils/pageQueries/<queryName>/index.ts`
 
@@ -62,11 +62,11 @@ export const get<queryName>PageData = async (
 `/utils/pageQueries/<queryName>/<queryName>.tsx`
 
 ```tsx
-import gql from "graphql-tag";
+import gql from 'graphql-tag'
 
 export default gql`
   query <queryName> {
-  # query here
+    # query here
   }
-`;
+`
 ```
