@@ -1,17 +1,22 @@
-# Project Guidelines
+# Project Guidelines <!-- omit from toc -->
 
-- [Project Guidelines](#project-guidelines)
+- [General](#general)
   - [Be consistent with identifier casing](#be-consistent-with-identifier-casing)
   - [Format comments like sentences](#format-comments-like-sentences)
   - [Prefer using Array.at when indexing from the end of an array](#prefer-using-arrayat-when-indexing-from-the-end-of-an-array)
-  - [Don't use React class components](#dont-use-react-class-components)
   - [Use ESM modules instead of CommonJS](#use-esm-modules-instead-of-commonjs)
+- [React](#react)
+  - [Don't use React class components](#dont-use-react-class-components)
+
+# General
 
 ## Be consistent with identifier casing
 
 Identifiers of the same type should use consistent casing. This rule applies to all types of identifiers: variable names, class names, type names, function names, constants, etc.
 
 For example, if some variable names use camelCase, then all variable names should use camelCase. If some type names use PascalCase, then all type names should use PascalCase. If some constants use CONSTANT_CASE, then all constants should use constant case.
+
+### Bad
 
 ```ts (bad)
 // This is bad because variable identifiers should use consistent casing.
@@ -22,6 +27,8 @@ const default_timeout = 5000
 function helloWorld() {}
 function hello_twitter() {}
 ```
+
+### Good
 
 ```ts (good)
 const fooBar = true
@@ -57,6 +64,12 @@ const items = [1, 2, 3, 4, 5, 6, 7]
 const lastItem = items.at(-1)
 ```
 
+## Use ESM modules instead of CommonJS
+
+TODO
+
+# React
+
 ## Don't use React class components
 
 React class components are deprecated. Use React functions and hooks instead.
@@ -74,7 +87,3 @@ function Button() {
   return <div>Hello</div>
 }
 ```
-
-## Use ESM modules instead of CommonJS
-
-ESM
