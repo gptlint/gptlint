@@ -2,8 +2,6 @@ import findCacheDirectory from 'find-cache-dir'
 import type { SetRequired, Simplify } from 'type-fest'
 import { z } from 'zod'
 
-import { dedupe } from './utils.js'
-
 export const LinterConfigRuleSchema = z.enum(['off', 'warn', 'error'])
 export type LinterConfigRule = z.infer<typeof LinterConfigRuleSchema>
 
@@ -31,6 +29,7 @@ export const LinterConfigOptionsSchema = z.object({
     .describe(
       'When enabled, logs the resolved config and parsed rules and then exits.'
     ),
+  debugModel: z.boolean().optional().describe('Enables verbose LLM logging.'),
 
   noCache: z.boolean().optional().describe('Disables the built-in cache.'),
 
@@ -99,6 +98,8 @@ export const defaultLinterConfigOptions: LinterConfigOptions = {
   noInlineConfig: false,
   earlyExit: false,
   debug: false,
+  debugConfig: false,
+  debugModel: false,
   noCache: false,
   cacheDir: defaultCacheDir,
   model: 'gpt-4-turbo-preview',
@@ -120,16 +121,6 @@ export function mergeLinterConfigs(
   return {
     ...configA,
     ...configB,
-    files: dedupe([...(configA.files ?? []), ...(configB.files ?? [])]),
-    ignores: dedupe([...(configA.ignores ?? []), ...(configB.ignores ?? [])]),
-    guidelineFiles: dedupe([
-      ...(configA.guidelineFiles ?? []),
-      ...(configB.guidelineFiles ?? [])
-    ]),
-    ruleFiles: dedupe([
-      ...(configA.ruleFiles ?? []),
-      ...(configB.ruleFiles ?? [])
-    ]),
     rules: { ...configA.rules, ...configB.rules },
     linterOptions:
       configA.linterOptions || configB.linterOptions

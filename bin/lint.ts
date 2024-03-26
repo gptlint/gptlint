@@ -8,6 +8,7 @@ import pMap from 'p-map'
 import type * as types from '../src/types.js'
 import { lintFiles } from '../src/linter.js'
 import { parseGuidelinesFile } from '../src/parse-guidelines-file.js'
+import { parseRuleFile } from '../src/parse-rule-file.js'
 import { resolveLinterConfig } from '../src/resolve-config.js'
 
 async function main() {
@@ -84,6 +85,12 @@ async function main() {
               return
             }
             processedRuleFilePaths.add(ruleFilePath)
+
+            if (processedGuidelineFilePaths.has(ruleFilePath)) {
+              throw new Error(
+                'File cannot be included as both a guidelines markdown file and an individual rule markdown file'
+              )
+            }
 
             const ruleFileContent = await fs.readFile(ruleFilePath, 'utf-8')
             const rule = await parseRuleFile(ruleFileContent)

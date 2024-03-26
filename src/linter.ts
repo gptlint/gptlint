@@ -128,8 +128,6 @@ export async function lintFile({
           .describe('Your confidence that this error is correct.')
       })
     },
-    // Fake weather API implementation which returns a random temperature
-    // after a short delay
     async ({
       ruleName,
       codeSnippet,
@@ -139,7 +137,6 @@ export async function lintFile({
       codeSnippet: string
       confidence: types.LintRuleErrorConfidence
     }) => {
-      // TODO: ensure ruleName === rule.name
       ruleName = ruleName.toLowerCase().trim()
       if (rule.name !== ruleName) {
         console.warn(

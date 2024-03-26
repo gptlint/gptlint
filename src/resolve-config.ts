@@ -73,7 +73,11 @@ export async function resolveLinterConfig(
         debugConfig: {
           type: Boolean,
           description:
-            'When enabled, logs the resolved config and parsed rules and then exits',
+            'When enabled, logs the resolved config and parsed rules and then exits'
+        },
+        debugModel: {
+          type: Boolean,
+          description: 'Enables verbose LLM debugging',
           alias: 'D'
         },
         earlyExit: {
@@ -121,6 +125,7 @@ export async function resolveLinterConfig(
       earlyExit: args.flags.earlyExit,
       debug: args.flags.debug,
       debugConfig: args.flags.debugConfig,
+      debugModel: args.flags.debugModel,
       noCache: args.flags.noCache,
       cacheDir:
         args.flags.cacheDir === defaultLinterConfig.linterOptions.cacheDir
