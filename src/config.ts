@@ -25,6 +25,12 @@ export const LinterConfigOptionsSchema = z.object({
     ),
 
   debug: z.boolean().optional().describe('Enables debug logging.'),
+  debugConfig: z
+    .boolean()
+    .optional()
+    .describe(
+      'When enabled, logs the resolved config and parsed rules and then exits.'
+    ),
 
   noCache: z.boolean().optional().describe('Disables the built-in cache.'),
 

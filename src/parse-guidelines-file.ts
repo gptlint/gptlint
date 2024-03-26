@@ -1,5 +1,4 @@
 import type { Code, Heading, Node, Root } from 'mdast'
-// import { toMarkdown } from 'mdast-util-to-markdown'
 import { toString } from 'mdast-util-to-string'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
@@ -11,7 +10,9 @@ import { visit } from 'unist-util-visit'
 import type * as types from './types.js'
 import { assert, slugify } from './utils.js'
 
-export async function parseGuidelines(content: string): Promise<types.Rule[]> {
+export async function parseGuidelinesFile(
+  content: string
+): Promise<types.Rule[]> {
   const ast = unified().use(remarkParse).use(remarkGfm).parse(content)
   const h2Rules: Heading[] = []
 
@@ -93,7 +94,6 @@ export async function parseGuidelines(content: string): Promise<types.Rule[]> {
       desc,
       positiveExamples,
       negativeExamples
-      // source
     })
 
     // console.log(inspectColor(ruleNode, { showPositions: false }))

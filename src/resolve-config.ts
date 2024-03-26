@@ -11,7 +11,10 @@ import {
   parseLinterConfig
 } from './config.js'
 
-export async function parseCLIConfig(argv: string[]) {
+export async function resolveLinterConfig(
+  cliArgs: string[],
+  { cwd }: { cwd: string }
+) {
   const args = cli(
     {
       name: 'lint',
@@ -67,6 +70,12 @@ export async function parseCLIConfig(argv: string[]) {
           description: 'Enables debug logging',
           alias: 'd'
         },
+        debugConfig: {
+          type: Boolean,
+          description:
+            'When enabled, logs the resolved config and parsed rules and then exits',
+          alias: 'D'
+        },
         earlyExit: {
           type: Boolean,
           description: 'Exits after finding the first error',
@@ -85,7 +94,7 @@ export async function parseCLIConfig(argv: string[]) {
       }
     },
     () => {},
-    argv
+    cliArgs
   )
 
   let files = args._.fileDirGlob.slice(2)
@@ -111,6 +120,7 @@ export async function parseCLIConfig(argv: string[]) {
       noInlineConfig: args.flags.noInlineConfig,
       earlyExit: args.flags.earlyExit,
       debug: args.flags.debug,
+      debugConfig: args.flags.debugConfig,
       noCache: args.flags.noCache,
       cacheDir:
         args.flags.cacheDir === defaultLinterConfig.linterOptions.cacheDir
@@ -135,7 +145,8 @@ export async function parseCLIConfig(argv: string[]) {
   ].filter(Boolean)
 
   for (const configFileRelativePath of configsToCheck) {
-    const configFilePath = path.resolve(process.cwd(), configFileRelativePath)
+    const configFilePath = path.resolve(cwd, configFileRelativePath)
+
     if (!(await stat(configFilePath))) {
       if (configFileRelativePath === args.flags.config) {
         throw new Error(`Error missing config file "${args.flags.config}"`)
@@ -153,6 +164,7 @@ export async function parseCLIConfig(argv: string[]) {
       linterConfig = mergeLinterConfigs(config, linterConfig)
     }
 
+    // Break after we find the first project config file
     break
   }
 
