@@ -79,7 +79,7 @@ export async function lintFiles({
           earlyExitTripped = true
         }
       } catch (err: any) {
-        const message = `Error: rule "${rule.name}" file "${file.filePath}" unexpected error: ${err.message}`
+        const message = `Error: rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`
         console.error(message)
         throw new Error(message, { cause: err })
       }

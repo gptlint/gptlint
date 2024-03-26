@@ -50,18 +50,19 @@ export async function lintFile({
 
       if (lintErrors.length) {
         console.log(
-          `\nFAIL CACHE HIT Rule "${rule.name}" file "${file.filePath}": ${
-            lintErrors.length
-          } ${plur('error', lintErrors.length)} found:`,
+          `\nFAIL CACHE HIT Rule "${rule.name}" file "${
+            file.fileRelativePath
+          }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
           lintErrors
         )
       } else {
         console.log(
-          `\nPASS CACHE HIT Rule "${rule.name}" file "${file.filePath}": ${
+          `\nPASS CACHE HIT Rule "${rule.name}" file "${
+            file.fileRelativePath
+          }": ${lintErrors.length} ${plur(
+            'error',
             lintErrors.length
-          } ${plur('error', lintErrors.length)} found: ${trimMessage(
-            lintResult.message
-          )}`
+          )} found: ${trimMessage(lintResult.message)}`
         )
       }
     }
@@ -102,7 +103,7 @@ export async function lintFile({
       ruleName = ruleName.toLowerCase().trim()
       if (rule.name !== ruleName) {
         console.warn(
-          `warning: rule "${rule.name}" LLM recorded error with unrecognized rule name "${ruleName}" on file "${file.filePath}"`
+          `warning: rule "${rule.name}" LLM recorded error with unrecognized rule name "${ruleName}" on file "${file.fileRelativePath}"`
         )
       }
 
@@ -117,7 +118,7 @@ export async function lintFile({
   )
 
   if (config.linterOptions.debug) {
-    console.log(`>>> Rule "${rule.name}" file "${file.filePath}"`)
+    console.log(`>>> Rule "${rule.name}" file "${file.fileRelativePath}"`)
   }
 
   const res = await chatModel.run({
@@ -179,18 +180,19 @@ ${rule.positiveExamples?.map(
 
     if (lintErrors.length) {
       console.log(
-        `\n<<< FAIL CACHE MISS Rule "${rule.name}" file "${file.filePath}": ${
-          lintErrors.length
-        } ${plur('error', lintErrors.length)} found:`,
+        `\n<<< FAIL CACHE MISS Rule "${rule.name}" file "${
+          file.fileRelativePath
+        }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
         lintErrors
       )
     } else {
       console.log(
-        `\n<<< PASS CACHE MISS Rule "${rule.name}" file "${file.filePath}": ${
+        `\n<<< PASS CACHE MISS Rule "${rule.name}" file "${
+          file.fileRelativePath
+        }": ${lintErrors.length} ${plur(
+          'error',
           lintErrors.length
-        } ${plur('error', lintErrors.length)} found: ${trimMessage(
-          lintResult.message
-        )}`
+        )} found: ${trimMessage(lintResult.message)}`
       )
     }
   }
