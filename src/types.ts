@@ -1,5 +1,7 @@
 /* eslint-disable no-use-before-define */
 
+export type * from './config.js'
+
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 
 export type Rule = {
@@ -9,19 +11,11 @@ export type Rule = {
 
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
-
-  source: string
 }
 
 export type RuleExample = {
   code: string
   language?: string
-}
-
-export type ConfigRule = 'error' | 'warn' | 'off'
-
-export type Config = {
-  rules: Record<string, ConfigRule>
 }
 
 export type InputFile = {

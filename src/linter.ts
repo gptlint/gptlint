@@ -8,30 +8,36 @@ import plur from 'plur'
 import { z } from 'zod'
 
 import type * as types from './types.js'
+import { LinterCache } from './cache.js'
 
 export async function lintFiles({
   inputFiles,
-  guidelines,
-  earlyExit = false,
-  concurrency = 16,
-  debug = false
+  rules,
+  config,
+  concurrency = 16
 }: {
   inputFiles: string[]
-  guidelines: types.Rule[]
-  earlyExit?: boolean
+  rules: types.Rule[]
+  config: types.ResolvedLinterConfig
   concurrency?: number
-  debug?: boolean
 }): Promise<types.LintError[]> {
+  const cache = new LinterCache({
+    cacheDir: config.linterOptions.cacheDir,
+    noCache: config.linterOptions.noCache
+  })
+  await cache.init()
+
   const files = await readFiles(inputFiles, { concurrency })
 
   const chatModel = new ChatModel({
     params: {
-      model: 'gpt-4-turbo-preview'
-    },
-    debug
+      model: config.linterOptions.model,
+      temperature: config.linterOptions.temperature
+    }
   })
 
-  const lintTasks = guidelines.flatMap((rule) =>
+  // TODO: Add support for different types of file <> rule mappings
+  const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))
   )
 
@@ -47,13 +53,13 @@ export async function lintFiles({
           }
 
           const lintErrors = await pRetry(
-            () => lintFile({ file, rule, chatModel, debug }),
+            () => lintFile({ file, rule, chatModel, cache, config }),
             {
               retries: 2
             }
           )
 
-          if (lintErrors.length && earlyExit) {
+          if (lintErrors.length && config.linterOptions.earlyExit) {
             earlyExitTripped = true
           }
 
@@ -65,7 +71,7 @@ export async function lintFiles({
         }
       },
       {
-        concurrency
+        concurrency: config.linterOptions.debug ? 1 : concurrency
       }
     )
   ).flat()
@@ -75,14 +81,31 @@ export async function lintFile({
   file,
   rule,
   chatModel,
-  debug = false
+  cache,
+  config
 }: {
   file: types.InputFile
   rule: types.Rule
   chatModel: ChatModel
-  debug?: boolean
+  cache: LinterCache
+  config: types.ResolvedLinterConfig
 }): Promise<types.LintError[]> {
   const lintErrors: types.LintError[] = []
+
+  if (!file.content.trim()) {
+    // Ignore empty files
+    return lintErrors
+  }
+
+  const cacheKey = {
+    file,
+    rule,
+    params: chatModel.getParams()
+  }
+  const cachedResult = await cache.get(cacheKey)
+  if (cachedResult) {
+    return cachedResult
+  }
 
   const recordRuleFailure = createAIFunction(
     {
@@ -134,9 +157,12 @@ export async function lintFile({
     }
   )
 
-  console.log()
+  if (config.linterOptions.debug) {
+    console.log()
+    console.log(`\n>>> Rule "${rule.name}" file "${file.filePath}"`)
+  }
+
   const res = await chatModel.run({
-    temperature: 0,
     messages: [
       Msg.system(`You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure code conforms to project-specific guidelines and best practices. You will be given a code rule in the form of a description rule's intent and one or more positive and negative code snippets.
     
@@ -170,16 +196,16 @@ ${rule.positiveExamples?.map(
     ]
   })
 
-  if (debug) {
+  if (config.linterOptions.debug) {
     console.log(
-      `Rule "${rule.name}" file "${file.filePath}": ${lintErrors.length} ${plur(
-        'error',
+      `<<< Rule "${rule.name}" file "${file.filePath}": ${
         lintErrors.length
-      )} found: ${res.message}`,
+      } ${plur('error', lintErrors.length)} found: ${res.message.content}`,
       ...[lintErrors.length ? [lintErrors] : []]
     )
   }
 
+  await cache.set(cacheKey, lintErrors)
   return lintErrors
 }
 
@@ -196,12 +222,12 @@ export async function readFiles(
     async (filePath) => {
       const content = await readFile(filePath, { encoding: 'utf-8' })
 
-      // TODO: improve this
-
-      const ext = filePath.split('.').at(-1)!
       const fileName = basename(filePath)
+      const ext = filePath.split('.').at(-1)!
       const jsExtensions = new Set(['js', 'jsx', 'cjs', 'mjs'])
       const tsExtensions = new Set(['js', 'jsx'])
+
+      // TODO: improve filePath => language detection
       const language = jsExtensions.has(ext)
         ? 'javascript'
         : tsExtensions.has(ext)

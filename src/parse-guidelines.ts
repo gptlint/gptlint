@@ -1,5 +1,5 @@
 import type { Code, Heading, Node, Root } from 'mdast'
-import { toMarkdown } from 'mdast-util-to-markdown'
+// import { toMarkdown } from 'mdast-util-to-markdown'
 import { toString } from 'mdast-util-to-string'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
@@ -49,13 +49,13 @@ export async function parseGuidelines(content: string): Promise<types.Rule[]> {
 
     const desc = toString(ruleNode).trim()
 
-    const nonCodeBlockNodes = ruleNodes.filter(
-      (ruleNode) => ruleNode.type !== 'code'
-    )
-    const source = toMarkdown({
-      type: 'root',
-      children: [ruleHeading].concat(nonCodeBlockNodes as any)
-    })
+    // const nonCodeBlockNodes = ruleNodes.filter(
+    //   (ruleNode) => ruleNode.type !== 'code'
+    // )
+    // const source = toMarkdown({
+    //   type: 'root',
+    //   children: [ruleHeading].concat(nonCodeBlockNodes as any)
+    // })
 
     const positiveExamples: types.RuleExample[] = []
     const negativeExamples: types.RuleExample[] = []
@@ -92,8 +92,8 @@ export async function parseGuidelines(content: string): Promise<types.Rule[]> {
       message,
       desc,
       positiveExamples,
-      negativeExamples,
-      source
+      negativeExamples
+      // source
     })
 
     // console.log(inspectColor(ruleNode, { showPositions: false }))

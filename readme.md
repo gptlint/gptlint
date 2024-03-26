@@ -11,6 +11,7 @@
   - the rendered markdown needs to make it clear whether code blocks are positive or negative examples
   - support both in the same code block
   - add support for organizing rules by h1 sections
+  - add support for a rules directory
 - config file
   - use eslint, ruff, and conformance as inspiration
 - linter engine
