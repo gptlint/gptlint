@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 import type * as types from './types.js'
 import type { LinterCache } from './cache.js'
+import { omit } from './utils.js'
 
 export async function lintFile({
   file,
@@ -34,7 +35,7 @@ export async function lintFile({
   }
 
   const cacheKey = {
-    file,
+    file: omit(file, 'fileRelativePath', 'fileName'),
     rule,
     params: chatModel.getParams()
   }
@@ -47,12 +48,22 @@ export async function lintFile({
     if (config.linterOptions.debug) {
       const { lintErrors } = lintResult
 
-      console.log(
-        `CACHE HIT Rule "${rule.name}" file "${file.filePath}": ${
-          lintErrors.length
-        } ${plur('error', lintErrors.length)} found: ${lintResult.message}`,
-        ...[lintErrors.length ? [lintErrors] : []]
-      )
+      if (lintErrors.length) {
+        console.log(
+          `\nFAIL CACHE HIT Rule "${rule.name}" file "${file.filePath}": ${
+            lintErrors.length
+          } ${plur('error', lintErrors.length)} found:`,
+          lintErrors
+        )
+      } else {
+        console.log(
+          `\nPASS CACHE HIT Rule "${rule.name}" file "${file.filePath}": ${
+            lintErrors.length
+          } ${plur('error', lintErrors.length)} found: ${trimMessage(
+            lintResult.message
+          )}`
+        )
+      }
     }
 
     return lintResult
@@ -106,8 +117,7 @@ export async function lintFile({
   )
 
   if (config.linterOptions.debug) {
-    console.log()
-    console.log(`\n>>> Rule "${rule.name}" file "${file.filePath}"`)
+    console.log(`>>> Rule "${rule.name}" file "${file.filePath}"`)
   }
 
   const res = await chatModel.run({
@@ -167,14 +177,37 @@ ${rule.positiveExamples?.map(
   if (config.linterOptions.debug) {
     const { lintErrors } = lintResult
 
-    console.log(
-      `<<< Rule "${rule.name}" file "${file.filePath}": ${
-        lintErrors.length
-      } ${plur('error', lintErrors.length)} found: ${lintResult.message}`,
-      ...[lintErrors.length ? [lintErrors] : []]
-    )
+    if (lintErrors.length) {
+      console.log(
+        `\n<<< FAIL CACHE MISS Rule "${rule.name}" file "${file.filePath}": ${
+          lintErrors.length
+        } ${plur('error', lintErrors.length)} found:`,
+        lintErrors
+      )
+    } else {
+      console.log(
+        `\n<<< PASS CACHE MISS Rule "${rule.name}" file "${file.filePath}": ${
+          lintErrors.length
+        } ${plur('error', lintErrors.length)} found: ${trimMessage(
+          lintResult.message
+        )}`
+      )
+    }
   }
 
   await cache.set(cacheKey, lintResult)
   return lintResult
+}
+
+function trimMessage(
+  message: string | undefined,
+  { maxLength = 80 }: { maxLength?: number } = {}
+): string {
+  if (!message) return ''
+
+  message = message.trim()
+  if (message.length < maxLength) return message
+  message = `${message.slice(0, maxLength - 3)}...`
+
+  return message
 }

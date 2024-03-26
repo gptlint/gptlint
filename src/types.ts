@@ -21,6 +21,7 @@ export type RuleExample = {
 export type InputFile = {
   filePath: string
   fileName: string
+  relativeFilePath: string
   content: string
   language: string
 }

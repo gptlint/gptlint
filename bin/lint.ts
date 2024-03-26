@@ -10,6 +10,7 @@ import { lintFiles } from '../src/lint-files.js'
 import { parseGuidelinesFile } from '../src/parse-guidelines-file.js'
 import { parseRuleFile } from '../src/parse-rule-file.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
+import { pick } from '../src/utils.js'
 
 async function main() {
   const cwd = process.cwd()
@@ -154,11 +155,28 @@ async function main() {
     concurrency
   })
 
+  if (config.linterOptions.debugStats) {
+    console.log(
+      `\nLLM stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
+      pick(
+        lintResult,
+        'numModelCalls',
+        'numModelCallsCached',
+        'numPromptTokens',
+        'numCompletionTokens',
+        'numTotalTokens'
+      )
+    )
+  }
+
   if (lintResult.lintErrors.length > 0) {
-    console.log('\nlint errors:', JSON.stringify(lintResult, null, 2))
+    console.log(
+      '\nlint errors:',
+      JSON.stringify(lintResult.lintErrors, null, 2)
+    )
     process.exit(1)
   } else {
-    console.log('\nno lint errors')
+    console.log('\nno lint errors 🎉')
     process.exit(0)
   }
 }

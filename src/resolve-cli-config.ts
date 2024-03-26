@@ -55,7 +55,8 @@ export async function resolveLinterCLIConfig(
         },
         noCache: {
           type: Boolean,
-          description: 'Disables the built-in cache'
+          description: 'Disables the built-in cache',
+          alias: 'C'
         },
         cacheDir: {
           type: String,
@@ -76,6 +77,12 @@ export async function resolveLinterCLIConfig(
           type: Boolean,
           description: 'Enables verbose LLM debugging',
           alias: 'D'
+        },
+        debugStats: {
+          type: Boolean,
+          description:
+            'Enables logging of cumulative LLM stats at the end (total tokens and cost)',
+          alias: 'S'
         },
         earlyExit: {
           type: Boolean,
@@ -125,6 +132,7 @@ export async function resolveLinterCLIConfig(
       debug: args.flags.debug,
       debugConfig: args.flags.debugConfig,
       debugModel: args.flags.debugModel,
+      debugStats: args.flags.debugStats,
       noCache: args.flags.noCache,
       cacheDir:
         args.flags.cacheDir === defaultLinterConfig.linterOptions.cacheDir

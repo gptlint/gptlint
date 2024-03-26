@@ -32,6 +32,12 @@ export const LinterConfigOptionsSchema = z.object({
       'When enabled, logs the resolved config and parsed rules and then exits.'
     ),
   debugModel: z.boolean().optional().describe('Enables verbose LLM logging.'),
+  debugStats: z
+    .boolean()
+    .optional()
+    .describe(
+      'Enables logging of cumulative LLM stats (total tokens and cost).'
+    ),
 
   noCache: z.boolean().optional().describe('Disables the built-in cache.'),
 
@@ -102,6 +108,7 @@ export const defaultLinterConfigOptions: Readonly<LinterConfigOptions> = {
   debug: false,
   debugConfig: false,
   debugModel: false,
+  debugStats: false,
   noCache: false,
   cacheDir: defaultCacheDir,
   model: 'gpt-4-turbo-preview',
