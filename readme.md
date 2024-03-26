@@ -50,6 +50,8 @@ Flags:
   - add support for different languages
   - add support for different LLM providers
 - update project name in multiple places once we decide on a name
+- contextual / semantic variable naming
+- config api base url
 
 ## License
 

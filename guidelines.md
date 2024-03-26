@@ -16,7 +16,7 @@
 | --------- | ------------------------------------ |
 | Name      | be-consistent-with-identifier-casing |
 | Level     | error                                |
-| Fixable   | true                                 |
+| Fixable   | false                                |
 | Tags      | general                              |
 | Languages | all                                  |
 
