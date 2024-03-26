@@ -111,7 +111,8 @@ export const defaultLinterConfigOptions: Readonly<LinterConfigOptions> = {
   debugStats: false,
   noCache: false,
   cacheDir: defaultCacheDir,
-  model: 'gpt-4-turbo-preview',
+  // model: 'gpt-4-turbo-preview',
+  model: 'gpt-3.5-turbo',
   temperature: 0
 }
 

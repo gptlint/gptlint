@@ -34,6 +34,7 @@ export async function lintFile({
     return lintResult
   }
 
+  // TODO: add linter major version to cache key
   const cacheKey = {
     file: omit(file, 'fileRelativePath', 'fileName'),
     rule,
@@ -123,7 +124,7 @@ export async function lintFile({
 
   const res = await chatModel.run({
     messages: [
-      Msg.system(`You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure code conforms to project-specific guidelines and best practices. You will be given a code rule in the form of a description rule's intent and one or more positive and negative code snippets.
+      Msg.system(`You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure code conforms to project-specific guidelines and best practices. You will be given a code rule with a description of the rule's intent and one or more positive and negative code snippet examples.
     
 Your task is to take the given code and determine whether any portions of it violate the rule's intent. Accuracy is important, so be sure to think step-by-step before invoking the "record_rule_failure" function and include a "confidence" value so it's clear how confident you when detecting possible errors.`),
 

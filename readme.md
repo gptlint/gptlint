@@ -31,27 +31,27 @@ Flags:
 ## TODO
 
 - guidelines file format
-  - figure out the best way to specify metadata
-    - name
-    - error level
-    - category
-    - fixable
+  - figure out the best way to specify metadata (table for inline rules vs frontmatter for rules md files)
   - the rendered markdown needs to make it clear whether code blocks are positive or negative examples
   - correctly parse good/bad/correct/incorrect headers instead of just code block metadata
   - support both in the same code block
   - add support for organizing rules by h1 sections
   - add support for a rules directory
-- config file
+- config
   - use eslint, ruff, and conformance as inspiration
+  - llm api base url
 - linter engine
   - cross-file linting; v0 is strictly local to individual files
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
   - add support for different languages
   - add support for different LLM providers
+  - add support for `fixable`
+  - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
+  - **evals**
 - update project name in multiple places once we decide on a name
-- contextual / semantic variable naming
-- config api base url
+- rules
+  - contextual / semantic variable naming
 
 ## License
 
