@@ -9,13 +9,13 @@ import type * as types from '../src/types.js'
 import { lintFiles } from '../src/lint-files.js'
 import { parseGuidelinesFile } from '../src/parse-guidelines-file.js'
 import { parseRuleFile } from '../src/parse-rule-file.js'
-import { resolveLinterConfig } from '../src/resolve-config.js'
+import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 
 async function main() {
   const cwd = process.cwd()
   const concurrency = 16
 
-  const { args, linterConfig: config } = await resolveLinterConfig(
+  const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
     { cwd }
   )
