@@ -47,6 +47,9 @@ dependencies:
   parse-gitignore:
     specifier: ^2.0.0
     version: 2.0.0
+  path-exists:
+    specifier: ^5.0.0
+    version: 5.0.0
   plur:
     specifier: ^5.1.0
     version: 5.1.0

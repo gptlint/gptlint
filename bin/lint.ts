@@ -112,6 +112,7 @@ async function main() {
     ).filter(Boolean)
   )
 
+  // TODO: validate rules for duplicates and invalid rules
   // TODO: validate config.rules against resolved rule names
 
   const inputFiles = (
@@ -124,11 +125,11 @@ async function main() {
 
   if (config.linterOptions.debugConfig) {
     console.log(
-      '\nlogging resolved config and then exiting because `debugConfig` is enabled\n'
+      '\nlogging resolved config and then exiting because `debugConfig` is enabled'
     )
-    console.log('config', JSON.stringify(config, null, 2))
-    console.log('input files', JSON.stringify(inputFiles, null, 2))
-    console.log('rules', JSON.stringify(rules, null, 2))
+    console.log('\nconfig', JSON.stringify(config, null, 2))
+    console.log('\ninput files', JSON.stringify(inputFiles, null, 2))
+    console.log('\nrules', JSON.stringify(rules, null, 2))
     process.exit(0)
   }
 

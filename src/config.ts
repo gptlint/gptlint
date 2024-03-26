@@ -2,6 +2,8 @@ import findCacheDirectory from 'find-cache-dir'
 import type { SetRequired, Simplify } from 'type-fest'
 import { z } from 'zod'
 
+import { pruneUndefined } from './utils.js'
+
 export const LinterConfigRuleSchema = z.enum(['off', 'warn', 'error'])
 export type LinterConfigRule = z.infer<typeof LinterConfigRuleSchema>
 
@@ -94,7 +96,7 @@ export type ResolvedLinterConfig = Simplify<
   }
 >
 
-export const defaultLinterConfigOptions: LinterConfigOptions = {
+export const defaultLinterConfigOptions: Readonly<LinterConfigOptions> = {
   noInlineConfig: false,
   earlyExit: false,
   debug: false,
@@ -106,7 +108,9 @@ export const defaultLinterConfigOptions: LinterConfigOptions = {
   temperature: 0
 }
 
-export const defaultLinterConfig: SetRequired<LinterConfig, 'linterOptions'> = {
+export const defaultLinterConfig: Readonly<
+  SetRequired<LinterConfig, 'linterOptions'>
+> = {
   linterOptions: defaultLinterConfigOptions
 }
 
@@ -119,12 +123,15 @@ export function mergeLinterConfigs(
   configB: LinterConfig
 ): LinterConfig {
   return {
-    ...configA,
-    ...configB,
+    ...pruneUndefined(configA),
+    ...pruneUndefined(configB),
     rules: { ...configA.rules, ...configB.rules },
     linterOptions:
       configA.linterOptions || configB.linterOptions
-        ? { ...configA.linterOptions!, ...configB.linterOptions! }
+        ? {
+            ...pruneUndefined(configA.linterOptions ?? {}),
+            ...pruneUndefined(configB.linterOptions ?? {})
+          }
         : undefined
   }
 }

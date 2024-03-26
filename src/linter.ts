@@ -66,7 +66,7 @@ export async function lintFiles({
 
           return lintErrors
         } catch (err: any) {
-          const message = `error: rule "${rule.name}" file "${file.filePath}" unexpected error: ${err.message}`
+          const message = `Error: rule "${rule.name}" file "${file.filePath}" unexpected error: ${err.message}`
           console.error(message)
           throw new Error(message, { cause: err })
         }

@@ -1,8 +1,9 @@
-import { readFile, stat } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { cli } from 'cleye'
 import parseGitIgnore from 'parse-gitignore'
+import { pathExists } from 'path-exists'
 
 import type * as types from './types.js'
 import {
@@ -108,11 +109,13 @@ export async function resolveLinterConfig(
 
   let ignores = args.flags.noIgnore ? [] : args.flags.ignorePattern
   if (args.flags.ignoreFile && !args.flags.noIgnore) {
-    const ignoreFile = await readFile(args.flags.ignoreFile, {
-      encoding: 'utf-8'
-    })
-    const ignoreFilePatterns: string[] = parseGitIgnore(ignoreFile)
-    ignores = ignores.concat(ignoreFilePatterns)
+    if (await pathExists(args.flags.ignoreFile)) {
+      const ignoreFile = await readFile(args.flags.ignoreFile, {
+        encoding: 'utf-8'
+      })
+      const ignoreFilePatterns: string[] = parseGitIgnore(ignoreFile)
+      ignores = ignores.concat(ignoreFilePatterns)
+    }
   }
 
   let linterConfig = parseLinterConfig({
@@ -152,7 +155,7 @@ export async function resolveLinterConfig(
   for (const configFileRelativePath of configsToCheck) {
     const configFilePath = path.resolve(cwd, configFileRelativePath)
 
-    if (!(await stat(configFilePath))) {
+    if (!(await pathExists(configFilePath))) {
       if (configFileRelativePath === args.flags.config) {
         throw new Error(`Error missing config file "${args.flags.config}"`)
       }
@@ -174,6 +177,7 @@ export async function resolveLinterConfig(
   }
 
   linterConfig = mergeLinterConfigs(defaultLinterConfig, linterConfig)
+
   return {
     args,
     linterConfig: linterConfig as types.ResolvedLinterConfig

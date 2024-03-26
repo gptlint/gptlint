@@ -37,3 +37,11 @@ export const pick = <T extends Record<any, unknown>, K extends keyof T>(
   Object.fromEntries(
     Object.entries(obj).filter(([k]) => keys.includes(k as any))
   ) as any
+
+export function pruneUndefined<T extends Record<string, any>>(
+  obj: T
+): NonNullable<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined)
+  ) as NonNullable<T>
+}

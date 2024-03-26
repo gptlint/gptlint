@@ -34,6 +34,7 @@
     "p-map": "^7.0.1",
     "p-retry": "^6.2.0",
     "parse-gitignore": "^2.0.0",
+    "path-exists": "^5.0.0",
     "plur": "^5.1.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
