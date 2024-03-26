@@ -1,5 +1,7 @@
 /* eslint-disable no-use-before-define */
 
+export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
+
 export type Rule = {
   name: string
   message: string
@@ -20,4 +22,21 @@ export type ConfigRule = 'error' | 'warn' | 'off'
 
 export type Config = {
   rules: Record<string, ConfigRule>
+}
+
+export type InputFile = {
+  filePath: string
+  fileName: string
+  content: string
+  language: string
+}
+
+export type LintError = {
+  filePath: string
+  language: string
+
+  // lineStart: number // TODO
+  ruleName: string
+  codeSnippet: string
+  confidence: LintRuleErrorConfidence
 }
