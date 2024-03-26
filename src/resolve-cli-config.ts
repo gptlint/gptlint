@@ -31,7 +31,7 @@ export async function resolveLinterCLIConfig(
         },
         rule: {
           type: [String],
-          description: 'Glob pattern of rule definition markdown files.',
+          description: 'Glob pattern to rule definition markdown files.',
           alias: 'r'
         },
         ignoreFile: {
@@ -55,7 +55,7 @@ export async function resolveLinterCLIConfig(
         },
         noCache: {
           type: Boolean,
-          description: 'Disables the built-in cache',
+          description: 'Disables caching',
           alias: 'C'
         },
         cacheDir: {
@@ -75,13 +75,13 @@ export async function resolveLinterCLIConfig(
         },
         debugModel: {
           type: Boolean,
-          description: 'Enables verbose LLM debugging',
+          description: 'Enables verbose LLM logging',
           alias: 'D'
         },
         debugStats: {
           type: Boolean,
           description:
-            'Enables logging of cumulative LLM stats at the end (total tokens and cost)',
+            'Enables logging of cumulative LLM stats at the end, including total tokens and cost',
           alias: 'S'
         },
         earlyExit: {

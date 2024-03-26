@@ -3,6 +3,7 @@
 export type * from './config.js'
 
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
+export type LintRuleLevel = 'error' | 'warn' | 'off'
 
 export type Rule = {
   name: string
@@ -11,6 +12,11 @@ export type Rule = {
 
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
+
+  fixable?: boolean
+  level?: LintRuleLevel
+  languages?: string[]
+  tags?: string[]
 }
 
 export type RuleExample = {
@@ -21,7 +27,7 @@ export type RuleExample = {
 export type InputFile = {
   filePath: string
   fileName: string
-  relativeFilePath: string
+  fileRelativePath: string
   content: string
   language: string
 }
