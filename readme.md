@@ -50,8 +50,6 @@ Flags:
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - **evals**
 - update project name in multiple places once we decide on a name
-- rules
-  - contextual / semantic variable naming
 
 ## License
 
