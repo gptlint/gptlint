@@ -34,6 +34,11 @@ export async function lintFiles({
     debug: config.linterOptions.debugModel
   })
 
+  if (config.rules) {
+    // Remove rules which have been disabled in the config
+    rules = rules.filter((rule) => config.rules[rule.name] !== 'off')
+  }
+
   // TODO: Add support for different types of file <> rule mappings
   const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))

@@ -12,6 +12,9 @@ import { parseRuleFile } from '../src/parse-rule-file.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { pick } from '../src/utils.js'
 
+/**
+ * Main CLI entrypoint.
+ */
 async function main() {
   const cwd = process.cwd()
   const concurrency = 16

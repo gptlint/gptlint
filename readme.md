@@ -46,9 +46,9 @@ Flags:
   - cross-file linting; v0 is strictly local to individual files
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
-  - add support for any language
-- CLI
-  - add support for diff LLM providers
+  - add support for different languages
+  - add support for different LLM providers
+- update project name in multiple places once we decide on a name
 
 ## License
 
