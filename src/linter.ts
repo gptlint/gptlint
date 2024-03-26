@@ -134,6 +134,7 @@ export async function lintFile({
     }
   )
 
+  console.log()
   const res = await chatModel.run({
     temperature: 0,
     messages: [

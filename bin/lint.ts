@@ -86,18 +86,22 @@ async function main() {
     })
   ).map((filePath) => path.join(cwd, filePath))
 
-  // console.log(inputFiles)
-
-  const lintResult = await lintFiles({
+  const lintErrors = await lintFiles({
     inputFiles,
     guidelines,
     earlyExit: args.flags.earlyExit,
     debug: args.flags.debug
   })
 
-  // TODO
-  console.log(JSON.stringify(lintResult, null, 2))
-  return lintResult
+  if (lintErrors.length > 0) {
+    console.log('\nlint errors:', JSON.stringify(lintErrors, null, 2))
+    process.exit(1)
+  } else {
+    console.log('\nno lint errors – huzzah!')
+    process.exit(0)
+  }
+
+  return lintErrors
 }
 
 main().catch((err) => {
