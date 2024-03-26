@@ -33,7 +33,8 @@ export async function lintFiles({
     params: {
       model: config.linterOptions.model,
       temperature: config.linterOptions.temperature
-    }
+    },
+    debug: config.linterOptions.debugModel
   })
 
   // TODO: Add support for different types of file <> rule mappings
