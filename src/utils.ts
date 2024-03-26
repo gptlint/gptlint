@@ -1,10 +1,8 @@
 import slugify from '@sindresorhus/slugify'
-import dedupe from 'array-uniq'
 import invariant from 'tiny-invariant'
 
 export { slugify }
 export { invariant as assert }
-export { dedupe }
 
 /**
  * From `obj`, create a new object that does not include `keys`.
