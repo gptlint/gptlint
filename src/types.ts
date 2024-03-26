@@ -34,3 +34,16 @@ export type LintError = {
   codeSnippet: string
   confidence: LintRuleErrorConfidence
 }
+
+export type LintResult = {
+  lintErrors: LintError[]
+  message?: string
+
+  numModelCalls: number
+  numModelCallsCached: number
+
+  numPromptTokens: number
+  numCompletionTokens: number
+  numTotalTokens: number
+  totalCost: number
+}

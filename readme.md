@@ -15,11 +15,13 @@
 - config file
   - use eslint, ruff, and conformance as inspiration
 - linter engine
-  - cross-file linting; v0 is striclty per-file
+  - cross-file linting; v0 is strictly local to individual files
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
   - add support for any language
   - add support for caching
+  - aggregate LLM call stats
+  - display aggregate cost
 - CLI
   - add support for diff LLM providers
 

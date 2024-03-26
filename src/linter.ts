@@ -1,6 +1,3 @@
-import { readFile } from 'node:fs/promises'
-import { basename } from 'node:path'
-
 import { ChatModel, Msg, createAIFunction } from '@dexaai/dexter'
 import pMap from 'p-map'
 import pRetry from 'p-retry'
@@ -9,6 +6,7 @@ import { z } from 'zod'
 
 import type * as types from './types.js'
 import { LinterCache } from './cache.js'
+import { readFiles } from './read-files.js'
 
 export async function lintFiles({
   inputFiles,
@@ -20,7 +18,7 @@ export async function lintFiles({
   rules: types.Rule[]
   config: types.ResolvedLinterConfig
   concurrency?: number
-}): Promise<types.LintError[]> {
+}): Promise<types.LintResult> {
   const cache = new LinterCache({
     cacheDir: config.linterOptions.cacheDir,
     noCache: config.linterOptions.noCache
@@ -42,40 +40,57 @@ export async function lintFiles({
     files.map((file) => ({ file, rule }))
   )
 
+  const lintResult: types.LintResult = {
+    lintErrors: [],
+    numModelCalls: 0,
+    numModelCallsCached: 0,
+    numPromptTokens: 0,
+    numCompletionTokens: 0,
+    numTotalTokens: 0,
+    totalCost: 0
+  }
   let earlyExitTripped = false
 
-  return (
-    await pMap(
-      lintTasks,
-      async ({ file, rule }) => {
-        try {
-          if (earlyExitTripped) {
-            return []
-          }
-
-          const lintErrors = await pRetry(
-            () => lintFile({ file, rule, chatModel, cache, config }),
-            {
-              retries: 2
-            }
-          )
-
-          if (lintErrors.length && config.linterOptions.earlyExit) {
-            earlyExitTripped = true
-          }
-
-          return lintErrors
-        } catch (err: any) {
-          const message = `Error: rule "${rule.name}" file "${file.filePath}" unexpected error: ${err.message}`
-          console.error(message)
-          throw new Error(message, { cause: err })
+  await pMap(
+    lintTasks,
+    async ({ file, rule }) => {
+      try {
+        if (earlyExitTripped) {
+          return []
         }
-      },
-      {
-        concurrency: config.linterOptions.debug ? 1 : concurrency
+
+        const lintResultFile = await pRetry(
+          () => lintFile({ file, rule, chatModel, cache, config }),
+          {
+            retries: 2
+          }
+        )
+
+        lintResult.lintErrors = lintResult.lintErrors.concat(
+          lintResultFile.lintErrors
+        )
+        lintResult.numModelCalls += lintResultFile.numModelCalls
+        lintResult.numModelCallsCached += lintResultFile.numModelCallsCached
+        lintResult.numPromptTokens += lintResultFile.numPromptTokens
+        lintResult.numCompletionTokens += lintResultFile.numCompletionTokens
+        lintResult.numTotalTokens += lintResultFile.numTotalTokens
+        lintResult.totalCost += lintResultFile.totalCost
+
+        if (lintResult.lintErrors.length && config.linterOptions.earlyExit) {
+          earlyExitTripped = true
+        }
+      } catch (err: any) {
+        const message = `Error: rule "${rule.name}" file "${file.filePath}" unexpected error: ${err.message}`
+        console.error(message)
+        throw new Error(message, { cause: err })
       }
-    )
-  ).flat()
+    },
+    {
+      concurrency
+    }
+  )
+
+  return lintResult
 }
 
 export async function lintFile({
@@ -90,12 +105,20 @@ export async function lintFile({
   chatModel: ChatModel
   cache: LinterCache
   config: types.ResolvedLinterConfig
-}): Promise<types.LintError[]> {
-  const lintErrors: types.LintError[] = []
+}): Promise<types.LintResult> {
+  const lintResult: types.LintResult = {
+    lintErrors: [],
+    numModelCalls: 0,
+    numModelCallsCached: 0,
+    numPromptTokens: 0,
+    numCompletionTokens: 0,
+    numTotalTokens: 0,
+    totalCost: 0
+  }
 
   if (!file.content.trim()) {
     // Ignore empty files
-    return lintErrors
+    return lintResult
   }
 
   const cacheKey = {
@@ -105,7 +128,22 @@ export async function lintFile({
   }
   const cachedResult = await cache.get(cacheKey)
   if (cachedResult) {
-    return cachedResult
+    lintResult.lintErrors = cachedResult.lintErrors
+    lintResult.message = cachedResult.message
+    lintResult.numModelCallsCached++
+
+    if (config.linterOptions.debug) {
+      const { lintErrors } = lintResult
+
+      console.log(
+        `CACHE HIT Rule "${rule.name}" file "${file.filePath}": ${
+          lintErrors.length
+        } ${plur('error', lintErrors.length)} found: ${lintResult.message}`,
+        ...[lintErrors.length ? [lintErrors] : []]
+      )
+    }
+
+    return lintResult
   }
 
   const recordRuleFailure = createAIFunction(
@@ -145,7 +183,7 @@ export async function lintFile({
         )
       }
 
-      lintErrors.push({
+      lintResult.lintErrors.push({
         filePath: file.filePath,
         language: file.language,
         ruleName: rule.name,
@@ -194,53 +232,37 @@ ${rule.positiveExamples?.map(
     ]
   })
 
+  if (res.message.content) {
+    lintResult.message = res.message.content
+  }
+
+  if (res.cached) {
+    lintResult.numModelCallsCached++
+  } else {
+    lintResult.numModelCalls++
+  }
+
+  if (res.cost) {
+    lintResult.totalCost += res.cost
+  }
+
+  if (res.usage) {
+    lintResult.numPromptTokens += res.usage.prompt_tokens
+    lintResult.numCompletionTokens += res.usage.completion_tokens
+    lintResult.numTotalTokens += res.usage.total_tokens
+  }
+
   if (config.linterOptions.debug) {
+    const { lintErrors } = lintResult
+
     console.log(
       `<<< Rule "${rule.name}" file "${file.filePath}": ${
         lintErrors.length
-      } ${plur('error', lintErrors.length)} found: ${res.message.content}`,
+      } ${plur('error', lintErrors.length)} found: ${lintResult.message}`,
       ...[lintErrors.length ? [lintErrors] : []]
     )
   }
 
-  await cache.set(cacheKey, lintErrors)
-  return lintErrors
-}
-
-export async function readFiles(
-  filePaths: string[],
-  {
-    concurrency = 16
-  }: {
-    concurrency?: number
-  } = {}
-): Promise<types.InputFile[]> {
-  return pMap(
-    filePaths,
-    async (filePath) => {
-      const content = await readFile(filePath, { encoding: 'utf-8' })
-
-      const fileName = basename(filePath)
-      const ext = filePath.split('.').at(-1)!
-      const jsExtensions = new Set(['js', 'jsx', 'cjs', 'mjs'])
-      const tsExtensions = new Set(['js', 'jsx'])
-
-      // TODO: improve filePath => language detection
-      const language = jsExtensions.has(ext)
-        ? 'javascript'
-        : tsExtensions.has(ext)
-        ? 'typescript'
-        : 'unknown'
-
-      return {
-        filePath,
-        fileName,
-        language,
-        content
-      }
-    },
-    {
-      concurrency
-    }
-  )
+  await cache.set(cacheKey, lintResult)
+  return lintResult
 }

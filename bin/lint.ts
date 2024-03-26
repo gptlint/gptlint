@@ -112,7 +112,21 @@ async function main() {
     ).filter(Boolean)
   )
 
-  // TODO: validate rules for duplicates and invalid rules
+  const processedRules = new Set<string>()
+
+  // TODO: validate rules for duplicates and malformed rules
+  for (const rule of rules) {
+    if (processedRules.has(rule.name)) {
+      console.error(`Duplicate rule found "${rule.name}"`)
+      args.showHelp()
+      process.exit(1)
+    }
+
+    processedRules.add(rule.name)
+
+    // TODO: validate rule
+  }
+
   // TODO: validate config.rules against resolved rule names
 
   const inputFiles = (
@@ -133,18 +147,18 @@ async function main() {
     process.exit(0)
   }
 
-  const lintErrors = await lintFiles({
+  const lintResult = await lintFiles({
     inputFiles,
     rules,
     config,
     concurrency
   })
 
-  if (lintErrors.length > 0) {
-    console.log('\nlint errors:', JSON.stringify(lintErrors, null, 2))
+  if (lintResult.lintErrors.length > 0) {
+    console.log('\nlint errors:', JSON.stringify(lintResult, null, 2))
     process.exit(1)
   } else {
-    console.log('\nno lint errors – huzzah!')
+    console.log('\nno lint errors')
     process.exit(0)
   }
 }

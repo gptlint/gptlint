@@ -10,7 +10,7 @@ import { assert } from './utils.js'
 
 export class LinterCache<
   TKey extends object = any,
-  TValue extends object = types.LintError[]
+  TValue extends object = types.LintResult
 > {
   noCache: boolean
   cacheDir?: string
