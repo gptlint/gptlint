@@ -6,7 +6,7 @@ import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from '../src/types.js'
-import { lintFiles } from '../src/linter.js'
+import { lintFiles } from '../src/lint-files.js'
 import { parseGuidelinesFile } from '../src/parse-guidelines-file.js'
 import { parseRuleFile } from '../src/parse-rule-file.js'
 import { resolveLinterConfig } from '../src/resolve-config.js'

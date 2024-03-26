@@ -1,6 +1,7 @@
 export * from './cache.js'
 export * from './config.js'
-export * from './linter.js'
+export * from './lint-file.js'
+export * from './lint-files.js'
 export * from './parse-guidelines-file.js'
 export * from './resolve-config.js'
 export type * from './types.js'
