@@ -31,12 +31,9 @@ Flags:
 ## TODO
 
 - guidelines file format
-  - figure out the best way to specify metadata (table for inline rules vs frontmatter for rules md files)
-  - the rendered markdown needs to make it clear whether code blocks are positive or negative examples
-  - correctly parse good/bad/correct/incorrect headers instead of just code block metadata
   - support both in the same code block
-  - add support for organizing rules by h1 sections
-  - add support for a rules directory
+  - add support to guidelines.md for organizing rules by h1 sections
+    - alternatively, just use directories and rule.md file format
 - config
   - use eslint, ruff, and conformance as inspiration
   - llm api base url
@@ -54,10 +51,8 @@ Flags:
 - rules
   - something which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
-- validate rule name
-  - slug or @scope/slug
 - `prefer-page-queries.md` code examples give extra context outside of the code blocks
-- try claude w/ structured output and prefilled output JSON
+- try claude w/ structured output and nudging it with prefilled / prefix output JSON
 
 ## License
 
