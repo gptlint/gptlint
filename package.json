@@ -17,7 +17,8 @@
     "test": "run-s test:*",
     "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
     "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "test:typecheck": "tsc --noEmit"
+    "test:typecheck": "tsc --noEmit",
+    "test:unit": "vitest run"
   },
   "dependencies": {
     "@dexaai/dexter": "^1.2.9",

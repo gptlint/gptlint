@@ -1,0 +1,229 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parseRuleFile - rules/force-list-pagination.md 1`] = `
+{
+  "desc": "This rule provides suggestionsCategory: Schema & OperationsRule name: @pmd/force-list-paginationRequires GraphQL Schema: falseRequires GraphQL Operations: falseFixable: trueForce the use of pagination for all lists in GraphQL",
+  "message": "Force List Pagination",
+  "name": "force-list-pagination",
+  "negativeExamples": [
+    {
+      "code": "type Query {
+  items: [ItemConnection]
+  requiredItems: [ItemConnection!]
+  nestedRequireItems: [ItemConnection!]!
+}",
+      "language": "graphql",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "type ListPaginationInput {
+  first: Int
+  last: Int
+  after: String
+  before: String
+}
+
+type Query {
+  items(pagination: ): [ItemConnection]
+  requiredItems: [ItemConnection!]
+  nestedRequireItems: [ItemConnection!]!
+}",
+      "language": "graphql",
+    },
+  ],
+  "source": "rules/force-list-pagination.md",
+}
+`;
+
+exports[`parseRuleFile - rules/mutations.md 1`] = `
+{
+  "desc": "This rule provides suggestionsCategory: Schema & OperationsRule name: @ux-l_graphql-eslint/mutation-typesRequires GraphQL Schema: falseRequires GraphQL Operations: falseDisallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types",
+  "message": "Mutation Inputs",
+  "name": "mutation-inputs",
+  "negativeExamples": [
+    {
+      "code": "type Mutation {
+  setMessage(message: SetMessageInput, other: String): String
+}
+type Mutation {
+  setMessage(message: String): String
+}
+type Mutation {
+  setMessage: String
+}
+type Mutation {
+  setMessage(input: setMessageInput): setMessageResponse
+}",
+      "language": "graphql",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "type Mutation {
+  setMessage(input: SetMessageInput): SetMessageResponse
+}
+type Mutation {
+  setMessage(input: [SetMessageInput]): SetMessageResponse
+}",
+      "language": "graphql",
+    },
+  ],
+  "source": "rules/mutations.md",
+}
+`;
+
+exports[`parseRuleFile - rules/prefer-edge-node.md 1`] = `
+{
+  "desc": "This rule provides suggestionsCategory: Schema & OperationsRule name: @pmd/prefer-edge-nodeRequires GraphQL Schema: falseRequires GraphQL Operations: falsePrefer usage of Edges and Nodes in GraphQL Lists",
+  "message": "Prefer Edges & Nodes",
+  "name": "prefer-edges-and-nodes",
+  "negativeExamples": [
+    {
+      "code": "type Item {
+  id: ID
+  name: String
+}
+
+type Query {
+  items: [Item]
+  requiredItems: [Item!]
+  nestedRequireItems: [Item!]!
+}",
+      "language": "graphql",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "type Item {
+  id: ID
+  name: String
+}
+
+type ItemEdge {
+  node: Node!
+  cursor: String!
+}
+
+type ItemConnection {
+  edges: [ItemEdge]
+  pageInfo: PageInfo!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  resultCount: Int!
+}
+
+type Query {
+  items: [ItemConnection]
+  requiredItems: [ItemConnection!]
+  nestedRequireItems: [ItemConnection!]!
+}",
+      "language": "graphql",
+    },
+  ],
+  "source": "rules/prefer-edge-node.md",
+}
+`;
+
+exports[`parseRuleFile - rules/prefer-page-queries.md 1`] = `
+{
+  "desc": "This rule provides suggestionsCategory: Code best practicesRule name: @pmd_eslint/prefer-page-queriesRequires GraphQL Schema: falseRequires GraphQL Operations: falseWarn on usage of the /utils/api.ts file in favor of creating a page query in the /utils/pageQueries folder",
+  "message": "Prefer page queries",
+  "name": "prefer-page-queries",
+  "negativeExamples": [
+    {
+      "code": "export const get<queryName>Data = async (
+  locale: string
+): Promise<<queryName>Type | null> => {
+  try {
+    const data = await fetchCmsGraphql(GET_<queryName>, {
+      locale,
+    });
+    return data?.<queryName>?.data?.attributes || null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "import { print } from 'graphql';
+import {
+  <queryName>Query,
+  <queryName>QueryVariables,
+} from './AboutUsPage.generated';
+export type { <queryName>Query, <queryName>QueryVariables };
+import QUERY from './AboutUsPage';
+import { fetchCmsGraphql } from '../../fetchCmsData';
+
+export const get<queryName>PageData = async (
+  variables: <queryName>PageQueryVariables
+): Promise<<queryName>Query | null> => {
+  try {
+    const data = await fetchCmsGraphql(print(QUERY), variables);
+    return data as <queryName>Query;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+",
+      "language": "ts",
+    },
+    {
+      "code": "import gql from 'graphql-tag'
+
+export default gql\`
+  query <queryName> {
+    # query here
+  }
+\`",
+      "language": "tsx",
+    },
+  ],
+  "source": "rules/prefer-page-queries.md",
+}
+`;
+
+exports[`parseRuleFile - rules/prefer-strapi-env-vars.md 1`] = `
+{
+  "desc": "This rule provides suggestionsCategory: Code SmellsRule name: @pmd/strapi-env-varsRequires GraphQL Schema: falseRequires GraphQL Operations: falseFixable: trueSuggest & Fix usage of process.env variables in favor of Strapi environment variables",
+  "message": "Use Strapi Environment Variables",
+  "name": "use-strapi-environment-variables",
+  "negativeExamples": [
+    {
+      "code": "export default ({ env }) => ({
+  auth: {
+    secret: process.env['ADMIN_JWT_SECRET']
+  }
+})",
+      "language": "ts",
+    },
+    {
+      "code": "export default ({ env }) => ({
+  auth: {
+    secret: process.env.ADMIN_JWT_SECRET
+  }
+})",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "export default ({ env }) => ({
+  auth: {
+    secret: env('ADMIN_JWT_SECRET')
+  }
+})",
+      "language": "ts",
+    },
+  ],
+  "source": "rules/prefer-strapi-env-vars.md",
+}
+`;
