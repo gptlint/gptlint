@@ -29,12 +29,10 @@ async function main() {
     cwd
   })
 
-  const ruleFilePaths = (
-    await globby(config.ruleFiles, {
-      gitignore: true,
-      cwd
-    })
-  ).map((filePath) => path.join(cwd, filePath))
+  const ruleFilePaths = await globby(config.ruleFiles, {
+    gitignore: true,
+    cwd
+  })
 
   const processedGuidelineFilePaths = new Set<string>()
   const processedRuleFilePaths = new Set<string>()
