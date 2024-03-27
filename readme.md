@@ -53,8 +53,6 @@ Flags:
   - if you refer to something as numIterations in one place, refer to it consistently
 - `prefer-page-queries.md` code examples give extra context outside of the code blocks
 - try claude w/ structured output and nudging it with prefilled / prefix output JSON
-- cli
-  - add progress bar
 
 ## License
 

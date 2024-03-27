@@ -11,12 +11,14 @@ export async function lintFiles({
   inputFiles,
   rules,
   config,
-  concurrency = 16
+  concurrency = 16,
+  onProgress
 }: {
   inputFiles: string[]
   rules: types.Rule[]
   config: types.ResolvedLinterConfig
   concurrency?: number
+  onProgress?: types.ProgressHandlerFn
 }): Promise<types.LintResult> {
   const cache = new LinterCache({
     cacheDir: config.linterOptions.cacheDir,
@@ -33,11 +35,6 @@ export async function lintFiles({
     },
     debug: config.linterOptions.debugModel
   })
-
-  if (config.rules) {
-    // Remove rules which have been disabled in the config
-    rules = rules.filter((rule) => config.rules[rule.name] !== 'off')
-  }
 
   // TODO: Add support for different types of file <> rule mappings
   const lintTasks = rules.flatMap((rule) =>
@@ -57,7 +54,7 @@ export async function lintFiles({
 
   await pMap(
     lintTasks,
-    async ({ file, rule }) => {
+    async ({ file, rule }, index) => {
       try {
         if (earlyExitTripped) {
           return []
@@ -82,6 +79,16 @@ export async function lintFiles({
 
         if (lintResult.lintErrors.length && config.linterOptions.earlyExit) {
           earlyExitTripped = true
+        }
+
+        if (onProgress) {
+          await Promise.resolve(
+            onProgress({
+              progress: index / lintTasks.length,
+              message: `Rule "${rule.name}" file "${file.fileRelativePath}"`,
+              result: lintResult
+            })
+          )
         }
       } catch (err: any) {
         const message = `Error: rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`

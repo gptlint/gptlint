@@ -56,3 +56,9 @@ export type LintResult = {
   numTotalTokens: number
   totalCost: number
 }
+
+export type ProgressHandlerFn = (opts: {
+  progress: number
+  message: string
+  result: LintResult
+}) => void | Promise<void>

@@ -4,6 +4,7 @@ import path from 'node:path'
 import 'dotenv/config'
 import { globby } from 'globby'
 import pMap from 'p-map'
+import Progress from 'ts-progress'
 
 import type * as types from '../src/types.js'
 import { lintFiles } from '../src/lint-files.js'
@@ -159,12 +160,29 @@ async function main() {
     process.exit(0)
   }
 
+  if (config.rules) {
+    // Remove rules which have been disabled in the config
+    rules = rules.filter((rule) => config.rules[rule.name] !== 'off')
+  }
+
+  const progressBar = config.linterOptions.debug
+    ? undefined
+    : Progress.create({
+        total: rules.length * inputFiles.length,
+        updateFrequency: 10
+      })
+
   const lintResult = await lintFiles({
     inputFiles,
     rules,
     config,
-    concurrency
+    concurrency,
+    onProgress: () => {
+      progressBar?.update()
+    }
   })
+
+  progressBar?.done()
 
   if (config.linterOptions.debugStats) {
     console.log(
