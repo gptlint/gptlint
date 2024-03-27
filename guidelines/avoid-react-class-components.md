@@ -1,12 +1,12 @@
 # Don't use React class components
 
-| Key       | Value                        |
-| --------- | ---------------------------- |
-| Name      | avoid-react-class-components |
-| Level     | error                        |
-| Fixable   | false                        |
-| Tags      | react                        |
-| Languages | javascript, typescript       |
+| Key       | Value                          |
+| --------- | ------------------------------ |
+| Name      | `avoid-react-class-components` |
+| Level     | error                          |
+| Fixable   | false                          |
+| Tags      | react                          |
+| Languages | javascript, typescript         |
 
 React class components are deprecated. Use React functions and hooks instead.
 

@@ -1,12 +1,12 @@
 # Use semantic variable names
 
-| Key       | Value                   |
-| --------- | ----------------------- |
-| Name      | semantic-variable-names |
-| Level     | error                   |
-| Fixable   | false                   |
-| Tags      | general                 |
-| Languages | all                     |
+| Key       | Value                     |
+| --------- | ------------------------- |
+| Name      | `semantic-variable-names` |
+| Level     | error                     |
+| Fixable   | false                     |
+| Tags      | general                   |
+| Languages | all                       |
 
 Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
 

@@ -1,12 +1,12 @@
 # Be consistent with identifier casing
 
-| Key       | Value                        |
-| --------- | ---------------------------- |
-| Name      | consistent-identifier-casing |
-| Level     | error                        |
-| Fixable   | false                        |
-| Tags      | general                      |
-| Languages | all                          |
+| Key       | Value                          |
+| --------- | ------------------------------ |
+| Name      | `consistent-identifier-casing` |
+| Level     | error                          |
+| Fixable   | false                          |
+| Tags      | general                        |
+| Languages | all                            |
 
 Identifiers of the same type should use consistent casing. This rule applies to all types of identifiers: variable names, class names, type names, function names, constants, etc.
 

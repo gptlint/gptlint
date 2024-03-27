@@ -2,7 +2,7 @@
 
 | Key       | Value                  |
 | --------- | ---------------------- |
-| Name      | use-esm                |
+| Name      | `use-esm`              |
 | Level     | error                  |
 | Fixable   | false                  |
 | Tags      | general                |
