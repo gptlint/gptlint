@@ -5,6 +5,8 @@ import { isValidRuleName } from './utils.js'
 test(`isValidRuleName - valid`, async () => {
   expect(isValidRuleName('foo')).toBe(true)
   expect(isValidRuleName('foo-bar')).toBe(true)
+  expect(isValidRuleName('foo0123_-3bar')).toBe(true)
+  expect(isValidRuleName('@foo0123_-3bar/v0')).toBe(true)
   expect(isValidRuleName('@baz/foo-bar')).toBe(true)
 })
 
