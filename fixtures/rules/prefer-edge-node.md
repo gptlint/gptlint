@@ -1,13 +1,15 @@
 # Prefer Edges & Nodes
 
-This rule provides suggestions
+| Key       | Value                                 |
+| --------- | ------------------------------------- |
+| Name      | `prefer-edge-node`                    |
+| Level     | error                                 |
+| Fixable   | false                                 |
+| Tags      | graphql                               |
+| Languages | javascript, typescript                |
+| Eslint    | `@ux-l_graphql-eslint/mutation-types` |
 
-- Category: Schema & Operations
-- Rule name: `@pmd/prefer-edge-node`
-- Requires GraphQL Schema: `false`
-- Requires GraphQL Operations: `false`
-
-Prefer usage of Edges and Nodes in GraphQL Lists
+Prefer usage of Edges and Nodes in GraphQL Lists.
 
 ## Usage Examples
 

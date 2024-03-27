@@ -5,9 +5,12 @@ import { assert, expect, test } from 'vitest'
 
 import { parseRuleFile } from './parse-rule-file.js'
 
-const ruleFiles = globbySync('rules/**/*.md', { gitignore: true })
+const validRuleFiles = globbySync('fixtures/rules/**/*.md', { gitignore: true })
+const invalidRuleFiles = globbySync('fixtures/invalid rules/**/*.md', {
+  gitignore: true
+})
 
-for (const ruleFile of ruleFiles) {
+for (const ruleFile of validRuleFiles) {
   test(`parseRuleFile - ${ruleFile}`, async () => {
     const content = await fs.readFile(ruleFile, { encoding: 'utf-8' })
     const rule = await parseRuleFile({
@@ -16,5 +19,17 @@ for (const ruleFile of ruleFiles) {
     })
     assert(rule)
     expect(rule).toMatchSnapshot()
+  })
+}
+
+for (const ruleFile of invalidRuleFiles) {
+  test(`parseRuleFile - invalid - ${ruleFile}`, async () => {
+    const content = await fs.readFile(ruleFile, { encoding: 'utf-8' })
+    await expect(
+      parseRuleFile({
+        content,
+        filePath: ruleFile
+      })
+    ).rejects.toThrow()
   })
 }

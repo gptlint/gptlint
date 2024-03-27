@@ -1,8 +1,25 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`parseRuleFile - rules/force-list-pagination.md 1`] = `
+exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
 {
-  "desc": "This rule provides suggestionsCategory: Schema & OperationsRule name: @pmd/force-list-paginationRequires GraphQL Schema: falseRequires GraphQL Operations: falseFixable: trueForce the use of pagination for all lists in GraphQL",
+  "desc": "This rule doesn't contain any examples which is fine because they are optional.",
+  "message": "Example",
+  "name": "example",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "source": "fixtures/rules/empty-examples.md",
+}
+`;
+
+exports[`parseRuleFile - fixtures/rules/force-list-pagination.md 1`] = `
+{
+  "desc": "Force the use of pagination for all lists in GraphQL.",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
   "message": "Force List Pagination",
   "name": "force-list-pagination",
   "negativeExamples": [
@@ -32,15 +49,76 @@ type Query {
       "language": "graphql",
     },
   ],
-  "source": "rules/force-list-pagination.md",
+  "source": "fixtures/rules/force-list-pagination.md",
+  "tags": [
+    "graphql",
+  ],
 }
 `;
 
-exports[`parseRuleFile - rules/mutations.md 1`] = `
+exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
 {
-  "desc": "This rule provides suggestionsCategory: Schema & OperationsRule name: @ux-l_graphql-eslint/mutation-typesRequires GraphQL Schema: falseRequires GraphQL Operations: falseDisallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types",
+  "desc": "This example should parse correctly.",
+  "eslint": [
+    "example-eslint-rule-1",
+    "example-eslint-rule-2",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Example",
+  "name": "example-name",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "source": "fixtures/rules/metadata-0.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
+exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
+{
+  "desc": "This example should parse correctly because we stringify the values.",
+  "eslint": [
+    "example-eslint-rule-1",
+    "@foo/example-eslint-rule-2",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Example",
+  "name": "example-name",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "source": "fixtures/rules/metadata-1.md",
+  "tags": [
+    "general",
+    "react",
+  ],
+}
+`;
+
+exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
+{
+  "desc": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.",
+  "eslint": [
+    "@ux-l_graphql-eslint/mutation-types",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
   "message": "Mutation Inputs",
-  "name": "mutation-inputs",
+  "name": "mutation-types",
   "negativeExamples": [
     {
       "code": "type Mutation {
@@ -69,15 +147,27 @@ type Mutation {
       "language": "graphql",
     },
   ],
-  "source": "rules/mutations.md",
+  "source": "fixtures/rules/mutations.md",
+  "tags": [
+    "graphql",
+  ],
 }
 `;
 
-exports[`parseRuleFile - rules/prefer-edge-node.md 1`] = `
+exports[`parseRuleFile - fixtures/rules/prefer-edge-node.md 1`] = `
 {
-  "desc": "This rule provides suggestionsCategory: Schema & OperationsRule name: @pmd/prefer-edge-nodeRequires GraphQL Schema: falseRequires GraphQL Operations: falsePrefer usage of Edges and Nodes in GraphQL Lists",
+  "desc": "Prefer usage of Edges and Nodes in GraphQL Lists.",
+  "eslint": [
+    "@ux-l_graphql-eslint/mutation-types",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
   "message": "Prefer Edges & Nodes",
-  "name": "prefer-edges-and-nodes",
+  "name": "prefer-edge-node",
   "negativeExamples": [
     {
       "code": "type Item {
@@ -124,13 +214,22 @@ type Query {
       "language": "graphql",
     },
   ],
-  "source": "rules/prefer-edge-node.md",
+  "source": "fixtures/rules/prefer-edge-node.md",
+  "tags": [
+    "graphql",
+  ],
 }
 `;
 
-exports[`parseRuleFile - rules/prefer-page-queries.md 1`] = `
+exports[`parseRuleFile - fixtures/rules/prefer-page-queries.md 1`] = `
 {
-  "desc": "This rule provides suggestionsCategory: Code best practicesRule name: @pmd_eslint/prefer-page-queriesRequires GraphQL Schema: falseRequires GraphQL Operations: falseWarn on usage of the /utils/api.ts file in favor of creating a page query in the /utils/pageQueries folder",
+  "desc": "Warn on usage of the /utils/api.ts file in favor of creating a page query in the /utils/pageQueries folder.",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
   "message": "Prefer page queries",
   "name": "prefer-page-queries",
   "negativeExamples": [
@@ -172,8 +271,7 @@ export const get<queryName>PageData = async (
     console.error(error);
     return null;
   }
-};
-",
+};",
       "language": "ts",
     },
     {
@@ -187,15 +285,24 @@ export default gql\`
       "language": "tsx",
     },
   ],
-  "source": "rules/prefer-page-queries.md",
+  "source": "fixtures/rules/prefer-page-queries.md",
+  "tags": [
+    "graphql",
+  ],
 }
 `;
 
-exports[`parseRuleFile - rules/prefer-strapi-env-vars.md 1`] = `
+exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
 {
-  "desc": "This rule provides suggestionsCategory: Code SmellsRule name: @pmd/strapi-env-varsRequires GraphQL Schema: falseRequires GraphQL Operations: falseFixable: trueSuggest & Fix usage of process.env variables in favor of Strapi environment variables",
+  "desc": "Avoid accessing process.env variables in favor of Strapi environment variables.",
+  "fixable": true,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
   "message": "Use Strapi Environment Variables",
-  "name": "use-strapi-environment-variables",
+  "name": "strapi-env-vars",
   "negativeExamples": [
     {
       "code": "export default ({ env }) => ({
@@ -224,6 +331,9 @@ exports[`parseRuleFile - rules/prefer-strapi-env-vars.md 1`] = `
       "language": "ts",
     },
   ],
-  "source": "rules/prefer-strapi-env-vars.md",
+  "source": "fixtures/rules/prefer-strapi-env-vars.md",
+  "tags": [
+    "code smells",
+  ],
 }
 `;

@@ -1,14 +1,14 @@
 # Force List Pagination
 
-This rule provides suggestions
+| Key       | Value                  |
+| --------- | ---------------------- |
+| Name      | force-list-pagination  |
+| Level     | error                  |
+| Fixable   | false                  |
+| Tags      | graphql                |
+| Languages | javascript, typescript |
 
-- Category: Schema & Operations
-- Rule name: `@pmd/force-list-pagination`
-- Requires GraphQL Schema: `false`
-- Requires GraphQL Operations: `false`
-- Fixable: true
-
-Force the use of pagination for all lists in GraphQL
+Force the use of pagination for all lists in GraphQL.
 
 ## Usage Examples
 

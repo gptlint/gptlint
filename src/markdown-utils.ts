@@ -7,7 +7,7 @@ import { inspectColor } from 'unist-util-inspect'
 import { type Test, is } from 'unist-util-is'
 
 import type * as types from './types.js'
-import { assert, slugify } from './utils.js'
+import { assert, isValidRuleName, slugify } from './utils.js'
 
 export function parseMarkdownAST(content: string) {
   return unified().use(remarkParse).use(remarkGfm).parse(content)
@@ -49,19 +49,15 @@ export function parseRuleNode({
   const message = toString(headingRuleNode)
   assert(message, 'Rule message must not be empty')
 
-  const name = slugify(message).trim()
-  assert(name, `Rule name must not be empty: ${message}`)
-
-  const desc = toString(bodyRuleNode)
-
   const rule: types.Rule = {
-    name,
     message,
-    desc,
+    name: slugify(message).trim(),
+    desc: toString(bodyRuleNode),
     positiveExamples: [],
     negativeExamples: [],
     source: filePath
   }
+  assert(rule.name, `Rule name must not be empty: ${message}`)
 
   assert(
     tableRuleNodes.length <= 1,
@@ -72,6 +68,11 @@ export function parseRuleNode({
     const tableNode = tableRuleNodes[0]!
     parseRuleTableNode({ tableNode, rule, filePath })
   }
+
+  assert(
+    isValidRuleName(rule.name),
+    `Rule name is invalid "${rule.name}": ${message}`
+  )
 
   const exampleRuleNode: Root = {
     type: 'root',
@@ -86,6 +87,9 @@ export function parseRuleNode({
     h3Nodes.length <= 2,
     `Rule must not contain more than 2 H3 markdown nodes: ${rule.name} (${filePath})`
   )
+
+  let numPositiveSections = 0
+  let numNegativeSections = 0
 
   for (let i = 0; i < h3Nodes.length; ++i) {
     const h3Node = h3Nodes[i]!
@@ -105,6 +109,12 @@ export function parseRuleNode({
     const codeBlockNodes = sectionNodes.filter(
       (node) => node.type === 'code'
     ) as Code[]
+
+    if (isPositive) {
+      numPositiveSections++
+    } else if (isNegative) {
+      numNegativeSections++
+    }
 
     // console.log(
     //   'sectionNode',
@@ -131,6 +141,16 @@ export function parseRuleNode({
       }
     }
   }
+
+  assert(
+    numPositiveSections <= 1,
+    `Rule must not contain more than 1 positive examples section: ${rule.name} (${filePath})`
+  )
+
+  assert(
+    numNegativeSections <= 1,
+    `Rule must not contain more than 1 negative examples section: ${rule.name} (${filePath})`
+  )
 
   // console.log(
   //   'bodyRuleNode',
@@ -183,7 +203,8 @@ export function parseRuleTableNode({
     'level',
     'fixable',
     'tags',
-    'languages'
+    'languages',
+    'eslint'
   ])
 
   for (const bodyRow of bodyRows) {
@@ -224,6 +245,8 @@ export function parseRuleTableNode({
       rule.tags = value.split(',').map((v) => v.trim())
     } else if (key === 'languages') {
       rule.languages = value.split(',').map((v) => v.trim())
+    } else if (key === 'eslint') {
+      rule.eslint = value.split(',').map((v) => v.trim())
     } else {
       assert(
         false,

@@ -43,3 +43,15 @@ export function pruneUndefined<T extends Record<string, any>>(
     Object.entries(obj).filter(([, value]) => value !== undefined)
   ) as NonNullable<T>
 }
+
+export function isValidRuleName(name: string): boolean {
+  if (!name) return false
+
+  const parts = name.split('/')
+  if (parts.length === 2) {
+    if (!/^@[a-zA-Z][a-zA-Z0-9-_]*$/i.test(parts[0]!)) return false
+    if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/i.test(parts[1]!)) return false
+  } else if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/i.test(name)) return false
+
+  return true
+}

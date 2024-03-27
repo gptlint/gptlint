@@ -1,13 +1,14 @@
 # Prefer page queries
 
-This rule provides suggestions
+| Key       | Value                  |
+| --------- | ---------------------- |
+| Name      | `prefer-page-queries`  |
+| Level     | error                  |
+| Fixable   | false                  |
+| Tags      | graphql                |
+| Languages | javascript, typescript |
 
-- Category: Code best practices
-- Rule name: `@pmd_eslint/prefer-page-queries`
-- Requires GraphQL Schema: `false`
-- Requires GraphQL Operations: `false`
-
-Warn on usage of the /utils/api.ts file in favor of creating a page query in the /utils/pageQueries folder
+Warn on usage of the `/utils/api.ts` file in favor of creating a page query in the /`utils/pageQueries` folder.
 
 ## Usage Examples
 
@@ -56,7 +57,6 @@ export const get<queryName>PageData = async (
     return null;
   }
 };
-
 ```
 
 `/utils/pageQueries/<queryName>/<queryName>.tsx`

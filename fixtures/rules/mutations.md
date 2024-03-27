@@ -1,13 +1,15 @@
 # Mutation Inputs
 
-This rule provides suggestions
+| Key       | Value                                 |
+| --------- | ------------------------------------- |
+| Name      | mutation-types                        |
+| Level     | error                                 |
+| Fixable   | false                                 |
+| Tags      | graphql                               |
+| Languages | javascript, typescript                |
+| Eslint    | `@ux-l_graphql-eslint/mutation-types` |
 
-- Category: Schema & Operations
-- Rule name: `@ux-l_graphql-eslint/mutation-types`
-- Requires GraphQL Schema: `false`
-- Requires GraphQL Operations: `false`
-
-Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types
+Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
 
 ## Usage Examples
 

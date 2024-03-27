@@ -54,6 +54,9 @@ Flags:
 - rules
   - something which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
+- validate rule name
+  - slug or @scope/slug
+- `prefer-page-queries.md` code examples give extra context outside of the code blocks
 
 ## License
 

@@ -1,14 +1,14 @@
 # Use Strapi Environment Variables
 
-This rule provides suggestions
+| Key       | Value                  |
+| --------- | ---------------------- |
+| Name      | `strapi-env-vars`      |
+| Level     | error                  |
+| Fixable   | true                   |
+| Tags      | code smells            |
+| Languages | javascript, typescript |
 
-- Category: Code Smells
-- Rule name: `@pmd/strapi-env-vars`
-- Requires GraphQL Schema: `false`
-- Requires GraphQL Operations: `false`
-- Fixable: true
-
-Suggest & Fix usage of process.env variables in favor of Strapi environment variables
+Avoid accessing `process.env` variables in favor of Strapi environment variables.
 
 ## Usage Examples
 

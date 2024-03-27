@@ -17,6 +17,7 @@ export type Rule = {
   level?: LintRuleLevel
   languages?: string[]
   tags?: string[]
+  eslint?: string[]
   source?: string
 }
 
