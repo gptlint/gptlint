@@ -26,13 +26,13 @@ export async function resolveLinterCLIConfig(
           type: [String],
           description:
             'Glob pattern to guideline markdown files containing rule definitions',
-          alias: 'g',
-          default: ['guidelines.md']
+          alias: 'g'
         },
-        rule: {
+        rules: {
           type: [String],
           description: 'Glob pattern to rule definition markdown files.',
-          alias: 'r'
+          alias: 'r',
+          default: ['guidelines/**/*.md']
         },
         ignoreFile: {
           type: String,
@@ -78,10 +78,10 @@ export async function resolveLinterCLIConfig(
           description: 'Enables verbose LLM logging',
           alias: 'D'
         },
-        debugStats: {
+        noDebugStats: {
           type: Boolean,
           description:
-            'Enables logging of cumulative LLM stats at the end, including total tokens and cost',
+            'Disables logging of cumulative LLM stats, including total tokens and cost (logging LLM stats is enabled by default)',
           alias: 'S'
         },
         earlyExit: {
@@ -125,14 +125,17 @@ export async function resolveLinterCLIConfig(
     files,
     ignores,
     guidelineFiles: args.flags.guidelines,
-    ruleFiles: args.flags.rule,
+    ruleFiles: args.flags.rules,
     linterOptions: {
       noInlineConfig: args.flags.noInlineConfig,
       earlyExit: args.flags.earlyExit,
       debug: args.flags.debug,
       debugConfig: args.flags.debugConfig,
       debugModel: args.flags.debugModel,
-      debugStats: args.flags.debugStats,
+      debugStats:
+        args.flags.noDebugStats === undefined
+          ? undefined
+          : !args.flags.noDebugStats,
       noCache: args.flags.noCache,
       cacheDir:
         args.flags.cacheDir === defaultLinterConfig.linterOptions.cacheDir
