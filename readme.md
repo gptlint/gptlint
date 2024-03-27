@@ -57,6 +57,7 @@ Flags:
 - validate rule name
   - slug or @scope/slug
 - `prefer-page-queries.md` code examples give extra context outside of the code blocks
+- try claude w/ structured output and prefilled output JSON
 
 ## License
 

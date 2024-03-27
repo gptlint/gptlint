@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`parseGuidelinesFile - fixtures/guidelines/guidelines.md 1`] = `
+exports[`parseGuidelinesFile - fixtures/guidelines/ts-example-0.md 1`] = `
 [
   {
     "desc": "Identifiers of the same type should use consistent casing. This rule applies to all types of identifiers: variable names, class names, type names, function names, constants, etc.For example, if some variable names use camelCase, then all variable names should use camelCase. If some type names use PascalCase, then all type names should use PascalCase. If some constants use CONSTANT_CASE, then all constants should use constant case.",
@@ -33,7 +33,7 @@ function helloTwitter() {}",
         "language": "ts",
       },
     ],
-    "source": "fixtures/guidelines/guidelines.md",
+    "source": "fixtures/guidelines/ts-example-0.md",
     "tags": [
       "general",
     ],
@@ -88,7 +88,7 @@ function normalDist(mu = 0, sigma = 1) {
         "language": "ts",
       },
     ],
-    "source": "fixtures/guidelines/guidelines.md",
+    "source": "fixtures/guidelines/ts-example-0.md",
     "tags": [
       "general",
     ],
@@ -114,7 +114,7 @@ function normalDist(mu = 0, sigma = 1) {
         "language": "ts",
       },
     ],
-    "source": "fixtures/guidelines/guidelines.md",
+    "source": "fixtures/guidelines/ts-example-0.md",
     "tags": [
       "general",
     ],
@@ -143,7 +143,7 @@ const lastItem = items.at(-1)",
         "language": "ts",
       },
     ],
-    "source": "fixtures/guidelines/guidelines.md",
+    "source": "fixtures/guidelines/ts-example-0.md",
     "tags": [
       "general",
     ],
@@ -174,7 +174,7 @@ export default function () {}",
         "language": "js",
       },
     ],
-    "source": "fixtures/guidelines/guidelines.md",
+    "source": "fixtures/guidelines/ts-example-0.md",
     "tags": [
       "general",
     ],
@@ -207,7 +207,7 @@ export default function () {}",
         "language": "tsx",
       },
     ],
-    "source": "fixtures/guidelines/guidelines.md",
+    "source": "fixtures/guidelines/ts-example-0.md",
     "tags": [
       "react",
     ],

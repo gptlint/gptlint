@@ -36,10 +36,16 @@ export async function lintFile({
 
   // TODO: add linter major version to cache key
   const cacheKey = {
-    file: omit(file, 'fileRelativePath', 'fileName'),
+    // Only keep the relative file path, content, and detected language
+    file: omit(file, 'filePath', 'fileName'),
+
+    // Remove rule fields which don't affect LLM logic
     rule: omit(rule, 'fixable', 'source', 'level'),
+
+    // Ensure the cache key depends on how the LLM is parameterized
     params: chatModel.getParams()
   }
+
   const cachedResult = await cache.get(cacheKey)
   if (cachedResult) {
     lintResult.lintErrors = cachedResult.lintErrors
