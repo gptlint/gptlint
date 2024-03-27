@@ -17,6 +17,7 @@ export type Rule = {
   level?: LintRuleLevel
   languages?: string[]
   tags?: string[]
+  source?: string
 }
 
 export type RuleExample = {

@@ -24,12 +24,10 @@ async function main() {
     { cwd }
   )
 
-  const guidelineFilePaths = (
-    await globby(config.guidelineFiles, {
-      gitignore: true,
-      cwd
-    })
-  ).map((filePath) => path.join(cwd, filePath))
+  const guidelineFilePaths = await globby(config.guidelineFiles, {
+    gitignore: true,
+    cwd
+  })
 
   const ruleFilePaths = (
     await globby(config.ruleFiles, {
@@ -53,11 +51,16 @@ async function main() {
           }
           processedGuidelineFilePaths.add(guidelineFilePath)
 
+          const guidelineFilePathAbsolute = path.join(cwd, guidelineFilePath)
           const guidelineFileContent = await fs.readFile(
-            guidelineFilePath,
+            guidelineFilePathAbsolute,
             'utf-8'
           )
-          const rules = await parseGuidelinesFile(guidelineFileContent)
+
+          const rules = await parseGuidelinesFile({
+            content: guidelineFileContent,
+            filePath: guidelineFilePath
+          })
 
           // console.log(JSON.stringify(rules, null, 2))
           return rules
@@ -96,8 +99,15 @@ async function main() {
               )
             }
 
-            const ruleFileContent = await fs.readFile(ruleFilePath, 'utf-8')
-            const rule = await parseRuleFile(ruleFileContent)
+            const ruleFilePathAbsolute = path.join(cwd, ruleFilePath)
+            const ruleFileContent = await fs.readFile(
+              ruleFilePathAbsolute,
+              'utf-8'
+            )
+            const rule = await parseRuleFile({
+              content: ruleFileContent,
+              filePath: ruleFilePath
+            })
 
             return rule
           } catch (err: any) {

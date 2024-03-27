@@ -15,10 +15,15 @@ export function parseMarkdownAST(content: string) {
 
 export const inspectNode = inspectColor
 
-export function parseRuleNode(
-  headingRuleNode: Node,
+export function parseRuleNode({
+  headingRuleNode,
+  bodyRuleNodes,
+  filePath
+}: {
+  headingRuleNode: Node
   bodyRuleNodes: Node[]
-): types.Rule {
+  filePath: string
+}): types.Rule {
   const tableRuleNodes = bodyRuleNodes.filter(
     (ruleNode) => ruleNode.type === 'table'
   ) as Table[]
@@ -54,17 +59,18 @@ export function parseRuleNode(
     message,
     desc,
     positiveExamples: [],
-    negativeExamples: []
+    negativeExamples: [],
+    source: filePath
   }
 
   assert(
     tableRuleNodes.length <= 1,
-    `Rule must not contain more than 1 markdown table: ${message}`
+    `Rule must not contain more than 1 markdown table: ${message} (${filePath})`
   )
 
   if (tableRuleNodes.length === 1) {
     const tableNode = tableRuleNodes[0]!
-    parseRuleTableNode(tableNode, rule)
+    parseRuleTableNode({ tableNode, rule, filePath })
   }
 
   const exampleRuleNode: Root = {
@@ -78,7 +84,7 @@ export function parseRuleNode(
 
   assert(
     h3Nodes.length <= 2,
-    `Rule must not contain more than 2 H3 markdown nodes: ${rule.name}`
+    `Rule must not contain more than 2 H3 markdown nodes: ${rule.name} (${filePath})`
   )
 
   for (let i = 0; i < h3Nodes.length; ++i) {
@@ -93,7 +99,7 @@ export function parseRuleNode(
 
     assert(
       isPositive || isNegative,
-      `Rule h3 header for examples section "${sectionLabel}" must include a known positive label (good, correct) or negative label (bad, incorrect): ${rule.name}`
+      `Rule h3 header for examples section "${sectionLabel}" must include a known positive label (good, correct) or negative label (bad, incorrect): ${rule.name} (${filePath})`
     )
 
     const codeBlockNodes = sectionNodes.filter(
@@ -139,29 +145,37 @@ export function parseRuleNode(
   return rule
 }
 
-export function parseRuleTableNode(tableNode: Table, rule: types.Rule) {
+export function parseRuleTableNode({
+  tableNode,
+  rule,
+  filePath
+}: {
+  tableNode: Table
+  rule: types.Rule
+  filePath: string
+}) {
   const headerRow = tableNode.children[0]
   const bodyRows = tableNode.children.slice(1)
 
   assert(
     headerRow?.type === 'tableRow',
-    `Rule contains invalid table: ${rule.message}`
+    `Rule contains invalid table: ${rule.message} (${filePath})`
   )
   assert(
     headerRow.children.length === 2,
-    `Rule contains invalid table (must have 2 columns): ${rule.message}`
+    `Rule contains invalid table (must have 2 columns): ${rule.message} (${filePath})`
   )
   assert(
     toString(headerRow.children[0]).toLowerCase().trim() === 'key',
-    `Rule contains invalid table (first column must be "key"): ${rule.message}`
+    `Rule contains invalid table (first column must be "key"): ${rule.message} (${filePath})`
   )
   assert(
     toString(headerRow.children[1]).toLowerCase().trim() === 'value',
-    `Rule contains invalid table (first column must be "value"): ${rule.message}`
+    `Rule contains invalid table (first column must be "value"): ${rule.message} (${filePath})`
   )
   assert(
     bodyRows.length > 0,
-    `Rule contains invalid table (empty table body): ${rule.message}`
+    `Rule contains invalid table (empty table body): ${rule.message} (${filePath})`
   )
 
   const validRuleTableKeysL = new Set<string>([
@@ -175,34 +189,34 @@ export function parseRuleTableNode(tableNode: Table, rule: types.Rule) {
   for (const bodyRow of bodyRows) {
     assert(
       bodyRow.children.length === 2,
-      `Rule contains invalid table (body rows must have 2 columns): ${rule.message}`
+      `Rule contains invalid table (body rows must have 2 columns): ${rule.message} (${filePath})`
     )
 
     const key = toString(bodyRow.children[0]).toLowerCase().trim()
     assert(
       validRuleTableKeysL.has(key),
-      `Rule contains invalid table (unsupported key "${key}"): ${rule.message}`
+      `Rule contains invalid table (unsupported key "${key}"): ${rule.message} (${filePath})`
     )
 
     const value = toString(bodyRow.children[1]).toLowerCase().trim()
     if (key === 'name') {
       assert(
         value,
-        `Rule contains invalid table ("name" must not be empty): ${rule.message}`
+        `Rule contains invalid table ("name" must not be empty): ${rule.message} (${filePath})`
       )
 
       rule.name = value
     } else if (key === 'level') {
       assert(
         value === 'warn' || value === 'error' || value === 'off',
-        `Rule contains invalid table ("level" must be one of "warn" | "error" | "off"): ${rule.message}`
+        `Rule contains invalid table ("level" must be one of "warn" | "error" | "off"): ${rule.message} (${filePath})`
       )
 
       rule.level = value
     } else if (key === 'fixable') {
       assert(
         value === 'true' || value === 'false',
-        `Rule contains invalid table ("fixable" must be one of "true" | "false"): ${rule.message}`
+        `Rule contains invalid table ("fixable" must be one of "true" | "false"): ${rule.message} (${filePath})`
       )
 
       rule.fixable = value === 'true'
@@ -213,7 +227,7 @@ export function parseRuleTableNode(tableNode: Table, rule: types.Rule) {
     } else {
       assert(
         false,
-        `Rule contains invalid table (unsupported key "${key}"): ${rule.message}`
+        `Rule contains invalid table (unsupported key "${key}"): ${rule.message} (${filePath})`
       )
     }
   }

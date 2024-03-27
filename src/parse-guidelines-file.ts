@@ -7,34 +7,42 @@ import {
   parseMarkdownAST,
   parseRuleNode
 } from './markdown-utils.js'
+import { assert } from './utils.js'
 
-export async function parseGuidelinesFile(
+export async function parseGuidelinesFile({
+  content,
+  filePath
+}: {
   content: string
-): Promise<types.Rule[]> {
+  filePath: string
+}): Promise<types.Rule[]> {
   const ast = parseMarkdownAST(content)
-  const h2Rules: Heading[] = []
+  const h2RuleNodes: Heading[] = []
 
   visit(ast, (node) => {
     if (node.type !== 'heading' || node.depth !== 2) {
       return
     }
 
-    h2Rules.push(node)
+    h2RuleNodes.push(node)
   })
 
-  if (!h2Rules.length) {
-    throw new Error('Your guidelines file must include at least one rule.')
-  }
+  assert(
+    h2RuleNodes.length > 0,
+    `Guidelines file must contain at least one h2 header rule: ${filePath}`
+  )
 
   const rules: types.Rule[] = []
 
-  // console.log('h2Rules', JSON.stringify(h2Rules, null, 2))
+  for (let i = 0; i < h2RuleNodes.length; ++i) {
+    const headingRuleNode = h2RuleNodes[i]!
+    const bodyRuleNodes = findAllBetween(
+      ast,
+      headingRuleNode,
+      h2RuleNodes[i + 1]
+    )
 
-  for (let i = 0; i < h2Rules.length; ++i) {
-    const headingRuleNode = h2Rules[i]!
-    const bodyRuleNodes = findAllBetween(ast, headingRuleNode, h2Rules[i + 1])
-
-    const rule = parseRuleNode(headingRuleNode, bodyRuleNodes)
+    const rule = parseRuleNode({ headingRuleNode, bodyRuleNodes, filePath })
     rules.push(rule)
   }
 

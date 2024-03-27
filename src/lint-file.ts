@@ -37,7 +37,7 @@ export async function lintFile({
   // TODO: add linter major version to cache key
   const cacheKey = {
     file: omit(file, 'fileRelativePath', 'fileName'),
-    rule,
+    rule: omit(rule, 'fixable', 'source', 'level'),
     params: chatModel.getParams()
   }
   const cachedResult = await cache.get(cacheKey)
