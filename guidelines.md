@@ -5,7 +5,7 @@
   - [Use semantic variable names](#use-semantic-variable-names)
   - [Format comments like sentences](#format-comments-like-sentences)
   - [Prefer using Array.at when indexing from the end of an array](#prefer-using-arrayat-when-indexing-from-the-end-of-an-array)
-  - [Use ESM modules instead of CommonJS](#use-esm-modules-instead-of-commonjs)
+  - [Use ESM instead of CommonJS](#use-esm-instead-of-commonjs)
 - [React](#react)
   - [Don't use React class components](#dont-use-react-class-components)
 
@@ -27,7 +27,7 @@ For example, if some variable names use camelCase, then all variable names shoul
 
 ### Bad
 
-```ts (bad)
+```ts
 // This is bad because variable identifiers should use consistent casing.
 const fooBar = true
 const default_timeout = 5000
@@ -39,7 +39,7 @@ function hello_twitter() {}
 
 ### Good
 
-```ts (good)
+```ts
 const fooBar = true
 const defaultTimeout = 5000
 
@@ -116,11 +116,15 @@ function normalDist(mu = 0, sigma = 1) {
 
 Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.
 
-```ts (bad)
+### Bad
+
+```ts
 // quick comment
 ```
 
-```ts (good)
+### Good
+
+```ts
 // Quick comment.
 ```
 
@@ -136,27 +140,49 @@ Capitalize the first word unless it's a case-sensitive identifier. End it with a
 
 When accessing items in an array from the end, like the last item, prefer using `Array.at` with a negative index because it is less error-prone. Note that using `Array.at` with a positive index is equivalent to indexing into the array normally, and if `Array.at` references a non-existing index, it will return `undefined`.
 
-```ts (bad)
+### Bad
+
+```ts
 const items = [1, 2, 3, 4, 5, 6, 7]
 const lastItem = items[items.length - 1]
 ```
 
-```ts (good)
+### Good
+
+```ts
 const items = [1, 2, 3, 4, 5, 6, 7]
 const lastItem = items.at(-1)
 ```
 
-## Use ESM modules instead of CommonJS
+## Use ESM instead of CommonJS
 
 | Key       | Value                  |
 | --------- | ---------------------- |
-| Name      | use-esm-modules        |
+| Name      | use-esm                |
 | Level     | error                  |
 | Fixable   | false                  |
 | Tags      | general                |
 | Languages | javascript, typescript |
 
-TODO
+CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses `require` and `module.exports` and suffers from poor standardization and interoperability issues.
+
+ESM (ECMAScript Modules) is a modern standard which uses `import` and `export` statements. It is preferred for all JS/TS code going forwards.
+
+### Bad
+
+```js
+const path = require('path')
+
+module.exports = function () {}
+```
+
+### Good
+
+```js
+import path from 'path'
+
+export default function () {}
+```
 
 # React
 
@@ -172,7 +198,9 @@ TODO
 
 React class components are deprecated. Use React functions and hooks instead.
 
-```tsx (bad)
+### Bad
+
+```tsx
 class Label extends Component {
   render() {
     return <div>Hello</div>
@@ -180,7 +208,9 @@ class Label extends Component {
 }
 ```
 
-```tsx (good)
+### Good
+
+```tsx
 function Button() {
   return <div>Hello</div>
 }

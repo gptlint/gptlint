@@ -48,8 +48,12 @@ Flags:
   - add support for different LLM providers
   - add support for `fixable`
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
+  - handle context overflow properly depending on selected model
   - **evals**
 - update project name in multiple places once we decide on a name
+- rules
+  - something which captures naming w/ types and consistency
+  - if you refer to something as numIterations in one place, refer to it consistently
 
 ## License
 
