@@ -337,3 +337,231 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
   ],
 }
 `;
+
+exports[`parseRuleFile - guidelines/avoid-react-class-components.md 1`] = `
+{
+  "desc": "React class components are deprecated. Use React functions and hooks instead.",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Don't use React class components",
+  "name": "avoid-react-class-components",
+  "negativeExamples": [
+    {
+      "code": "class Label extends Component {
+  render() {
+    return <div>Hello</div>
+  }
+}",
+      "language": "tsx",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "function Button() {
+  return <div>Hello</div>
+}",
+      "language": "tsx",
+    },
+  ],
+  "source": "guidelines/avoid-react-class-components.md",
+  "tags": [
+    "react",
+  ],
+}
+`;
+
+exports[`parseRuleFile - guidelines/consistent-identifier-casing.md 1`] = `
+{
+  "desc": "Identifiers of the same type should use consistent casing. This rule applies to all types of identifiers: variable names, class names, type names, function names, constants, etc.For example, if some variable names use camelCase, then all variable names should use camelCase. If some type names use PascalCase, then all type names should use PascalCase. If some constants use CONSTANT_CASE, then all constants should use constant case.",
+  "fixable": false,
+  "languages": [
+    "all",
+  ],
+  "level": "error",
+  "message": "Be consistent with identifier casing",
+  "name": "consistent-identifier-casing",
+  "negativeExamples": [
+    {
+      "code": "// This is bad because variable identifiers should use consistent casing.
+const fooBar = true
+const default_timeout = 5000
+
+// This is bad because function identifiers should use consistent casing.
+function helloWorld() {}
+function hello_twitter() {}",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const fooBar = true
+const defaultTimeout = 5000
+
+function helloWorld() {}
+function helloTwitter() {}",
+      "language": "ts",
+    },
+  ],
+  "source": "guidelines/consistent-identifier-casing.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
+exports[`parseRuleFile - guidelines/format-comments-like-sentences.md 1`] = `
+{
+  "desc": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.",
+  "fixable": true,
+  "languages": [
+    "all",
+  ],
+  "level": "error",
+  "message": "Format comments like sentences",
+  "name": "format-comments-like-sentences",
+  "negativeExamples": [
+    {
+      "code": "// quick comment",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "// Quick comment.",
+      "language": "ts",
+    },
+  ],
+  "source": "guidelines/format-comments-like-sentences.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
+exports[`parseRuleFile - guidelines/prefer-array-at-negative-indexing.md 1`] = `
+{
+  "desc": "When accessing items in an array from the end, like the last item, prefer using Array.at with a negative index because it is less error-prone. Note that using Array.at with a positive index is equivalent to indexing into the array normally, and if Array.at references a non-existing index, it will return undefined.",
+  "fixable": true,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer using Array.at when indexing from the end of an array",
+  "name": "prefer-array-at-negative-indexing",
+  "negativeExamples": [
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const lastItem = items[items.length - 1]",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const lastItem = items.at(-1)",
+      "language": "ts",
+    },
+  ],
+  "source": "guidelines/prefer-array-at-negative-indexing.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
+exports[`parseRuleFile - guidelines/semantic-variable-names.md 1`] = `
+{
+  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.",
+  "fixable": false,
+  "languages": [
+    "all",
+  ],
+  "level": "error",
+  "message": "Use semantic variable names",
+  "name": "semantic-variable-names",
+  "negativeExamples": [
+    {
+      "code": "// Bad because "a" is not a descriptive variable name
+const a = 5
+
+// Bad because "b" is not a descriptive variable name
+const b = false",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "// Good because "numTokens" is descriptive
+const numTokens = 5
+
+// Good because "isFinished" is descriptive
+const isFinished = true",
+      "language": "ts",
+    },
+    {
+      "code": "// "i" is okay here because it is a simple for loop
+for (let i = 0; i < 10; i++) {}",
+      "language": "ts",
+    },
+    {
+      "code": "// "x", "y", and "r" are all okay here because they represent real, mathematical
+// concepts, and concise variable names are often preferred in math-heavy code.
+function normalDist(mu = 0, sigma = 1) {
+  let x: number, y: number, r: number
+
+  do {
+    x = Math.random() * 2 - 1
+    y = Math.random() * 2 - 1
+    r = x * x + y * y
+  } while (!r || r > 1)
+
+  return mu + sigma * y * Math.sqrt((-2 * Math.log(r)) / r)
+}",
+      "language": "ts",
+    },
+  ],
+  "source": "guidelines/semantic-variable-names.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
+exports[`parseRuleFile - guidelines/use-esm.md 1`] = `
+{
+  "desc": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses require and module.exports and suffers from poor standardization and interoperability issues.ESM (ECMAScript Modules) is a modern standard which uses import and export statements. It is preferred for all JS/TS code going forwards.",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Use ESM instead of CommonJS",
+  "name": "use-esm",
+  "negativeExamples": [
+    {
+      "code": "const path = require('path')
+
+module.exports = function () {}",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "import path from 'path'
+
+export default function () {}",
+      "language": "js",
+    },
+  ],
+  "source": "guidelines/use-esm.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
