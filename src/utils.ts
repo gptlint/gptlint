@@ -46,6 +46,7 @@ export function pruneUndefined<T extends Record<string, any>>(
 
 export function isValidRuleName(name: string): boolean {
   if (!name) return false
+  if (name.toLowerCase() !== name) return false
 
   const parts = name.split('/')
   if (parts.length === 2) {

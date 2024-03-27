@@ -33,6 +33,7 @@ export async function parseGuidelinesFile({
   )
 
   const rules: types.Rule[] = []
+  const ruleNames = new Set<string>()
 
   for (let i = 0; i < h2RuleNodes.length; ++i) {
     const headingRuleNode = h2RuleNodes[i]!
@@ -43,6 +44,13 @@ export async function parseGuidelinesFile({
     )
 
     const rule = parseRuleNode({ headingRuleNode, bodyRuleNodes, filePath })
+
+    assert(
+      !ruleNames.has(rule.name),
+      `Guidelines file has duplicate rule "${rule.name}": ${filePath}`
+    )
+
+    ruleNames.add(rule.name)
     rules.push(rule)
   }
 
