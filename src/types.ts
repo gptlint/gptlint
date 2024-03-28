@@ -1,15 +1,17 @@
 /* eslint-disable no-use-before-define */
 import type {
+  LLMOptions,
   LinterConfig,
-  LinterConfigOptions,
   LinterConfigRuleSetting,
+  LinterOptions,
   ResolvedLinterConfig
 } from './config.js'
 
 export type {
   LinterConfig,
-  LinterConfigOptions,
   LinterConfigRuleSetting,
+  LinterOptions,
+  LLMOptions,
   ResolvedLinterConfig
 }
 

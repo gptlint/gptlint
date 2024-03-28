@@ -1,9 +1,9 @@
-import { ChatModel } from '@dexaai/dexter'
 import pMap from 'p-map'
 import pRetry from 'p-retry'
 
 import type * as types from './types.js'
 import { LinterCache } from './cache.js'
+import { createChatModel } from './create-chat-model.js'
 import { lintFile } from './lint-file.js'
 import { preLintFile } from './pre-lint-file.js'
 import { readFiles } from './read-files.js'
@@ -32,13 +32,7 @@ export async function lintFiles({
 
   const files = await readFiles(inputFiles, { concurrency })
 
-  const chatModel = new ChatModel({
-    params: {
-      model: config.linterOptions.model,
-      temperature: config.linterOptions.temperature
-    },
-    debug: config.linterOptions.debugModel
-  })
+  const chatModel = createChatModel(config)
 
   // TODO: Add support for different types of file <> rule mappings
   const lintTasks = rules.flatMap((rule) =>

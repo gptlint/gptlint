@@ -1,12 +1,13 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { ChatModel, Msg } from '@dexaai/dexter'
+import { Msg } from '@dexaai/dexter'
 import 'dotenv/config'
 import hashObject from 'hash-object'
 import pMap from 'p-map'
 
 import type * as types from '../src/types.js'
+import { createChatModel } from '../src/create-chat-model.js'
 import { formatSource } from '../src/formatter.js'
 import {
   findAllCodeBlockNodes,
@@ -29,7 +30,7 @@ async function main() {
     {
       cwd,
       linterConfigDefaults: {
-        linterOptions: {
+        llmOptions: {
           // Use GPT-4 as the default for generating eval code snippets
           model: 'gpt-4-turbo-preview'
         }
@@ -56,13 +57,7 @@ async function main() {
     process.exit(0)
   }
 
-  const chatModel = new ChatModel({
-    params: {
-      model: config.linterOptions.model,
-      temperature: config.linterOptions.temperature
-    },
-    debug: config.linterOptions.debugModel
-  })
+  const chatModel = createChatModel(config)
 
   const numExamples = 5
   const outputDir = path.join('fixtures', 'evals')

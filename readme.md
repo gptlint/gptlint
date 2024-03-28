@@ -89,10 +89,9 @@ Flags:
     - alternatively, just use directories and rule.md file format
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks
   - add support for including links to one or more URLs as resources explaining the rule in more depth
-  - need to decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
+  - decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
 - config
   - use eslint, ruff, and conformance as inspiration
-  - llm api base url
 - linter engine
   - **evals**
   - add integration tests against eval test suite
@@ -110,15 +109,17 @@ Flags:
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
     - possibly via optional regex patterns to enable / disable rules for files
-- update project name in multiple places once we decide on a name
+  - try claude w/ structured output and nudging it with prefilled / prefix output JSON
 - rules
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
   - react unnecessary effects for https://react.dev/learn/you-might-not-need-an-effect
-- try claude w/ structured output and nudging it with prefilled / prefix output JSON
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
-- publish to NPM
+- project
+  - update project name in multiple places once we decide on a name
+  - decide on OSS license
+  - publish to NPM
 
 ## License
 

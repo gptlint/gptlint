@@ -92,15 +92,33 @@ export async function resolveLinterCLIConfig(
           description: 'Exits after finding the first error',
           alias: 'e'
         },
+        apiKey: {
+          type: String,
+          description:
+            'API key for the OpenAI-compatible LLM API. Defaults to the value of the `OPENAI_API_KEY` environment variable.',
+          default: defaultLinterConfig.llmOptions.apiKey
+        },
+        apiOrganizationId: {
+          type: String,
+          description:
+            'An optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.',
+          default: defaultLinterConfig.llmOptions.apiOrganizationId
+        },
+        apiBaseUrl: {
+          type: String,
+          description:
+            'Base URL for the LLM API to use which must be compatible with the OpenAI chat completions API. Defaults to the OpenAI API',
+          default: defaultLinterConfig.llmOptions.apiBaseUrl
+        },
         model: {
           type: String,
           description: 'Which LLM to use for assessing rule conformance',
-          default: defaultLinterConfig.linterOptions.model
+          default: defaultLinterConfig.llmOptions.model
         },
         temperature: {
           type: Number,
           description: 'LLM temperature parameter',
-          default: defaultLinterConfig.linterOptions.temperature
+          default: defaultLinterConfig.llmOptions.temperature
         }
       }
     },
@@ -149,15 +167,30 @@ export async function resolveLinterCLIConfig(
       cacheDir:
         args.flags.cacheDir === defaultLinterConfig.linterOptions.cacheDir
           ? undefined
-          : args.flags.cacheDir,
+          : args.flags.cacheDir
+    },
+    llmOptions: {
       model:
-        args.flags.model === defaultLinterConfig.linterOptions.model
+        args.flags.model === defaultLinterConfig.llmOptions.model
           ? undefined
           : args.flags.model,
       temperature:
-        args.flags.temperature === defaultLinterConfig.linterOptions.temperature
+        args.flags.temperature === defaultLinterConfig.llmOptions.temperature
           ? undefined
-          : args.flags.temperature
+          : args.flags.temperature,
+      apiKey:
+        args.flags.apiKey === defaultLinterConfig.llmOptions.apiKey
+          ? undefined
+          : args.flags.apiKey,
+      apiOrganizationId:
+        args.flags.apiOrganizationId ===
+        defaultLinterConfig.llmOptions.apiOrganizationId
+          ? undefined
+          : args.flags.apiOrganizationId,
+      apiBaseUrl:
+        args.flags.apiBaseUrl === defaultLinterConfig.llmOptions.apiBaseUrl
+          ? undefined
+          : args.flags.apiBaseUrl
     }
   })
 

@@ -3,7 +3,7 @@ import type { MergeDeep, SetRequired, Simplify } from 'type-fest'
 import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
 import { z } from 'zod'
 
-import { dedupe, pruneUndefined } from './utils.js'
+import { dedupe, getEnv, pruneUndefined } from './utils.js'
 
 export const LinterConfigRuleSettingSchema = z.enum(['off', 'warn', 'error'])
 export type LinterConfigRuleSetting = z.infer<
@@ -14,7 +14,50 @@ export type LinterConfigRuleSetting = z.infer<
 export const defaultCacheDir =
   findCacheDirectory({ name: 'gptlint' }) ?? '.gptlint'
 
-export const LinterConfigOptionsSchema = z.object({
+export const LLMOptionsSchema = z.object({
+  model: z
+    .string()
+    .optional()
+    .describe('Which LLM to use for assessing rule conformance.'),
+
+  temperature: z
+    .number()
+    .min(0.0)
+    .max(2.0)
+    .optional()
+    .describe('LLM temperature parameter.'),
+
+  apiKey: z
+    .string()
+    .optional()
+    .describe(
+      'API key for the OpenAI-compatible LLM API. Defaults to the value of the `OPENAI_API_KEY` environment variable.'
+    ),
+
+  apiOrganizationId: z
+    .string()
+    .optional()
+    .describe(
+      'An optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.'
+    ),
+
+  apiBaseUrl: z
+    .string()
+    .optional()
+    .describe(
+      'Base URL for the OpemAI-compatible LLM API. Defaults to the OpenAI API `https://api.openai.com/v1`'
+    ),
+
+  kyOptions: z
+    .record(z.any())
+    .optional()
+    .describe(
+      'Additional options for customizing HTTP calls to the LLM API, such as custom `headers` to pass with every request. All options are passed to `ky` which is the HTTP `fetch` wrapper used under the hood.'
+    )
+})
+export type LLMOptions = z.infer<typeof LLMOptionsSchema>
+
+export const LinterOptionsSchema = z.object({
   noInlineConfig: z
     .boolean()
     .optional()
@@ -48,21 +91,9 @@ export const LinterConfigOptionsSchema = z.object({
   cacheDir: z
     .string()
     .optional()
-    .describe('A string path to the shared cache directory.'),
-
-  model: z
-    .string()
-    .optional()
-    .describe('Which LLM to use for assessing rule conformance.'),
-
-  temperature: z
-    .number()
-    .min(0.0)
-    .max(2.0)
-    .optional()
-    .describe('LLM temperature parameter.')
+    .describe('A string path to the shared cache directory.')
 })
-export type LinterConfigOptions = z.infer<typeof LinterConfigOptionsSchema>
+export type LinterOptions = z.infer<typeof LinterOptionsSchema>
 
 export const LinterConfigSchema = z.object({
   files: z
@@ -94,19 +125,25 @@ export const LinterConfigSchema = z.object({
     .optional()
     .describe('An object customizing the configured rules.'),
 
-  linterOptions: LinterConfigOptionsSchema.optional().describe(
+  linterOptions: LinterOptionsSchema.optional().describe(
     'An object containing settings related to the linting process.'
-  )
+  ),
+
+  llmOptions: LLMOptionsSchema.optional().describe('')
 })
 export type LinterConfig = z.infer<typeof LinterConfigSchema>
 
 export type ResolvedLinterConfig = Simplify<
-  Omit<SetRequired<LinterConfig, keyof LinterConfig>, 'linterOptions'> & {
-    linterOptions: SetRequired<LinterConfigOptions, keyof LinterConfigOptions>
+  Omit<
+    SetRequired<LinterConfig, keyof LinterConfig>,
+    'linterOptions' | 'llmOptions'
+  > & {
+    linterOptions: SetRequired<LinterOptions, keyof LinterOptions>
+    llmOptions: SetRequired<LLMOptions, 'model'>
   }
 >
 
-export const defaultLinterConfigOptions: Readonly<LinterConfigOptions> = {
+export const defaultLinterOptions: Readonly<LinterOptions> = {
   noInlineConfig: false,
   earlyExit: false,
   debug: false,
@@ -115,16 +152,22 @@ export const defaultLinterConfigOptions: Readonly<LinterConfigOptions> = {
   debugStats: true,
   disabled: false,
   noCache: false,
-  cacheDir: defaultCacheDir,
+  cacheDir: defaultCacheDir
+}
+
+export const defaultLLMOptions: Readonly<LLMOptions> = {
+  apiKey: getEnv('OPENAI_API_KEY'),
+  apiBaseUrl: 'https://api.openai.com/v1',
   // model: 'gpt-4-turbo-preview',
   model: 'gpt-3.5-turbo',
   temperature: 0
 }
 
 export const defaultLinterConfig: Readonly<
-  SetRequired<LinterConfig, 'linterOptions'>
+  SetRequired<LinterConfig, 'linterOptions' | 'llmOptions'>
 > = {
-  linterOptions: defaultLinterConfigOptions
+  linterOptions: defaultLinterOptions,
+  llmOptions: defaultLLMOptions
 }
 
 export function parseLinterConfig(config: Partial<LinterConfig>): LinterConfig {
@@ -151,6 +194,13 @@ export function mergeLinterConfigs<
         ? {
             ...pruneUndefined(configA.linterOptions ?? {}),
             ...pruneUndefined(configB.linterOptions ?? {})
+          }
+        : undefined,
+    llmOptions:
+      configA.llmOptions || configB.llmOptions
+        ? {
+            ...pruneUndefined(configA.llmOptions ?? {}),
+            ...pruneUndefined(configB.llmOptions ?? {})
           }
         : undefined
   } as SimplifyDeep<MergeDeep<ConfigTypeA, ConfigTypeB>>
