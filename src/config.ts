@@ -10,7 +10,7 @@ export type LinterConfigRuleSetting = z.infer<
   typeof LinterConfigRuleSettingSchema
 >
 
-// TODO: update when we decide project name
+// TODO: update when we decide on a project name
 export const defaultCacheDir =
   findCacheDirectory({ name: 'gptlint' }) ?? '.gptlint'
 
@@ -38,7 +38,7 @@ export const LLMOptionsSchema = z.object({
     .string()
     .optional()
     .describe(
-      'An optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.'
+      'Optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.'
     ),
 
   apiBaseUrl: z

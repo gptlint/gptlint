@@ -101,7 +101,7 @@ export async function resolveLinterCLIConfig(
         apiOrganizationId: {
           type: String,
           description:
-            'An optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.',
+            'Optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.',
           default: defaultLinterConfig.llmOptions.apiOrganizationId
         },
         apiBaseUrl: {
