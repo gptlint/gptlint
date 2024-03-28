@@ -338,6 +338,26 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
 }
 `;
 
+exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = `
+{
+  "desc": "State which is simple to derive should be re-derived when necessary instead of storing it in state or props.TODO",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer derived state in React",
+  "name": "react-prefer-derived-state",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "source": "fixtures/rules/wip/react-prefer-derived-state.md",
+  "tags": [
+    "react",
+  ],
+}
+`;
+
 exports[`parseRuleFile - guidelines/avoid-react-class-components.md 1`] = `
 {
   "desc": "React class components are deprecated. Use React functions and hooks instead.",
@@ -348,7 +368,7 @@ exports[`parseRuleFile - guidelines/avoid-react-class-components.md 1`] = `
   ],
   "level": "error",
   "message": "Don't use React class components",
-  "name": "avoid-react-class-components",
+  "name": "react-avoid-class-components",
   "negativeExamples": [
     {
       "code": "class Label extends Component {
@@ -468,6 +488,26 @@ const lastItem = items.at(-1)",
     },
   ],
   "source": "guidelines/prefer-array-at-negative-indexing.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
+exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
+{
+  "desc": "The NPM package axios should be avoided in favor of native fetch. Now that native fetch has widespread support, axios is effectively deprecated and is generally a code smell when encountered.Convenience wrappers around fetch such as ky and ofetch are encouraged.",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer fetch over axios",
+  "name": "prefer-fetch-over-axios",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "source": "guidelines/prefer-fetch-over-axios.md",
   "tags": [
     "general",
   ],

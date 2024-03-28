@@ -1,6 +1,6 @@
 # GPTLint
 
-> A fundamentally new approach to code health and stability. Uses LLMs to enforce best practices that are impossible to capture with traditional, AST-based static analysis tools like `eslint`.
+> A fundamentally new approach to code health and stability. Use LLMs to enforce best practices across your codebase that are impossible to capture with traditional static analysis tools like `eslint`.
 
 ## Features
 
@@ -31,13 +31,13 @@
 ## Caveats
 
 - this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (errors which shouldn't have been reported) and **false negatives** (real errors that the tool missed)
-  - **all built-in rules are extensively tested** with eval sets to ensure that the reporting accuracy is as trustworthy as possible
-  - keep in mind that even expert human developers are very unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy** at a fraction of the cost and speed
+  - **all built-in rules are extensively tested** with eval sets to ensure that the tool is as accurate as possible out-of-the-box
+  - keep in mind that even expert human developers are very unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy at a fraction of the cost and speed**
 - **LLM costs can add up quickly**
   - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
   - depending on the LLM you're using and the size of your codebase `N`, this can quickly get expensive
-  - for instance, using `gpt-3.5-turbo` running `gptlint` on this small repository with caching disabled (`N=22` files, `M=8` rules) takes ~70s and costs ~$0.31 cents USD
-  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this small repository with caching disabled (`N=22` files, `M=8` rules) takes ~64s and costs ~$2.38 USD
+  - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (`N=22` files, `M=8` rules) takes ~70s and costs ~$0.31 cents USD
+  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (`N=22` files, `M=8` rules) takes ~64s and costs ~$2.38 USD
   - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
 
 ## How it works
