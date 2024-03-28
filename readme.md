@@ -30,8 +30,8 @@
 
 ## Caveats
 
-- this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (errors which shouldn't have been reported) and **false negatives** (real errors that the tool missed)
-  - **all built-in rules are extensively tested** with eval sets to ensure that the tool is as accurate as possible out-of-the-box
+- this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed)
+  - **all built-in rules are extensively tested** with eval sets to ensure that the default linter is as accurate as possible
   - keep in mind that even expert human developers are very unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy at a fraction of the cost and speed**
 - **LLM costs can add up quickly**
   - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
@@ -48,6 +48,10 @@
 
 TODO
 
+## Usage
+
+TODO
+
 ## CLI
 
 ```bash
@@ -56,7 +60,7 @@ Usage:
 
 Flags:
       --cache-dir <string>             Customize the path to the cache directory (default:
-                                       "node_modules/.cache/eslint-plus-plus")
+                                       "node_modules/.cache/gptlint")
   -c, --config <string>                Path to a configuration file
   -d, --debug                          Enables debug logging
       --debug-config                   When enabled, logs the resolved config and parsed rules and then exits
@@ -66,7 +70,7 @@ Flags:
   -g, --guidelines <string>            Glob pattern to guideline markdown files containing rule definitions (default:
                                        ["guidelines.md"])
   -h, --help                           Show help
-      --ignore-file <string>           Path to file containing ignore patterns (default: ".eslint-plus-plus-ignore")
+      --ignore-file <string>           Path to file containing ignore patterns (default: ".gptlintignore")
       --ignore-pattern <string>        Pattern of files to ignore
       --model <string>                 Which LLM to use for assessing rule conformance (default: "gpt-4-turbo-preview")
       --temperature <number>           LLM temperature parameter
