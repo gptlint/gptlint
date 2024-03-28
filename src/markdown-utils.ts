@@ -18,7 +18,7 @@ export function parseMarkdownAST(content: string) {
   return unified().use(remarkParse).use(remarkGfm).parse(content)
 }
 
-export const inspectNode = inspectColor
+export { inspectColor as inspectNode }
 
 export function parseRuleNode({
   headingRuleNode,
@@ -129,7 +129,7 @@ export function parseRuleNode({
     //     isNegative,
     //     numCodeBlockNodes: codeBlockNodes.length
     //   },
-    //   inspectNode(
+    //   inspectColor(
     //     { type: 'root', children: sectionNodes },
     //     { showPositions: false }
     //   )
@@ -326,4 +326,8 @@ export function findAllBetween(
 
     return index
   }
+}
+
+export function findAllCodeBlockNodes(tree: Root) {
+  return tree.children.filter((node) => node.type === 'code') as Code[]
 }

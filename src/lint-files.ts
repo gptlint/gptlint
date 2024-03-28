@@ -56,6 +56,8 @@ export async function lintFiles({
   }
   let earlyExitTripped = false
 
+  // Preprocess the file / rule tasks so our progress bar has a clear indication of
+  // how many non-cached tasks need to be handled
   const preLintResults = await pMap(
     lintTasks,
     async ({ file, rule }) => {
@@ -97,6 +99,8 @@ export async function lintFiles({
     )
   }
 
+  // Loop over each non-cached file / rule task and lint then with the LLM
+  // linting engine and a capped max concurrency
   await pMap(
     resolvedlintTasks,
     async ({ file, rule, cacheKey, config }, index) => {

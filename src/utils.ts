@@ -97,3 +97,75 @@ export function mergeLintResults(
     totalCost: lintResultA.totalCost + lintResultB.totalCost
   }
 }
+
+const knownSupportedCodeFileExtensions = new Set([
+  'js',
+  'ts',
+  'mjs',
+  'cjs',
+  'jsx',
+  'tsx',
+  'py',
+  'r',
+  'rb',
+  'html',
+  'md',
+  'c',
+  'cpp',
+  'cs',
+  'h',
+  'go',
+  'java',
+  'lisp',
+  'lua',
+  'css',
+  'scss',
+  'swift',
+  'svg',
+  'tcl',
+  'txt',
+  'csv',
+  'tsv',
+  'yaml',
+  'json',
+  'elm',
+  'sh',
+  'bash',
+  'fish',
+  'd',
+  'dart'
+])
+
+const knownCodeFileMappings: Record<string, string> = {
+  javascript: 'js',
+  typescript: 'ts',
+  python: 'py'
+}
+
+export function inferBestPossibleCodeFileExtension(
+  lang?: string | null,
+  { fallbacks }: { fallbacks?: string[] } = {}
+): string | undefined {
+  function handleFallbacks() {
+    if (fallbacks) {
+      for (const fallback of fallbacks) {
+        const alias = inferBestPossibleCodeFileExtension(fallback)
+        if (alias) return alias
+      }
+    }
+
+    // Fallback to no file extension
+    return undefined
+  }
+
+  lang = lang?.trim().toLowerCase()
+
+  if (!lang) return handleFallbacks()
+
+  if (knownSupportedCodeFileExtensions.has(lang)) return lang
+
+  const alias = knownCodeFileMappings[lang]
+  if (alias) return alias
+
+  return handleFallbacks()
+}

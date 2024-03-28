@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 import type * as types from './types.js'
 import type { LinterCache } from './cache.js'
+import { stringifyRuleForModel } from './rule-utils.js'
 import { trimMessage } from './utils.js'
 
 export async function lintFile({
@@ -87,24 +88,7 @@ export async function lintFile({
       Msg.system(`You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure code conforms to project-specific guidelines and best practices. You will be given a code rule with a description of the rule's intent and one or more positive and negative code snippet examples.
     
 Your task is to take the given code and determine whether any portions of it violate the rule's intent. Accuracy is important, so be sure to think step-by-step before invoking the "record_rule_failure" function and include a "confidence" value so it's clear how confident you when detecting possible errors.`),
-
-      Msg.system(`# Rule name "${rule.name}"
-
-${rule.message}
-
-${rule.desc}
-
-${rule.negativeExamples?.length ? '## Incorrect Examples\n' : ''}
-${rule.negativeExamples?.map(
-  (example) => `\`\`\`${example.language}\n${example.code}\n\`\`\`\n\n`
-)}
-
-${rule.positiveExamples?.length ? '## Correct Examples\n' : ''}
-${rule.positiveExamples?.map(
-  (example) => `\`\`\`${example.language}\n${example.code}\n\`\`\`\n\n`
-)}
-`),
-
+      Msg.system(stringifyRuleForModel(rule)),
       Msg.user(`File: ${file.fileName}:`),
       Msg.user(file.content)
     ],

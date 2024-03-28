@@ -23,3 +23,18 @@ const lastItem = items[items.length - 1]
 const items = [1, 2, 3, 4, 5, 6, 7]
 const lastItem = items.at(-1)
 ```
+
+```ts
+const items = [1, 2, 3, 4, 5, 6, 7]
+
+// This example is fine because it uses a normal, positive index
+const firstItem = items[0]
+```
+
+```ts
+const items = [1, 2, 3, 4, 5, 6, 7]
+const index = 3
+
+// This example is fine because it uses a variable index
+const item = items[index]
+```
