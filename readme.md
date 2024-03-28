@@ -1,6 +1,6 @@
 # GPTLint
 
-> A fundamentally new approach to code health and stability. Use LLMs to enforce best practices across your codebase that are impossible to capture with traditional static analysis tools like `eslint`.
+> A fundamentally new approach to code health and stability. Use LLMs to enforce best practices across your codebase in a way that naturally extends the limitations of traditional static analysis tools like `eslint`.
 
 ## Features
 
