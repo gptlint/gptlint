@@ -5,20 +5,24 @@ import pRetry from 'p-retry'
 import type * as types from './types.js'
 import { LinterCache } from './cache.js'
 import { lintFile } from './lint-file.js'
+import { preLintFile } from './pre-lint-file.js'
 import { readFiles } from './read-files.js'
+import { mergeLintResults } from './utils.js'
 
 export async function lintFiles({
   inputFiles,
   rules,
   config,
   concurrency = 16,
-  onProgress
+  onProgress,
+  onProgressInit
 }: {
   inputFiles: string[]
   rules: types.Rule[]
   config: types.ResolvedLinterConfig
   concurrency?: number
   onProgress?: types.ProgressHandlerFn
+  onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
   const cache = new LinterCache({
     cacheDir: config.linterOptions.cacheDir,
@@ -41,7 +45,7 @@ export async function lintFiles({
     files.map((file) => ({ file, rule }))
   )
 
-  const lintResult: types.LintResult = {
+  let lintResult: types.LintResult = {
     lintErrors: [],
     numModelCalls: 0,
     numModelCallsCached: 0,
@@ -52,48 +56,90 @@ export async function lintFiles({
   }
   let earlyExitTripped = false
 
-  await pMap(
+  const preLintResults = await pMap(
     lintTasks,
-    async ({ file, rule }, index) => {
+    async ({ file, rule }) => {
       try {
-        if (earlyExitTripped) {
-          return []
+        const preLintResult = await preLintFile({
+          file,
+          rule,
+          chatModel,
+          cache,
+          config
+        })
+
+        if (preLintResult.lintResult) {
+          lintResult = mergeLintResults(lintResult, preLintResult.lintResult)
         }
 
+        return preLintResult
+      } catch (err: any) {
+        throw new Error(
+          `Error: rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`,
+          { cause: err }
+        )
+      }
+    },
+    {
+      concurrency
+    }
+  )
+
+  const resolvedlintTasks = preLintResults.filter((r) => !r.lintResult)
+
+  if (config.linterOptions.earlyExit && lintResult.lintErrors.length) {
+    earlyExitTripped = true
+  }
+
+  if (onProgressInit) {
+    await Promise.resolve(
+      onProgressInit({ numTasks: resolvedlintTasks.length })
+    )
+  }
+
+  await pMap(
+    resolvedlintTasks,
+    async ({ file, rule, cacheKey, config }, index) => {
+      if (earlyExitTripped) {
+        return
+      }
+
+      try {
         const lintResultFile = await pRetry(
-          () => lintFile({ file, rule, chatModel, cache, config }),
+          () =>
+            lintFile({
+              file,
+              rule,
+              chatModel,
+              cache,
+              cacheKey,
+              config
+            }),
           {
             retries: 2
           }
         )
 
-        lintResult.lintErrors = lintResult.lintErrors.concat(
-          lintResultFile.lintErrors
-        )
-        lintResult.numModelCalls += lintResultFile.numModelCalls
-        lintResult.numModelCallsCached += lintResultFile.numModelCallsCached
-        lintResult.numPromptTokens += lintResultFile.numPromptTokens
-        lintResult.numCompletionTokens += lintResultFile.numCompletionTokens
-        lintResult.numTotalTokens += lintResultFile.numTotalTokens
-        lintResult.totalCost += lintResultFile.totalCost
+        lintResult = mergeLintResults(lintResult, lintResultFile)
 
-        if (lintResult.lintErrors.length && config.linterOptions.earlyExit) {
+        if (config.linterOptions.earlyExit && lintResult.lintErrors.length) {
           earlyExitTripped = true
         }
 
         if (onProgress) {
           await Promise.resolve(
             onProgress({
-              progress: index / lintTasks.length,
+              progress: index / resolvedlintTasks.length,
               message: `Rule "${rule.name}" file "${file.fileRelativePath}"`,
               result: lintResult
             })
           )
         }
       } catch (err: any) {
-        const message = `Error: rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`
-        console.error(message)
-        throw new Error(message, { cause: err })
+        throw new Error(
+          `Error: rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`,
+          { cause: err }
+        )
       }
     },
     {

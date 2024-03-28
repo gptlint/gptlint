@@ -4,7 +4,7 @@ import path from 'node:path'
 import 'dotenv/config'
 import { globby } from 'globby'
 import pMap from 'p-map'
-import Progress from 'ts-progress'
+import ProgressBar, { type Progress } from 'ts-progress'
 
 import type * as types from '../src/types.js'
 import { lintFiles } from '../src/lint-files.js'
@@ -165,18 +165,22 @@ async function main() {
     rules = rules.filter((rule) => config.rules[rule.name] !== 'off')
   }
 
-  const progressBar = config.linterOptions.debug
-    ? undefined
-    : Progress.create({
-        total: rules.length * inputFiles.length,
-        updateFrequency: 10
-      })
+  let progressBar: Progress | undefined
 
   const lintResult = await lintFiles({
     inputFiles,
     rules,
     config,
     concurrency,
+    onProgressInit: ({ numTasks }) => {
+      progressBar =
+        config.linterOptions.debug || numTasks <= 0
+          ? undefined
+          : ProgressBar.create({
+              total: numTasks,
+              updateFrequency: 10
+            })
+    },
     onProgress: () => {
       progressBar?.update()
     }

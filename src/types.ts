@@ -1,11 +1,17 @@
 /* eslint-disable no-use-before-define */
+import type {
+  LinterConfig,
+  LinterConfigOptions,
+  LinterConfigRuleSetting,
+  ResolvedLinterConfig
+} from './config.js'
 
 export type {
   LinterConfig,
   LinterConfigOptions,
   LinterConfigRuleSetting,
   ResolvedLinterConfig
-} from './config.js'
+}
 
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 export type LintRuleLevel = 'error' | 'warn' | 'off'
@@ -62,8 +68,20 @@ export type LintResult = {
   totalCost: number
 }
 
+export type PreLintResult = {
+  file: InputFile
+  rule: Rule
+  config: ResolvedLinterConfig
+  cacheKey: any
+  lintResult?: LintResult
+}
+
 export type ProgressHandlerFn = (opts: {
   progress: number
   message: string
   result: LintResult
+}) => void | Promise<void>
+
+export type ProgressHandlerInitFn = (opts: {
+  numTasks: number
 }) => void | Promise<void>

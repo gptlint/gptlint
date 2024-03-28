@@ -56,7 +56,6 @@ Flags:
 - try claude w/ structured output and nudging it with prefilled / prefix output JSON
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
-  - improve progress bar to only take into account non-cached tasks
 - publish to NPM
 
 ## License
