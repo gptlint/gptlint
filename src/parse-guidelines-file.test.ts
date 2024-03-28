@@ -9,7 +9,7 @@ const validGuidelinesFiles = globbySync('fixtures/guidelines/**/*.md', {
   gitignore: true
 })
 const invalidGuidelinesFiles = globbySync(
-  'fixtures/invalid guidelines/**/*.md',
+  'fixtures/invalid-guidelines/**/*.md',
   {
     gitignore: true
   }

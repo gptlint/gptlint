@@ -39,6 +39,10 @@
   - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (`N=22` files, `M=8` rules) takes ~70s and costs ~$0.31 cents USD
   - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (`N=22` files, `M=8` rules) takes ~64s and costs ~$2.38 USD
   - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
+- **rules in the MVP are single-file only**
+  - many architectural patterns fundamentally span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
+  - this restriction will likely be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting to optimize rules which explicitly don't need multi-file context
+  - if you'd like to use a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new)
 
 ## How it works
 
