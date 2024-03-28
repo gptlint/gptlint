@@ -2,7 +2,7 @@
 
 > A fundamentally new approach to code health and stability. Use LLMs to enforce best practices across your codebase in a way that takes traditional static analysis tools like `eslint` to the next level.
 
-You can think of `gptlint` like `eslint` but on steroids 💪
+**TL;DR** You can think of `gptlint` like `eslint` but on steroids 💪
 
 ## Features
 
