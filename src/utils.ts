@@ -67,3 +67,16 @@ export function isValidRuleSetting(
 
   return value === 'off' || value === 'warn' || value === 'error'
 }
+
+export function trimMessage(
+  message: string | undefined,
+  { maxLength = 80 }: { maxLength?: number } = {}
+): string {
+  if (!message) return ''
+
+  message = message.trim()
+  if (message.length < maxLength) return message
+  message = `${message.slice(0, maxLength - 3)}...`
+
+  return message
+}

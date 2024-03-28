@@ -6,7 +6,7 @@ import type * as types from './types.js'
 import type { LinterCache } from './cache.js'
 import { mergeLinterConfigs } from './config.js'
 import { parseInlineConfig } from './parse-inline-config.js'
-import { omit } from './utils.js'
+import { omit, trimMessage } from './utils.js'
 
 export async function lintFile({
   file,
@@ -87,12 +87,18 @@ export async function lintFile({
         await cache.set(cacheKey, lintResult)
         return lintResult
       } else {
+        // Inline config overrides for this file
         config = mergeLinterConfigs(
           config,
           configFileOverride
         ) as types.ResolvedLinterConfig
       }
     }
+  }
+
+  if (config.rules[rule.name] === 'off') {
+    // Inline config disabled this rule for this file
+    return lintResult
   }
 
   const recordRuleFailure = createAIFunction(
@@ -224,17 +230,4 @@ ${rule.positiveExamples?.map(
 
   await cache.set(cacheKey, lintResult)
   return lintResult
-}
-
-function trimMessage(
-  message: string | undefined,
-  { maxLength = 80 }: { maxLength?: number } = {}
-): string {
-  if (!message) return ''
-
-  message = message.trim()
-  if (message.length < maxLength) return message
-  message = `${message.slice(0, maxLength - 3)}...`
-
-  return message
 }
