@@ -4,7 +4,7 @@
 
 ## Features
 
-- rules are specified in markdown ([example](./guidelines/prefer-array-at-negative-indexing.md))
+- simple markdown format for specifying rules ([example](./guidelines/prefer-array-at-negative-indexing.md))
 - easy to add custom, project-specific rules ([example](./fixtures/guidelines/ts-example-0.md))
 - cli and config formats are ~~copied from~~ inspired by `eslint`
 - content-based caching
@@ -84,6 +84,7 @@ Flags:
     - alternatively, just use directories and rule.md file format
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks
   - add support for including links to one or more URLs as resources explaining the rule in more depth
+  - need to decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
 - config
   - use eslint, ruff, and conformance as inspiration
   - llm api base url

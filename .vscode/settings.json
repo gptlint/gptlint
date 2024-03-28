@@ -1,3 +1,9 @@
 {
-  "markdown.extension.toc.levels": "1..2"
+  "markdown.extension.toc.levels": "1..2",
+  "search.exclude": {
+    "fixtures/evals": true,
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true
+  }
 }
