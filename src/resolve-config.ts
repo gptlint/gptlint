@@ -11,7 +11,11 @@ import {
 
 export async function resolveLinterConfig(
   linterConfig: types.LinterConfig,
-  opts: { cwd: string; configFilePath?: string }
+  opts: {
+    cwd: string
+    configFilePath?: string
+    linterConfigDefaults?: types.LinterConfig
+  }
 ): Promise<types.ResolvedLinterConfig> {
   const configsToCheck = [
     opts.configFilePath,
@@ -42,6 +46,10 @@ export async function resolveLinterConfig(
 
     // Break after we find the first project config file
     break
+  }
+
+  if (opts.linterConfigDefaults) {
+    linterConfig = mergeLinterConfigs(opts.linterConfigDefaults, linterConfig)
   }
 
   linterConfig = mergeLinterConfigs(defaultLinterConfig, linterConfig)

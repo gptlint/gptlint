@@ -33,7 +33,7 @@ const firstItem = items[0]
 
 ```ts
 const items = [1, 2, 3, 4, 5, 6, 7]
-const index = 3
+const index = example()
 
 // This example is fine because it uses a variable index
 const item = items[index]

@@ -100,6 +100,9 @@ devDependencies:
   '@types/parse-gitignore':
     specifier: ^1.0.2
     version: 1.0.2
+  '@types/prettier':
+    specifier: '2'
+    version: 2.7.3
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
@@ -1040,6 +1043,10 @@ packages:
     resolution: {integrity: sha512-AQwj+lNTWI7y1kkMe8qLByiToXoXs/du70qGFIHJZaJUVrF5jB8QzvWmLyR1VWYqRagpY8ABrqAjs7uHsJnVBQ==}
     dependencies:
       '@types/node': 20.11.30
+    dev: true
+
+  /@types/prettier@2.7.3:
+    resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
     dev: true
 
   /@types/retry@0.12.2:

@@ -10,7 +10,10 @@ import { resolveLinterConfig } from './resolve-config.js'
 
 export async function resolveLinterCLIConfig(
   cliArgs: string[],
-  { cwd }: { cwd: string }
+  {
+    cwd,
+    linterConfigDefaults
+  }: { cwd: string; linterConfigDefaults?: types.LinterConfig }
 ) {
   const args = cli(
     {
@@ -156,7 +159,8 @@ export async function resolveLinterCLIConfig(
   // Resolve any file-based linter config and merge it with the CLI-based config
   linterConfig = await resolveLinterConfig(linterConfig, {
     cwd,
-    configFilePath: args.flags.config
+    configFilePath: args.flags.config,
+    linterConfigDefaults
   })
 
   return {
