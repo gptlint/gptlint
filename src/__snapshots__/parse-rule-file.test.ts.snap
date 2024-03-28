@@ -358,42 +358,6 @@ exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = 
 }
 `;
 
-exports[`parseRuleFile - guidelines/avoid-react-class-components.md 1`] = `
-{
-  "desc": "React class components are deprecated. Use React functions and hooks instead.",
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
-  "level": "error",
-  "message": "Don't use React class components",
-  "name": "react-avoid-class-components",
-  "negativeExamples": [
-    {
-      "code": "class Label extends Component {
-  render() {
-    return <div>Hello</div>
-  }
-}",
-      "language": "tsx",
-    },
-  ],
-  "positiveExamples": [
-    {
-      "code": "function Button() {
-  return <div>Hello</div>
-}",
-      "language": "tsx",
-    },
-  ],
-  "source": "guidelines/avoid-react-class-components.md",
-  "tags": [
-    "react",
-  ],
-}
-`;
-
 exports[`parseRuleFile - guidelines/consistent-identifier-casing.md 1`] = `
 {
   "desc": "Identifiers of the same type should use consistent casing. This rule applies to all types of identifiers: variable names, class names, type names, function names, constants, etc.For example, if some variable names use camelCase, then all variable names should use camelCase. If some type names use PascalCase, then all type names should use PascalCase. If some constants use CONSTANT_CASE, then all constants should use constant case.",
@@ -486,6 +450,21 @@ const lastItem = items[items.length - 1]",
 const lastItem = items.at(-1)",
       "language": "ts",
     },
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+
+// This example is fine because it uses a normal, positive index
+const firstItem = items[0]",
+      "language": "ts",
+    },
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const index = 3
+
+// This example is fine because it uses a variable index
+const item = items[index]",
+      "language": "ts",
+    },
   ],
   "source": "guidelines/prefer-array-at-negative-indexing.md",
   "tags": [
@@ -510,6 +489,42 @@ exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
   "source": "guidelines/prefer-fetch-over-axios.md",
   "tags": [
     "general",
+  ],
+}
+`;
+
+exports[`parseRuleFile - guidelines/react-avoid-class-components.md 1`] = `
+{
+  "desc": "React class components are deprecated. Use React functions and hooks instead.",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Don't use React class components",
+  "name": "react-avoid-class-components",
+  "negativeExamples": [
+    {
+      "code": "class Label extends Component {
+  render() {
+    return <div>Hello</div>
+  }
+}",
+      "language": "tsx",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "function Button() {
+  return <div>Hello</div>
+}",
+      "language": "tsx",
+    },
+  ],
+  "source": "guidelines/react-avoid-class-components.md",
+  "tags": [
+    "react",
   ],
 }
 `;
