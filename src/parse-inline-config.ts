@@ -1,6 +1,11 @@
 import type * as types from './types.js'
 import { assert, isValidRuleName, isValidRuleSetting } from './utils.js'
 
+/**
+ * Parse inline config directives.
+ *
+ * TODO: support non-C-style-block-comments (e.g., for python)
+ */
 export function parseInlineConfig({
   file
 }: {
@@ -8,8 +13,8 @@ export function parseInlineConfig({
 }): types.LinterConfig | undefined {
   const rules: types.LinterConfig['rules'] = {}
 
-  const inlineDisableRe = /\/\*+\s*eslint-disable\s*\*+\//gi
-  const inlineEnableRe = /\/\*+\s*eslint-enable\s*\*+\//gi
+  const inlineDisableRe = /\/\*+\s*gptlint-disable\s*\*+\//gi
+  const inlineEnableRe = /\/\*+\s*gptlint-enable\s*\*+\//gi
   let lastDisableIndex = -1
   let lastEnableIndex = -1
 
@@ -32,7 +37,7 @@ export function parseInlineConfig({
     }
   }
 
-  const inlineConfigRe = /\/\*+\s*eslint\s+([^*]+)\s*\*+\//gi
+  const inlineConfigRe = /\/\*+\s*gptlint\s+([^*]+)\s*\*+\//gi
   for (const match of file.content.matchAll(inlineConfigRe)) {
     const inlineConfig = match[1]?.trim()
     if (!inlineConfig) continue

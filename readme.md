@@ -1,10 +1,10 @@
-# ESLint++
+# GPTLint
 
 ## CLI
 
 ```bash
 Usage:
-  lint [flags...] [file/dir/glob ...]
+  gptlint [flags...] [file/dir/glob ...]
 
 Flags:
       --cache-dir <string>             Customize the path to the cache directory (default:
@@ -57,6 +57,7 @@ Flags:
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
   - improve progress bar to only take into account non-cached tasks
+- publish to NPM
 
 ## License
 

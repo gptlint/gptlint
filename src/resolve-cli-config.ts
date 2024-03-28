@@ -37,12 +37,12 @@ export async function resolveLinterCLIConfig(
         ignoreFile: {
           type: String,
           description: 'Path to file containing ignore patterns',
-          default: '.eslint-plus-plus-ignore'
+          default: '.gptlintignore'
         },
         ignorePattern: {
           type: [String],
-          // TODO: add  (in addition to those in .eslintignore) depending on what we call the project
-          description: 'Pattern of files to ignore'
+          description:
+            'Pattern of files to ignore (in addition to .gptlintignore)'
         },
         noIgnore: {
           type: Boolean,

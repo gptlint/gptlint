@@ -12,7 +12,7 @@ export type LinterConfigRuleSetting = z.infer<
 
 // TODO: update when we decide project name
 export const defaultCacheDir =
-  findCacheDirectory({ name: 'eslint-plus-plus' }) ?? '.eslint-plus-plus'
+  findCacheDirectory({ name: 'gptlint' }) ?? '.gptlint'
 
 export const LinterConfigOptionsSchema = z.object({
   noInlineConfig: z

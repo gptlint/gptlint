@@ -5,7 +5,7 @@ import { parseInlineConfig } from './parse-inline-config.js'
 test(`parseInlineConfig valid`, () => {
   expect(
     parseInlineConfig({
-      file: { fileRelativePath: 'test.ts', content: `/* eslint foo: off */` }
+      file: { fileRelativePath: 'test.ts', content: `/* gptlint foo: off */` }
     })
   ).toEqual({
     rules: {
@@ -17,7 +17,7 @@ test(`parseInlineConfig valid`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `\n\n/** eslint bar-baz: warn, @namespace/id : off **/\n\n`
+        content: `\n\n/** gptlint bar-baz: warn, @namespace/id : off **/\n\n`
       }
     })
   ).toEqual({
@@ -31,7 +31,7 @@ test(`parseInlineConfig valid`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `\n\n/** eslint bar-baz: warn, @namespace/id : off **/\n\n`
+        content: `\n\n/** gptlint bar-baz: warn, @namespace/id : off **/\n\n`
       }
     })
   ).toEqual({
@@ -45,7 +45,7 @@ test(`parseInlineConfig valid`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `/* eslint foo: off */\n/* bar: warn */`
+        content: `/* gptlint foo: off */\n/* bar: warn */`
       }
     })
   ).toEqual({
@@ -58,7 +58,7 @@ test(`parseInlineConfig valid`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `/* eslint foo: off */\n/* eslint bar: warn */`
+        content: `/* gptlint foo: off */\n/* gptlint bar: warn */`
       }
     })
   ).toEqual({
@@ -72,7 +72,7 @@ test(`parseInlineConfig valid`, () => {
 test(`parseInlineConfig disable`, () => {
   expect(
     parseInlineConfig({
-      file: { fileRelativePath: 'test.ts', content: `/* eslint-disable */` }
+      file: { fileRelativePath: 'test.ts', content: `/* gptlint-disable */` }
     })
   ).toEqual({
     linterOptions: {
@@ -84,7 +84,7 @@ test(`parseInlineConfig disable`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `/* eslint-disable */\n\n/**   eslint-enable  */`
+        content: `/* gptlint-disable */\n\n/**   gptlint-enable  */`
       }
     })
   ).toEqual(undefined)
@@ -93,7 +93,7 @@ test(`parseInlineConfig disable`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `/* eslint-disable */\n\n/* eslint-enable */\n\n/* eslint-disable */`
+        content: `/* gptlint-disable */\n\n/* gptlint-enable */\n\n/* gptlint-disable */`
       }
     })
   ).toEqual({
@@ -106,7 +106,7 @@ test(`parseInlineConfig disable`, () => {
 test(`parseInlineConfig invalid`, () => {
   expect(() =>
     parseInlineConfig({
-      file: { fileRelativePath: 'test.ts', content: `/* eslint foo */` }
+      file: { fileRelativePath: 'test.ts', content: `/* gptlint foo */` }
     })
   ).toThrow()
 
@@ -114,7 +114,7 @@ test(`parseInlineConfig invalid`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `/* eslint foo: unknown */`
+        content: `/* gptlint foo: unknown */`
       }
     })
   ).toThrow()
@@ -123,7 +123,7 @@ test(`parseInlineConfig invalid`, () => {
     parseInlineConfig({
       file: {
         fileRelativePath: 'test.ts',
-        content: `\n\n/* eslint foo: off */\n\n/** eslint bar: unknown   **/\n`
+        content: `\n\n/* gptlint foo: off */\n\n/** gptlint bar: unknown   **/\n`
       }
     })
   ).toThrow()

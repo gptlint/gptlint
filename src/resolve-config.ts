@@ -15,10 +15,9 @@ export async function resolveLinterConfig(
 ): Promise<types.ResolvedLinterConfig> {
   const configsToCheck = [
     opts.configFilePath,
-    // TODO: change "eslint" prefix to project name
-    'eslint.config.js',
-    'eslint.config.mjs',
-    'eslint.config.cjs'
+    'gptlint.config.js',
+    'gptlint.config.mjs',
+    'gptlint.config.cjs'
   ].filter(Boolean)
 
   for (const configFileRelativePath of configsToCheck) {
