@@ -4,29 +4,29 @@
 
 ## Features
 
-- really simple markdown format for specifying rules ([example rule file](./guidelines/prefer-array-at-negative-indexing.md))
-- it's easy to add custom, project-specific rules ([example guidelines file](./fixtures/guidelines/ts-example-0.md))
+- rules are specified in markdown ([example](./guidelines/prefer-array-at-negative-indexing.md))
+- easy to add custom, project-specific rules ([example](./fixtures/guidelines/ts-example-0.md))
 - cli and config formats are ~~copied from~~ inspired by `eslint`
 - content-based caching
 - outputs LLM stats per run (cost, tokens, etc)
 - community-driven rules
 - every rule is fully configurable, both at the project level (`gptlint.config.js`) and at the rule definition level (markdown)
   - don't agree with a rule? simply disable it in your config like you would with `eslint` or copy the rule's markdown into your project and change it to suit your project's needs
-  - want to enforce a new best practice in your project? add a new rule markdown file, describe the rule's intent in natural language, add a few correct/incorrect examples, and you're good to go
-  - all custom rules live in your repo as simple markdown files, are understandable by non-devs, and can be improved over time via standard git workflows
+  - want to enforce a new best practice in your project? add a new markdown file for the rule, describe the rule's intent in natural language, add a few correct/incorrect examples, and you're good to go
+  - all custom rules live in your repo as simple markdown files, they're understandable by non-devs, and they can be improved over time via standard git workflows
   - this is the way 💯
 - built-in rules come with evals so you can be sure they work correctly at scale
   - (you can think of evals as regression test suites for possibly non-deterministic functions like the LLMs that power GPTLint)
   - this allows us to track the accuracy of GPTLint over time and improve the rules whenever we find false-positives / false-negatives
-- ~~Supports any programming language~~ (ts, py, C++, java, etc)
+- ~~supports any programming language~~ (ts, py, C++, java, etc)
   - the MVP is focused on JS / TS only for now (python support coming soon)
 - supports any natural language (english, chinese, spanish, etc)
-- ~~Supports multiple LLM providers~~ (openai, anthropic, [openrouter](https://openrouter.ai/))
+- ~~supports multiple LLM providers~~ (openai, anthropic, [openrouter](https://openrouter.ai/))
   - the MVP is focused on OpenAI only for now (openai-compatible LLM provider support coming soon)
-- ~~Supports local LLMs via [ollama](https://github.com/ollama/ollama)~~
+- ~~supports local LLMs~~ (via [ollama](https://github.com/ollama/ollama))
   - the MVP is focused on OpenAI only for now (local LLM support coming soon)
-- augments existing static analysis tools like `eslint`, `pylint`, `ruff`, etc
-- no complicated github integration, bots, or CI actions – just call the `gptlint` CLI the same way you would call the `eslint` CLI
+- designed to be used in addition to existing static analysis tools like `eslint`, `pylint`, `ruff`, etc
+- no complicated github integration, bots, or CI actions – just call the `gptlint` CLI the same way you would call a tool like `eslint`
 
 ## Caveats
 
@@ -74,11 +74,12 @@ Flags:
 
 ## TODO
 
-- guidelines file format
+- rule file format
   - support both positive and negative examples in the same code block
   - add support to guidelines.md for organizing rules by h1 sections
     - alternatively, just use directories and rule.md file format
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks
+  - add support for including links to one or more URLs as resources explaining the rule in more depth
 - config
   - use eslint, ruff, and conformance as inspiration
   - llm api base url
