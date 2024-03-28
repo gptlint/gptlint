@@ -102,7 +102,7 @@ export async function preLintFile({
   }
 
   if (preLintResult.config.rules[rule.name] === 'off') {
-    // Inline config disabled this rule for this file
+    // Config has this rule disabled for this file
     return { ...preLintResult, lintResult }
   }
 
