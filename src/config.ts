@@ -3,7 +3,7 @@ import type { MergeDeep, SetRequired, Simplify } from 'type-fest'
 import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
 import { z } from 'zod'
 
-import { pruneUndefined } from './utils.js'
+import { dedupe, pruneUndefined } from './utils.js'
 
 export const LinterConfigRuleSettingSchema = z.enum(['off', 'warn', 'error'])
 export type LinterConfigRuleSetting = z.infer<
@@ -142,6 +142,10 @@ export function mergeLinterConfigs<
     ...pruneUndefined(configA),
     ...pruneUndefined(configB),
     rules: { ...configA.rules, ...configB.rules },
+    ignores:
+      configA.ignores || configB.ignores
+        ? dedupe([...(configA.ignores ?? []), ...(configB.ignores ?? [])])
+        : undefined,
     linterOptions:
       configA.linterOptions || configB.linterOptions
         ? {

@@ -116,10 +116,15 @@ export async function resolveLinterCLIConfig(
   let ignores = args.flags.noIgnore ? [] : args.flags.ignorePattern
   if (args.flags.ignoreFile && !args.flags.noIgnore) {
     if (await pathExists(args.flags.ignoreFile)) {
-      const ignoreFile = await readFile(args.flags.ignoreFile, {
+      const ignoreFileContent = await readFile(args.flags.ignoreFile, {
         encoding: 'utf-8'
       })
-      const ignoreFilePatterns: string[] = parseGitIgnore(ignoreFile)
+      // `parseGitIgnore` doesn't handle single-line ignore files correctly,
+      // so this is a workaround to ensure it doesn't view the file content as
+      // a valid filesystem path
+      const ignoreFile = `\n${ignoreFileContent}\n`
+      // `parseGitIgnore` types are incorrect
+      const { patterns: ignoreFilePatterns } = parseGitIgnore(ignoreFile) as any
       ignores = ignores.concat(ignoreFilePatterns)
     }
   }

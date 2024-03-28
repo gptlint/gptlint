@@ -1,8 +1,10 @@
 import slugify from '@sindresorhus/slugify'
+import dedupe from 'array-uniq'
 import invariant from 'tiny-invariant'
 
 import type * as types from './types.js'
 
+export { dedupe }
 export { slugify }
 export { invariant as assert }
 
