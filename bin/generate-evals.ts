@@ -18,8 +18,7 @@ import { stringifyRuleForModel } from '../src/rule-utils.js'
 import { inferBestPossibleCodeFileExtension, omit } from '../src/utils.js'
 
 /**
- * Internal CLI to generate synthetic eval data (code snippets) for a set of
- * rules.
+ * Internal CLI to generate synthetic eval data (code snippets) for rules.
  */
 async function main() {
   const cwd = process.cwd()

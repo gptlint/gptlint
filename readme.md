@@ -37,9 +37,8 @@
   - keep in mind that even expert human developers are very unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy at a fraction of the cost and speed**
 - **LLM costs can add up quickly**
   - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
-  - depending on the LLM you're using and the size of your codebase `N`, this can quickly get expensive
-  - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (`N=22` files, `M=8` rules) takes ~70s and costs ~$0.31 cents USD
-  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (`N=22` files, `M=8` rules) takes ~64s and costs ~$2.38 USD
+  - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~70s and costs ~$0.31 cents USD
+  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~64s and costs ~$2.38 USD
   - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
 - **rules in the MVP are single-file only**
   - many architectural patterns fundamentally span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
@@ -96,6 +95,7 @@ Flags:
   - llm api base url
 - linter engine
   - **evals**
+  - add integration tests against eval test suite
   - cross-file linting; v0 is strictly local to individual files
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
@@ -107,10 +107,14 @@ Flags:
   - add support for `fixable`
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - handle context overflow properly depending on selected model
+  - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
+    - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
+    - possibly via optional regex patterns to enable / disable rules for files
 - update project name in multiple places once we decide on a name
 - rules
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
+  - react unnecessary effects for https://react.dev/learn/you-might-not-need-an-effect
 - try claude w/ structured output and nudging it with prefilled / prefix output JSON
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
