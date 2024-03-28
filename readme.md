@@ -1,5 +1,49 @@
 # GPTLint
 
+> A fundamentally new approach to code health and stability. Uses LLMs to enforce best practices that are impossible to capture with traditional, AST-based static analysis tools like `eslint`.
+
+## Features
+
+- really simple markdown format for specifying rules ([example rule file](./guidelines/prefer-array-at-negative-indexing.md))
+- it's easy to add custom, project-specific rules ([example guidelines file](./fixtures/guidelines/ts-example-0.md))
+- cli and config formats are ~~copied from~~ inspired by `eslint`
+- content-based caching
+- outputs LLM stats per run (cost, tokens, etc)
+- community-driven rules
+- every rule is fully configurable, both at the project level (`gptlint.config.js`) and at the rule definition level (markdown)
+  - don't agree with a rule? simply disable it in your config like you would with `eslint` or copy the rule's markdown into your project and change it to suit your project's needs
+  - want to enforce a new best practice in your project? add a new rule markdown file, describe the rule's intent in natural language, add a few correct/incorrect examples, and you're good to go
+  - all custom rules live in your repo as simple markdown files, are understandable by non-devs, and can be improved over time via standard git workflows
+  - this is the way 💯
+- built-in rules come with evals so you can be sure they work correctly at scale
+  - (you can think of evals as regression test suites for possibly non-deterministic functions like the LLMs that power GPTLint)
+  - this allows us to track the accuracy of GPTLint over time and improve the rules whenever we find false-positives / false-negatives
+- ~~Supports any programming language~~ (ts, py, C++, java, etc)
+  - the MVP is focused on JS / TS only for now (python support coming soon)
+- supports any natural language (english, chinese, spanish, etc)
+- ~~Supports multiple LLM providers~~ (openai, anthropic, [openrouter](https://openrouter.ai/))
+  - the MVP is focused on OpenAI only for now (openai-compatible LLM provider support coming soon)
+- ~~Supports local LLMs via [ollama](https://github.com/ollama/ollama)~~
+  - the MVP is focused on OpenAI only for now (local LLM support coming soon)
+- augments existing static analysis tools like `eslint`, `pylint`, `ruff`, etc
+- no complicated github integration, bots, or CI actions – just call the `gptlint` CLI the same way you would call the `eslint` CLI
+
+## Caveats
+
+- this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (errors which shouldn't have been reported) and **false negatives** (real errors that the tool missed)
+  - **all built-in rules are extensively tested** with eval sets to ensure that the reporting accuracy is as trustworthy as possible
+  - keep in mind that even expert human developers are very unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy** at a fraction of the cost and speed
+- **LLM costs can add up quickly**
+  - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
+  - depending on the LLM you're using and the size of your codebase `N`, this can quickly get expensive
+  - for instance, using `gpt-3.5-turbo` running `gptlint` on this small repository with caching disabled (`N=22` files, `M=8` rules) takes ~70s and costs ~$0.31 cents USD
+  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this small repository with caching disabled (`N=22` files, `M=8` rules) takes ~64s and costs ~$2.38 USD
+  - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
+
+## How it works
+
+TODO
+
 ## CLI
 
 ```bash

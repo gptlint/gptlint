@@ -2,7 +2,7 @@
 
 | Key       | Value                          |
 | --------- | ------------------------------ |
-| Name      | `avoid-react-class-components` |
+| Name      | `react-avoid-class-components` |
 | Level     | error                          |
 | Fixable   | false                          |
 | Tags      | react                          |
