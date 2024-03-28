@@ -12,10 +12,10 @@
 - content-based caching
 - outputs LLM stats per run (cost, tokens, etc)
 - community-driven rules
-- every rule is fully configurable, both at the project level (`gptlint.config.js`) and at the rule definition level (markdown)
-  - don't agree with a rule? simply disable it in your config like you would with `eslint` or copy the rule's markdown into your project and change it to suit your project's needs
+- every rule is fully configurable, both at the project level (`gptlint.config.js`) and at the rule level (markdown)
+  - don't agree with a rule? simply disable it in your config like you would with `eslint` or copy the rule's markdown into your project and customize it to suit your project's needs
   - want to enforce a new best practice in your project? add a new markdown file for the rule, describe the rule's intent in natural language, add a few correct/incorrect examples, and you're good to go
-  - all custom rules live in your repo as simple markdown files, they're understandable by non-devs, and they can be improved over time via standard git workflows
+  - all custom rules live in your repo as simple markdown files and are self-documenting, understandable by non-devs, and they can be improved over time via standard git workflows
   - this is the way 💯
 - built-in rules come with evals so you can be sure they work correctly at scale
   - (you can think of evals as regression test suites for possibly non-deterministic functions like the LLMs that power GPTLint)
