@@ -18,7 +18,8 @@ import { stringifyRuleForModel } from '../src/rule-utils.js'
 import { inferBestPossibleCodeFileExtension, omit } from '../src/utils.js'
 
 /**
- * Internal CLI for generating eval data to evaluate rules.
+ * Internal CLI to generate synthetic eval data (code snippets) for a set of
+ * rules.
  */
 async function main() {
   const cwd = process.cwd()
@@ -30,6 +31,7 @@ async function main() {
       cwd,
       linterConfigDefaults: {
         linterOptions: {
+          // Use GPT-4 as the default for generating eval code snippets
           model: 'gpt-4-turbo-preview'
         }
       }
