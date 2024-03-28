@@ -87,7 +87,7 @@ async function main() {
             ),
             Msg.system(stringifyRuleForModel(rule)),
             Msg.user(
-              `Generate ${numExamples} diverse code snippets which CORRECTLY adhere to the given rule. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code CORRECTLY adheres to the given rule. Do not include any prose or descriptions outside of the code blocks.`
+              `Generate ${numExamples} diverse code snippets which CORRECTLY adhere to the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code CORRECTLY adheres to the given RULE. Do not include any prose or descriptions outside of the code blocks.`
             )
           ]
         })
@@ -140,7 +140,7 @@ async function main() {
             ),
             Msg.system(stringifyRuleForModel(rule)),
             Msg.user(
-              `Generate ${numExamples} diverse code snippets which VIOLATE the given rule. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code VIOLATES to the given rule. Do not include any prose or descriptions outside of the code blocks.`
+              `Generate ${numExamples} diverse code snippets which VIOLATE the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code VIOLATES to the given RULE. Do not include any prose or descriptions outside of the code blocks.`
             )
           ]
         })

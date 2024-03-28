@@ -92,6 +92,7 @@ Flags:
   - decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
 - config
   - use eslint, ruff, and conformance as inspiration
+  - add ability to extend other configs
 - linter engine
   - **evals**
   - add integration tests against eval test suite

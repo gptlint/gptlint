@@ -1,4 +1,9 @@
-import { type ChatModel, Msg, createAIFunction } from '@dexaai/dexter'
+import {
+  type ChatModel,
+  Msg,
+  createAIFunction,
+  handleFunctionCallMessage
+} from '@dexaai/dexter'
 import plur from 'plur'
 import { z } from 'zod'
 
@@ -34,19 +39,27 @@ export async function lintFile({
 
   const recordRuleFailure = createAIFunction(
     {
-      name: 'record_rule_failure',
-      description:
-        "Keeps track of snippets of code which fail to conform to the given rule's intent.",
+      name: 'record_rule_violation',
+      description: `Keeps track of code snippets in the SOURCE which fail to conform to RULE's intent. This function should only be called for code snippets appearing in the SOURCE which VIOLATE the RULE's intent.
+
+DO NOT call this function for code snippets which conform correctly to the RULE.
+DO NOT call this function for example code snippets from the RULE or other code snippets which don't appear in the SOURCE.`,
       argsSchema: z.object({
         ruleName: z
           .string()
-          .describe(
-            'The name of the rule which this codeSnippet failed to conform to.'
-          ),
+          .describe('The name of the RULE which this `codeSnippet` violates.'),
         codeSnippet: z
           .string()
           .describe(
-            'The offending code snippet which fails to conform to the given rule.'
+            'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given file content.'
+          ),
+        violation: z
+          .boolean()
+          .describe('Whether or not this `codeSnippet` violates the RULE'),
+        reasoning: z
+          .string()
+          .describe(
+            'A brief explanation of why this code snippet VIOLATES the given RULE.'
           ),
         confidence: z
           .enum(['low', 'medium', 'high'])
@@ -56,17 +69,38 @@ export async function lintFile({
     async ({
       ruleName,
       codeSnippet,
-      confidence
+      violation,
+      confidence,
+      reasoning
     }: {
       ruleName: string
       codeSnippet: string
+      violation: boolean
       confidence: types.LintRuleErrorConfidence
+      reasoning: string
     }) => {
       ruleName = ruleName.toLowerCase().trim()
+
+      if (!violation || confidence !== 'high') {
+        console.warn(
+          `warning: rule "${rule.name}" file "${file.fileRelativePath}": possible false positive`,
+          {
+            violation,
+            confidence,
+            codeSnippet,
+            reasoning
+          }
+        )
+
+        return
+      }
+
       if (rule.name !== ruleName) {
         console.warn(
           `warning: rule "${rule.name}" LLM recorded error with unrecognized rule name "${ruleName}" on file "${file.fileRelativePath}"`
         )
+
+        return
       }
 
       lintResult.lintErrors.push({
@@ -74,7 +108,8 @@ export async function lintFile({
         language: file.language,
         ruleName: rule.name,
         codeSnippet,
-        confidence
+        confidence,
+        reasoning
       })
     }
   )
@@ -85,12 +120,11 @@ export async function lintFile({
 
   const res = await chatModel.run({
     messages: [
-      Msg.system(`You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure code conforms to project-specific guidelines and best practices. You will be given a code rule with a description of the rule's intent and one or more positive and negative code snippet examples.
-    
-Your task is to take the given code and determine whether any portions of it violate the rule's intent. Accuracy is important, so be sure to think step-by-step before invoking the "record_rule_failure" function and include a "confidence" value so it's clear how confident you when detecting possible errors.`),
+      Msg.system(`You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure source code conforms to project-specific guidelines and best practices. You will be given a RULE with a description of the RULE's intent and some positive examples where the RULE is used correctly and some negative examples where the RULE is VIOLATED (used incorrectly).
+
+Your task is to take the given SOURCE and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why any given \`codeSnippet\` VIOLATES the RULE.`),
       Msg.system(stringifyRuleForModel(rule)),
-      Msg.user(`File: ${file.fileName}:`),
-      Msg.user(file.content)
+      Msg.user(`SOURCE FILE: ${file.fileName}\nSOURCE:\n\n${file.content}`)
     ],
     tools: [
       {
@@ -100,8 +134,24 @@ Your task is to take the given code and determine whether any portions of it vio
     ]
   })
 
-  if (res.message.content) {
-    lintResult.message = res.message.content
+  switch (res.message.role) {
+    case 'assistant':
+      if (res.message.content) {
+        lintResult.message = res.message.content
+      }
+
+      await handleFunctionCallMessage({
+        message: res.message,
+        functions: [recordRuleFailure],
+        functionCallConcurrency: 8
+      })
+      break
+
+    default:
+      console.warn(
+        `warning: rule "${rule.name}" LLM unexpected response message role "${res.message.role}" for file "${file.fileRelativePath}"`,
+        res.message
+      )
   }
 
   if (res.cached) {

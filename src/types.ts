@@ -55,6 +55,7 @@ export type LintError = {
   ruleName: string
   codeSnippet: string
   confidence: LintRuleErrorConfidence
+  reasoning: string
 }
 
 export type LintResult = {

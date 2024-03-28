@@ -1,5 +1,3 @@
-import path from 'node:path'
-
 import 'dotenv/config'
 import { globby } from 'globby'
 import ProgressBar, { type Progress } from 'ts-progress'
@@ -32,13 +30,11 @@ async function main() {
     process.exit(1)
   }
 
-  const inputFiles = (
-    await globby(config.files, {
-      gitignore: true,
-      ignore: config.ignores,
-      cwd
-    })
-  ).map((filePath) => path.join(cwd, filePath))
+  const inputFiles = await globby(config.files, {
+    gitignore: true,
+    ignore: config.ignores,
+    cwd
+  })
 
   if (config.linterOptions.debugConfig) {
     console.log(

@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises'
-import { basename, relative } from 'node:path'
+import { basename, relative, resolve } from 'node:path'
 
 import pMap from 'p-map'
 
@@ -18,13 +18,14 @@ export async function readFiles(
   return pMap(
     filePaths,
     async (filePath) => {
+      filePath = resolve(cwd, filePath)
       const content = await readFile(filePath, { encoding: 'utf-8' })
 
       const fileRelativePath = relative(cwd, filePath)
       const fileName = basename(filePath)
-      const ext = filePath.split('.').at(-1)!
+      const ext = fileName.split('.').at(-1)?.toLowerCase() ?? ''
       const jsExtensions = new Set(['js', 'jsx', 'cjs', 'mjs'])
-      const tsExtensions = new Set(['js', 'jsx'])
+      const tsExtensions = new Set(['ts', 'tsx'])
 
       // TODO: improve filePath => language detection
       const language = jsExtensions.has(ext)

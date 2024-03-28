@@ -38,6 +38,7 @@ export async function lintFiles({
   const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))
   )
+  const foo_bar = 5
 
   let lintResult: types.LintResult = {
     lintErrors: [],
@@ -81,7 +82,7 @@ export async function lintFiles({
     }
   )
 
-  const resolvedlintTasks = preLintResults.filter((r) => !r.lintResult)
+  const resolvedLintTasks = preLintResults.filter((r) => !r.lintResult)
 
   if (config.linterOptions.earlyExit && lintResult.lintErrors.length) {
     earlyExitTripped = true
@@ -89,14 +90,14 @@ export async function lintFiles({
 
   if (onProgressInit) {
     await Promise.resolve(
-      onProgressInit({ numTasks: resolvedlintTasks.length })
+      onProgressInit({ numTasks: resolvedLintTasks.length })
     )
   }
 
   // Loop over each non-cached file / rule task and lint then with the LLM
   // linting engine and a capped max concurrency
   await pMap(
-    resolvedlintTasks,
+    resolvedLintTasks,
     async ({ file, rule, cacheKey, config }, index) => {
       if (earlyExitTripped) {
         return
@@ -127,7 +128,7 @@ export async function lintFiles({
         if (onProgress) {
           await Promise.resolve(
             onProgress({
-              progress: index / resolvedlintTasks.length,
+              progress: index / resolvedLintTasks.length,
               message: `Rule "${rule.name}" file "${file.fileRelativePath}"`,
               result: lintResult
             })
