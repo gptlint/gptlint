@@ -1,6 +1,8 @@
 import slugify from '@sindresorhus/slugify'
 import invariant from 'tiny-invariant'
 
+import type * as types from './types.js'
+
 export { slugify }
 export { invariant as assert }
 
@@ -44,7 +46,7 @@ export function pruneUndefined<T extends Record<string, any>>(
   ) as NonNullable<T>
 }
 
-export function isValidRuleName(name: string): boolean {
+export function isValidRuleName(name: string): name is NonNullable<string> {
   if (!name) return false
   if (name.toLowerCase() !== name) return false
 
@@ -55,4 +57,13 @@ export function isValidRuleName(name: string): boolean {
   } else if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/i.test(name)) return false
 
   return true
+}
+
+export function isValidRuleSetting(
+  value: string
+): value is types.LinterConfigRuleSetting {
+  if (!value) return false
+  if (value.toLowerCase() !== value) return false
+
+  return value === 'off' || value === 'warn' || value === 'error'
 }

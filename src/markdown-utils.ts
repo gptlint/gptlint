@@ -7,7 +7,12 @@ import { inspectColor } from 'unist-util-inspect'
 import { type Test, is } from 'unist-util-is'
 
 import type * as types from './types.js'
-import { assert, isValidRuleName, slugify } from './utils.js'
+import {
+  assert,
+  isValidRuleName,
+  isValidRuleSetting,
+  slugify
+} from './utils.js'
 
 export function parseMarkdownAST(content: string) {
   return unified().use(remarkParse).use(remarkGfm).parse(content)
@@ -229,7 +234,7 @@ export function parseRuleTableNode({
       rule.name = value
     } else if (key === 'level') {
       assert(
-        value === 'warn' || value === 'error' || value === 'off',
+        isValidRuleSetting(value),
         `Rule contains invalid table ("level" must be one of "warn" | "error" | "off"): ${rule.message} (${filePath})`
       )
 

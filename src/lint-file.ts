@@ -4,6 +4,8 @@ import { z } from 'zod'
 
 import type * as types from './types.js'
 import type { LinterCache } from './cache.js'
+import { mergeLinterConfigs } from './config.js'
+import { parseInlineConfig } from './parse-inline-config.js'
 import { omit } from './utils.js'
 
 export async function lintFile({
@@ -75,6 +77,22 @@ export async function lintFile({
     }
 
     return lintResult
+  }
+
+  if (!config.linterOptions.noInlineConfig) {
+    const configFileOverride = parseInlineConfig({ file })
+    if (configFileOverride) {
+      if (configFileOverride.linterOptions?.disabled) {
+        // Inline config disabled linting for this file
+        await cache.set(cacheKey, lintResult)
+        return lintResult
+      } else {
+        config = mergeLinterConfigs(
+          config,
+          configFileOverride
+        ) as types.ResolvedLinterConfig
+      }
+    }
   }
 
   const recordRuleFailure = createAIFunction(

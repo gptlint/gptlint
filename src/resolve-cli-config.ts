@@ -121,6 +121,7 @@ export async function resolveLinterCLIConfig(
     }
   }
 
+  // Resolve the linter config from the command-line only
   let linterConfig = parseLinterConfig({
     files,
     ignores,
@@ -152,6 +153,7 @@ export async function resolveLinterCLIConfig(
     }
   })
 
+  // Resolve any file-based linter config and merge it with the CLI-based config
   linterConfig = await resolveLinterConfig(linterConfig, {
     cwd,
     configFilePath: args.flags.config

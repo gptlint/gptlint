@@ -1,11 +1,14 @@
 import findCacheDirectory from 'find-cache-dir'
-import type { SetRequired, Simplify } from 'type-fest'
+import type { MergeDeep, SetRequired, Simplify } from 'type-fest'
+import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
 import { z } from 'zod'
 
 import { pruneUndefined } from './utils.js'
 
-export const LinterConfigRuleSchema = z.enum(['off', 'warn', 'error'])
-export type LinterConfigRule = z.infer<typeof LinterConfigRuleSchema>
+export const LinterConfigRuleSettingSchema = z.enum(['off', 'warn', 'error'])
+export type LinterConfigRuleSetting = z.infer<
+  typeof LinterConfigRuleSettingSchema
+>
 
 // TODO: update when we decide project name
 export const defaultCacheDir =
@@ -40,6 +43,7 @@ export const LinterConfigOptionsSchema = z.object({
     ),
 
   noCache: z.boolean().optional().describe('Disables the built-in cache.'),
+  disabled: z.boolean().optional().describe('Disables linting entirely.'),
 
   cacheDir: z
     .string()
@@ -86,7 +90,7 @@ export const LinterConfigSchema = z.object({
     .describe('An array of glob patterns to rule definition markdown files.'),
 
   rules: z
-    .record(z.string(), LinterConfigRuleSchema)
+    .record(z.string(), LinterConfigRuleSettingSchema)
     .optional()
     .describe('An object customizing the configured rules.'),
 
@@ -109,6 +113,7 @@ export const defaultLinterConfigOptions: Readonly<LinterConfigOptions> = {
   debugConfig: false,
   debugModel: false,
   debugStats: true,
+  disabled: false,
   noCache: false,
   cacheDir: defaultCacheDir,
   // model: 'gpt-4-turbo-preview',
@@ -126,10 +131,13 @@ export function parseLinterConfig(config: Partial<LinterConfig>): LinterConfig {
   return LinterConfigSchema.parse(config)
 }
 
-export function mergeLinterConfigs(
-  configA: LinterConfig,
-  configB: LinterConfig
-): LinterConfig {
+export function mergeLinterConfigs<
+  ConfigTypeA extends LinterConfig = LinterConfig,
+  ConfigTypeB extends LinterConfig = LinterConfig
+>(
+  configA: ConfigTypeA,
+  configB: ConfigTypeB
+): SimplifyDeep<MergeDeep<ConfigTypeA, ConfigTypeB>> {
   return {
     ...pruneUndefined(configA),
     ...pruneUndefined(configB),
@@ -141,5 +149,5 @@ export function mergeLinterConfigs(
             ...pruneUndefined(configB.linterOptions ?? {})
           }
         : undefined
-  }
+  } as SimplifyDeep<MergeDeep<ConfigTypeA, ConfigTypeB>>
 }

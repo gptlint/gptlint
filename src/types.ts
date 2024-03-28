@@ -1,6 +1,11 @@
 /* eslint-disable no-use-before-define */
 
-export type * from './config.js'
+export type {
+  LinterConfig,
+  LinterConfigOptions,
+  LinterConfigRuleSetting,
+  ResolvedLinterConfig
+} from './config.js'
 
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 export type LintRuleLevel = 'error' | 'warn' | 'off'

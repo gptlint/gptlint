@@ -45,6 +45,7 @@ Flags:
   - add support for different LLM providers
   - add support for `fixable`
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
+  - support disabling rules within files
   - handle context overflow properly depending on selected model
   - **evals**
 - update project name in multiple places once we decide on a name
@@ -53,6 +54,9 @@ Flags:
   - if you refer to something as numIterations in one place, refer to it consistently
 - `prefer-page-queries.md` code examples give extra context outside of the code blocks
 - try claude w/ structured output and nudging it with prefilled / prefix output JSON
+- cli
+  - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
+  - improve progress bar to only take into account non-cached tasks
 
 ## License
 
