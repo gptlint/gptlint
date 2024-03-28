@@ -31,28 +31,30 @@ Flags:
 ## TODO
 
 - guidelines file format
-  - support both in the same code block
+  - support both positive and negative examples in the same code block
   - add support to guidelines.md for organizing rules by h1 sections
     - alternatively, just use directories and rule.md file format
+  - `prefer-page-queries.md` code examples give extra context outside of the code blocks
 - config
   - use eslint, ruff, and conformance as inspiration
   - llm api base url
 - linter engine
+  - **evals**
   - cross-file linting; v0 is strictly local to individual files
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
   - add support for different languages
   - add support for different LLM providers
+    - test anthropic claude
+    - test ollama w/ mistral, llama, etc
+    - move from function calling to structured output for increased compat
   - add support for `fixable`
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
-  - support disabling rules within files
   - handle context overflow properly depending on selected model
-  - **evals**
 - update project name in multiple places once we decide on a name
 - rules
-  - something which captures naming w/ types and consistency
+  - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
-- `prefer-page-queries.md` code examples give extra context outside of the code blocks
 - try claude w/ structured output and nudging it with prefilled / prefix output JSON
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
