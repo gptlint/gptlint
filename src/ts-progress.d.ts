@@ -28,5 +28,5 @@ declare module 'ts-progress' {
     create(options: ProgressOptions): Progress
   }
 
-  export = progress
+  export default progress
 }
