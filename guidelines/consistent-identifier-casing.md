@@ -6,20 +6,36 @@
 | Level     | error                          |
 | Fixable   | false                          |
 | Tags      | general                        |
-| Languages | all                            |
+| Languages | javascript, typescript         |
 
-Identifiers of the same type should use consistent casing. This rule applies to all types of identifiers: variable names, class names, type names, function names, constants, etc.
+Identifiers of the same type should try to use consistent casing.
 
-For example, if some variable names use camelCase, then all variable names should use camelCase. If some type names use PascalCase, then all type names should use PascalCase. If some constants use CONSTANT_CASE, then all constants should use constant case.
+Variable names should use camelCase.
+Global const variable names should either use camelCase or CONSTANT_CASE.
+Type names should use PascalCase.
+Class names should use PascalCase.
+Function names should use camelCase.
+
+Third-party APIs may use inconsistent casing, which is an exception to this rule.
+
+Keys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.
+
+Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and \_getKey.
+
+Ignore identifiers which mix PascalCase with camelCase.
+
+Ignore the casing of common acronyms like API, IP, HTTP, and LLM.
+
+Class variables and functions may include `_` prefixes.
 
 ### Bad
 
 ```ts
-// This is bad because variable identifiers should use consistent casing.
+// These are bad because variable identifiers should use consistent casing.
 const fooBar = true
 const default_timeout = 5000
 
-// This is bad because function identifiers should use consistent casing.
+// These are bad because function identifiers should use consistent casing.
 function helloWorld() {}
 function hello_twitter() {}
 ```
@@ -32,4 +48,11 @@ const defaultTimeout = 5000
 
 function helloWorld() {}
 function helloTwitter() {}
+```
+
+```ts
+import foo from 'foo'
+
+// This is fine because `foo` is a third-party API which this rule should to ignore.
+foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })
 ```

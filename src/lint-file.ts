@@ -53,17 +53,21 @@ DO NOT call this function for example code snippets from the RULE or other code 
           .describe(
             'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given file content.'
           ),
-        violation: z
-          .boolean()
-          .describe('Whether or not this `codeSnippet` violates the RULE'),
         reasoning: z
           .string()
           .describe(
-            'A brief explanation of why this code snippet VIOLATES the given RULE.'
+            'An explanation of why this code snippet VIOLATES the given RULE. Think step-by-step when describing your reasoning.'
+          ),
+        violation: z
+          .boolean()
+          .describe(
+            'Whether or not this `codeSnippet` violates the RULE and appears in the SOURCE. If the `codeSnippet` does VIOLATE the RULE, then `violation` should be `true`. If the `codeSnippet` conforms to the RULE correctly or does not appear in the SOURCE, then `violation` should be `false`.'
           ),
         confidence: z
           .enum(['low', 'medium', 'high'])
-          .describe('Your confidence that this error is correct.')
+          .describe(
+            'Your confidence that the `codeSnippet` VIOLATES the RULE and appears in the SOURCE.'
+          )
       })
     },
     async ({
@@ -82,15 +86,15 @@ DO NOT call this function for example code snippets from the RULE or other code 
       ruleName = ruleName.toLowerCase().trim()
 
       if (!violation || confidence !== 'high') {
-        console.warn(
-          `warning: rule "${rule.name}" file "${file.fileRelativePath}": possible false positive`,
-          {
-            violation,
-            confidence,
-            codeSnippet,
-            reasoning
-          }
-        )
+        // console.warn(
+        //   `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive`,
+        //   {
+        //     violation,
+        //     confidence,
+        //     codeSnippet,
+        //     reasoning
+        //   }
+        // )
 
         return
       }
@@ -140,11 +144,20 @@ Your task is to take the given SOURCE and determine whether any portions of it V
         lintResult.message = res.message.content
       }
 
-      await handleFunctionCallMessage({
-        message: res.message,
-        functions: [recordRuleFailure],
-        functionCallConcurrency: 8
-      })
+      try {
+        await handleFunctionCallMessage({
+          message: res.message,
+          functions: [recordRuleFailure],
+          functionCallConcurrency: 8
+        })
+      } catch (err: any) {
+        // TODO: handle "multi_tool_use.parallel" openai tool calling bug
+        console.warn(
+          `warning: rule "${rule.name}" file "${file.fileRelativePath}" unexpected LLM error`,
+          err.message,
+          JSON.stringify(res.message.tool_calls, null, 2)
+        )
+      }
       break
 
     default:

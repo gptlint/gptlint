@@ -72,14 +72,17 @@ async function main() {
   if (config.linterOptions.debugStats) {
     console.log(
       `\nLLM stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
-      pick(
-        lintResult,
-        'numModelCalls',
-        'numModelCallsCached',
-        'numPromptTokens',
-        'numCompletionTokens',
-        'numTotalTokens'
-      )
+      {
+        model: config.llmOptions.model,
+        ...pick(
+          lintResult,
+          'numModelCalls',
+          'numModelCallsCached',
+          'numPromptTokens',
+          'numCompletionTokens',
+          'numTotalTokens'
+        )
+      }
     )
   }
 

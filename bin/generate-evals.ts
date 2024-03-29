@@ -189,7 +189,10 @@ async function main() {
   if (config.linterOptions.debugStats) {
     console.log(
       `\nLLM stats; total cost $${(llmStats.totalCost / 100).toFixed(2)}`,
-      omit(llmStats, 'totalCost')
+      {
+        model: config.llmOptions.model,
+        ...omit(llmStats, 'totalCost')
+      }
     )
   }
 }
