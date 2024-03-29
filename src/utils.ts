@@ -116,6 +116,7 @@ export function createEvalStats(): types.EvalStats {
   return {
     numFiles: 0,
     numRules: 0,
+    numUnexpectedErrors: 0,
     numFalseNegatives: 0,
     numFalsePositives: 0,
     numTrueNegatives: 0,
@@ -130,6 +131,8 @@ export function mergeEvalStats(
   return {
     numFiles: evalStatsA.numFiles + evalStatsB.numFiles,
     numRules: evalStatsA.numRules + evalStatsB.numRules,
+    numUnexpectedErrors:
+      evalStatsA.numUnexpectedErrors + evalStatsB.numUnexpectedErrors,
     numFalseNegatives:
       evalStatsA.numFalseNegatives + evalStatsB.numFalseNegatives,
     numFalsePositives:
@@ -283,5 +286,19 @@ export function logEvalStats({
   evalStats: types.EvalStats
   // ruleToEvalStats: Record<string, types.EvalStats>
 }) {
-  console.log(`\nEval results`, evalStats)
+  const precision =
+    evalStats.numTruePositives /
+    (evalStats.numTruePositives + evalStats.numFalsePositives)
+  const recall =
+    evalStats.numTruePositives /
+    (evalStats.numTruePositives + evalStats.numFalseNegatives)
+  const f1Score = (2 * precision * recall) / (precision + recall)
+  const extendedStats = {
+    precision,
+    recall,
+    f1Score
+  }
+
+  console.log(`\nEval results`, { ...evalStats, ...extendedStats })
+  return extendedStats
 }

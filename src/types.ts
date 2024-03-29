@@ -92,6 +92,7 @@ export type ProgressHandlerInitFn = (opts: {
 export type EvalStats = {
   numFiles: number
   numRules: number
+  numUnexpectedErrors: number
   numTruePositives: number
   numTrueNegatives: number
   numFalsePositives: number

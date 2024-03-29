@@ -84,30 +84,38 @@ async function main() {
         await pMap(
           files,
           async function lint(file) {
-            const fileLintResult = await lintFile({
-              file,
-              rule,
-              chatModel,
-              config
-            })
+            try {
+              const fileLintResult = await lintFile({
+                file,
+                rule,
+                chatModel,
+                config
+              })
 
-            ++ruleEvalStats.numFiles
-            if (fileLintResult.lintErrors.length) {
-              ruleEvalStats.numFalsePositives++
+              ++ruleEvalStats.numFiles
+              if (fileLintResult.lintErrors.length) {
+                ruleEvalStats.numFalsePositives++
 
+                console.warn(
+                  `False positive: rule ${rule.name}: ${file.fileRelativePath}`,
+                  fileLintResult.lintErrors
+                )
+              } else {
+                ruleEvalStats.numTrueNegatives++
+
+                console.log(
+                  `True negative: rule ${rule.name}: ${file.fileRelativePath}`
+                )
+              }
+
+              ruleLintResult = mergeLintResults(ruleLintResult, fileLintResult)
+            } catch (err: any) {
+              ruleEvalStats.numUnexpectedErrors++
               console.warn(
-                `False positive: rule ${rule.name}: ${file.fileRelativePath}`,
-                fileLintResult.lintErrors
-              )
-            } else {
-              ruleEvalStats.numTrueNegatives++
-
-              console.log(
-                `True negative: rule ${rule.name}: ${file.fileRelativePath}`
+                `Unexpected error: rule ${rule.name}: ${file.fileRelativePath}`,
+                err
               )
             }
-
-            ruleLintResult = mergeLintResults(ruleLintResult, fileLintResult)
           },
           {
             concurrency: 4
@@ -127,30 +135,38 @@ async function main() {
         await pMap(
           files,
           async function lint(file) {
-            const fileLintResult = await lintFile({
-              file,
-              rule,
-              chatModel,
-              config
-            })
+            try {
+              const fileLintResult = await lintFile({
+                file,
+                rule,
+                chatModel,
+                config
+              })
 
-            ++ruleEvalStats.numFiles
-            if (fileLintResult.lintErrors.length) {
-              ruleEvalStats.numTruePositives++
+              ++ruleEvalStats.numFiles
+              if (fileLintResult.lintErrors.length) {
+                ruleEvalStats.numTruePositives++
 
-              console.log(
-                `True positive: rule ${rule.name}: ${file.fileRelativePath}`
-              )
-            } else {
-              ruleEvalStats.numFalseNegatives++
+                console.log(
+                  `True positive: rule ${rule.name}: ${file.fileRelativePath}`
+                )
+              } else {
+                ruleEvalStats.numFalseNegatives++
 
+                console.warn(
+                  `False negative: rule ${rule.name}: ${file.fileRelativePath}`,
+                  fileLintResult.message
+                )
+              }
+
+              ruleLintResult = mergeLintResults(ruleLintResult, fileLintResult)
+            } catch (err: any) {
+              ruleEvalStats.numUnexpectedErrors++
               console.warn(
-                `False negative: rule ${rule.name}: ${file.fileRelativePath}`,
-                fileLintResult.message
+                `Unexpected error: rule ${rule.name}: ${file.fileRelativePath}`,
+                err
               )
             }
-
-            ruleLintResult = mergeLintResults(ruleLintResult, fileLintResult)
           },
           {
             concurrency: 4
