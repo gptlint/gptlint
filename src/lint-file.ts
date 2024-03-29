@@ -55,10 +55,10 @@ export async function lintFileImpl({
   const recordRuleFailure = createAIFunction(
     {
       name: 'record_rule_violation',
-      description: `Keeps track of code snippets in the SOURCE which fail to conform to RULE's intent. This function should only be called for code snippets appearing in the SOURCE which VIOLATE the RULE's intent.
+      description: `This function should only be called for code snippets appearing in the SOURCE which VIOLATE the RULE's intent.
 
 DO NOT call this function for code snippets which conform correctly to the RULE.
-DO NOT call this function for example code snippets from the RULE or other code snippets which don't appear in the SOURCE.`,
+DO NOT call this function for example code snippets from the RULE or for code snippets which don't appear in the SOURCE.`,
       argsSchema: z.object({
         ruleName: z
           .string()
@@ -120,6 +120,7 @@ DO NOT call this function for example code snippets from the RULE or other code 
         //   }
         // )
 
+        // Ignore any false positives
         return
       }
 
@@ -153,6 +154,8 @@ DO NOT call this function for example code snippets from the RULE or other code 
         }
       }
 
+      // TODO: possibly if codeSnippet doesn't appear in the source (or something close to it), then ignore this as a false positive
+
       lintResult.lintErrors.push({
         filePath: file.filePath,
         language: file.language,
@@ -171,9 +174,10 @@ DO NOT call this function for example code snippets from the RULE or other code 
   const res = await chatModel.run({
     messages: [
       Msg.system(`# INSTRUCTIONS
+
 You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure source code conforms to project-specific guidelines and best practices. You will be given a RULE with a description of the RULE's intent and some positive examples where the RULE is used correctly and some negative examples where the RULE is VIOLATED (used incorrectly).
 
-Your task is to take the given SOURCE and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why any given \`codeSnippet\` VIOLATES the RULE.
+Your task is to take the given SOURCE code and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why any given \`codeSnippet\` VIOLATES the RULE.
 
 ${stringifyRuleForModel(rule)}
 

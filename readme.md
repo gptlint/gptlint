@@ -108,23 +108,21 @@ Flags:
   - add ability to extend other configs
 - linter engine
   - **evals**
+  - add support for different LLM providers
+    - test anthropic claude w/ structured output and prefill
+    - move from function calling to structured output for increased compat
   - improve solution to ignore false positives from `negativeExamples`
-  - cross-file linting; v0 is strictly local to individual files
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
   - add support for different languages
-  - add support for different LLM providers
-    - test anthropic claude
-    - test ollama w/ mistral, llama, etc
-    - move from function calling to structured output for increased compat
   - add support for `fixable`
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - handle context overflow properly depending on selected model
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
     - possibly via optional regex patterns to enable / disable rules for files
-  - try claude w/ structured output and nudging it with prefilled / prefix output JSON
   - track llm calls and token stats across retry invocations within `lintFile`
+  - cross-file linting; v0 is strictly local to individual files
 - rules
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
@@ -133,7 +131,9 @@ Flags:
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
 - project
   - update project name in multiple places once we decide on a name
-  - decide on OSS license
+  - decide on an OSS license
+  - add a [security policy](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md)
+  - basic evals and blog post
   - publish to NPM
 
 ## License
