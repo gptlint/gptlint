@@ -16,7 +16,17 @@ An exception to this rule is that math-heavy code may use simple variable names 
 
 Common acronyms like `api`, `ast`, and `llm` are fine even though they aren't as descriptive.
 
-Variables names which mirror the type names are okay to ignore.
+Variables names which mirror the corresponding type name are okay to ignore.
+
+Keys in objects and JS/TS strings are not variable names, so they should be ignored.
+
+If a value isn't a variable name, then it should be ignored.
+
+This rule should be ignored in test files.
+
+The names of file imports from third-party APIs and modules should be ignored because we have no control over them.
+
+If you are unsure whether or not a variable name is descriptive enough, err on the side of ignoring it or setting `confidence` to `low` because we don't want this rule to produce noisy errors.
 
 ### Bad
 
@@ -69,4 +79,9 @@ function normalDist(mu = 0, sigma = 1) {
 // These are fine because the simple variable names match the corresponding type names.
 const rule: Rule = {}
 const data: Data = {}
+```
+
+```ts
+// This is fine because `z` is an external dependency that we have no control over.
+import { z } from 'zod'
 ```

@@ -66,17 +66,16 @@ DO NOT call this function for example code snippets from the RULE or other code 
         codeSnippet: z
           .string()
           .describe(
-            'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given file content.'
+            'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE and should be no longer than needed in order to show the RULE violation.'
           ),
+        codeSnippetSource: z.enum(['examples', 'source']).describe(
+          // TODO: possibly use SOURCE ${file.fileRelativePath}
+          `Where the codeSnippet comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".`
+        ),
         reasoning: z
           .string()
           .describe(
             'An explanation of why this code snippet VIOLATES the given RULE. Think step-by-step when describing your reasoning.'
-          ),
-        codeSnippetSource: z
-          .enum(['examples', 'source'])
-          .describe(
-            `Where the codeSnippet comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".`
           ),
         violation: z
           .boolean()
@@ -136,17 +135,18 @@ DO NOT call this function for example code snippets from the RULE or other code 
         // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
         for (const negativeExample of rule.negativeExamples) {
           if (negativeExample.code.indexOf(codeSnippet) >= 0) {
-            console.warn(
-              `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive from examples`,
-              {
-                violation,
-                confidence,
-                codeSnippet,
-                codeSnippetSource,
-                reasoning,
-                negativeExample
-              }
-            )
+            // TODO: this whole approach needs to be reworked
+            // console.warn(
+            //   `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive from examples`,
+            //   {
+            //     violation,
+            //     confidence,
+            //     codeSnippet,
+            //     codeSnippetSource,
+            //     reasoning,
+            //     negativeExample
+            //   }
+            // )
 
             return
           }
@@ -179,7 +179,7 @@ ${stringifyRuleForModel(rule)}
 
 ---
 `),
-      Msg.system(`SOURCE FILE: ${file.fileName}\nSOURCE:\n\n${file.content}`)
+      Msg.system(`# SOURCE ${file.fileName}:\n\n${file.content}`)
     ],
     tools: [
       {

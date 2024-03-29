@@ -1,3 +1,5 @@
+/** gptlint-disable */
+
 declare module 'ts-progress' {
   export interface ProgressOptions {
     total: number
