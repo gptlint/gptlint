@@ -338,6 +338,35 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
 }
 `;
 
+exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`] = `
+{
+  "desc": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.",
+  "fixable": true,
+  "languages": [
+    "all",
+  ],
+  "level": "error",
+  "message": "Format comments like sentences",
+  "name": "format-comments-like-sentences",
+  "negativeExamples": [
+    {
+      "code": "// quick comment",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "// Quick comment.",
+      "language": "ts",
+    },
+  ],
+  "source": "fixtures/rules/wip/format-comments-like-sentences.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
 exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = `
 {
   "desc": "State which is simple to derive should be re-derived when necessary instead of storing it in state or props.TODO",
@@ -415,35 +444,6 @@ const validKeysL = new Set()",
 }
 `;
 
-exports[`parseRuleFile - guidelines/format-comments-like-sentences.md 1`] = `
-{
-  "desc": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.",
-  "fixable": true,
-  "languages": [
-    "all",
-  ],
-  "level": "error",
-  "message": "Format comments like sentences",
-  "name": "format-comments-like-sentences",
-  "negativeExamples": [
-    {
-      "code": "// quick comment",
-      "language": "ts",
-    },
-  ],
-  "positiveExamples": [
-    {
-      "code": "// Quick comment.",
-      "language": "ts",
-    },
-  ],
-  "source": "guidelines/format-comments-like-sentences.md",
-  "tags": [
-    "general",
-  ],
-}
-`;
-
 exports[`parseRuleFile - guidelines/prefer-array-at-negative-indexing.md 1`] = `
 {
   "desc": "When accessing items in an array from the end, like the last item, prefer using Array.at with a negative index because it is less error-prone. Note that using Array.at with a positive index is equivalent to indexing into the array normally, and if Array.at references a non-existing index, it will return undefined.",
@@ -513,7 +513,7 @@ exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
 
 exports[`parseRuleFile - guidelines/react-avoid-class-components.md 1`] = `
 {
-  "desc": "React class components are deprecated. Use React functions and hooks instead.",
+  "desc": "React class components are deprecated. Use React functions and hooks instead.Note that uses classes is fine for non-react components.",
   "fixable": false,
   "languages": [
     "javascript",
@@ -524,9 +524,21 @@ exports[`parseRuleFile - guidelines/react-avoid-class-components.md 1`] = `
   "name": "react-avoid-class-components",
   "negativeExamples": [
     {
-      "code": "class Label extends Component {
+      "code": "import { Component } from 'react'
+
+export class Label extends Component {
   render() {
     return <div>Hello</div>
+  }
+}",
+      "language": "tsx",
+    },
+    {
+      "code": "import react from 'react'
+
+export class Label extends react.Component {
+  render() {
+    return <div />
   }
 }",
       "language": "tsx",
@@ -534,10 +546,19 @@ exports[`parseRuleFile - guidelines/react-avoid-class-components.md 1`] = `
   ],
   "positiveExamples": [
     {
-      "code": "function Button() {
+      "code": "export function Button() {
   return <div>Hello</div>
 }",
       "language": "tsx",
+    },
+    {
+      "code": "import EventEmitter from 'eventemitter3'
+
+// This is fine because it is a normal class and not a React component.
+class Foo extends EventEmitter {
+  constructor() {}
+}",
+      "language": "ts",
     },
   ],
   "source": "guidelines/react-avoid-class-components.md",
@@ -549,10 +570,11 @@ exports[`parseRuleFile - guidelines/react-avoid-class-components.md 1`] = `
 
 exports[`parseRuleFile - guidelines/semantic-variable-names.md 1`] = `
 {
-  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.Common acronyms like api, ast, and llm are fine even though they aren't as descriptive.",
+  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.Common acronyms like api, ast, and llm are fine even though they aren't as descriptive.Variables names which mirror the type names are okay to ignore.",
   "fixable": false,
   "languages": [
-    "all",
+    "javascript",
+    "typescript",
   ],
   "level": "error",
   "message": "Use semantic variable names",
@@ -598,6 +620,12 @@ function normalDist(mu = 0, sigma = 1) {
 
   return mu + sigma * y * Math.sqrt((-2 * Math.log(r)) / r)
 }",
+      "language": "ts",
+    },
+    {
+      "code": "// These are fine because the simple variable names match the corresponding type names.
+const rule: Rule = {}
+const data: Data = {}",
       "language": "ts",
     },
   ],
