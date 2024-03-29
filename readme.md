@@ -100,6 +100,9 @@ Flags:
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks
   - add support for including links to one or more URLs as resources explaining the rule in more depth
   - decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
+    - if we go with only the one-rule-per-file format, consider switching from an inline table to frontmatter for metadata
+  - support a caveats / exceptions h2
+  - support other h2s for examples / usage examples / etc
 - config
   - use eslint, ruff, and conformance as inspiration
   - add ability to extend other configs
