@@ -493,7 +493,7 @@ const item = items[index]",
 
 exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
 {
-  "desc": "The NPM package axios should be avoided in favor of native fetch. Now that native fetch has widespread support, axios is effectively deprecated and is generally a code smell when encountered.Convenience wrappers around fetch such as ky and ofetch are encouraged.",
+  "desc": "The NPM package axios should be avoided in favor of native fetch. Now that native fetch has widespread support, axios is effectively deprecated and is generally a code smell when encountered.Convenience wrappers around fetch such as ky and ofetch are encouraged.Code which doesn't use the axios module should be ignored.",
   "fixable": false,
   "languages": [
     "javascript",
@@ -502,7 +502,16 @@ exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
   "level": "error",
   "message": "Prefer fetch over axios",
   "name": "prefer-fetch-over-axios",
-  "negativeExamples": [],
+  "negativeExamples": [
+    {
+      "code": "import axios from 'axios'",
+      "language": "ts",
+    },
+    {
+      "code": "const axios = require('axios')",
+      "language": "ts",
+    },
+  ],
   "positiveExamples": [],
   "source": "guidelines/prefer-fetch-over-axios.md",
   "tags": [
@@ -570,7 +579,7 @@ class Foo extends EventEmitter {
 
 exports[`parseRuleFile - guidelines/semantic-variable-names.md 1`] = `
 {
-  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.Common acronyms like api, ast, and llm are fine even though they aren't as descriptive.Variables names which mirror the type names are okay to ignore.",
+  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.Common acronyms like api, ast, and llm are fine even though they aren't as descriptive.Variables names which mirror the corresponding type name are okay to ignore.Keys in objects and JS/TS strings are not variable names, so they should be ignored.If a value isn't a variable name, then it should be ignored.This rule should be ignored in test files.The names of file imports from third-party APIs and modules should be ignored because we have no control over them.If you are unsure whether or not a variable name is descriptive enough, err on the side of ignoring it or setting confidence to low.",
   "fixable": false,
   "languages": [
     "javascript",
@@ -598,7 +607,10 @@ const numTokens = 5
 const isFinished = true
 
 // Good because "ast" is an acronym
-const ast = parseAST()",
+const ast = parseAST()
+
+// Good because "fileTypeToParserMap" is very descriptive
+const fileTypeToParserMap: Record<string, string> = {}",
       "language": "ts",
     },
     {
@@ -628,6 +640,11 @@ const rule: Rule = {}
 const data: Data = {}",
       "language": "ts",
     },
+    {
+      "code": "// This is fine because \`z\` is an external dependency that we have no control over.
+import { z } from 'zod'",
+      "language": "ts",
+    },
   ],
   "source": "guidelines/semantic-variable-names.md",
   "tags": [
@@ -651,7 +668,7 @@ exports[`parseRuleFile - guidelines/use-esm.md 1`] = `
     {
       "code": "const path = require('path')
 
-module.exports = function () {}",
+module.exports = function foo() {}",
       "language": "js",
     },
   ],
@@ -659,7 +676,8 @@ module.exports = function () {}",
     {
       "code": "import path from 'path'
 
-export default function () {}",
+export default function foo() {}
+export function bar() {}",
       "language": "js",
     },
   ],

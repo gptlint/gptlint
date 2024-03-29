@@ -74,8 +74,8 @@ async function main() {
 
       {
         // Positive examples
-        const fuleExamplesGlob = path.join(ruleExamplesDir, 'correct', '*')
-        const exampleFiles = await globby(fuleExamplesGlob, {
+        const fileExamplesGlob = path.join(ruleExamplesDir, 'correct', '*')
+        const exampleFiles = await globby(fileExamplesGlob, {
           gitignore: true,
           cwd
         })
@@ -125,8 +125,8 @@ async function main() {
 
       {
         // Negative examples
-        const fuleExamplesGlob = path.join(ruleExamplesDir, 'incorrect', '*')
-        const exampleFiles = await globby(fuleExamplesGlob, {
+        const fileExamplesGlob = path.join(ruleExamplesDir, 'incorrect', '*')
+        const exampleFiles = await globby(fileExamplesGlob, {
           gitignore: true,
           cwd
         })

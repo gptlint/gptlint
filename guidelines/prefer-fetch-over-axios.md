@@ -13,3 +13,13 @@ The NPM package `axios` should be avoided in favor of native `fetch`. Now that n
 Convenience wrappers around `fetch` such as `ky` and `ofetch` are encouraged.
 
 Code which doesn't use the `axios` module should be ignored.
+
+### Bad
+
+```ts
+import axios from 'axios'
+```
+
+```ts
+const axios = require('axios')
+```

@@ -66,7 +66,7 @@ DO NOT call this function for example code snippets from the RULE or other code 
         codeSnippet: z
           .string()
           .describe(
-            'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE and should be no longer than needed in order to show the RULE violation.'
+            'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.'
           ),
         codeSnippetSource: z.enum(['examples', 'source']).describe(
           // TODO: possibly use SOURCE ${file.fileRelativePath}
