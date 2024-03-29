@@ -11,7 +11,7 @@
 Identifiers of the same type should try to use consistent casing.
 
 Variable names should use camelCase.
-Global const variable names should either use camelCase or CONSTANT_CASE.
+Global const variable names should either use camelCase, PascalCase, or CONSTANT_CASE.
 Type names should use PascalCase.
 Class names should use PascalCase.
 Function names should use camelCase.
@@ -25,6 +25,8 @@ Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBas
 Ignore identifiers which mix PascalCase with camelCase.
 
 Ignore the casing of common acronyms like API, IP, HTTP, and LLM.
+
+Ignore the casing of identifiers which start with acronyms like `LLMOptionsSchema`.
 
 Class variables and functions may include `_` prefixes.
 
@@ -55,4 +57,10 @@ import foo from 'foo'
 
 // This is fine because `foo` is a third-party API which this rule should to ignore.
 foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })
+```
+
+```ts
+export const HTTPConfig = {}
+const LLMOptions = {}
+const validKeysL = new Set()
 ```

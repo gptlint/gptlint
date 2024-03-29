@@ -58,43 +58,53 @@ DO NOT call this function for example code snippets from the RULE or other code 
           .describe(
             'An explanation of why this code snippet VIOLATES the given RULE. Think step-by-step when describing your reasoning.'
           ),
+        codeSnippetSource: z
+          .enum(['examples', 'source'])
+          .describe(
+            'Where the codeSnippet comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source".'
+          ),
         violation: z
           .boolean()
           .describe(
-            'Whether or not this `codeSnippet` violates the RULE and appears in the SOURCE. If the `codeSnippet` does VIOLATE the RULE, then `violation` should be `true`. If the `codeSnippet` conforms to the RULE correctly or does not appear in the SOURCE, then `violation` should be `false`.'
+            'Whether or not this `codeSnippet` violates the RULE. If the `codeSnippet` does VIOLATE the RULE, then `violation` should be `true`. If the `codeSnippet` conforms to the RULE correctly or does not appear in the SOURCE, then `violation` should be `false`.'
           ),
         confidence: z
           .enum(['low', 'medium', 'high'])
-          .describe(
-            'Your confidence that the `codeSnippet` VIOLATES the RULE and appears in the SOURCE.'
-          )
+          .describe('Your confidence that the `codeSnippet` VIOLATES the RULE.')
       })
     },
     async ({
       ruleName,
       codeSnippet,
+      codeSnippetSource,
       violation,
       confidence,
       reasoning
     }: {
       ruleName: string
       codeSnippet: string
+      codeSnippetSource: string
       violation: boolean
       confidence: types.LintRuleErrorConfidence
       reasoning: string
     }) => {
       ruleName = ruleName.toLowerCase().trim()
 
-      if (!violation || confidence !== 'high') {
-        // console.warn(
-        //   `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive`,
-        //   {
-        //     violation,
-        //     confidence,
-        //     codeSnippet,
-        //     reasoning
-        //   }
-        // )
+      if (
+        !violation ||
+        confidence !== 'high' ||
+        codeSnippetSource !== 'source'
+      ) {
+        console.warn(
+          `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive`,
+          {
+            violation,
+            confidence,
+            codeSnippet,
+            codeSnippetSource,
+            reasoning
+          }
+        )
 
         return
       }
@@ -105,6 +115,27 @@ DO NOT call this function for example code snippets from the RULE or other code 
         )
 
         return
+      }
+
+      if (rule.negativeExamples) {
+        // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
+        for (const negativeExample of rule.negativeExamples) {
+          if (negativeExample.code.indexOf(codeSnippet) >= 0) {
+            console.warn(
+              `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive from examples`,
+              {
+                violation,
+                confidence,
+                codeSnippet,
+                codeSnippetSource,
+                reasoning,
+                negativeExample
+              }
+            )
+
+            return
+          }
+        }
       }
 
       lintResult.lintErrors.push({
@@ -152,6 +183,7 @@ Your task is to take the given SOURCE and determine whether any portions of it V
         })
       } catch (err: any) {
         // TODO: handle "multi_tool_use.parallel" openai tool calling bug
+        // @see https://community.openai.com/t/model-tries-to-call-unknown-function-multi-tool-use-parallel/490653
         console.warn(
           `warning: rule "${rule.name}" file "${file.fileRelativePath}" unexpected LLM error`,
           err.message,
