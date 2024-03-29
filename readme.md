@@ -7,7 +7,7 @@
 ## Features
 
 - simple markdown format for specifying rules ([example](./guidelines/prefer-array-at-negative-indexing.md))
-- easy to add custom, project-specific rules ([example](./fixtures/guidelines/ts-example-0.md))
+- easy to add custom, project-specific rules (_rules are just markdown files_)
 - cli and config formats are ~~copied from~~ inspired by `eslint`
 - content-based caching
 - outputs LLM stats per run (cost, tokens, etc)
@@ -17,9 +17,9 @@
   - want to enforce a new best practice in your project? add a new markdown file for the rule, describe the rule's intent in natural language, add a few correct/incorrect examples, and you're good to go
   - all custom rules live in your repo as simple markdown files and are self-documenting, understandable by non-devs, and they can be improved over time via standard git workflows
   - this is the way 💯
-- built-in rules come with evals so you can be sure they work correctly at scale
+- all built-in rules are tested extensively with a combination of _synthetic evals_ and manual test cases
   - (you can think of evals as regression test suites for possibly non-deterministic functions like the LLMs that power GPTLint)
-  - this allows us to track the accuracy of GPTLint over time and improve the rules whenever we find false-positives / false-negatives
+  - this allows us to track the accuracy of GPTLint over time and improve the rules whenever we find false positives or false negatives
 - ~~supports any programming language~~ (ts, py, C++, java, etc)
   - the MVP is focused on JS / TS only for now (python support coming soon)
 - supports any natural language (english, chinese, spanish, etc)
