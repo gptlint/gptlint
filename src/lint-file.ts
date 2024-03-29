@@ -61,7 +61,7 @@ DO NOT call this function for example code snippets from the RULE or other code 
         codeSnippetSource: z
           .enum(['examples', 'source'])
           .describe(
-            'Where the codeSnippet comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source".'
+            `Where the codeSnippet comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".`
           ),
         violation: z
           .boolean()
@@ -95,16 +95,16 @@ DO NOT call this function for example code snippets from the RULE or other code 
         confidence !== 'high' ||
         codeSnippetSource !== 'source'
       ) {
-        console.warn(
-          `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive`,
-          {
-            violation,
-            confidence,
-            codeSnippet,
-            codeSnippetSource,
-            reasoning
-          }
-        )
+        // console.warn(
+        //   `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive`,
+        //   {
+        //     violation,
+        //     confidence,
+        //     codeSnippet,
+        //     codeSnippetSource,
+        //     reasoning
+        //   }
+        // )
 
         return
       }
@@ -155,11 +155,16 @@ DO NOT call this function for example code snippets from the RULE or other code 
 
   const res = await chatModel.run({
     messages: [
-      Msg.system(`You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure source code conforms to project-specific guidelines and best practices. You will be given a RULE with a description of the RULE's intent and some positive examples where the RULE is used correctly and some negative examples where the RULE is VIOLATED (used incorrectly).
+      Msg.system(`# INSTRUCTIONS
+You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure source code conforms to project-specific guidelines and best practices. You will be given a RULE with a description of the RULE's intent and some positive examples where the RULE is used correctly and some negative examples where the RULE is VIOLATED (used incorrectly).
 
-Your task is to take the given SOURCE and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why any given \`codeSnippet\` VIOLATES the RULE.`),
-      Msg.system(stringifyRuleForModel(rule)),
-      Msg.user(`SOURCE FILE: ${file.fileName}\nSOURCE:\n\n${file.content}`)
+Your task is to take the given SOURCE and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why any given \`codeSnippet\` VIOLATES the RULE.
+
+${stringifyRuleForModel(rule)}
+
+---
+`),
+      Msg.system(`SOURCE FILE: ${file.fileName}\nSOURCE:\n\n${file.content}`)
     ],
     tools: [
       {

@@ -106,6 +106,8 @@ export async function preLintFile({
     return { ...preLintResult, lintResult }
   }
 
+  // console.log('cacheKey', JSON.stringify(preLintResult.cacheKey, null, 2))
+
   // No cached result
   return preLintResult
 }

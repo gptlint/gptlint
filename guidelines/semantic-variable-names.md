@@ -6,13 +6,17 @@
 | Level     | error                     |
 | Fixable   | false                     |
 | Tags      | general                   |
-| Languages | all                       |
+| Languages | javascript, typescript    |
 
 Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
 
 An exception to this rule is that it is acceptable to use simple variable names like `i` in `for` loops.
 
 An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.
+
+Common acronyms like `api`, `ast`, and `llm` are fine even though they aren't as descriptive.
+
+Variables names which mirror the type names are okay to ignore.
 
 ### Bad
 
@@ -32,6 +36,9 @@ const numTokens = 5
 
 // Good because "isFinished" is descriptive
 const isFinished = true
+
+// Good because "ast" is an acronym
+const ast = parseAST()
 ```
 
 ```ts
@@ -53,4 +60,10 @@ function normalDist(mu = 0, sigma = 1) {
 
   return mu + sigma * y * Math.sqrt((-2 * Math.log(r)) / r)
 }
+```
+
+```ts
+// These are fine because the simple variable names match the corresponding type names.
+const rule: Rule = {}
+const data: Data = {}
 ```

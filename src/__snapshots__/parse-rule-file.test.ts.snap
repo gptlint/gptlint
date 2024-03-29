@@ -360,21 +360,26 @@ exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = 
 
 exports[`parseRuleFile - guidelines/consistent-identifier-casing.md 1`] = `
 {
-  "desc": "Identifiers of the same type should use consistent casing. This rule applies to all types of identifiers: variable names, class names, type names, function names, constants, etc.For example, if some variable names use camelCase, then all variable names should use camelCase. If some type names use PascalCase, then all type names should use PascalCase. If some constants use CONSTANT_CASE, then all constants should use constant case.",
+  "desc": "Identifiers of the same type should try to use consistent casing.Variable names should use camelCase.
+Global const variable names should either use camelCase, PascalCase, or CONSTANT_CASE.
+Type names should use PascalCase.
+Class names should use PascalCase.
+Function names should use camelCase.Third-party APIs may use inconsistent casing, which is an exception to this rule.Keys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and _getKey.Ignore identifiers which mix PascalCase with camelCase.Ignore the casing of common acronyms like API, IP, HTTP, and LLM.Ignore the casing of identifiers which start with acronyms like LLMOptionsSchema.Class variables and functions may include _ prefixes.",
   "fixable": false,
   "languages": [
-    "all",
+    "javascript",
+    "typescript",
   ],
   "level": "error",
   "message": "Be consistent with identifier casing",
   "name": "consistent-identifier-casing",
   "negativeExamples": [
     {
-      "code": "// This is bad because variable identifiers should use consistent casing.
+      "code": "// These are bad because variable identifiers should use consistent casing.
 const fooBar = true
 const default_timeout = 5000
 
-// This is bad because function identifiers should use consistent casing.
+// These are bad because function identifiers should use consistent casing.
 function helloWorld() {}
 function hello_twitter() {}",
       "language": "ts",
@@ -387,6 +392,19 @@ const defaultTimeout = 5000
 
 function helloWorld() {}
 function helloTwitter() {}",
+      "language": "ts",
+    },
+    {
+      "code": "import foo from 'foo'
+
+// This is fine because \`foo\` is a third-party API which this rule should to ignore.
+foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })",
+      "language": "ts",
+    },
+    {
+      "code": "export const HTTPConfig = {}
+const LLMOptions = {}
+const validKeysL = new Set()",
       "language": "ts",
     },
   ],
@@ -531,7 +549,7 @@ exports[`parseRuleFile - guidelines/react-avoid-class-components.md 1`] = `
 
 exports[`parseRuleFile - guidelines/semantic-variable-names.md 1`] = `
 {
-  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.",
+  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.Common acronyms like api, ast, and llm are fine even though they aren't as descriptive.",
   "fixable": false,
   "languages": [
     "all",
@@ -555,7 +573,10 @@ const b = false",
 const numTokens = 5
 
 // Good because "isFinished" is descriptive
-const isFinished = true",
+const isFinished = true
+
+// Good because "ast" is an acronym
+const ast = parseAST()",
       "language": "ts",
     },
     {

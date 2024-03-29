@@ -1,45 +1,36 @@
+import type { ChatModel } from '@dexaai/dexter'
 import pMap from 'p-map'
 import pRetry from 'p-retry'
 
 import type * as types from './types.js'
-import { LinterCache } from './cache.js'
-import { createChatModel } from './create-chat-model.js'
+import type { LinterCache } from './cache.js'
 import { lintFile } from './lint-file.js'
 import { preLintFile } from './pre-lint-file.js'
-import { readFiles } from './read-files.js'
 import { mergeLintResults } from './utils.js'
 
 export async function lintFiles({
-  inputFiles,
+  files,
   rules,
   config,
+  cache,
+  chatModel,
   concurrency = 16,
   onProgress,
   onProgressInit
 }: {
-  inputFiles: string[]
+  files: types.InputFile[]
   rules: types.Rule[]
   config: types.ResolvedLinterConfig
+  cache: LinterCache
+  chatModel: ChatModel
   concurrency?: number
   onProgress?: types.ProgressHandlerFn
   onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
-  const cache = new LinterCache({
-    cacheDir: config.linterOptions.cacheDir,
-    noCache: config.linterOptions.noCache
-  })
-  await cache.init()
-
-  const files = await readFiles(inputFiles, { concurrency })
-
-  const chatModel = createChatModel(config)
-
   // TODO: Add support for different types of file <> rule mappings
   const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))
   )
-  const foo_bar = 5
-
   let lintResult: types.LintResult = {
     lintErrors: [],
     numModelCalls: 0,
@@ -83,6 +74,19 @@ export async function lintFiles({
   )
 
   const resolvedLintTasks = preLintResults.filter((r) => !r.lintResult)
+
+  console.log(
+    'preLintResults',
+    {
+      numTasks: lintTasks.length,
+      numTasksCached: lintTasks.length - resolvedLintTasks.length,
+      numTasksTodo: resolvedLintTasks.length
+    },
+    resolvedLintTasks.map((task) => ({
+      file: task.file.fileRelativePath,
+      rule: task.rule.name
+    }))
+  )
 
   if (config.linterOptions.earlyExit && lintResult.lintErrors.length) {
     earlyExitTripped = true

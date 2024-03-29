@@ -3,6 +3,7 @@ import path from 'node:path'
 
 import { Msg } from '@dexaai/dexter'
 import 'dotenv/config'
+import { gracefulExit } from 'exit-hook'
 import hashObject from 'hash-object'
 import pMap from 'p-map'
 
@@ -45,7 +46,7 @@ async function main() {
   } catch (err: any) {
     console.error(err.message)
     args.showHelp()
-    process.exit(1)
+    return gracefulExit(1)
   }
 
   if (config.linterOptions.debugConfig) {
@@ -54,7 +55,7 @@ async function main() {
     )
     console.log('\nconfig', JSON.stringify(config, null, 2))
     console.log('\nrules', JSON.stringify(rules, null, 2))
-    process.exit(0)
+    return gracefulExit(0)
   }
 
   const chatModel = createChatModel(config)
@@ -199,5 +200,5 @@ async function main() {
 
 main().catch((err) => {
   console.error(err)
-  process.exit(1)
+  return gracefulExit(1)
 })
