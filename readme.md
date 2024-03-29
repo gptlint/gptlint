@@ -111,6 +111,7 @@ Flags:
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
     - possibly via optional regex patterns to enable / disable rules for files
   - try claude w/ structured output and nudging it with prefilled / prefix output JSON
+  - track llm calls and token stats across retry invocations within `lintFile`
 - rules
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently

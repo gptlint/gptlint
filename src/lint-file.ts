@@ -4,38 +4,53 @@ import {
   createAIFunction,
   handleFunctionCallMessage
 } from '@dexaai/dexter'
+import pRetry, { type Options as RetryOptions } from 'p-retry'
 import plur from 'plur'
 import { z } from 'zod'
 
 import type * as types from './types.js'
-import type { LinterCache } from './cache.js'
 import { stringifyRuleForModel } from './rule-utils.js'
-import { trimMessage } from './utils.js'
+import { createLintResult, trimMessage } from './utils.js'
 
 export async function lintFile({
   file,
   rule,
   chatModel,
-  cache,
-  cacheKey,
+  config,
+  retryOptions = {
+    retries: 2
+  }
+}: {
+  file: types.InputFile
+  rule: types.Rule
+  chatModel: ChatModel
+  config: types.ResolvedLinterConfig
+  retryOptions?: RetryOptions
+}): Promise<types.LintResult> {
+  return pRetry(
+    () =>
+      lintFileImpl({
+        file,
+        rule,
+        chatModel,
+        config
+      }),
+    retryOptions
+  )
+}
+
+export async function lintFileImpl({
+  file,
+  rule,
+  chatModel,
   config
 }: {
   file: types.InputFile
   rule: types.Rule
   chatModel: ChatModel
-  cache: LinterCache
-  cacheKey: any
   config: types.ResolvedLinterConfig
 }): Promise<types.LintResult> {
-  const lintResult: types.LintResult = {
-    lintErrors: [],
-    numModelCalls: 0,
-    numModelCallsCached: 0,
-    numPromptTokens: 0,
-    numCompletionTokens: 0,
-    numTotalTokens: 0,
-    totalCost: 0
-  }
+  const lintResult = createLintResult()
 
   const recordRuleFailure = createAIFunction(
     {
@@ -242,6 +257,5 @@ ${stringifyRuleForModel(rule)}
     }
   }
 
-  await cache.set(cacheKey, lintResult)
   return lintResult
 }

@@ -1,16 +1,15 @@
 import 'dotenv/config'
 import { gracefulExit } from 'exit-hook'
-import { globby } from 'globby'
 import ProgressBar, { type Progress } from 'ts-progress'
 
 import type * as types from '../src/types.js'
-import { LinterCache } from '../src/cache.js'
+import { createLinterCache } from '../src/cache.js'
 import { createChatModel } from '../src/create-chat-model.js'
 import { lintFiles } from '../src/lint-files.js'
-import { readFiles } from '../src/read-files.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
+import { resolveFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
-import { pick } from '../src/utils.js'
+import { logDebugConfig, logDebugStats } from '../src/utils.js'
 
 /**
  * Main CLI entrypoint.
@@ -24,39 +23,27 @@ async function main() {
     { cwd }
   )
 
+  let files: types.InputFile[]
   let rules: types.Rule[]
 
   try {
-    rules = await resolveRules({ cwd, config, concurrency })
+    ;[files, rules] = await Promise.all([
+      resolveFiles({ cwd, config, concurrency }),
+      resolveRules({ cwd, config, concurrency })
+    ])
   } catch (err: any) {
     console.error(err.message)
     args.showHelp()
     return gracefulExit(1)
   }
 
-  const inputFiles = await globby(config.files, {
-    gitignore: true,
-    ignore: config.ignores,
-    cwd
-  })
-
   if (config.linterOptions.debugConfig) {
-    console.log(
-      '\nlogging resolved config and then exiting because `debugConfig` is enabled'
-    )
-    console.log('\nconfig', JSON.stringify(config, null, 2))
-    console.log('\ninput files', JSON.stringify(inputFiles, null, 2))
-    console.log('\nrules', JSON.stringify(rules, null, 2))
+    logDebugConfig({ files, rules, config })
     return gracefulExit(0)
   }
 
-  const files = await readFiles(inputFiles, { concurrency })
   const chatModel = createChatModel(config)
-  const cache = new LinterCache({
-    cacheDir: config.linterOptions.cacheDir,
-    noCache: config.linterOptions.noCache
-  })
-  await cache.init()
+  const cache = await createLinterCache(config)
 
   let progressBar: Progress | undefined
 
@@ -84,20 +71,7 @@ async function main() {
   progressBar?.done()
 
   if (config.linterOptions.debugStats) {
-    console.log(
-      `\nLLM stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
-      {
-        model: config.llmOptions.model,
-        ...pick(
-          lintResult,
-          'numModelCalls',
-          'numModelCallsCached',
-          'numPromptTokens',
-          'numCompletionTokens',
-          'numTotalTokens'
-        )
-      }
-    )
+    logDebugStats({ lintResult, config })
   }
 
   if (lintResult.lintErrors.length > 0) {

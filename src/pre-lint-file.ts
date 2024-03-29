@@ -5,8 +5,15 @@ import type * as types from './types.js'
 import type { LinterCache } from './cache.js'
 import { mergeLinterConfigs } from './config.js'
 import { parseInlineConfig } from './parse-inline-config.js'
-import { omit, trimMessage } from './utils.js'
+import { createLintResult, omit, trimMessage } from './utils.js'
 
+/**
+ * If the result contains a `lintResult`, then that is the cached result which
+ * should be used.
+ *
+ * If the result does not contain a `lintResult`, then the file / rule is not
+ * cached and needs to be processed.
+ */
 export async function preLintFile({
   file,
   rule,
@@ -20,15 +27,7 @@ export async function preLintFile({
   cache: LinterCache
   config: types.ResolvedLinterConfig
 }): Promise<types.PreLintResult> {
-  const lintResult: types.LintResult = {
-    lintErrors: [],
-    numModelCalls: 0,
-    numModelCallsCached: 0,
-    numPromptTokens: 0,
-    numCompletionTokens: 0,
-    numTotalTokens: 0,
-    totalCost: 0
-  }
+  const lintResult = createLintResult()
 
   const preLintResult: types.PreLintResult = {
     file,

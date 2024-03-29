@@ -83,6 +83,18 @@ export function trimMessage(
   return message
 }
 
+export function createLintResult(): types.LintResult {
+  return {
+    lintErrors: [],
+    numModelCalls: 0,
+    numModelCallsCached: 0,
+    numPromptTokens: 0,
+    numCompletionTokens: 0,
+    numTotalTokens: 0,
+    totalCost: 0
+  }
+}
+
 export function mergeLintResults(
   lintResultA: types.LintResult,
   lintResultB: types.LintResult
@@ -97,6 +109,33 @@ export function mergeLintResults(
       lintResultA.numCompletionTokens + lintResultB.numCompletionTokens,
     numTotalTokens: lintResultA.numTotalTokens + lintResultB.numTotalTokens,
     totalCost: lintResultA.totalCost + lintResultB.totalCost
+  }
+}
+
+export function createEvalStats(): types.EvalStats {
+  return {
+    numFiles: 0,
+    numRules: 0,
+    numFalseNegatives: 0,
+    numFalsePositives: 0,
+    numTrueNegatives: 0,
+    numTruePositives: 0
+  }
+}
+
+export function mergeEvalStats(
+  evalStatsA: types.EvalStats,
+  evalStatsB: types.EvalStats
+): types.EvalStats {
+  return {
+    numFiles: evalStatsA.numFiles + evalStatsB.numFiles,
+    numRules: evalStatsA.numRules + evalStatsB.numRules,
+    numFalseNegatives:
+      evalStatsA.numFalseNegatives + evalStatsB.numFalseNegatives,
+    numFalsePositives:
+      evalStatsA.numFalsePositives + evalStatsB.numFalsePositives,
+    numTrueNegatives: evalStatsA.numTrueNegatives + evalStatsB.numTrueNegatives,
+    numTruePositives: evalStatsA.numTruePositives + evalStatsB.numTruePositives
   }
 }
 
@@ -186,4 +225,63 @@ export function getEnv(
   } catch (e) {
     return defaultValue
   }
+}
+
+export function logDebugConfig({
+  files,
+  rules,
+  config
+}: {
+  files?: types.InputFile[]
+  rules: types.Rule[]
+  config: types.ResolvedLinterConfig
+}) {
+  console.log(
+    '\nlogging resolved config and then exiting because `debugConfig` is enabled'
+  )
+  console.log('\nconfig', JSON.stringify(config, null, 2))
+  if (files) {
+    console.log(
+      '\ninput files',
+      JSON.stringify(
+        files.map((file) => file.fileRelativePath),
+        null,
+        2
+      )
+    )
+  }
+  console.log('\nrules', JSON.stringify(rules, null, 2))
+}
+
+export function logDebugStats({
+  lintResult,
+  config
+}: {
+  lintResult: types.LintResult
+  config: types.ResolvedLinterConfig
+}) {
+  console.log(
+    `\nLLM stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
+    {
+      model: config.llmOptions.model,
+      ...pick(
+        lintResult,
+        'numModelCalls',
+        'numModelCallsCached',
+        'numPromptTokens',
+        'numCompletionTokens',
+        'numTotalTokens'
+      )
+    }
+  )
+}
+
+export function logEvalStats({
+  evalStats
+}: // ruleToEvalStats
+{
+  evalStats: types.EvalStats
+  // ruleToEvalStats: Record<string, types.EvalStats>
+}) {
+  console.log(`\nEval results`, evalStats)
 }

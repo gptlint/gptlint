@@ -17,7 +17,11 @@ import {
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { resolveRules } from '../src/resolve-rules.js'
 import { stringifyRuleForModel } from '../src/rule-utils.js'
-import { inferBestPossibleCodeFileExtension, omit } from '../src/utils.js'
+import {
+  inferBestPossibleCodeFileExtension,
+  logDebugConfig,
+  omit
+} from '../src/utils.js'
 
 /**
  * Internal CLI to generate synthetic eval data (code snippets) for rules.
@@ -32,7 +36,7 @@ async function main() {
       cwd,
       linterConfigDefaults: {
         llmOptions: {
-          // Use GPT-4 as the default for generating eval code snippets
+          // Use GPT-4 as the default for evals
           model: 'gpt-4-turbo-preview'
         }
       }
@@ -50,11 +54,7 @@ async function main() {
   }
 
   if (config.linterOptions.debugConfig) {
-    console.log(
-      '\nlogging resolved config and then exiting because `debugConfig` is enabled'
-    )
-    console.log('\nconfig', JSON.stringify(config, null, 2))
-    console.log('\nrules', JSON.stringify(rules, null, 2))
+    logDebugConfig({ rules, config })
     return gracefulExit(0)
   }
 

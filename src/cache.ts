@@ -40,8 +40,8 @@ export class LinterCache<
     })
   }
 
-  async init() {
-    if (this.cache) return
+  async init(): Promise<this> {
+    if (this.cache) return this
     this.cache = {}
 
     // console.log('cache', {
@@ -65,9 +65,11 @@ export class LinterCache<
         }
       } catch (err: any) {
         console.error(`Failed to initialize cache "${cacheFile}"`, err.message)
-        return gracefulExit(1)
+        gracefulExit(1)
       }
     }
+
+    return this
   }
 
   async close() {
@@ -116,4 +118,16 @@ export class LinterCache<
   protected _getKey(key: TKey): string {
     return hashObject(key)
   }
+}
+
+export async function createLinterCache<
+  TKey extends object = any,
+  TValue extends object = types.LintResult
+>(config: types.ResolvedLinterConfig): Promise<LinterCache<TKey, TValue>> {
+  const cache = new LinterCache<TKey, TValue>({
+    cacheDir: config.linterOptions.cacheDir,
+    noCache: config.linterOptions.noCache
+  })
+  await cache.init()
+  return cache
 }

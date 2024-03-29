@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import 'dotenv/config'
 import { globby } from 'globby'
 import pMap from 'p-map'
 

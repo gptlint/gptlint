@@ -88,3 +88,12 @@ export type ProgressHandlerFn = (opts: {
 export type ProgressHandlerInitFn = (opts: {
   numTasks: number
 }) => void | Promise<void>
+
+export type EvalStats = {
+  numFiles: number
+  numRules: number
+  numTruePositives: number
+  numTrueNegatives: number
+  numFalsePositives: number
+  numFalseNegatives: number
+}

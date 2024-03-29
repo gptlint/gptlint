@@ -1,12 +1,11 @@
 import type { ChatModel } from '@dexaai/dexter'
 import pMap from 'p-map'
-import pRetry from 'p-retry'
 
 import type * as types from './types.js'
 import type { LinterCache } from './cache.js'
 import { lintFile } from './lint-file.js'
 import { preLintFile } from './pre-lint-file.js'
-import { mergeLintResults } from './utils.js'
+import { createLintResult, mergeLintResults } from './utils.js'
 
 export async function lintFiles({
   files,
@@ -31,15 +30,7 @@ export async function lintFiles({
   const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))
   )
-  let lintResult: types.LintResult = {
-    lintErrors: [],
-    numModelCalls: 0,
-    numModelCallsCached: 0,
-    numPromptTokens: 0,
-    numCompletionTokens: 0,
-    numTotalTokens: 0,
-    totalCost: 0
-  }
+  let lintResult = createLintResult()
   let earlyExitTripped = false
 
   // Preprocess the file / rule tasks so our progress bar has a clear indication of
@@ -108,22 +99,18 @@ export async function lintFiles({
       }
 
       try {
-        const lintResultFile = await pRetry(
-          () =>
-            lintFile({
-              file,
-              rule,
-              chatModel,
-              cache,
-              cacheKey,
-              config
-            }),
-          {
-            retries: 2
-          }
-        )
+        const fileLintResult = await lintFile({
+          file,
+          rule,
+          chatModel,
+          config
+        })
 
-        lintResult = mergeLintResults(lintResult, lintResultFile)
+        if (cacheKey) {
+          await cache.set(cacheKey, fileLintResult)
+        }
+
+        lintResult = mergeLintResults(lintResult, fileLintResult)
 
         if (config.linterOptions.earlyExit && lintResult.lintErrors.length) {
           earlyExitTripped = true
