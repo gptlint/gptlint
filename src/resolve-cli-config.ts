@@ -113,6 +113,7 @@ export async function resolveLinterCLIConfig(
         model: {
           type: String,
           description: 'Which LLM to use for assessing rule conformance',
+          alias: 'm',
           default: defaultLinterConfig.llmOptions.model
         },
         temperature: {
