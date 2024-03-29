@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { gracefulExit } from 'exit-hook'
+import plur from 'plur'
 import ProgressBar, { type Progress } from 'ts-progress'
 
 import type * as types from '../src/types.js'
@@ -76,9 +77,17 @@ async function main() {
 
   if (lintResult.lintErrors.length > 0) {
     console.log(
-      '\nlint errors:',
+      `\nlint errors:`,
       JSON.stringify(lintResult.lintErrors, null, 2)
     )
+
+    console.log(
+      `\nfound ${lintResult.lintErrors.length} lint ${plur(
+        'error',
+        lintResult.lintErrors.length
+      )}`
+    )
+
     return gracefulExit(1)
   } else {
     console.log('\nno lint errors 🎉')

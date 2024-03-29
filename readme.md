@@ -105,7 +105,7 @@ Flags:
   - add ability to extend other configs
 - linter engine
   - **evals**
-  - add integration tests against eval test suite
+  - improve solution to ignore false positives from `negativeExamples`
   - cross-file linting; v0 is strictly local to individual files
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas

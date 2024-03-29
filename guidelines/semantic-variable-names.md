@@ -39,6 +39,9 @@ const isFinished = true
 
 // Good because "ast" is an acronym
 const ast = parseAST()
+
+// Good because "fileTypeToParserMap" is very descriptive
+const fileTypeToParserMap: Record<string, string> = {}
 ```
 
 ```ts

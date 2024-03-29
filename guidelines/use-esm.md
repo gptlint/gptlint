@@ -17,7 +17,7 @@ ESM (ECMAScript Modules) is a modern standard which uses `import` and `export` s
 ```js
 const path = require('path')
 
-module.exports = function () {}
+module.exports = function foo() {}
 ```
 
 ### Good
@@ -25,5 +25,6 @@ module.exports = function () {}
 ```js
 import path from 'path'
 
-export default function () {}
+export default function foo() {}
+export function bar() {}
 ```
