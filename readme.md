@@ -109,8 +109,8 @@ Flags:
 - linter engine
   - **evals**
   - add support for different LLM providers
+    - **move from function calling to structured output for increased compat**
     - test anthropic claude w/ structured output and prefill
-    - move from function calling to structured output for increased compat
   - improve solution to ignore false positives from `negativeExamples`
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
