@@ -5,7 +5,7 @@ import type * as types from './types.js'
 import { type LinterCache } from './cache.js'
 import { mergeLinterConfigs } from './config.js'
 import { parseInlineConfig } from './parse-inline-config.js'
-import { createCacheKey, createLintResult, trimMessage } from './utils.js'
+import { createCacheKey, createLintResult } from './utils.js'
 
 /**
  * If the result contains a `lintResult`, then that is the cached result which
@@ -61,10 +61,7 @@ export async function preLintFile({
         console.log(
           `\nPASS CACHE HIT Rule "${rule.name}" file "${
             file.fileRelativePath
-          }": ${lintErrors.length} ${plur(
-            'error',
-            lintErrors.length
-          )} found: ${trimMessage(lintResult.message)}`
+          }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
         )
       }
     }
