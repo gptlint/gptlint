@@ -502,16 +502,7 @@ exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
   "level": "error",
   "message": "Prefer fetch over axios",
   "name": "prefer-fetch-over-axios",
-  "negativeExamples": [
-    {
-      "code": "import axios from 'axios'",
-      "language": "ts",
-    },
-    {
-      "code": "const axios = require('axios')",
-      "language": "ts",
-    },
-  ],
+  "negativeExamples": [],
   "positiveExamples": [],
   "source": "guidelines/prefer-fetch-over-axios.md",
   "tags": [
