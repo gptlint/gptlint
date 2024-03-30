@@ -1,5 +1,4 @@
 import type { ChatModel } from '@dexaai/dexter'
-import plur from 'plur'
 
 import type * as types from './types.js'
 import { type LinterCache } from './cache.js'
