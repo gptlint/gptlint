@@ -47,24 +47,24 @@ export async function preLintFile({
     lintResult.message = cachedResult.message
     lintResult.numModelCallsCached++
 
-    if (config.linterOptions.debug) {
-      const { lintErrors } = lintResult
+    // if (config.linterOptions.debug) {
+    //   const { lintErrors } = lintResult
 
-      if (lintErrors.length) {
-        console.log(
-          `\nFAIL CACHE HIT Rule "${rule.name}" file "${
-            file.fileRelativePath
-          }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
-          lintErrors
-        )
-      } else {
-        console.log(
-          `\nPASS CACHE HIT Rule "${rule.name}" file "${
-            file.fileRelativePath
-          }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
-        )
-      }
-    }
+    //   if (lintErrors.length) {
+    //     console.log(
+    //       `\nFAIL CACHE HIT Rule "${rule.name}" file "${
+    //         file.fileRelativePath
+    //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
+    //       lintErrors
+    //     )
+    //   } else {
+    //     console.log(
+    //       `\nPASS CACHE HIT Rule "${rule.name}" file "${
+    //         file.fileRelativePath
+    //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
+    //     )
+    //   }
+    // }
 
     return { ...preLintResult, lintResult }
   }
