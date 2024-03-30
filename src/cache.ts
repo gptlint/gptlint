@@ -50,7 +50,7 @@ export class LinterCache<
     //   noCache: this.noCache
     // })
 
-    if (this.cacheDir && !this.noCache) {
+    if (this.cacheDir) {
       const cacheFile = this.cacheFile!
 
       try {
@@ -81,8 +81,10 @@ export class LinterCache<
   }
 
   async get(key: TKey): Promise<TValue | undefined> {
+    if (this.noCache) return
+
     assert(this.cache, 'Must call LinterCache.init')
-    const encodedValue = this.cache[this._getKey(key)]
+    const encodedValue = this.cache[getCacheKey(key)]
 
     if (encodedValue !== undefined) {
       const decodedValue = JSON.parse(encodedValue) as TValue
@@ -95,7 +97,7 @@ export class LinterCache<
   async set(key: TKey, value: TValue) {
     assert(this.cache, 'Must call LinterCache.init')
     const encodedValue = JSON.stringify(value)
-    this.cache[this._getKey(key)] = encodedValue
+    this.cache[getCacheKey(key)] = encodedValue
 
     // TODO: don't write the value every time or move to a different local json db abstraction
     await this.flush()
@@ -114,10 +116,10 @@ export class LinterCache<
       })
     }
   }
+}
 
-  protected _getKey(key: TKey): string {
-    return hashObject(key)
-  }
+export function getCacheKey<T extends object = any>(obj: T): string {
+  return hashObject(obj)
 }
 
 export async function createLinterCache<

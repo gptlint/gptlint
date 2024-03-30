@@ -1,3 +1,4 @@
+import type { ChatModel } from '@dexaai/dexter'
 import slugify from '@sindresorhus/slugify'
 import dedupe from 'array-uniq'
 import invariant from 'tiny-invariant'
@@ -301,4 +302,26 @@ export function logEvalStats({
 
   console.log(`\nEval results`, { ...evalStats, ...extendedStats })
   return extendedStats
+}
+
+export function createCacheKey({
+  file,
+  rule,
+  chatModel
+}: {
+  file: types.InputFile
+  rule: types.Rule
+  chatModel: ChatModel
+}): any {
+  // TODO: add linter major version to the cache key
+  return {
+    // Only keep the relative file path, content, and detected language
+    file: omit(file, 'filePath', 'fileName'),
+
+    // Remove rule fields which don't affect LLM logic
+    rule: omit(rule, 'fixable', 'source', 'level'),
+
+    // Ensure the cache key depends on how the LLM is parameterized
+    params: chatModel.getParams()
+  }
 }

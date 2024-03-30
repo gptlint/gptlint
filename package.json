@@ -31,6 +31,7 @@
     "find-cache-dir": "^5.0.0",
     "globby": "^14.0.1",
     "hash-object": "^5.0.1",
+    "jsonrepair": "^3.6.0",
     "mdast-util-to-string": "^4.0.0",
     "p-map": "^7.0.1",
     "p-retry": "^6.2.0",
@@ -45,7 +46,6 @@
     "unified": "^11.0.4",
     "unist-util-inspect": "^8.0.0",
     "unist-util-is": "^6.0.0",
-    "unist-util-visit": "^5.0.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

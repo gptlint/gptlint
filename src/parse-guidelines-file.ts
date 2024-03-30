@@ -1,9 +1,7 @@
-import type { Heading } from 'mdast'
-import { visit } from 'unist-util-visit'
-
 import type * as types from './types.js'
 import {
   findAllBetween,
+  findAllHeadingNodes,
   parseMarkdownAST,
   parseRuleNode
 } from './markdown-utils.js'
@@ -17,15 +15,7 @@ export async function parseGuidelinesFile({
   filePath: string
 }): Promise<types.Rule[]> {
   const ast = parseMarkdownAST(content)
-  const h2RuleNodes: Heading[] = []
-
-  visit(ast, (node) => {
-    if (node.type !== 'heading' || node.depth !== 2) {
-      return
-    }
-
-    h2RuleNodes.push(node)
-  })
+  const h2RuleNodes = findAllHeadingNodes(ast, { depth: 2 })
 
   assert(
     h2RuleNodes.length > 0,
