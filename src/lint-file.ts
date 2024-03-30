@@ -15,7 +15,7 @@ import {
 } from './markdown-utils.js'
 import { safeParseStructuredOutput } from './parse-structured-output.js'
 import { stringifyRuleForModel } from './rule-utils.js'
-import { createLintResult, trimMessage } from './utils.js'
+import { createLintResult } from './utils.js'
 
 const ruleViolationSchema = z.object({
   ruleName: z
@@ -257,10 +257,11 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
       }
 
       if (err instanceof RetryableError) {
-        // TODO
-        console.warn(
-          `\nRETRYING ERROR rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
-        )
+        if (config.linterOptions.debug) {
+          console.warn(
+            `\nRETRYING error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
+          )
+        }
 
         // Retry
         const errMessage = err.message
@@ -270,7 +271,11 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
           )
         )
       } else {
-        console.warn('Retrying after unexpected error', err)
+        if (config.linterOptions.debug) {
+          console.warn(
+            `\nRETRYING unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
+          )
+        }
       }
     }
   } while (true)
@@ -289,10 +294,7 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
       console.log(
         `\n<<< PASS CACHE MISS Rule "${rule.name}" file "${
           file.fileRelativePath
-        }": ${lintErrors.length} ${plur(
-          'error',
-          lintErrors.length
-        )} found: ${trimMessage(lintResult.message)}`
+        }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
       )
     }
   }
