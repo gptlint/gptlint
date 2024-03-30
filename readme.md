@@ -133,7 +133,8 @@ Flags:
   - update project name in multiple places once we decide on a name
   - decide on an OSS license
   - add a [security policy](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md)
-  - basic evals and blog post
+  - basic eval graphs and blog post
+  - rubric for what makes a good rule
   - publish to NPM
 
 ## License

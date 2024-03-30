@@ -177,7 +177,7 @@ DO NOT call this function for example code snippets from the RULE or for code sn
 
 You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure source code conforms to project-specific guidelines and best practices. You will be given a RULE with a description of the RULE's intent and some positive examples where the RULE is used correctly and some negative examples where the RULE is VIOLATED (used incorrectly).
 
-Your task is to take the given SOURCE code and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why any given \`codeSnippet\` VIOLATES the RULE.
+Your task is to take the given SOURCE code and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why a given \`codeSnippet\` may VIOLATE the RULE.
 
 ${stringifyRuleForModel(rule)}
 
