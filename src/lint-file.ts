@@ -264,6 +264,8 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
       }
 
       response = res.message.content!
+      lintResult.message = response
+
       if (config.linterOptions.debug) {
         console.log(
           `\nrule "${rule.name}" file "${file.fileRelativePath}" response\n${response}\n\n`

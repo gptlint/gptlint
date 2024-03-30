@@ -20,10 +20,12 @@ export { invariant as assert }
 export const omit = <T extends Record<any, unknown>, K extends keyof T>(
   obj: T,
   ...keys: K[]
-): Omit<T, K> =>
-  Object.fromEntries(
-    Object.entries(obj).filter(([k]) => !keys.includes(k as any))
+): Omit<T, K> => {
+  const keysSet = new Set(keys)
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k]) => !keysSet.has(k as any))
   ) as any
+}
 
 /**
  * From `obj`, create a new object that only includes `keys`.
@@ -36,10 +38,12 @@ export const omit = <T extends Record<any, unknown>, K extends keyof T>(
 export const pick = <T extends Record<any, unknown>, K extends keyof T>(
   obj: T,
   ...keys: K[]
-): Pick<T, K> =>
-  Object.fromEntries(
-    Object.entries(obj).filter(([k]) => keys.includes(k as any))
+): Pick<T, K> => {
+  const keysSet = new Set(keys)
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k]) => keysSet.has(k as any))
   ) as any
+}
 
 export function pruneUndefined<T extends Record<string, any>>(
   obj: T
