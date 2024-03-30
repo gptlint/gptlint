@@ -1,3 +1,4 @@
+import type { ChatModel } from '@dexaai/dexter'
 import slugify from '@sindresorhus/slugify'
 import dedupe from 'array-uniq'
 import invariant from 'tiny-invariant'
@@ -19,10 +20,12 @@ export { invariant as assert }
 export const omit = <T extends Record<any, unknown>, K extends keyof T>(
   obj: T,
   ...keys: K[]
-): Omit<T, K> =>
-  Object.fromEntries(
-    Object.entries(obj).filter(([k]) => !keys.includes(k as any))
+): Omit<T, K> => {
+  const keysSet = new Set(keys)
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k]) => !keysSet.has(k as any))
   ) as any
+}
 
 /**
  * From `obj`, create a new object that only includes `keys`.
@@ -35,10 +38,12 @@ export const omit = <T extends Record<any, unknown>, K extends keyof T>(
 export const pick = <T extends Record<any, unknown>, K extends keyof T>(
   obj: T,
   ...keys: K[]
-): Pick<T, K> =>
-  Object.fromEntries(
-    Object.entries(obj).filter(([k]) => keys.includes(k as any))
+): Pick<T, K> => {
+  const keysSet = new Set(keys)
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k]) => keysSet.has(k as any))
   ) as any
+}
 
 export function pruneUndefined<T extends Record<string, any>>(
   obj: T
@@ -301,4 +306,26 @@ export function logEvalStats({
 
   console.log(`\nEval results`, { ...evalStats, ...extendedStats })
   return extendedStats
+}
+
+export function createCacheKey({
+  file,
+  rule,
+  chatModel
+}: {
+  file: types.InputFile
+  rule: types.Rule
+  chatModel: ChatModel
+}): any {
+  // TODO: add linter major version to the cache key
+  return {
+    // Only keep the relative file path, content, and detected language
+    file: omit(file, 'filePath', 'fileName'),
+
+    // Remove rule fields which don't affect LLM logic
+    rule: omit(rule, 'fixable', 'source', 'level'),
+
+    // Ensure the cache key depends on how the LLM is parameterized
+    params: chatModel.getParams()
+  }
 }

@@ -1,16 +1,12 @@
-import {
-  type ChatModel,
-  Msg,
-  createAIFunction,
-  handleFunctionCallMessage
-} from '@dexaai/dexter'
-import pRetry, { type Options as RetryOptions } from 'p-retry'
+import { type ChatModel, Msg, type Prompt } from '@dexaai/dexter'
 import plur from 'plur'
-import { z } from 'zod'
 
 import type * as types from './types.js'
+import { AbortError, RetryableError } from './errors.js'
+import { parseRuleViolationsFromModelResponse } from './parse-rule-violations.js'
 import { stringifyRuleForModel } from './rule-utils.js'
-import { createLintResult, trimMessage } from './utils.js'
+import type { RuleViolation } from './rule-violations.js'
+import { createLintResult } from './utils.js'
 
 export async function lintFile({
   file,
@@ -25,219 +21,195 @@ export async function lintFile({
   rule: types.Rule
   chatModel: ChatModel
   config: types.ResolvedLinterConfig
-  retryOptions?: RetryOptions
-}): Promise<types.LintResult> {
-  return pRetry(
-    () =>
-      lintFileImpl({
-        file,
-        rule,
-        chatModel,
-        config
-      }),
-    retryOptions
-  )
-}
-
-export async function lintFileImpl({
-  file,
-  rule,
-  chatModel,
-  config
-}: {
-  file: types.InputFile
-  rule: types.Rule
-  chatModel: ChatModel
-  config: types.ResolvedLinterConfig
+  retryOptions?: {
+    retries: number
+  }
 }): Promise<types.LintResult> {
   const lintResult = createLintResult()
 
-  const recordRuleFailure = createAIFunction(
-    {
-      name: 'record_rule_violation',
-      description: `This function should only be called for code snippets appearing in the SOURCE which VIOLATE the RULE's intent.
+  function recordRuleViolation({
+    ruleName,
+    codeSnippet,
+    codeSnippetSource,
+    reasoning,
+    violation,
+    confidence
+  }: RuleViolation) {
+    ruleName = ruleName?.toLowerCase().trim()
 
-DO NOT call this function for code snippets which conform correctly to the RULE.
-DO NOT call this function for example code snippets from the RULE or for code snippets which don't appear in the SOURCE.`,
-      argsSchema: z.object({
-        ruleName: z
-          .string()
-          .describe('The name of the RULE which this `codeSnippet` violates.'),
-        codeSnippet: z
-          .string()
-          .describe(
-            'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.'
-          ),
-        codeSnippetSource: z.enum(['examples', 'source']).describe(
-          // TODO: possibly use SOURCE ${file.fileRelativePath}
-          `Where the codeSnippet comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".`
-        ),
-        reasoning: z
-          .string()
-          .describe(
-            'An explanation of why this code snippet VIOLATES the given RULE. Think step-by-step when describing your reasoning.'
-          ),
-        violation: z
-          .boolean()
-          .describe(
-            'Whether or not this `codeSnippet` violates the RULE. If the `codeSnippet` does VIOLATE the RULE, then `violation` should be `true`. If the `codeSnippet` conforms to the RULE correctly or does not appear in the SOURCE, then `violation` should be `false`.'
-          ),
-        confidence: z
-          .enum(['low', 'medium', 'high'])
-          .describe('Your confidence that the `codeSnippet` VIOLATES the RULE.')
-      })
-    },
-    async ({
-      ruleName,
+    if (!violation || confidence !== 'high' || codeSnippetSource !== 'source') {
+      // Ignore any false positives
+      return
+    }
+
+    if (ruleName && rule.name !== ruleName) {
+      console.warn(
+        `warning: rule "${rule.name}" LLM recorded error with unrecognized rule name "${ruleName}" on file "${file.fileRelativePath}"`
+      )
+
+      return
+    }
+
+    // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
+
+    lintResult.lintErrors.push({
+      filePath: file.filePath,
+      language: file.language,
+      ruleName: rule.name,
       codeSnippet,
-      codeSnippetSource,
-      violation,
       confidence,
       reasoning
-    }: {
-      ruleName: string
-      codeSnippet: string
-      codeSnippetSource: string
-      violation: boolean
-      confidence: types.LintRuleErrorConfidence
-      reasoning: string
-    }) => {
-      ruleName = ruleName.toLowerCase().trim()
-
-      if (
-        !violation ||
-        confidence !== 'high' ||
-        codeSnippetSource !== 'source'
-      ) {
-        // console.warn(
-        //   `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive`,
-        //   {
-        //     violation,
-        //     confidence,
-        //     codeSnippet,
-        //     codeSnippetSource,
-        //     reasoning
-        //   }
-        // )
-
-        // Ignore any false positives
-        return
-      }
-
-      if (rule.name !== ruleName) {
-        console.warn(
-          `warning: rule "${rule.name}" LLM recorded error with unrecognized rule name "${ruleName}" on file "${file.fileRelativePath}"`
-        )
-
-        return
-      }
-
-      if (rule.negativeExamples) {
-        // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
-        for (const negativeExample of rule.negativeExamples) {
-          if (negativeExample.code.indexOf(codeSnippet) >= 0) {
-            // TODO: this whole approach needs to be reworked
-            // console.warn(
-            //   `warning: rule "${rule.name}" file "${file.fileRelativePath}": ignoring false positive from examples`,
-            //   {
-            //     violation,
-            //     confidence,
-            //     codeSnippet,
-            //     codeSnippetSource,
-            //     reasoning,
-            //     negativeExample
-            //   }
-            // )
-
-            return
-          }
-        }
-      }
-
-      // TODO: possibly if codeSnippet doesn't appear in the source (or something close to it), then ignore this as a false positive
-
-      lintResult.lintErrors.push({
-        filePath: file.filePath,
-        language: file.language,
-        ruleName: rule.name,
-        codeSnippet,
-        confidence,
-        reasoning
-      })
-    }
-  )
+    })
+  }
 
   if (config.linterOptions.debug) {
     console.log(`>>> Rule "${rule.name}" file "${file.fileRelativePath}"`)
   }
 
-  const res = await chatModel.run({
-    messages: [
-      Msg.system(`# INSTRUCTIONS
+  const messages: Prompt.Msg[] = [
+    Msg.system(`# INSTRUCTIONS
 
 You are an expert senior TypeScript software engineer at Vercel who loves to lint code. You make sure source code conforms to project-specific guidelines and best practices. You will be given a RULE with a description of the RULE's intent and some positive examples where the RULE is used correctly and some negative examples where the RULE is VIOLATED (used incorrectly).
 
-Your task is to take the given SOURCE code and determine whether any portions of it VIOLATE the RULE's intent. Accuracy is important, so be sure to think step-by-step before invoking the \`record_rule_violation\` function and include \`reasoning\` and \`confidence\` to make it clear why a given \`codeSnippet\` may VIOLATE the RULE.
+Your task is to take the given SOURCE code and determine whether any portions of it VIOLATE the RULE's intent.
 
 ${stringifyRuleForModel(rule)}
 
 ---
 `),
-      Msg.system(`# SOURCE ${file.fileName}:\n\n${file.content}`)
-    ],
-    tools: [
-      {
-        type: 'function',
-        function: recordRuleFailure.spec
-      }
-    ]
-  })
+    Msg.system(`# SOURCE ${file.fileName}:\n\n${file.content}`),
+    Msg.system(`# TASK
 
-  switch (res.message.role) {
-    case 'assistant':
-      if (res.message.content) {
-        lintResult.message = res.message.content
-      }
+List out the portions of the SOURCE code ${file.fileName} which are related to the RULE and explain whether they VIOLATE or conform to the RULE's intent. Your answer should contain two markdown sections, EXPLANATION and VIOLATIONS.
 
-      try {
-        await handleFunctionCallMessage({
-          message: res.message,
-          functions: [recordRuleFailure],
-          functionCallConcurrency: 8
-        })
-      } catch (err: any) {
-        // TODO: handle "multi_tool_use.parallel" openai tool calling bug
-        // @see https://community.openai.com/t/model-tries-to-call-unknown-function-multi-tool-use-parallel/490653
-        console.warn(
-          `warning: rule "${rule.name}" file "${file.fileRelativePath}" unexpected LLM error`,
-          err.message,
-          JSON.stringify(res.message.tool_calls, null, 2)
+Accuracy is important, so be sure to think step-by-step and explain your reasoning in the EXPLANATION section.
+
+If you find any code snippets which VIOLATE the RULE, then output them as RULE_VIOLATION objects in the VIOLATIONS section. The VIOLATIONS section should be a JSON array of RULE_VIOLATION objects. This array may be empty if there are no RULE VIOLATIONS. Ignore code snippets which correctly conform to the RULE.
+
+RULE_VIOLATION schema:
+
+\`\`\`ts
+interface RULE_VIOLATION {
+  // The name of the RULE which this \`codeSnippet\` violates.
+  ruleName: string
+
+  // The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.
+  codeSnippet: string
+
+  // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".
+  codeSnippetSource: 'examples' | 'source'
+
+  // An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.
+  reasoning: string
+
+  // Whether or not this \`codeSnippet\` violates the RULE. If this \`codeSnippet\` does VIOLATE the RULE, then \`violation\` should be \`true\`. If the \`codeSnippet\` conforms to the RULE correctly or does not appear in the SOURCE, then \`violation\` should be \`false\`.
+  violation: boolean
+
+  // Your confidence that the \`codeSnippet\` VIOLATES the RULE.
+  confidence: 'low' | 'medium' | 'high'
+}
+\`\`\`
+
+---
+
+Example output format:
+
+# EXPLANATION
+
+Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
+
+# VIOLATIONS
+
+\`\`\`json
+[
+  {
+    "ruleName": "${rule.name}",
+    "codeSnippet": "...",
+    "codeSnippetSource": "source",
+    "reasoning": "..."
+    "violation": true,
+    "confidence": "high",
+  }
+]
+\`\`\`
+`)
+  ]
+
+  let retries = retryOptions.retries
+
+  do {
+    let response: string
+
+    try {
+      const res = await chatModel.run({
+        messages
+      })
+
+      response = res.message.content!
+      lintResult.message = response
+
+      if (config.linterOptions.debug) {
+        console.log(
+          `\nrule "${rule.name}" file "${file.fileRelativePath}" response\n${response}\n\n`
         )
       }
+
+      messages.push(Msg.assistant(response))
+
+      if (res.cached) {
+        lintResult.numModelCallsCached++
+      } else {
+        lintResult.numModelCalls++
+      }
+
+      if (res.cost) {
+        lintResult.totalCost += res.cost
+      }
+
+      if (res.usage) {
+        lintResult.numPromptTokens += res.usage.prompt_tokens
+        lintResult.numCompletionTokens += res.usage.completion_tokens
+        lintResult.numTotalTokens += res.usage.total_tokens
+      }
+
+      const ruleViolations = parseRuleViolationsFromModelResponse(response)
+      for (const ruleViolation of ruleViolations) {
+        recordRuleViolation(ruleViolation)
+      }
+
       break
+    } catch (err: any) {
+      if (err instanceof AbortError || err.name === 'AbortError') {
+        throw err
+      }
 
-    default:
-      console.warn(
-        `warning: rule "${rule.name}" LLM unexpected response message role "${res.message.role}" for file "${file.fileRelativePath}"`,
-        res.message
-      )
-  }
+      if (retries-- <= 0) {
+        throw err
+      }
 
-  if (res.cached) {
-    lintResult.numModelCallsCached++
-  } else {
-    lintResult.numModelCalls++
-  }
+      if (err instanceof RetryableError) {
+        if (config.linterOptions.debug) {
+          console.warn(
+            `\nRETRYING error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
+          )
+        }
 
-  if (res.cost) {
-    lintResult.totalCost += res.cost
-  }
-
-  if (res.usage) {
-    lintResult.numPromptTokens += res.usage.prompt_tokens
-    lintResult.numCompletionTokens += res.usage.completion_tokens
-    lintResult.numTotalTokens += res.usage.total_tokens
-  }
+        // Retry
+        const errMessage = err.message
+        messages.push(
+          Msg.user(
+            `There was an error validating the response. Please check the error message and try again.\nError:\n${errMessage}`
+          )
+        )
+      } else {
+        if (config.linterOptions.debug) {
+          console.warn(
+            `\nRETRYING unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
+          )
+        }
+      }
+    }
+  } while (true)
 
   if (config.linterOptions.debug) {
     const { lintErrors } = lintResult
@@ -253,10 +225,7 @@ ${stringifyRuleForModel(rule)}
       console.log(
         `\n<<< PASS CACHE MISS Rule "${rule.name}" file "${
           file.fileRelativePath
-        }": ${lintErrors.length} ${plur(
-          'error',
-          lintErrors.length
-        )} found: ${trimMessage(lintResult.message)}`
+        }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
       )
     }
   }

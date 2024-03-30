@@ -331,3 +331,13 @@ export function findAllBetween(
 export function findAllCodeBlockNodes(tree: Root) {
   return tree.children.filter((node) => node.type === 'code') as Code[]
 }
+
+export function findAllHeadingNodes(
+  tree: Root,
+  { depth }: { depth?: number } = {}
+) {
+  return tree.children.filter(
+    (node) =>
+      node.type === 'heading' && (depth === undefined || node.depth === depth)
+  ) as Heading[]
+}

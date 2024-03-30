@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { LinterCache } from './cache.js'
+import { LinterCache, getCacheKey } from './cache.js'
 import { defaultCacheDir } from './config.js'
 
 test(`LinterCache`, async () => {
@@ -35,4 +35,25 @@ test(`LinterCache`, async () => {
 
   await cache.flush()
   await cache.close()
+})
+
+test(`getCacheKey`, async () => {
+  expect(getCacheKey({ foo: 'bar' })).toEqual(getCacheKey({ foo: 'bar' }))
+  expect(getCacheKey({ foo: 'bar' })).toEqual(
+    getCacheKey({ foo: 'bar', baz: undefined })
+  )
+
+  expect(
+    getCacheKey({
+      foo: 'bar',
+      bar: [1, 2, { a: -1.4, nala: 'cat' }],
+      dog: false
+    })
+  ).toEqual(
+    getCacheKey({
+      dog: false,
+      foo: 'bar',
+      bar: [1, 2, { nala: 'cat', a: -1.4 }]
+    })
+  )
 })
