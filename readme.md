@@ -109,9 +109,7 @@ Flags:
 - linter engine
   - **evals**
   - add support for different LLM providers
-    - **move from function calling to structured output for increased compat**
-    - test anthropic claude w/ structured output and prefill
-  - improve solution to ignore false positives from `negativeExamples`
+  - test anthropic claude w/ structured output and prefill
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
   - add support for different languages
@@ -121,7 +119,6 @@ Flags:
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
     - possibly via optional regex patterns to enable / disable rules for files
-  - track llm calls and token stats across retry invocations within `lintFile`
   - cross-file linting; v0 is strictly local to individual files
 - rules
   - add a rule which captures naming w/ types and consistency
