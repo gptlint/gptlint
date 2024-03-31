@@ -84,6 +84,7 @@ const defaultCLIFlags: Readonly<types.CLIFlags> = {
     type: String,
     description:
       'API key for the OpenAI-compatible LLM API. Defaults to the value of the `OPENAI_API_KEY` environment variable.',
+    alias: 'k',
     default: defaultLinterConfig.llmOptions.apiKey
   },
   apiOrganizationId: {

@@ -1,18 +1,24 @@
 # GPTLint <!-- omit from toc -->
 
-> A fundamentally new approach to code health and stability. Use LLMs to enforce best practices across your codebase in a way that takes traditional static analysis tools like `eslint` to the next level.
+> A fundamentally new approach to code health. Use LLMs to enforce best practices across your codebase in a way that takes traditional static analysis tools like `eslint` to the next level.
 
-**TL;DR** You can think of `gptlint` like `eslint` but on steroids 💪
+**TL;DR** You can think of `gptlint` as `eslint++` 💪
 
 - [Features](#features)
 - [How it works](#how-it-works)
+- [Install](#install)
 - [Usage](#usage)
 - [CLI](#cli)
-- [TODO](#todo)
+- [LLM Providers](#llm-providers)
+  - [OpenAI](#openai)
+  - [Anthropic](#anthropic)
+  - [OSS Models](#oss-models)
+  - [Local Models](#local-models)
 - [How it works in-depth](#how-it-works-in-depth)
-  - [Comments](#comments)
+  - [Author notes](#author-notes)
   - [Evals](#evals)
   - [Caveats](#caveats)
+- [TODO](#todo)
 - [License](#license)
 
 ## Features
@@ -34,10 +40,11 @@
 - ~~supports any programming language~~ (ts, py, C++, java, etc)
   - the MVP is focused on JS / TS only for now (python support coming soon)
 - supports any natural language (english, chinese, spanish, etc)
-- ~~supports multiple LLM providers~~ (openai, anthropic, [openrouter](https://openrouter.ai/))
-  - the MVP is focused on OpenAI only for now (openai-compatible LLM provider support coming soon)
-- ~~supports local LLMs~~ (via [ollama](https://github.com/ollama/ollama))
-  - the MVP is focused on OpenAI only for now (local LLM support coming soon)
+- supports multiple LLM providers (openai, anthropic, [openrouter](https://openrouter.ai/), etc.)
+  - the MVP supports any LLM provider with an OpenAI-compatible chat completions API
+  - see [LLM Providers](#llm-providers) for more info
+- supports local LLMs (via [ollama](https://github.com/ollama/ollama) or [vllm](https://github.com/vllm-project/vllm))
+  - see [LLM Providers](#llm-providers) for more info
 - designed to be used in addition to existing static analysis tools like `eslint`, `pylint`, `ruff`, etc
 - no complicated github integration, bots, or CI actions – just call the `gptlint` CLI the same way you would call a tool like `eslint`
 
@@ -49,11 +56,23 @@
 
 See [How it works in-depth](#how-it-works-in-depth) for more detail.
 
+## Install
+
+```sh
+npm install -D gptlint
+```
+
+It is recommended to install `gptlint` as a dev dep just like `eslint`.
+
 ## Usage
 
 ```sh
-export OPENAI_API_KEY='your key'
+export OPENAI_API_KEY='your openai api key'
 npx gptlint 'src/**/*.{js,ts,tsx}'
+
+# or
+
+npx gptlint -k 'your openai api key'
 ```
 
 ## CLI
@@ -94,48 +113,59 @@ Flags:
       --temperature <number>                LLM temperature parameter
 ```
 
-## TODO
+## LLM Providers
 
-- rule file format
-  - support both positive and negative examples in the same code block
-  - add support to guidelines.md for organizing rules by h1 sections
-    - alternatively, just use directories and rule.md file format
-  - `prefer-page-queries.md` code examples give extra context outside of the code blocks
-  - decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
-    - if we go with only the one-rule-per-file format, consider switching from an inline table to frontmatter for metadata
-  - support a caveats / exceptions h2
-  - support other h2s for examples / usage examples / etc
-- config
-  - use eslint, ruff, and conformance as inspiration
-  - add ability to extend other configs
-- linter engine
-  - **evals**
-  - gracefully respect rate limits
-  - add support for different LLM providers
-  - test anthropic claude w/ structured output and prefill
-  - add support for optionally applying automatic fixes to linter errors
-  - add support for only linting changed git deltas
-  - add support for different languages
-  - add support for `fixable`
-  - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
-  - handle context overflow properly depending on selected model
-  - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
-    - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
-    - possibly via optional regex patterns to enable / disable rules for files
-  - cross-file linting; v0 is strictly local to individual files
-- rules
-  - add a rule which captures naming w/ types and consistency
-  - if you refer to something as numIterations in one place, refer to it consistently
-  - react unnecessary effects for https://react.dev/learn/you-might-not-need-an-effect
-- cli
-  - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
-- project
-  - update project name in multiple places once we decide on a name
-  - decide on an OSS license
-  - add a [security policy](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md)
-  - basic eval graphs and blog post
-  - rubric for what makes a good rule
-  - publish to NPM
+This project supports any chat completions model which exposes an OpenAI-compatible chat completions API. Specific instructions for the most popular LLM providers and local, open source models are included below.
+
+### OpenAI
+
+This is the default. Just export an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
+
+The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it, and we're not using `gpt-3.5-turbo` as the default because it doesn't perform as consistently in our tests.
+
+If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-4` by adding a [config file](./gptlint.config.js) to your project.
+
+### Anthropic
+
+Anthropic Claude is supported by using a proxy such as [OpenRouter](https://openrouter.ai/).
+
+- [Claude Opus](https://openrouter.ai/models/anthropic/claude-3-opus)
+- [Claude Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet)
+- [Claude Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku)
+
+Export your OpenRouter API key as `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
+
+```js
+// gptlint.config.js
+export default [
+  {
+    llmOptions: {
+      apiBaseUrl: 'https://openrouter.ai/api/v1',
+      model: 'gpt-4-turbo-preview',
+      // Optional
+      kyOptions: {
+        headers: {
+          'HTTP-Referer': `${YOUR_SITE_URL}`, // Optional, for including your app on openrouter.ai rankings.
+          'X-Title': `${YOUR_SITE_NAME}` // Optional, shows in rankings on openrouter.ai.
+        }
+      }
+    }
+  }
+]
+```
+
+### OSS Models
+
+The best way to use GPTLint with OSS models is to either [host them locally](#local-models) or to use a cloud provider that offers inference and fine-tuning APIs for common OSS language models:
+
+- [Together.ai](https://www.together.ai)
+- [Anyscale](https://www.anyscale.com/private-endpoints)
+- [Modal Labs](https://modal.com/use-cases/language-models)
+
+### Local Models
+
+- [ollama](https://github.com/ollama/ollama) supports exposing a local [OpenAI compatible server](https://github.com/ollama/ollama/blob/main/docs/openai.md) which you can point `gptlint` to.
+- [vLLM](https://github.com/vllm-project/vllm) supports exposing a local [OpenAI compatible server](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html) which you can point `gptlint` to.
 
 ## How it works in-depth
 
@@ -193,14 +223,14 @@ Based on these observations, the only violation found in the source code is the 
 
 </details>
 
-### Comments
+### Author notes
 
 - the current version restricts rules to a single file of context. this is to simplify the MVP and will likely change in the future
 - the LLM classifier outputs a markdown file with two sections, `EXPLANATION` and `VIOLATIONS`
-  - the `EXPLANATION` section is important to [give the LLM time to think](https://twitter.com/karpathy/status/1708142056735228229)
+  - the `EXPLANATION` section is important to give the LLM [time to think](https://twitter.com/karpathy/status/1708142056735228229) (a previous version without this section produced false positives a lot more frequently)
   - the `VIOLATIONS` section contains the actual structured JSON output of [RuleViolation](./src/rule-violations.ts) objects
     - `codeSnippetSource`, `reasoning`, `violation`, and `confidence` were all added empirically to increase the LLM's accuracy and to mitigate common forms of false positives
-    - these false positives will sometimes still appear when using less capable models, but these additional fields allow us to filter many of them
+    - these false positives will sometimes still appear when using less capable models, but these additional fields still help in filtering many of them
 
 ### Evals
 
@@ -222,6 +252,52 @@ Based on these observations, the only violation found in the source code is the 
   - many architectural patterns fundamentally span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
   - this restriction will likely be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting to optimize rules which explicitly don't need multi-file context
   - if you'd like to use a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new)
+- **rules in the MVP focus on JS/TS only**
+  - this project is inherently language-agnostic, but to keep the MVP scoped, I wanted to focus on the languages & ecosystem that I'm most familiar with
+  - we're hoping that rules for other programming languages will trickle in from the community
+
+## TODO
+
+- rule file format
+  - support both positive and negative examples in the same code block
+  - add support to guidelines.md for organizing rules by h1 sections
+    - alternatively, just use directories and rule.md file format
+  - `prefer-page-queries.md` code examples give extra context outside of the code blocks
+  - decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
+    - if we go with only the one-rule-per-file format, consider switching from an inline table to frontmatter for metadata
+  - support a caveats / exceptions h2
+  - support other h2s for examples / usage examples / etc
+- config
+  - use eslint, ruff, and conformance as inspiration
+  - add ability to extend other configs
+- linter engine
+  - **evals**
+  - gracefully respect rate limits
+  - add support for different LLM providers
+  - test anthropic claude w/ structured output and prefill
+  - add support for optionally applying automatic fixes to linter errors
+  - add support for only linting changed git deltas
+  - add support for different languages
+  - add support for `fixable`
+  - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
+  - handle context overflow properly depending on selected model
+  - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
+    - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
+    - possibly via optional regex patterns to enable / disable rules for files
+  - cross-file linting; v0 is strictly local to individual files
+- rules
+  - add a rule which captures naming w/ types and consistency
+  - if you refer to something as numIterations in one place, refer to it consistently
+  - react unnecessary effects for https://react.dev/learn/you-might-not-need-an-effect
+- cli
+  - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
+- project
+  - update project name in multiple places once we decide on a name
+  - decide on an OSS license
+  - add a [security policy](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md)
+  - basic eval graphs and blog post
+  - rubric for what makes a good rule
+  - publish to NPM
 
 ## License
 
