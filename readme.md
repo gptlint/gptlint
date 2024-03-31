@@ -98,7 +98,6 @@ Flags:
   - add support to guidelines.md for organizing rules by h1 sections
     - alternatively, just use directories and rule.md file format
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks
-  - add support for including links to one or more URLs as resources explaining the rule in more depth
   - decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
     - if we go with only the one-rule-per-file format, consider switching from an inline table to frontmatter for metadata
   - support a caveats / exceptions h2

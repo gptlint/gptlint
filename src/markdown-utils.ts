@@ -209,7 +209,8 @@ export function parseRuleTableNode({
     'fixable',
     'tags',
     'languages',
-    'eslint'
+    'eslint',
+    'resources'
   ])
 
   for (const bodyRow of bodyRows) {
@@ -252,6 +253,8 @@ export function parseRuleTableNode({
       rule.languages = value.split(',').map((v) => v.trim())
     } else if (key === 'eslint') {
       rule.eslint = value.split(',').map((v) => v.trim())
+    } else if (key === 'resources') {
+      rule.resources = value.split(',').map((v) => v.trim())
     } else {
       assert(
         false,

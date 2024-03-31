@@ -31,6 +31,7 @@ export type Rule = {
   languages?: string[]
   tags?: string[]
   eslint?: string[]
+  resources?: string[]
   source?: string
 }
 

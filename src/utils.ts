@@ -320,10 +320,20 @@ export function createCacheKey({
   // TODO: add linter major version to the cache key
   return {
     // Only keep the relative file path, content, and detected language
-    file: omit(file, 'filePath', 'fileName'),
+    file: pruneUndefined(pick(file, 'fileRelativePath', 'content', 'language')),
 
     // Remove rule fields which don't affect LLM logic
-    rule: omit(rule, 'fixable', 'source', 'level'),
+    rule: pruneUndefined(
+      pick(
+        rule,
+        'name',
+        'message',
+        'desc',
+        'positiveExamples',
+        'negativeExamples',
+        'languages'
+      )
+    ),
 
     // Ensure the cache key depends on how the LLM is parameterized
     params: chatModel.getParams()
