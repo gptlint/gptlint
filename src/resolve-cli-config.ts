@@ -120,11 +120,13 @@ const defaultCLIFlags: Readonly<types.CLIFlags> = {
 export async function resolveLinterCLIConfig(
   cliArgs: string[],
   {
+    name = 'gptlint',
     cwd,
     linterConfigDefaults,
     flagsToOmit,
     flagsToAdd
   }: {
+    name?: string
     cwd: string
     linterConfigDefaults?: types.LinterConfig
     flagsToOmit?: string[]
@@ -138,7 +140,7 @@ export async function resolveLinterCLIConfig(
 
   const args = cli(
     {
-      name: 'lint',
+      name,
       parameters: ['[file/dir/glob ...]'],
       flags
     },

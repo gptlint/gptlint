@@ -98,13 +98,14 @@ Flags:
       --api-base-url <string>               Base URL for the LLM API to use which must be compatible with the OpenAI
                                             chat completions API. Defaults to the OpenAI API (default:
                                             "https://api.openai.com/v1")
-      --api-key <string>                    API key for the OpenAI-compatible LLM API. Defaults to the value of the
+  -k, --api-key <string>                    API key for the OpenAI-compatible LLM API. Defaults to the value of the
                                             `OPENAI_API_KEY` environment variable. (default:
                                             "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")
       --api-organization-id <string>        Optional organization ID that should be billed for LLM API requests. This is
                                             only necessary if your OpenAI API key is scoped to multiple organizations.
       --cache-dir <string>                  Customize the path to the cache directory (default:
                                             "/Users/tfischer/dev/modules/eslint++/node_modules/.cache/gptlint")
+      --concurrency <number>                Limits the maximum number of concurrent tasks (default: 16)
   -c, --config <string>                     Path to a configuration file
   -d, --debug                               Enables debug logging
       --debug-config                        When enabled, logs the resolved config and parsed rules and then exits
@@ -114,8 +115,7 @@ Flags:
   -h, --help                                Show help
       --ignore-file <string>                Path to file containing ignore patterns (default: ".gptlintignore")
       --ignore-pattern <string>             Pattern of files to ignore (in addition to .gptlintignore)
-      --model <string>                      Which LLM to use for assessing rule conformance (default:
-                                            "gpt-4-turbo-preview")
+  -m, --model <string>                      Which LLM to use for assessing rule conformance (default: "gpt-4")
   -C, --no-cache                            Disables caching
   -S, --no-debug-stats                      Disables logging of cumulative LLM stats, including total tokens and cost
                                             (logging LLM stats is enabled by default)
