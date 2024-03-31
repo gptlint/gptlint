@@ -40,7 +40,7 @@
 - ~~supports any programming language~~ (ts, py, C++, java, etc)
   - the MVP is focused on JS / TS only for now (python support coming soon)
 - supports any natural language (english, chinese, spanish, etc)
-- supports multiple LLM providers (openai, anthropic, [openrouter](https://openrouter.ai/), etc.)
+- supports multiple LLM providers (openai, anthropic, [openrouter](https://openrouter.ai/), etc)
   - the MVP supports any LLM provider with an OpenAI-compatible chat completions API
   - see [LLM Providers](#llm-providers) for more info
 - supports local LLMs (via [ollama](https://github.com/ollama/ollama) or [vllm](https://github.com/vllm-project/vllm))
