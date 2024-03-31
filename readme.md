@@ -107,6 +107,7 @@ Flags:
   - add ability to extend other configs
 - linter engine
   - **evals**
+  - gracefully respect rate limits
   - add support for different LLM providers
   - test anthropic claude w/ structured output and prefill
   - add support for optionally applying automatic fixes to linter errors

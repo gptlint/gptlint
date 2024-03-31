@@ -32,37 +32,42 @@ export async function lintFiles({
   )
   let lintResult = createLintResult()
   let earlyExitTripped = false
+  const warnings: Error[] = []
 
   // Preprocess the file / rule tasks so our progress bar has a clear indication of
   // how many non-cached tasks need to be handled
-  const preLintResults = await pMap(
-    lintTasks,
-    async ({ file, rule }) => {
-      try {
-        const preLintResult = await preLintFile({
-          file,
-          rule,
-          chatModel,
-          cache,
-          config
-        })
+  const preLintResults = (
+    await pMap(
+      lintTasks,
+      async ({ file, rule }) => {
+        try {
+          const preLintResult = await preLintFile({
+            file,
+            rule,
+            chatModel,
+            cache,
+            config
+          })
 
-        if (preLintResult.lintResult) {
-          lintResult = mergeLintResults(lintResult, preLintResult.lintResult)
+          if (preLintResult.lintResult) {
+            lintResult = mergeLintResults(lintResult, preLintResult.lintResult)
+          }
+
+          return preLintResult
+        } catch (err: any) {
+          const error = new Error(
+            `rule "${rule.name}" file "${file.fileRelativePath}" unexpected prelint error: ${err.message}`,
+            { cause: err }
+          )
+          console.warn(error.message)
+          warnings.push(error)
         }
-
-        return preLintResult
-      } catch (err: any) {
-        throw new Error(
-          `Error: rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`,
-          { cause: err }
-        )
+      },
+      {
+        concurrency
       }
-    },
-    {
-      concurrency
-    }
-  )
+    )
+  ).filter(Boolean)
 
   const resolvedLintTasks = preLintResults.filter((r) => !r.lintResult)
 
@@ -126,10 +131,12 @@ export async function lintFiles({
           )
         }
       } catch (err: any) {
-        throw new Error(
-          `Error: rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`,
+        const error = new Error(
+          `rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`,
           { cause: err }
         )
+        console.warn(error.message)
+        warnings.push(error)
       }
     },
     {

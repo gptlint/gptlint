@@ -72,6 +72,12 @@ export function parseRuleViolationsFromModelResponse(
   let codeBlockNode: Code | undefined
 
   if (codeBlocksNodes.length === 0) {
+    const h1Nodes = findAllHeadingNodes(ast, { depth: 1 })
+
+    if (h1Nodes.length === 2) {
+      return []
+    }
+
     throw new RetryableError(
       'Invalid output: missing VIOLATIONS code block which should contain an array of RULE_VIOLATION objects.'
     )
