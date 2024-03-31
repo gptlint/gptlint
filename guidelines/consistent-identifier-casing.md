@@ -30,6 +30,8 @@ Ignore the casing of identifiers which start with acronyms like `LLMOptionsSchem
 
 Ignore parameter names used in inline functions.
 
+Ignore string literals and module names for this rule.
+
 Class variables and functions may include `_` prefixes.
 
 ### Bad
@@ -62,9 +64,11 @@ foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })
 ```
 
 ```ts
+// These are all fine as common exceptions to this rule
 export const HTTPConfig = {}
 const LLMOptions = {}
 const validKeysL = new Set()
+const cwd = process.cwd
 ```
 
 ```ts

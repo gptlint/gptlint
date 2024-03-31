@@ -287,6 +287,7 @@ Based on these observations, the only violation found in the source code is the 
 - linter engine
   - **evals**
   - gracefully respect rate limits
+  - gracefully handle llm api errors like 403 / 409 for content moderation
   - add support for different LLM providers
   - test anthropic claude w/ structured output and prefill
   - add support for optionally applying automatic fixes to linter errors
