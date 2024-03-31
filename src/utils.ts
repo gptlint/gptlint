@@ -17,7 +17,10 @@ export { invariant as assert }
  * omit({ a: 1, b: 2, c: 3 }, 'a', 'c') // { b: 2 }
  * ```
  */
-export const omit = <T extends Record<any, unknown>, K extends keyof T>(
+export const omit = <
+  T extends Record<any, unknown>,
+  K extends keyof T = keyof T
+>(
   obj: T,
   ...keys: K[]
 ): Omit<T, K> => {
@@ -35,7 +38,10 @@ export const omit = <T extends Record<any, unknown>, K extends keyof T>(
  * pick({ a: 1, b: 2, c: 3 }, 'a', 'c') // { a: 1, c: 3 }
  * ```
  */
-export const pick = <T extends Record<any, unknown>, K extends keyof T>(
+export const pick = <
+  T extends Record<any, unknown>,
+  K extends keyof T = keyof T
+>(
   obj: T,
   ...keys: K[]
 ): Pick<T, K> => {

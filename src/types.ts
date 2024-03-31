@@ -1,4 +1,6 @@
 /* eslint-disable no-use-before-define */
+import type { Command } from 'cleye'
+
 import type {
   LLMOptions,
   LinterConfig,
@@ -99,3 +101,5 @@ export type EvalStats = {
   numFalsePositives: number
   numFalseNegatives: number
 }
+
+export type CLIFlags = NonNullable<Command['options']['flags']>

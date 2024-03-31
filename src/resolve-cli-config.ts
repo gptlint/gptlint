@@ -7,121 +7,134 @@ import { pathExists } from 'path-exists'
 import type * as types from './types.js'
 import { defaultLinterConfig, parseLinterConfig } from './config.js'
 import { resolveLinterConfig } from './resolve-config.js'
+import { omit } from './utils.js'
+
+const defaultCLIFlags: Readonly<types.CLIFlags> = {
+  config: {
+    type: String,
+    description: 'Path to a configuration file',
+    alias: 'c'
+  },
+  guidelines: {
+    type: [String],
+    description:
+      'Glob pattern to guideline markdown files containing rule definitions',
+    alias: 'g'
+  },
+  rules: {
+    type: [String],
+    description: 'Glob pattern to rule definition markdown files.',
+    alias: 'r',
+    default: ['guidelines/**/*.md']
+  },
+  ignoreFile: {
+    type: String,
+    description: 'Path to file containing ignore patterns',
+    default: '.gptlintignore'
+  },
+  ignorePattern: {
+    type: [String],
+    description: 'Pattern of files to ignore (in addition to .gptlintignore)'
+  },
+  noIgnore: {
+    type: Boolean,
+    description: 'Disables the use of ignore files and patterns'
+  },
+  noInlineConfig: {
+    type: Boolean,
+    description: 'Disables the use of inline rule config inside of source files'
+  },
+  noCache: {
+    type: Boolean,
+    description: 'Disables caching',
+    alias: 'C'
+  },
+  cacheDir: {
+    type: String,
+    description: 'Customize the path to the cache directory',
+    default: defaultLinterConfig.linterOptions.cacheDir
+  },
+  debug: {
+    type: Boolean,
+    description: 'Enables debug logging',
+    alias: 'd'
+  },
+  debugConfig: {
+    type: Boolean,
+    description:
+      'When enabled, logs the resolved config and parsed rules and then exits'
+  },
+  debugModel: {
+    type: Boolean,
+    description: 'Enables verbose LLM logging',
+    alias: 'D'
+  },
+  noDebugStats: {
+    type: Boolean,
+    description:
+      'Disables logging of cumulative LLM stats, including total tokens and cost (logging LLM stats is enabled by default)',
+    alias: 'S'
+  },
+  earlyExit: {
+    type: Boolean,
+    description: 'Exits after finding the first error',
+    alias: 'e'
+  },
+  apiKey: {
+    type: String,
+    description:
+      'API key for the OpenAI-compatible LLM API. Defaults to the value of the `OPENAI_API_KEY` environment variable.',
+    default: defaultLinterConfig.llmOptions.apiKey
+  },
+  apiOrganizationId: {
+    type: String,
+    description:
+      'Optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.',
+    default: defaultLinterConfig.llmOptions.apiOrganizationId
+  },
+  apiBaseUrl: {
+    type: String,
+    description:
+      'Base URL for the LLM API to use which must be compatible with the OpenAI chat completions API. Defaults to the OpenAI API',
+    default: defaultLinterConfig.llmOptions.apiBaseUrl
+  },
+  model: {
+    type: String,
+    description: 'Which LLM to use for assessing rule conformance',
+    alias: 'm',
+    default: defaultLinterConfig.llmOptions.model
+  },
+  temperature: {
+    type: Number,
+    description: 'LLM temperature parameter',
+    default: defaultLinterConfig.llmOptions.temperature
+  }
+} as const
 
 export async function resolveLinterCLIConfig(
   cliArgs: string[],
   {
     cwd,
-    linterConfigDefaults
-  }: { cwd: string; linterConfigDefaults?: types.LinterConfig }
+    linterConfigDefaults,
+    flagsToOmit,
+    flagsToAdd
+  }: {
+    cwd: string
+    linterConfigDefaults?: types.LinterConfig
+    flagsToOmit?: string[]
+    flagsToAdd?: types.CLIFlags
+  }
 ) {
+  const flags: types.CLIFlags = {
+    ...omit<types.CLIFlags>(defaultCLIFlags, ...((flagsToOmit as any) ?? [])),
+    ...flagsToAdd
+  }
+
   const args = cli(
     {
       name: 'lint',
       parameters: ['[file/dir/glob ...]'],
-      flags: {
-        config: {
-          type: String,
-          description: 'Path to a configuration file',
-          alias: 'c'
-        },
-        guidelines: {
-          type: [String],
-          description:
-            'Glob pattern to guideline markdown files containing rule definitions',
-          alias: 'g'
-        },
-        rules: {
-          type: [String],
-          description: 'Glob pattern to rule definition markdown files.',
-          alias: 'r',
-          default: ['guidelines/**/*.md']
-        },
-        ignoreFile: {
-          type: String,
-          description: 'Path to file containing ignore patterns',
-          default: '.gptlintignore'
-        },
-        ignorePattern: {
-          type: [String],
-          description:
-            'Pattern of files to ignore (in addition to .gptlintignore)'
-        },
-        noIgnore: {
-          type: Boolean,
-          description: 'Disables the use of ignore files and patterns'
-        },
-        noInlineConfig: {
-          type: Boolean,
-          description:
-            'Disables the use of inline rule config inside of source files'
-        },
-        noCache: {
-          type: Boolean,
-          description: 'Disables caching',
-          alias: 'C'
-        },
-        cacheDir: {
-          type: String,
-          description: 'Customize the path to the cache directory',
-          default: defaultLinterConfig.linterOptions.cacheDir
-        },
-        debug: {
-          type: Boolean,
-          description: 'Enables debug logging',
-          alias: 'd'
-        },
-        debugConfig: {
-          type: Boolean,
-          description:
-            'When enabled, logs the resolved config and parsed rules and then exits'
-        },
-        debugModel: {
-          type: Boolean,
-          description: 'Enables verbose LLM logging',
-          alias: 'D'
-        },
-        noDebugStats: {
-          type: Boolean,
-          description:
-            'Disables logging of cumulative LLM stats, including total tokens and cost (logging LLM stats is enabled by default)',
-          alias: 'S'
-        },
-        earlyExit: {
-          type: Boolean,
-          description: 'Exits after finding the first error',
-          alias: 'e'
-        },
-        apiKey: {
-          type: String,
-          description:
-            'API key for the OpenAI-compatible LLM API. Defaults to the value of the `OPENAI_API_KEY` environment variable.',
-          default: defaultLinterConfig.llmOptions.apiKey
-        },
-        apiOrganizationId: {
-          type: String,
-          description:
-            'Optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.',
-          default: defaultLinterConfig.llmOptions.apiOrganizationId
-        },
-        apiBaseUrl: {
-          type: String,
-          description:
-            'Base URL for the LLM API to use which must be compatible with the OpenAI chat completions API. Defaults to the OpenAI API',
-          default: defaultLinterConfig.llmOptions.apiBaseUrl
-        },
-        model: {
-          type: String,
-          description: 'Which LLM to use for assessing rule conformance',
-          alias: 'm',
-          default: defaultLinterConfig.llmOptions.model
-        },
-        temperature: {
-          type: Number,
-          description: 'LLM temperature parameter',
-          default: defaultLinterConfig.llmOptions.temperature
-        }
-      }
+      flags
     },
     () => {},
     cliArgs
