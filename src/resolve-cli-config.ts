@@ -120,13 +120,13 @@ const defaultCLIFlags: Readonly<types.CLIFlags> = {
 export async function resolveLinterCLIConfig(
   cliArgs: string[],
   {
-    name = 'gptlint',
+    name,
     cwd,
     linterConfigDefaults,
     flagsToOmit,
     flagsToAdd
   }: {
-    name?: string
+    name: string
     cwd: string
     linterConfigDefaults?: types.LinterConfig
     flagsToOmit?: string[]

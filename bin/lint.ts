@@ -21,7 +21,10 @@ async function main() {
 
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
-    { cwd }
+    {
+      name: 'gptlint',
+      cwd
+    }
   )
 
   let files: types.InputFile[]
