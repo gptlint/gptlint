@@ -79,11 +79,14 @@ npx gptlint
 # or
 
 export OPENAI_API_KEY='your openai api key'
-npx gptlint 'src/**/*.{js,ts,tsx}'
+npx gptlint
 
 # or
+
 npx gptlint -k 'your openai api key'
 ```
+
+By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` as a file glob for source files to lint and `guidelines/**/*.md` for rule definition files.
 
 ## CLI
 
@@ -151,7 +154,7 @@ export default [
   {
     llmOptions: {
       apiBaseUrl: 'https://openrouter.ai/api/v1',
-      model: 'anthropic/claude-3-opus:beta',
+      model: 'anthropic/claude-3-sonnet:beta',
       // Optional
       kyOptions: {
         headers: {

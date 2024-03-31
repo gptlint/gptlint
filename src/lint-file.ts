@@ -160,7 +160,7 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
 
       if (config.linterOptions.debug) {
         console.log(
-          `\nrule "${rule.name}" file "${file.fileRelativePath}" response\n${response}\n\n`
+          `\nrule "${rule.name}" file "${file.fileRelativePath}" response:\n\n ${response}\n\n`
         )
       }
 
