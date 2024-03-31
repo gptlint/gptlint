@@ -13,7 +13,7 @@ ${
     : ''
 }
 ${rule.negativeExamples?.map(
-  (example) => `\`\`\`${example.language}\n${example.code}\n\`\`\`\n\n`
+  (example) => `\`\`\`${example.language ?? ''}\n${example.code}\n\`\`\`\n\n`
 )}
 
 ${
@@ -22,7 +22,7 @@ ${
     : ''
 }
 ${rule.positiveExamples?.map(
-  (example) => `\`\`\`${example.language}\n${example.code}\n\`\`\`\n\n`
+  (example) => `\`\`\`${example.language ?? ''}\n${example.code}\n\`\`\`\n\n`
 )}
 `
 }

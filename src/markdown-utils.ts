@@ -254,6 +254,7 @@ export function parseRuleTableNode({
     } else if (key === 'eslint') {
       rule.eslint = value.split(',').map((v) => v.trim())
     } else if (key === 'resources') {
+      // TODO: support markdown links for resources
       rule.resources = value.split(',').map((v) => v.trim())
     } else {
       assert(
@@ -273,8 +274,8 @@ export function parseRuleTableNode({
  *
  * @param parent Parent node to search in
  * @param start A node or index to start from (exclusive)
- * @param end A node or index to end with (exclusive)
- * @param test A test passed to unist-util-is for nodes to pass to be returns in result
+ * @param end An optional node or index to end with (exclusive)
+ * @param test An optional test passed to `unist-util-is` that nodes must pass to be included in the results
  */
 export function findAllBetween(
   parent: Parent,
