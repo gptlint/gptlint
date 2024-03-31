@@ -3,9 +3,11 @@ import plur from 'plur'
 
 import type * as types from './types.js'
 import { AbortError, RetryableError } from './errors.js'
-import { parseRuleViolationsFromModelResponse } from './parse-rule-violations.js'
 import { stringifyRuleForModel } from './rule-utils.js'
-import type { RuleViolation } from './rule-violations.js'
+import {
+  type RuleViolation,
+  parseRuleViolationsFromModelResponse
+} from './rule-violations.js'
 import { createLintResult } from './utils.js'
 
 export async function lintFile({

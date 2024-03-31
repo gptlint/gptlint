@@ -105,6 +105,21 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
 }
 `;
 
+exports[`parseRuleFile - fixtures/rules/metadata-2.md 1`] = `
+{
+  "desc": "This example should parse correctly because we stringify the values.",
+  "message": "Example",
+  "name": "example-name",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "resources": [
+    "foo",
+    "bar",
+  ],
+  "source": "fixtures/rules/metadata-2.md",
+}
+`;
+
 exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
 {
   "desc": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.",
