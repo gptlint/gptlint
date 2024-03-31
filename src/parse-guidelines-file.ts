@@ -7,6 +7,10 @@ import {
 } from './markdown-utils.js'
 import { assert } from './utils.js'
 
+/**
+ * Parses a guidelines definition markdown file containing an array of one or
+ * more rules and returns the result.
+ */
 export async function parseGuidelinesFile({
   content,
   filePath

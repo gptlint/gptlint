@@ -11,6 +11,16 @@ import {
 } from './markdown-utils.js'
 import { safeParseStructuredOutput } from './parse-structured-output.js'
 
+/**
+ * The core zod schema which is used to parse the LLM's structured output.
+ *
+ * Note that the order of the keys is empirically important to help the LLM
+ * "think" in the right order.
+ *
+ * Note that `codeSnippetSource`, `reasoning`, `violation`, and `confidence`
+ * were all added empirically to increase the LLM's accuracy and to mitigate
+ * common forms of false positives.
+ */
 export const ruleViolationSchema = z.object({
   ruleName: z
     .string()
@@ -47,6 +57,13 @@ export type RuleViolation = z.infer<typeof ruleViolationSchema>
 export const ruleViolationsOutputSchema = z.array(ruleViolationSchema)
 export type RuleViolationsOutput = z.infer<typeof ruleViolationsOutputSchema>
 
+/**
+ * Attempts to parse an array of `RuleViolation` objects from a JSON code block
+ * in the given markdown response.
+ *
+ * Will throw a `RetryableError` if the response is invalid with an error
+ * message that the LLM can use to retry the request.
+ */
 export function parseRuleViolationsFromModelResponse(
   response: string
 ): RuleViolation[] {

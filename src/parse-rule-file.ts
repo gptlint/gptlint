@@ -7,6 +7,9 @@ import {
 } from './markdown-utils.js'
 import { assert } from './utils.js'
 
+/**
+ * Parses a rule definition markdown file and returns the result.
+ */
 export async function parseRuleFile({
   content,
   filePath

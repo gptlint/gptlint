@@ -10,6 +10,10 @@ import {
 } from './rule-violations.js'
 import { createLintResult } from './utils.js'
 
+/**
+ * Core linting logic which takes in a single `rule` and a single `file` and
+ * uses the `chatModel` LLM to extract rule violations using structured output.
+ */
 export async function lintFile({
   file,
   rule,
@@ -179,6 +183,8 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
         recordRuleViolation(ruleViolation)
       }
 
+      // We've successfully processed the model output, so break out of the
+      // retry loop.
       break
     } catch (err: any) {
       if (err instanceof AbortError || err.name === 'AbortError') {

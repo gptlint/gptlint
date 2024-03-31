@@ -9,6 +9,9 @@ import { pathExists } from 'path-exists'
 import type * as types from './types.js'
 import { assert } from './utils.js'
 
+/**
+ * Content-based cache of previous linter results.
+ */
 export class LinterCache<
   TKey extends object = any,
   TValue extends object = types.LintResult

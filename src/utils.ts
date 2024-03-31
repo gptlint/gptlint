@@ -188,7 +188,9 @@ const knownSupportedCodeFileExtensions = new Set([
 const knownCodeFileMappings: Record<string, string> = {
   javascript: 'js',
   typescript: 'ts',
-  python: 'py'
+  markdown: 'md',
+  python: 'py',
+  text: 'txt'
 }
 
 export function inferBestPossibleCodeFileExtension(

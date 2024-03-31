@@ -13,6 +13,11 @@ const fileTypeToParserMap: Record<string, BuiltInParserName> = {
   json: 'json5'
 }
 
+/**
+ * Attempts to format the given source code using Prettier.
+ *
+ * @TODO In the future, add support for formatting other languages like python.
+ */
 export async function formatSource(
   source: string,
   {
