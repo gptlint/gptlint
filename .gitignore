@@ -38,4 +38,3 @@ next-env.d.ts
 dist/
 
 .env
-.env.*

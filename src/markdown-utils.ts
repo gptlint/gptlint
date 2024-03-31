@@ -203,7 +203,7 @@ export function parseRuleTableNode({
     `Rule contains invalid table (empty table body): ${rule.message} (${filePath})`
   )
 
-  const validRuleTableKeysL = new Set<string>([
+  const validRuleTableKeys = new Set<string>([
     'name',
     'level',
     'fixable',
@@ -221,7 +221,7 @@ export function parseRuleTableNode({
 
     const key = toString(bodyRow.children[0]).toLowerCase().trim()
     assert(
-      validRuleTableKeysL.has(key),
+      validRuleTableKeys.has(key),
       `Rule contains invalid table (unsupported key "${key}"): ${rule.message} (${filePath})`
     )
 
