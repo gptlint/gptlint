@@ -1,8 +1,19 @@
-# GPTLint
+# GPTLint <!-- omit from toc -->
 
 > A fundamentally new approach to code health and stability. Use LLMs to enforce best practices across your codebase in a way that takes traditional static analysis tools like `eslint` to the next level.
 
 **TL;DR** You can think of `gptlint` like `eslint` but on steroids 💪
+
+- [Features](#features)
+- [How it works](#how-it-works)
+- [Usage](#usage)
+- [CLI](#cli)
+- [TODO](#todo)
+- [How it works in-depth](#how-it-works-in-depth)
+  - [Comments](#comments)
+  - [Evals](#evals)
+  - [Caveats](#caveats)
+- [License](#license)
 
 ## Features
 
@@ -30,30 +41,20 @@
 - designed to be used in addition to existing static analysis tools like `eslint`, `pylint`, `ruff`, etc
 - no complicated github integration, bots, or CI actions – just call the `gptlint` CLI the same way you would call a tool like `eslint`
 
-## Caveats
-
-- this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed)
-  - **all built-in rules are extensively tested** with eval sets to ensure that the default linter is as accurate as possible
-  - keep in mind that even expert human developers are very unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy at a fraction of the cost and speed**
-- **LLM costs can add up quickly**
-  - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
-  - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~70s and costs ~$0.31 cents USD
-  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~64s and costs ~$2.38 USD
-  - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
-- **rules in the MVP are single-file only**
-  - many architectural patterns fundamentally span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
-  - this restriction will likely be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting to optimize rules which explicitly don't need multi-file context
-  - if you'd like to use a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new)
-
 ## How it works
 
 <p align="center">
   <img alt="How it works" src="/media/how-gptlint-works.png">
 </p>
 
+See [How it works in-depth](#how-it-works-in-depth) for more detail.
+
 ## Usage
 
-TODO
+```sh
+export OPENAI_API_KEY='your key'
+npx gptlint 'src/**/*.{js,ts,tsx}'
+```
 
 ## CLI
 
@@ -135,6 +136,92 @@ Flags:
   - basic eval graphs and blog post
   - rubric for what makes a good rule
   - publish to NPM
+
+## How it works in-depth
+
+<p align="center">
+  <img alt="How it works" src="/media/how-gptlint-works.png">
+</p>
+
+GPTLint lints a codebase by taking the following steps:
+
+1. Resolves a set of markdown rule definitions along with optional few-shot examples (defaults to `guidelines/**/*.md`)
+2. Resolves a set of input source files to lint (defaults to `**/*.{js,ts,jsx,tsx,cjs,mjs}`)
+3. For each `[rule, file]` pair, creates a linter task
+4. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file
+5. For each non-cached linter task, runs it through an LLM classifier with the goal of identifying rule violations
+6. Parses the LLM's markdown output for a JSON code block containing an array of `RuleViolation` objects
+7. Retries step #5 if the LLM output fails to validate
+8. Otherwise, adds any `RuleViolation` objects to the output
+
+The core linting logic lives in [lintFile](./src/lint-file.ts).
+
+<details>
+<summary>
+Example LLM markdown output:
+</summary>
+
+```md
+# EXPLANATION
+
+The source code provided is a TypeScript file that includes variable names, function names, and type imports. According to the "consistent-identifier-casing" rule, variable names should use camelCase, global const variable names should use camelCase, PascalCase, or CONSTANT_CASE, type names should use PascalCase, class names should use PascalCase, and function names should use camelCase.
+
+Upon reviewing the source code, the following observations were made:
+
+1. Variable names such as `ast`, `h1RuleNodes`, `headingRuleNode`, `bodyRuleNodes`, and `rule` are all in camelCase, which conforms to the rule.
+2. Function names like `parseRuleFile`, `findAllBetween`, `findAllHeadingNodes`, `parseMarkdownAST`, and `parseRuleNode` are in camelCase, which also conforms to the rule.
+3. The type import `import type * as types from './types.js'` uses PascalCase for the type alias `types`, which is acceptable since it's an import statement and the rule primarily focuses on the casing of identifiers rather than import aliases.
+4. The variable `example_rule_failure` uses snake_case, which violates the rule for consistent identifier casing for variable names.
+
+Based on these observations, the only violation found in the source code is the use of snake_case in the variable name `example_rule_failure`.
+
+# VIOLATIONS
+
+\`\`\`json
+[
+{
+"ruleName": "consistent-identifier-casing",
+"codeSnippet": "let example_rule_failure",
+"codeSnippetSource": "source",
+"reasoning": "The variable name 'example_rule_failure' uses snake_case, which violates the rule that variable names should use camelCase.",
+"violation": true,
+"confidence": "high"
+}
+]
+\`\`\`
+```
+
+</details>
+
+### Comments
+
+- the current version restricts rules to a single file of context. this is to simplify the MVP and will likely change in the future
+- the LLM classifier outputs a markdown file with two sections, `EXPLANATION` and `VIOLATIONS`
+  - the `EXPLANATION` section is important to [give the LLM time to think](https://twitter.com/karpathy/status/1708142056735228229)
+  - the `VIOLATIONS` section contains the actual structured JSON output of [RuleViolation](./src/rule-violations.ts) objects
+    - `codeSnippetSource`, `reasoning`, `violation`, and `confidence` were all added empirically to increase the LLM's accuracy and to mitigate common forms of false positives
+    - these false positives will sometimes still appear when using less capable models, but these additional fields allow us to filter many of them
+
+### Evals
+
+- [`bin/generate-evals.ts`](./bin/generate-evals.ts) is used to generate N synthetic positive and negative example code snippets for each rule under [`fixtures/evals`](./fixtures/evals)
+- [`bin/run-evals.ts`](./bin/run-evals.ts) is used to evaluate rules for false negatives / false positives across their generated test fixtures
+
+### Caveats
+
+- this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed)
+  - **all built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default
+  - keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy at a fraction of the cost and speed**
+- **LLM costs can add up quickly**
+  - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
+  - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~70s and costs ~$0.31 cents USD
+  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~64s and costs ~$2.38 USD
+  - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
+  - NOTE: for many projects, this will still be several orders of magnitude cheaper than hiring senior developers to track and fix technical debt
+- **rules in the MVP are single-file only**
+  - many architectural patterns fundamentally span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
+  - this restriction will likely be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting to optimize rules which explicitly don't need multi-file context
+  - if you'd like to use a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new)
 
 ## License
 
