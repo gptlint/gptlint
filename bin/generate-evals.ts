@@ -33,6 +33,7 @@ async function main() {
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
     {
+      name: 'generate-evals',
       cwd,
       linterConfigDefaults: {
         llmOptions: {
