@@ -179,8 +179,8 @@ The best way to use GPTLint with OSS models is to either [host them locally](#lo
 
 ### Local Models
 
-- [ollama](https://github.com/ollama/ollama) supports exposing a local [OpenAI compatible server](https://github.com/ollama/ollama/blob/main/docs/openai.md) which you can point `gptlint` to.
-- [vLLM](https://github.com/vllm-project/vllm) supports exposing a local [OpenAI compatible server](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html) which you can point `gptlint` to.
+- [ollama](https://github.com/ollama/ollama) supports exposing a local [OpenAI compatible server](https://github.com/ollama/ollama/blob/main/docs/openai.md)
+- [vLLM](https://github.com/vllm-project/vllm) supports exposing a local [OpenAI compatible server](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html)
 
 Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your local model server.
 
