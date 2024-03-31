@@ -78,6 +78,7 @@ export async function lintFiles({
       numTasksCached: lintTasks.length - resolvedLintTasks.length,
       numTasksTodo: resolvedLintTasks.length
     },
+    '\n',
     resolvedLintTasks.map((task) => ({
       file: task.file.fileRelativePath,
       rule: task.rule.name
