@@ -1,6 +1,5 @@
 {
   "name": "gptlint",
-  "type": "module",
   "description": "A linter with superpowers! Use LLMs to enforce best practices across your codebase in a standardized, configurable, scalable manner.",
   "author": "Travis Fischer <travis@transitivebullsh.it>",
   "license": "MIT",
@@ -12,7 +11,29 @@
   "engines": {
     "node": ">=18"
   },
+  "type": "module",
+  "source": "./bin/lint.ts",
+  "types": "./dist/lint.d.ts",
+  "bin": {
+    "gptlint": "./dist/bin/lint.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js",
+      "default": "./dist/src/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "del dist",
+    "prebuild": "run-s clean",
+    "predev": "run-s clean",
+    "pretest": "run-s build",
     "prepare": "husky install",
     "test": "run-s test:*",
     "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
@@ -56,11 +77,13 @@
     "@types/node": "^20.11.28",
     "@types/parse-gitignore": "^1.0.2",
     "@types/prettier": "2",
+    "del-cli": "^5.1.0",
     "eslint": "^8.57.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.8",
+    "tsup": "^8.0.2",
     "tsx": "^4.7.1",
     "typescript": "^5.4.2",
     "vite": "^5.1.6",

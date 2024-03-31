@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import 'dotenv/config'
 import { gracefulExit } from 'exit-hook'
 import plur from 'plur'

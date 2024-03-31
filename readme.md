@@ -47,7 +47,9 @@
 
 ## How it works
 
-TODO
+<p align="center">
+  <img alt="How it works" src="/media/how-gptlint-works.png">
+</p>
 
 ## Usage
 
