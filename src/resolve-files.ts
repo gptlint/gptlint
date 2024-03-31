@@ -8,12 +8,10 @@ import type * as types from './types.js'
 
 export async function resolveFiles({
   config,
-  cwd,
-  concurrency = 16
+  cwd
 }: {
   config: types.ResolvedLinterConfig
   cwd: string
-  concurrency?: number
 }) {
   const inputFiles = await globby(config.files, {
     gitignore: true,
@@ -21,7 +19,9 @@ export async function resolveFiles({
     cwd
   })
 
-  return readFiles(inputFiles, { concurrency })
+  return readFiles(inputFiles, {
+    concurrency: config.linterOptions.concurrency
+  })
 }
 
 export async function readFiles(

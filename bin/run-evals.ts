@@ -29,7 +29,6 @@ import {
  */
 async function main() {
   const cwd = process.cwd()
-  const concurrency = 16
 
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
@@ -47,7 +46,7 @@ async function main() {
   let rules: types.Rule[]
 
   try {
-    rules = await resolveRules({ cwd, config, concurrency })
+    rules = await resolveRules({ cwd, config })
   } catch (err: any) {
     console.error(err.message)
     args.showHelp()
@@ -80,7 +79,7 @@ async function main() {
           gitignore: true,
           cwd
         })
-        const files = await readFiles(exampleFiles, { concurrency, cwd })
+        const files = await readFiles(exampleFiles, { cwd })
 
         await pMap(
           files,
@@ -131,7 +130,7 @@ async function main() {
           gitignore: true,
           cwd
         })
-        const files = await readFiles(exampleFiles, { concurrency, cwd })
+        const files = await readFiles(exampleFiles, { cwd })
 
         await pMap(
           files,

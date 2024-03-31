@@ -125,7 +125,7 @@ Flags:
 
 ## LLM Providers
 
-This project supports any chat completions model which exposes an OpenAI-compatible chat completions API. Specific instructions for the most popular LLM providers and local, open source models are included below.
+This project supports any chat LLM which exposes an OpenAI-compatible chat completions API. Specific instructions for the most popular LLM providers and local, open source models are included below.
 
 ### OpenAI
 
@@ -143,7 +143,7 @@ Anthropic Claude is supported by using a proxy such as [OpenRouter](https://open
 - [Claude Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet)
 - [Claude Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku)
 
-Export your OpenRouter API key as `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
+Export your OpenRouter API key as an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
 
 ```js
 // gptlint.config.js
@@ -151,12 +151,14 @@ export default [
   {
     llmOptions: {
       apiBaseUrl: 'https://openrouter.ai/api/v1',
-      model: 'gpt-4-turbo-preview',
+      model: 'anthropic/claude-3-opus',
       // Optional
       kyOptions: {
         headers: {
-          'HTTP-Referer': `${YOUR_SITE_URL}`, // Optional, for including your app on openrouter.ai rankings.
-          'X-Title': `${YOUR_SITE_NAME}` // Optional, shows in rankings on openrouter.ai.
+          // Optional, for including your app on openrouter.ai rankings.
+          'HTTP-Referer': 'https://github.com/GPTLint/GPTLint',
+          // Optional, shows in rankings on openrouter.ai.
+          'X-Title': 'gptlint'
         }
       }
     }
@@ -177,6 +179,8 @@ The best way to use GPTLint with OSS models is to either [host them locally](#lo
 - [ollama](https://github.com/ollama/ollama) supports exposing a local [OpenAI compatible server](https://github.com/ollama/ollama/blob/main/docs/openai.md) which you can point `gptlint` to.
 - [vLLM](https://github.com/vllm-project/vllm) supports exposing a local [OpenAI compatible server](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html) which you can point `gptlint` to.
 
+Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your local model server.
+
 ## How it works in-depth
 
 <p align="center">
@@ -194,7 +198,7 @@ GPTLint lints a codebase by taking the following steps:
 7. Retries step #5 if the LLM output fails to validate
 8. Otherwise, adds any `RuleViolation` objects to the output
 
-The core linting logic lives in [lintFile](./src/lint-file.ts).
+The core linting logic lives in [src/lint-file.ts](./src/lint-file.ts).
 
 <details>
 <summary>

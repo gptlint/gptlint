@@ -18,7 +18,6 @@ import { logDebugConfig, logDebugStats } from '../src/utils.js'
  */
 async function main() {
   const cwd = process.cwd()
-  const concurrency = 16
 
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
@@ -30,8 +29,8 @@ async function main() {
 
   try {
     ;[files, rules] = await Promise.all([
-      resolveFiles({ cwd, config, concurrency }),
-      resolveRules({ cwd, config, concurrency })
+      resolveFiles({ cwd, config }),
+      resolveRules({ cwd, config })
     ])
   } catch (err: any) {
     console.error(err.message)
@@ -55,7 +54,6 @@ async function main() {
     config,
     cache,
     chatModel,
-    concurrency,
     onProgressInit: ({ numTasks }) => {
       progressBar =
         config.linterOptions.debug || numTasks <= 0

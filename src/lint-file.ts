@@ -82,9 +82,13 @@ Your task is to take the given SOURCE code and determine whether any portions of
 ${stringifyRuleForModel(rule)}
 
 ---
+
+# SOURCE ${file.fileName}:
+
+${file.content}
 `),
-    Msg.system(`# SOURCE ${file.fileName}:\n\n${file.content}`),
-    Msg.system(`# TASK
+
+    Msg.user(`# TASK
 
 List out the portions of the SOURCE code ${file.fileName} which are related to the RULE and explain whether they VIOLATE or conform to the RULE's intent. Your answer should contain two markdown sections, EXPLANATION and VIOLATIONS.
 
@@ -170,6 +174,8 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
 
       if (res.cost) {
         lintResult.totalCost += res.cost
+      } else if ((res.usage as any)?.total_cost) {
+        lintResult.totalCost += (res.usage as any)?.total_cost
       }
 
       if (res.usage) {
@@ -212,7 +218,8 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
       } else {
         if (config.linterOptions.debug) {
           console.warn(
-            `\nRETRYING unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
+            `\nRETRYING unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}"`,
+            err
           )
         }
       }

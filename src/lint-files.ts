@@ -13,7 +13,6 @@ export async function lintFiles({
   config,
   cache,
   chatModel,
-  concurrency = 16,
   onProgress,
   onProgressInit
 }: {
@@ -22,7 +21,6 @@ export async function lintFiles({
   config: types.ResolvedLinterConfig
   cache: LinterCache
   chatModel: ChatModel
-  concurrency?: number
   onProgress?: types.ProgressHandlerFn
   onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
@@ -64,7 +62,7 @@ export async function lintFiles({
         }
       },
       {
-        concurrency
+        concurrency: config.linterOptions.concurrency
       }
     )
   ).filter(Boolean)
@@ -141,7 +139,7 @@ export async function lintFiles({
       }
     },
     {
-      concurrency
+      concurrency: config.linterOptions.concurrency
     }
   )
 

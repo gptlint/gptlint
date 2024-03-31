@@ -10,12 +10,10 @@ import { parseRuleFile } from './parse-rule-file.js'
 
 export async function resolveRules({
   config,
-  cwd,
-  concurrency = 16
+  cwd
 }: {
   config: types.ResolvedLinterConfig
   cwd: string
-  concurrency?: number
 }) {
   const guidelineFilePaths = await globby(config.guidelineFiles, {
     gitignore: true,
@@ -63,7 +61,7 @@ export async function resolveRules({
         }
       },
       {
-        concurrency
+        concurrency: config.linterOptions.concurrency
       }
     )
   )
@@ -107,7 +105,7 @@ export async function resolveRules({
           }
         },
         {
-          concurrency
+          concurrency: config.linterOptions.concurrency
         }
       )
     ).filter(Boolean)

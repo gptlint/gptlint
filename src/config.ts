@@ -91,7 +91,14 @@ export const LinterOptionsSchema = z.object({
   cacheDir: z
     .string()
     .optional()
-    .describe('A string path to the shared cache directory.')
+    .describe('A string path to the shared cache directory.'),
+
+  concurrency: z
+    .number()
+    .int()
+    .nonnegative()
+    .optional()
+    .describe('Limits the maximum number of concurrent tasks.')
 })
 export type LinterOptions = z.infer<typeof LinterOptionsSchema>
 
@@ -146,6 +153,7 @@ export type ResolvedLinterConfig = Simplify<
 export const defaultLinterOptions: Readonly<LinterOptions> = {
   noInlineConfig: false,
   earlyExit: false,
+  concurrency: 16,
   debug: false,
   debugConfig: false,
   debugModel: false,

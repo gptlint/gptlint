@@ -54,6 +54,11 @@ const defaultCLIFlags: Readonly<types.CLIFlags> = {
     description: 'Customize the path to the cache directory',
     default: defaultLinterConfig.linterOptions.cacheDir
   },
+  concurrency: {
+    type: Number,
+    description: 'Limits the maximum number of concurrent tasks',
+    default: 16
+  },
   debug: {
     type: Boolean,
     description: 'Enables debug logging',
@@ -171,6 +176,10 @@ export async function resolveLinterCLIConfig(
     linterOptions: {
       noInlineConfig: args.flags.noInlineConfig,
       earlyExit: args.flags.earlyExit,
+      concurrency:
+        args.flags.concurrency === undefined
+          ? undefined
+          : args.flags.concurrency,
       debug: args.flags.debug,
       debugConfig: args.flags.debugConfig,
       debugModel: args.flags.debugModel,
