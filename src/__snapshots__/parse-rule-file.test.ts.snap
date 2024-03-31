@@ -408,7 +408,7 @@ exports[`parseRuleFile - guidelines/consistent-identifier-casing.md 1`] = `
 Global const variable names should either use camelCase, PascalCase, or CONSTANT_CASE.
 Type names should use PascalCase.
 Class names should use PascalCase.
-Function names should use camelCase.Third-party APIs may use inconsistent casing, which is an exception to this rule.Keys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and _getKey.Ignore identifiers which mix PascalCase with camelCase.Ignore the casing of common acronyms like API, IP, HTTP, and LLM.Ignore the casing of identifiers which start with acronyms like LLMOptionsSchema.Class variables and functions may include _ prefixes.",
+Function names should use camelCase.Third-party APIs may use inconsistent casing, which is an exception to this rule.Keys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and _getKey.Ignore identifiers which mix PascalCase with camelCase.Ignore the casing of common acronyms like API, IP, HTTP, and LLM.Ignore the casing of identifiers which start with acronyms like LLMOptionsSchema.Ignore parameter names used in inline functions.Ignore string literals and module names for this rule.Class variables and functions may include _ prefixes.",
   "fixable": false,
   "languages": [
     "javascript",
@@ -446,9 +446,16 @@ foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })",
       "language": "ts",
     },
     {
-      "code": "export const HTTPConfig = {}
+      "code": "// These are all fine as common exceptions to this rule
+export const HTTPConfig = {}
 const LLMOptions = {}
-const validKeysL = new Set()",
+const validKeysL = new Set()
+const cwd = process.cwd",
+      "language": "ts",
+    },
+    {
+      "code": "// This is fine because \`i\` is a parameter for an inline function.
+const foo = [1, 2, 3].filter((i) => i >= 0)",
       "language": "ts",
     },
   ],

@@ -139,9 +139,9 @@ If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-
 
 Anthropic Claude is supported by using a proxy such as [OpenRouter](https://openrouter.ai/).
 
-- [Claude Opus](https://openrouter.ai/models/anthropic/claude-3-opus)
-- [Claude Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet)
-- [Claude Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku)
+- [Claude Opus](https://openrouter.ai/models/anthropic/claude-3-opus:beta)
+- [Claude Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet:beta)
+- [Claude Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku:beta)
 
 Export your OpenRouter API key as an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
 
@@ -151,7 +151,7 @@ export default [
   {
     llmOptions: {
       apiBaseUrl: 'https://openrouter.ai/api/v1',
-      model: 'anthropic/claude-3-opus',
+      model: 'anthropic/claude-3-opus:beta',
       // Optional
       kyOptions: {
         headers: {

@@ -15,7 +15,7 @@ export default [
       apiBaseUrl: 'https://openrouter.ai/api/v1',
       // eslint-disable-next-line no-process-env
       apiKey: process.env.OPENROUTER_API_KEY,
-      model: 'anthropic/claude-3-opus',
+      model: 'anthropic/claude-3-opus:beta',
       // Optional
       kyOptions: {
         headers: {
