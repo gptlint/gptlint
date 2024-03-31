@@ -175,7 +175,7 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
       if (res.cost) {
         lintResult.totalCost += res.cost
       } else if ((res.usage as any)?.total_cost) {
-        lintResult.totalCost += (res.usage as any)?.total_cost
+        lintResult.totalCost += 10 * (res.usage as any).total_cost
       }
 
       if (res.usage) {

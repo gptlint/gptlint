@@ -28,6 +28,8 @@ Ignore the casing of common acronyms like API, IP, HTTP, and LLM.
 
 Ignore the casing of identifiers which start with acronyms like `LLMOptionsSchema`.
 
+Ignore parameter names used in inline functions.
+
 Class variables and functions may include `_` prefixes.
 
 ### Bad
@@ -63,4 +65,9 @@ foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })
 export const HTTPConfig = {}
 const LLMOptions = {}
 const validKeysL = new Set()
+```
+
+```ts
+// This is fine because `i` is a parameter for an inline function.
+const foo = [1, 2, 3].filter((i) => i >= 0)
 ```
