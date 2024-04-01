@@ -68,6 +68,7 @@ foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })
 export const HTTPConfig = {}
 const LLMOptions = {}
 const validKeysL = new Set()
+const loadingP = new Promise()
 const cwd = process.cwd
 ```
 

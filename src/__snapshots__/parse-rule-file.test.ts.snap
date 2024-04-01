@@ -423,6 +423,66 @@ exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = 
 }
 `;
 
+exports[`parseRuleFile - rules/always-handle-promises.md 1`] = `
+{
+  "desc": "Promises (and async functions which implicitly create Promises) must always be handled at some level of the program, either via:using await to wait for the Promise to resolve successfullyusing .then or .catch to handle Promise resolutionreturning a Promise to a calling function which itself has to handle the PromiseCreating a Promise or calling an async function and NOT awaiting or propagating the resulting Promise using one of these approaches is a code smell and violates this rule.",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Always handle Promises",
+  "name": "always-handle-promises",
+  "negativeExamples": [
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is bad because we're not handling the Promise returned by \`saveFile\`
+saveFile()",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because we explicitly \`await\` the Promise returned by \`saveFile\`
+await saveFile()",
+      "language": "js",
+    },
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because the Promise returned from \`saveFile\` is propagated to \`main\`'s caller
+async function main() {
+  return saveFile()
+}",
+      "language": "js",
+    },
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because we explicitly \`await\` the promise results
+await Promise.all([saveFile(), saveFile()])",
+      "language": "js",
+    },
+  ],
+  "source": "rules/always-handle-promises.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
 exports[`parseRuleFile - rules/consistent-identifier-casing.md 1`] = `
 {
   "desc": "Identifiers of the same type should try to use consistent casing.Variable names should use camelCase.
@@ -471,6 +531,7 @@ foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })",
 export const HTTPConfig = {}
 const LLMOptions = {}
 const validKeysL = new Set()
+const loadingP = new Promise()
 const cwd = process.cwd",
       "language": "ts",
     },

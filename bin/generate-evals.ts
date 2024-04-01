@@ -61,7 +61,7 @@ async function main() {
 
   const chatModel = createChatModel(config)
 
-  const numExamples = 5
+  const numExamples = 10
   const outputDir = path.join('fixtures', 'evals')
   await fs.mkdir(outputDir, { recursive: true })
 
@@ -76,6 +76,8 @@ async function main() {
     rules,
     async function generateEvalsForRule(rule) {
       const ruleExamplesDir = path.join(outputDir, rule.name)
+      console.log(`\nprocessing rule ${rule.name} ⇒ ${ruleExamplesDir}`)
+      await fs.mkdir(ruleExamplesDir, { recursive: true })
 
       {
         // Positive examples
@@ -85,9 +87,12 @@ async function main() {
         const res = await chatModel.run({
           messages: [
             Msg.system(
-              `You are an expert senior TypeScript software engineer at Vercel who loves to lint code.`
+              `You are an expert senior TypeScript software engineer at Vercel who loves to lint code.
+
+${stringifyRuleForModel(rule)}
+`
             ),
-            Msg.system(stringifyRuleForModel(rule)),
+
             Msg.user(
               `Generate ${numExamples} diverse code snippets which CORRECTLY adhere to the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code CORRECTLY adheres to the given RULE. Do not include any prose or descriptions outside of the code blocks.`
             )
@@ -140,9 +145,12 @@ async function main() {
         const res = await chatModel.run({
           messages: [
             Msg.system(
-              `You are an expert senior TypeScript software engineer at Vercel who loves to lint code.`
+              `You are an expert senior TypeScript software engineer at Vercel who loves to lint code.
+
+${stringifyRuleForModel(rule)}
+`
             ),
-            Msg.system(stringifyRuleForModel(rule)),
+
             Msg.user(
               `Generate ${numExamples} diverse code snippets which VIOLATE the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code VIOLATES to the given RULE. Do not include any prose or descriptions outside of the code blocks.`
             )
