@@ -102,6 +102,8 @@ npx gptlint -k 'your openai api key'
 
 By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` as a file glob for source files to lint and `rules/**/*.md` for rule definition files.
 
+`gptlint` respects `.gitignore` and optionally `.gptlintignore` as well if it exists.
+
 ## CLI
 
 ```bash

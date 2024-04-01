@@ -527,6 +527,9 @@ const item = items[index]",
       "language": "ts",
     },
   ],
+  "resources": [
+    "https://twitter.com/housecor/status/1768622518179369036",
+  ],
   "source": "rules/prefer-array-at-negative-indexing.md",
   "tags": [
     "general",

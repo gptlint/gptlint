@@ -8,7 +8,7 @@
 
 ## About
 
-The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define a standard for how to describe higher-level linting rules and best practices that can be enforced across codebases using tools compatible with [GPTLint](https://github.com/GPTLint/GPTLint).
+The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define a standard for how to describe higher-level linting rules and best practices that can be enforced across codebases using LLM-based tools compatible with [GPTLint](https://github.com/GPTLint/GPTLint).
 
 ## Rule Format
 
@@ -38,14 +38,17 @@ export type Rule = {
 
 ## Rule File Format
 
-A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/gfm/) (GFM) document. Each GRS rule must have its own markdown file, and GRS markdown files can only contain a single rule.
+A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/gfm/) (GFM) document. Each GRS rule must have its own markdown file, and GRS markdown files may only contain a single rule.
 
-- GRS rule files must contain a single `h1` containing the rule's `message` property
-- Within this `h1` section, GRS rule files may optionally contain a [metadata table](#rule-metadata-table) for customizing the rule's behavior
-- The content from the `h1` section up until any optional example header sections will comprise the rule's `desc` property
-- The rule's `name` will be inferred from either the metadata table's `Name` row (preferred) or will fall back to a slugified version of the rule's `message` (main `h1`)
-- GRS rules may optionally contain a single `h3` section named "Bad" or "Incorrect" which contains 1 or more code blocks to use as `negativeExamples`
-- GRS rules may optionally contain a single `h3` section named "Good" or "Correct" which contains 1 or more code blocks to use as `positiveExamples`
+- GRS rule files must contain a single markdown `h1` header containing the rule's `message` property.
+- Within this `h1` section, GRS rule files may optionally contain a [metadata table](#rule-metadata-table) for customizing the rule's behavior.
+- The content from the `h1` section up until any optional example header sections will comprise the rule's `desc` property which is intended to explain the rule's intent in natural language.
+- The rule's `name` will be inferred from either the metadata table's `Name` row (preferred) or will fall back to a slugified version of the rule's `message` (main `h1`).
+- GRS rules may optionally contain a single markdown `h3` header named "Bad" or "Incorrect".
+  - The content of this section should contain 1 or more code blocks to use as `negativeExamples`.
+- GRS rules may optionally contain a single markdown `h3` header named "Good" or "Correct".
+  - The content of this section should contain 1 or more code blocks to use as `positiveExamples`.
+- It is encouraged to specify a language for all code block examples, but it not required.
 
 ### Rule Metadata Table
 
@@ -71,6 +74,7 @@ Here is a breakdown of the supported metadata fields and their expected types.
 - Empty arrays as values are supported.
 - Table keys are case-insensitive (`Name` is the same as `name`).
 - All table values are stripped of markdown formatting, so values may contain formatting like `inline code blocks`, **bold**, _italics_, etc, and their parsed values will be the same with or without this formatting.
+- We considered using [frontmatter](https://github.com/remarkjs/remark-frontmatter) instead of this table format, but found we preferred the ability to see the metadata in the GitHub-rendered markdown along with the ability to apply formatting to the values.
 
 #### Example Rule Metadata Table
 
@@ -93,7 +97,7 @@ In the future, we may support more "escape hatches" to enable rule authors more 
 
 ## Example Rules
 
-See [rules/](./rules) for example rules.
+See [rules/](./rules) for examples of valid rules.
 
 Parsing-wise, [fixtures/rules/](./fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules/](./fixtures/invalid-rules) contains invalid rules which violate the spec and will fail parsing.
 
