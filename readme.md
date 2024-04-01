@@ -11,7 +11,7 @@
   <a href="https://github.com/transitive-bullshit/eslint-plus-plus/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/transitive-bullshit/eslint-plus-plus/actions/workflows/main.yml/badge.svg" /></a>
   <a href="https://github.com/transitive-bullshit/eslint-plus-plus/blob/main/license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue" /></a>
   <a href="https://prettier.io"><img alt="Prettier Code Formatting" src="https://img.shields.io/badge/code_style-prettier-brightgreen.svg" /></a>
-  <a href="https://twitter.com/transitive_bs"><img alt="Discuss on Twitter" src="https://img.shields.io/badge/twitter-discuss-blue" /></a>
+  <a href="https://twitter.com/transitive_bs"><img alt="Discuss on Twitter" src="https://img.shields.io/badge/twitter-discussion-blue" /></a>
 </p>
 
 # GPTLint <!-- omit from toc -->
@@ -157,9 +157,9 @@ If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-
 
 Anthropic Claude is supported by using a proxy such as [OpenRouter](https://openrouter.ai/).
 
-- [Claude Opus](https://openrouter.ai/models/anthropic/claude-3-opus:beta) - Most powerful model, but _expensive_
-- [Claude Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet:beta)
-- [Claude Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku:beta)
+- [Claude 3 Opus](https://openrouter.ai/models/anthropic/claude-3-opus:beta) (powerful, but very expensive)
+- [Claude 3 Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet:beta) (balanced)
+- [Claude 3 Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku:beta) (cheapest but better than `gpt-3.5-turbo`)
 
 Export your OpenRouter API key as an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
 
@@ -169,7 +169,7 @@ export default [
   {
     llmOptions: {
       apiBaseUrl: 'https://openrouter.ai/api/v1',
-      model: 'anthropic/claude-3-opus:beta',
+      model: 'anthropic/claude-3-haiku:beta',
       // Optional
       kyOptions: {
         headers: {
@@ -185,7 +185,7 @@ export default [
 ```
 
 > [!WARNING]
-> Claude Opus is ~2.5x as expensive as `gpt-4-turbo`, and it consistently produces more false positives in my testing, so I would avoid using it unless you have a strong reason. Linting this codebase with `anthropic/claude-3-opus:beta` **costs ~$10 per uncached run** which is prohibitive for testing. In contrast, Claude Haiku performs relatively well and is extremely cheap, so you may want to start from there.
+> Claude Opus is ~2.5x as expensive as `gpt-4-turbo`, and it consistently produces more false positives in my testing, so I would avoid using it unless you have a strong reason. Linting this codebase with `anthropic/claude-3-opus:beta` **costs ~$10 per uncached run** which is prohibitive for testing. In contrast, Claude 3 Haiku performs relatively well and is extremely cheap, so you may want to start from there.
 
 ### OSS Models
 
@@ -301,6 +301,7 @@ Based on these observations, the only violation found in the source code is the 
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
     - possibly via optional regex patterns to enable / disable rules for files
+  - experiment with smart model and cheap model; cheap model computes potential rule violations and smart model verifies them, reducing the potential for false positives and significantly reducing the overall cost
 - rules
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
