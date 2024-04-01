@@ -157,7 +157,7 @@ If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-
 
 Anthropic Claude is supported by using a proxy such as [OpenRouter](https://openrouter.ai/).
 
-- [Claude Opus](https://openrouter.ai/models/anthropic/claude-3-opus:beta)
+- [Claude Opus](https://openrouter.ai/models/anthropic/claude-3-opus:beta) - Most powerful model, but _expensive_
 - [Claude Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet:beta)
 - [Claude Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku:beta)
 
@@ -169,7 +169,7 @@ export default [
   {
     llmOptions: {
       apiBaseUrl: 'https://openrouter.ai/api/v1',
-      model: 'anthropic/claude-3-sonnet:beta',
+      model: 'anthropic/claude-3-opus:beta',
       // Optional
       kyOptions: {
         headers: {
@@ -185,7 +185,7 @@ export default [
 ```
 
 > [!WARNING]
-> Claude Opus is ~2.5x as expensive as `gpt-4-turbo`, and it consistently produces more false positives in my testing, so I would avoid using it unless you have a strong reason for using Anthropic. Linting this codebase with `anthropic/claude-3-sonnet:beta` **costs ~$10 per uncached run** which is prohibitive for testing. In contrast, Claude Haiku performs relatively well and is extremely cheap, so you may want to start from there.
+> Claude Opus is ~2.5x as expensive as `gpt-4-turbo`, and it consistently produces more false positives in my testing, so I would avoid using it unless you have a strong reason. Linting this codebase with `anthropic/claude-3-opus:beta` **costs ~$10 per uncached run** which is prohibitive for testing. In contrast, Claude Haiku performs relatively well and is extremely cheap, so you may want to start from there.
 
 ### OSS Models
 
