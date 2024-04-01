@@ -205,9 +205,9 @@ Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your l
   <img alt="How it works" src="/media/how-gptlint-works.png">
 </p>
 
-GPTLint lints a codebase by taking the following steps:
+To lint a codebase, GPTLint takes the following steps:
 
-1. Resolves a set of markdown rule definitions along with optional few-shot examples (defaults to `guidelines/**/*.md`)
+1. Resolves a set of markdown rule definitions along with optional few-shot examples for each rule (defaults to `guidelines/**/*.md`)
 2. Resolves a set of input source files to lint (defaults to `**/*.{js,ts,jsx,tsx,cjs,mjs}`)
 3. For each `[rule, file]` pair, creates a linter task
 4. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file
@@ -334,12 +334,14 @@ Based on these observations, the only violation found in the source code is the 
 
 ## Citations
 
-```
-bibtex
-@misc{agentic2024gptlint,
+To stay up to date or learn more, follow [@transitive_bs](https://twitter.com/transitive_bs) on Twitter.
+
+```bibtex
+@software{agentic2024gptlint,
   title        = {GPTLint},
-  author       = {Travis Fischer},
+  author       = {Travis Fischer, Scott Silvi},
   year         = {2024},
+  month        = {4},
   howpublished = {GitHub},
   url          = {https://github.com/GPTLint/GPTLint}
 }
@@ -347,4 +349,4 @@ bibtex
 
 ## License
 
-MIT © [Travis Fischer](https://transitivebullsh.it)
+MIT © [Travis Fischer](https://twitter.com/transitive_bs)

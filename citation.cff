@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: GPTLint
+message: >-
+  If you use this software, please cite it using the metadata in this file.
+abstract: |
+  Use LLMs to enforce best practices across your codebase in a way that takes traditional static analysis tools like eslint to the next level.
+type: software
+authors:
+  - given-names: Travis
+    family-names: Fischer
+    email: travis@transitivebullsh.it
+  - given-names: Scott
+    family-names: Silvi
+    email: scott@teamduality.dev
+keywords:
+  - Linting
+  - Best practices
+  - Conformance
+  - Technical debt
+  - GPTLint
+  - ESLint++
+  - AI code analysis
+license: MIT
+date-released: '2024-04-20'
+repository-code: https://github.com/GPTLint/GPTLint
+url: https://github.com/GPTLint/GPTLint
