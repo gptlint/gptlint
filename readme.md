@@ -29,7 +29,7 @@
   - [OSS Models](#oss-models)
   - [Local Models](#local-models)
 - [How it works in-depth](#how-it-works-in-depth)
-  - [Author notes](#author-notes)
+  - [Implementation Notes](#implementation-notes)
   - [Evals](#evals)
   - [Caveats](#caveats)
 - [TODO](#todo)
@@ -256,7 +256,7 @@ Based on these observations, the only violation found in the source code is the 
 
 </details>
 
-### Author notes
+### Implementation Notes
 
 - the current version restricts rules to a single file of context. this is to simplify the MVP and will likely change in the future
 - the LLM classifier outputs a markdown file with two sections, `EXPLANATION` and `VIOLATIONS`
@@ -291,14 +291,6 @@ Based on these observations, the only violation found in the source code is the 
 
 ## TODO
 
-- rule file format
-  - support both positive and negative examples in the same code block
-  - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
-  - support additional h2s (ex for caveats / exceptions / usage examples)
-- config
-  - use eslint, ruff, and conformance as inspiration
-  - add ability to extend other configs
-  - add built-in configs
 - linter engine
   - **improve evals**
   - gracefully respect [rate limits](https://platform.openai.com/account/limits)
@@ -311,6 +303,14 @@ Based on these observations, the only violation found in the source code is the 
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
   - react unnecessary effects for https://react.dev/learn/you-might-not-need-an-effect
+- rule file format
+  - support both positive and negative examples in the same code block
+  - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
+  - support additional h2s (ex for caveats / exceptions / usage examples)
+- config
+  - add ability to extend other configs
+  - add built-in configs
+    - convert this repo to a monorepo?
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
 - project
