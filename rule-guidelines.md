@@ -13,7 +13,7 @@
 
 ## Intro
 
-GPTLint is intended to augment traditional, AST-based, static analysis tools like `eslint`, `pylint`, `ruff`, etc with _higher-level codbest practices_ that are difficult or impossible to capture with these lower-level, AST-based tools. GPTLint rules are therefore meant to be higher-level in nature than traditional AST-based linting rules.
+GPTLint is intended to augment traditional, AST-based, static analysis tools like `eslint`, `pylint`, `ruff`, etc with _higher-level coding best practices_ that are difficult or impossible to capture with these lower-level, AST-based tools. GPTLint rules are therefore meant to be higher-level in nature than traditional AST-based linting rules.
 
 _On the flip side, rules which are too abstract are impossible to enforce_ – even for expert human developers.
 
