@@ -287,22 +287,18 @@ Based on these observations, the only violation found in the source code is the 
 - config
   - use eslint, ruff, and conformance as inspiration
   - add ability to extend other configs
+  - add built-in configs
 - linter engine
   - **evals**
-  - gracefully respect rate limits
-  - gracefully handle llm api errors like 403 / 409 for content moderation
-  - add support for different LLM providers
-  - test anthropic claude w/ structured output and prefill
+  - gracefully respect [rate limits](https://platform.openai.com/account/limits)
   - add support for optionally applying automatic fixes to linter errors
   - add support for only linting changed git deltas
-  - add support for different languages
   - add support for `fixable`
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - handle context overflow properly depending on selected model
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
     - possibly via optional regex patterns to enable / disable rules for files
-  - cross-file linting; v0 is strictly local to individual files
 - rules
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
@@ -313,9 +309,13 @@ Based on these observations, the only violation found in the source code is the 
   - update project name in multiple places once we decide on a name
   - decide on an OSS license
   - add a [security policy](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md)
+  - basic project logo
   - basic eval graphs and blog post
   - rubric for what makes a good rule
   - publish to NPM
+- post-mvp
+  - cross-file linting; v0 is strictly local to individual files
+  - add support for different programming languages
 
 ## License
 

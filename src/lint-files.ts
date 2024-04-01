@@ -69,14 +69,12 @@ export async function lintFiles({
 
   const resolvedLintTasks = preLintResults.filter((r) => !r.lintResult)
 
+  console.log('preLintResults', {
+    numTasks: lintTasks.length,
+    numTasksCached: lintTasks.length - resolvedLintTasks.length,
+    numTasksTodo: resolvedLintTasks.length
+  })
   console.log(
-    'preLintResults',
-    {
-      numTasks: lintTasks.length,
-      numTasksCached: lintTasks.length - resolvedLintTasks.length,
-      numTasksTodo: resolvedLintTasks.length
-    },
-    '\n',
     resolvedLintTasks.map((task) => ({
       file: task.file.fileRelativePath,
       rule: task.rule.name

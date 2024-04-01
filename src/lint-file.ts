@@ -216,12 +216,10 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
           )
         )
       } else {
-        if (config.linterOptions.debug) {
-          console.warn(
-            `\nRETRYING unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}"`,
-            err
-          )
-        }
+        throw new Error(
+          `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
+          { cause: err }
+        )
       }
     }
   } while (true)
