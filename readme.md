@@ -334,8 +334,6 @@ Based on these observations, the only violation found in the source code is the 
 
 ## Citations
 
-To stay up to date or learn more, follow [@transitive_bs](https://twitter.com/transitive_bs) on Twitter.
-
 ```bibtex
 @software{agentic2024gptlint,
   title        = {GPTLint},
@@ -350,3 +348,5 @@ To stay up to date or learn more, follow [@transitive_bs](https://twitter.com/tr
 ## License
 
 MIT © [Travis Fischer](https://twitter.com/transitive_bs)
+
+To stay up to date or learn more, follow [@transitive_bs](https://twitter.com/transitive_bs) on Twitter.
