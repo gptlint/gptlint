@@ -38,7 +38,7 @@ export async function preLintFile({
 
   if (!file.content.trim()) {
     // Ignore empty files
-    return preLintResult
+    return { ...preLintResult, lintResult, skipReason: 'empty' }
   }
 
   const cachedResult = await cache.get(preLintResult.cacheKey)

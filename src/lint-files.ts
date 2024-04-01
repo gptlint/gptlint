@@ -24,7 +24,7 @@ export async function lintFiles({
   onProgress?: types.ProgressHandlerFn
   onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
-  // TODO: Add support for different types of file <> rule mappings
+  // TODO: Experiment with different types of file <> rule mappings
   const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))
   )
@@ -32,8 +32,8 @@ export async function lintFiles({
   let earlyExitTripped = false
   const warnings: Error[] = []
 
-  // Preprocess the file / rule tasks so our progress bar has a clear indication of
-  // how many non-cached, non-disabled tasks need to be processed
+  // Preprocess the file / rule tasks so we have a clear indication of how many
+  // non-cached, non-disabled tasks need to be processed
   const preLintResults = (
     await pMap(
       lintTasks,
@@ -107,8 +107,8 @@ export async function lintFiles({
     )
   }
 
-  // Loop over each non-cached file / rule task and lint then with the LLM
-  // linting engine and a capped max concurrency
+  // Loop over each non-cached file / rule task and lint them with the LLM
+  // linting engine.
   await pMap(
     resolvedLintTasks,
     async ({ file, rule, cacheKey, config }, index) => {
