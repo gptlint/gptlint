@@ -1,9 +1,9 @@
 # GPTLint Rule Informal Spec
 
 <table>
-<tr><td><em>Version</em></td><td>0.1.0</td></tr>
-<tr><td><em>Date</em></td><td>2024-04-01</td></tr>
-<tr><td><em>Author</em></td><td><a href="https://twitter.com/transitive_bs">Travis Fischer</a></td></tr>
+<tr><td>Version</td><td>0.1.0</td></tr>
+<tr><td>Date</td><td>April 1, 2024</td></tr>
+<tr><td>Author</td><td><a href="https://twitter.com/transitive_bs">Travis Fischer</a></td></tr>
 </table>
 
 ## About
@@ -15,6 +15,8 @@ The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define 
 GRS rules are parsed into the following TypeScript format:
 
 ```ts
+export type LintRuleLevel = 'error' | 'warn' | 'off'
+
 export type Rule = {
   name: string
   message: string
@@ -97,6 +99,6 @@ Parsing-wise, [fixtures/rules/](./fixtures/rules) contains valid rules which tes
 
 # License
 
-The GPTLint rule spec is licensed under the Creative Commons License [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+The GPTLint Rule Spec is licensed under the Creative Commons License [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
 If you found this project interesting, please consider [sponsoring me](https://github.com/sponsors/transitive-bullshit) or <a href="https://twitter.com/transitive_bs">following me on twitter <img src="https://storage.googleapis.com/saasify-assets/twitter-logo.svg" alt="twitter" height="24px" align="center"></a>
