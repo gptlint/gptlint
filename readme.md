@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="How it works" src="/media/gptlint-logo.png" width="128">
+  <img alt="How it works" src="/media/gptlint-logo.png" width="256">
 </p>
 
 <p align="center">
@@ -33,6 +33,7 @@
   - [Evals](#evals)
   - [Caveats](#caveats)
 - [TODO](#todo)
+- [Citations](#citations)
 - [License](#license)
 
 ## Features
@@ -330,6 +331,19 @@ Based on these observations, the only violation found in the source code is the 
 - post-mvp
   - cross-file linting; v0 is strictly local to individual files
   - add support for different programming languages
+
+## Citations
+
+```
+bibtex
+@misc{agentic2024gptlint,
+  title        = {GPTLint},
+  author       = {Travis Fischer},
+  year         = {2024},
+  howpublished = {GitHub},
+  url          = {https://github.com/GPTLint/GPTLint}
+}
+```
 
 ## License
 
