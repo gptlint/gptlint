@@ -93,26 +93,5 @@
     "*.{ts,tsx}": [
       "prettier --ignore-unknown --write"
     ]
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@dexaai/eslint-config",
-      "@dexaai/eslint-config/node"
-    ],
-    "rules": {
-      "no-console": "off",
-      "simple-import-sort/imports": "off",
-      "@typescript-eslint/naming-convention": "off",
-      "import/consistent-type-specifier-style": "off",
-      "@typescript-eslint/array-type": "off",
-      "@typescript-eslint/no-inferrable-types": "off",
-      "import/order": "off"
-    },
-    "ignorePatterns": [
-      "scripts/",
-      "dist/",
-      "node_modules/"
-    ]
   }
 }

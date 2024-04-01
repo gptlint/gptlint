@@ -302,6 +302,8 @@ Based on these observations, the only violation found in the source code is the 
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
     - possibly via optional regex patterns to enable / disable rules for files
   - experiment with smart model and cheap model; cheap model computes potential rule violations and smart model verifies them, reducing the potential for false positives and significantly reducing the overall cost
+  - track the positive instances where we see rule conformance as well?
+    - could help us output a better picture of overall code health
 - rules
   - add a rule which captures naming w/ types and consistency
   - if you refer to something as numIterations in one place, refer to it consistently
@@ -319,7 +321,7 @@ Based on these observations, the only violation found in the source code is the 
 - project
   - update project name in multiple places once we decide on a name
   - decide on an OSS license
-  - add a [security policy](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md)
+  - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - basic eval graphs and blog post
   - rubric for what makes a good rule
   - publish to NPM
