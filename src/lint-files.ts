@@ -5,7 +5,7 @@ import type * as types from './types.js'
 import type { LinterCache } from './cache.js'
 import { lintFile } from './lint-file.js'
 import { preLintFile } from './pre-lint-file.js'
-import { createLintResult, mergeLintResults } from './utils.js'
+import { createLintResult, mergeLintResults, pruneUndefined } from './utils.js'
 
 export async function lintFiles({
   files,
@@ -33,7 +33,7 @@ export async function lintFiles({
   const warnings: Error[] = []
 
   // Preprocess the file / rule tasks so our progress bar has a clear indication of
-  // how many non-cached tasks need to be handled
+  // how many non-cached, non-disabled tasks need to be processed
   const preLintResults = (
     await pMap(
       lintTasks,
@@ -68,12 +68,28 @@ export async function lintFiles({
   ).filter(Boolean)
 
   const resolvedLintTasks = preLintResults.filter((r) => !r.lintResult)
+  const skippedLintTasks = preLintResults.filter((r) => r.lintResult)
+  const numTasksCached = skippedLintTasks.filter(
+    (r) => r.skipReason === 'cached'
+  ).length
+  const numTasksPrecheck = skippedLintTasks.filter(
+    (r) => r.skipReason === 'failed-precheck'
+  ).length
+  const numTasksDisabled = skippedLintTasks.filter(
+    (r) =>
+      r.skipReason === 'inline-linter-disabled' ||
+      r.skipReason === 'rule-disabled'
+  ).length
 
-  console.log('preLintResults', {
-    numTasks: lintTasks.length,
-    numTasksCached: lintTasks.length - resolvedLintTasks.length,
-    numTasksTodo: resolvedLintTasks.length
-  })
+  console.log(
+    'preLintResults',
+    pruneUndefined({
+      numTasks: resolvedLintTasks.length,
+      numTasksCached: numTasksCached || undefined,
+      numTasksPrecheck: numTasksPrecheck || undefined,
+      numTasksDisabled: numTasksDisabled || undefined
+    })
+  )
   console.log(
     resolvedLintTasks.map((task) => ({
       file: task.file.fileRelativePath,

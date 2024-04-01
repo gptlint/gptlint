@@ -1,4 +1,5 @@
 import type { ChatModel } from '@dexaai/dexter'
+import pMap from 'p-map'
 
 import type * as types from './types.js'
 import { type LinterCache } from './cache.js'
@@ -65,16 +66,22 @@ export async function preLintFile({
     //   }
     // }
 
-    return { ...preLintResult, lintResult }
+    return { ...preLintResult, lintResult, skipReason: 'cached' }
   }
 
+  // TODO: This should probably be moved to run a single time per file instead
+  // of per lint task
   if (!config.linterOptions.noInlineConfig) {
     const configFileOverride = parseInlineConfig({ file })
     if (configFileOverride) {
       if (configFileOverride.linterOptions?.disabled) {
         // Inline config disabled linting for this file
         await cache.set(preLintResult.cacheKey, lintResult)
-        return { ...preLintResult, lintResult }
+        return {
+          ...preLintResult,
+          lintResult,
+          skipReason: 'inline-linter-disabled'
+        }
       } else {
         // Inline config overrides for this file
         preLintResult.config = mergeLinterConfigs(
@@ -87,7 +94,45 @@ export async function preLintFile({
 
   if (preLintResult.config.rules[rule.name] === 'off') {
     // Config has this rule disabled for this file
-    return { ...preLintResult, lintResult }
+    return { ...preLintResult, lintResult, skipReason: 'rule-disabled' }
+  }
+
+  if (rule.prechecks) {
+    let precheckFailure: string | undefined
+
+    await pMap(
+      rule.prechecks,
+      async (precheck) => {
+        if (precheckFailure) return
+
+        try {
+          const passedPrecheck = await Promise.resolve(
+            precheck.fileCheckFn({ file })
+          )
+
+          if (!passedPrecheck) {
+            precheckFailure = precheck.desc
+          }
+        } catch (err: any) {
+          precheckFailure = `Unexpected precheck error: ${err.message} (${precheck.desc})`
+          throw new Error(precheckFailure)
+        }
+      },
+      { concurrency: config.linterOptions.concurrency }
+    )
+
+    // console.log(
+    //   `rule "${rule.name}" file "${file.fileRelativePath}" precheck failure: ${precheckFailure}`
+    // )
+
+    if (precheckFailure) {
+      return {
+        ...preLintResult,
+        lintResult,
+        skipReason: 'failed-precheck',
+        skipDetail: precheckFailure
+      }
+    }
   }
 
   // console.log(

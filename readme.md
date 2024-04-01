@@ -45,14 +45,12 @@
 - outputs LLM stats per run (cost, tokens, etc)
 - community-driven rules
 - every rule is fully configurable, both at the project level (`gptlint.config.js`) and at the rule level (markdown)
-  - don't agree with a rule? simply disable it in your config like you would with `eslint` or copy the rule's markdown into your project and customize it to suit your project's needs
+  - don't agree with a rule? simply disable it in your config like you would with `eslint`, or copy the rule's markdown into your project and customize it to suit your project's needs
   - want to enforce a new best practice in your project? add a new markdown file for the rule, describe the rule's intent in natural language, add a few correct/incorrect examples, and you're good to go
-  - all custom rules live in your repo as simple markdown files and are self-documenting, understandable by non-devs, and they can be improved over time via standard git workflows
+  - all custom rules live in your repo as simple markdown files and are self-documenting, understandable by non-devs, and can be improved over time via standard git workflows
   - this is the way 💯
-- all built-in rules are tested extensively with a combination of _synthetic evals_ and manual test cases
-  - (you can think of evals as regression test suites for possibly non-deterministic functions like the LLMs that power GPTLint)
-  - this allows us to track the accuracy of GPTLint over time and improve the rules whenever we find false positives or false negatives
-- ~~supports any programming language~~ (ts, py, C++, java, etc)
+- all built-in rules are tested extensively with a combination of _synthetic evals_ and manual tests
+- ~~supports any programming language~~ (js, ts, tsx, py, C++, java, etc)
   - the MVP is focused on JS / TS only for now (python support coming soon)
 - supports any natural language (english, chinese, spanish, etc)
 - supports multiple LLM providers (openai, anthropic, [openrouter](https://openrouter.ai/), etc)
@@ -62,6 +60,7 @@
   - see [LLM Providers](#llm-providers) for more info
 - designed to be used in addition to existing static analysis tools like `eslint`, `pylint`, `ruff`, etc
 - no complicated github integration, bots, or CI actions – just call the `gptlint` CLI the same way you would call a tool like `eslint`
+- supports multi-level configs just like `eslint`; use a `gptlint.config.js` file and/or CLI args and/or file overrides (`/* gptlint-disable */`, `/* gpt-lint use-esm: off */`, etc)
 
 ## How it works
 
@@ -304,11 +303,8 @@ Based on these observations, the only violation found in the source code is the 
   - add ability to extend other configs
   - add built-in configs
 - linter engine
-  - **evals**
+  - **improve evals**
   - gracefully respect [rate limits](https://platform.openai.com/account/limits)
-  - add support for optionally applying automatic fixes to linter errors
-  - add support for only linting changed git deltas
-  - add support for `fixable`
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - handle context overflow properly depending on selected model
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
@@ -331,6 +327,7 @@ Based on these observations, the only violation found in the source code is the 
 - post-mvp
   - cross-file linting; v0 is strictly local to individual files
   - add support for different programming languages
+  - add support for applying fixes to linter errors
 
 ## Citations
 

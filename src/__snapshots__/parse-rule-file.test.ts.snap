@@ -120,6 +120,27 @@ exports[`parseRuleFile - fixtures/rules/metadata-2.md 1`] = `
 }
 `;
 
+exports[`parseRuleFile - fixtures/rules/metadata-prechecks.md 1`] = `
+{
+  "desc": "This example should parse correctly. It uses 2 regex prechecks.",
+  "message": "Example",
+  "name": "example-name",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "prechecks": [
+    {
+      "desc": "Precheck /\\b['"]axios['"]\\b/gi",
+      "fileCheckFn": [Function],
+    },
+    {
+      "desc": "Precheck /import\\s+.*from\\s*['"]react['"]/gi",
+      "fileCheckFn": [Function],
+    },
+  ],
+  "source": "fixtures/rules/metadata-prechecks.md",
+}
+`;
+
 exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
 {
   "desc": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.",
@@ -526,6 +547,12 @@ exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
   "name": "prefer-fetch-over-axios",
   "negativeExamples": [],
   "positiveExamples": [],
+  "prechecks": [
+    {
+      "desc": "Precheck /\\b['"]axios['"]\\b/gi",
+      "fileCheckFn": [Function],
+    },
+  ],
   "source": "guidelines/prefer-fetch-over-axios.md",
   "tags": [
     "general",

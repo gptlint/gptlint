@@ -35,6 +35,7 @@ export type Rule = {
   eslint?: string[]
   resources?: string[]
   source?: string
+  prechecks?: FileCheck[]
 }
 
 export type RuleExample = {
@@ -74,23 +75,41 @@ export type LintResult = {
   totalCost: number
 }
 
+export type LintSkipReason =
+  | 'cached'
+  | 'empty'
+  | 'failed-precheck'
+  | 'rule-disabled'
+  | 'inline-linter-disabled'
+
 export type PreLintResult = {
   file: InputFile
   rule: Rule
   config: ResolvedLinterConfig
   cacheKey: any
   lintResult?: LintResult
+  skipReason?: LintSkipReason
+  skipDetail?: string
 }
+
+export type MaybePromise<T> = T | Promise<T>
 
 export type ProgressHandlerFn = (opts: {
   progress: number
   message: string
   result: LintResult
-}) => void | Promise<void>
+}) => MaybePromise<void>
 
 export type ProgressHandlerInitFn = (opts: {
   numTasks: number
-}) => void | Promise<void>
+}) => MaybePromise<void>
+
+export type FileCheckFn = (opts: { file: InputFile }) => MaybePromise<boolean>
+
+export type FileCheck = {
+  desc: string
+  fileCheckFn: FileCheckFn
+}
 
 export type EvalStats = {
   numFiles: number

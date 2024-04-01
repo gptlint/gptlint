@@ -3,6 +3,7 @@ import slugify from '@sindresorhus/slugify'
 import dedupe from 'array-uniq'
 import invariant from 'tiny-invariant'
 
+// import axios from 'axios'
 import type * as types from './types.js'
 
 export { dedupe }

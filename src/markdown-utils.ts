@@ -210,7 +210,8 @@ export function parseRuleTableNode({
     'tags',
     'languages',
     'eslint',
-    'resources'
+    'resources',
+    'prechecks'
   ])
 
   for (const bodyRow of bodyRows) {
@@ -256,6 +257,24 @@ export function parseRuleTableNode({
     } else if (key === 'resources') {
       // TODO: support markdown links for resources
       rule.resources = value.split(',').map((v) => v.trim())
+    } else if (key === 'prechecks') {
+      const prechecks = value.split(',').map((v) => v.trim())
+
+      try {
+        const reFlags = 'gi'
+        const precheckRegexes = prechecks.map(
+          (precheck) => new RegExp(precheck, reFlags)
+        )
+
+        rule.prechecks = precheckRegexes.map((re, index) => ({
+          desc: `Precheck /${prechecks[index]!}/${reFlags}`,
+          fileCheckFn: ({ file }) => re.test(file.content)
+        }))
+      } catch (err: any) {
+        throw new Error(
+          `Rule contains invalid table (invalid "${key}" regex: ${err.message} (${filePath})`
+        )
+      }
     } else {
       assert(
         false,
