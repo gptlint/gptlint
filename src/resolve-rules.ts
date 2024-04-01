@@ -5,7 +5,6 @@ import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from './types.js'
-import { parseGuidelinesFile } from './parse-guidelines-file.js'
 import { parseRuleFile } from './parse-rule-file.js'
 
 export async function resolveRules({
@@ -15,47 +14,38 @@ export async function resolveRules({
   config: types.ResolvedLinterConfig
   cwd: string
 }) {
-  const guidelineFilePaths = await globby(config.guidelineFiles, {
-    gitignore: true,
-    cwd
-  })
-
   const ruleFilePaths = await globby(config.ruleFiles, {
     gitignore: true,
     cwd
   })
 
-  const processedGuidelineFilePaths = new Set<string>()
   const processedRuleFilePaths = new Set<string>()
-  let rules: types.Rule[] = []
 
-  // Parse any project-specific guideline files
-  rules = (
+  // Parse any project-specific rule files
+  let rules = (
     await pMap(
-      guidelineFilePaths,
-      async (guidelineFilePath) => {
+      ruleFilePaths,
+      async (ruleFilePath) => {
         try {
-          if (processedGuidelineFilePaths.has(guidelineFilePath)) {
+          if (processedRuleFilePaths.has(ruleFilePath)) {
             return
           }
-          processedGuidelineFilePaths.add(guidelineFilePath)
+          processedRuleFilePaths.add(ruleFilePath)
 
-          const guidelineFilePathAbsolute = path.join(cwd, guidelineFilePath)
-          const guidelineFileContent = await fs.readFile(
-            guidelineFilePathAbsolute,
+          const ruleFilePathAbsolute = path.join(cwd, ruleFilePath)
+          const ruleFileContent = await fs.readFile(
+            ruleFilePathAbsolute,
             'utf-8'
           )
-
-          const rules = await parseGuidelinesFile({
-            content: guidelineFileContent,
-            filePath: guidelineFilePath
+          const rule = await parseRuleFile({
+            content: ruleFileContent,
+            filePath: ruleFilePath
           })
 
-          // console.log(JSON.stringify(rules, null, 2))
-          return rules
+          return rule
         } catch (err: any) {
           throw new Error(
-            `Error parsing guidelines file "${guidelineFilePath}": ${err.message}`,
+            `Error parsing rule file "${ruleFilePath}": ${err.message}`,
             { cause: err }
           )
         }
@@ -64,52 +54,7 @@ export async function resolveRules({
         concurrency: config.linterOptions.concurrency
       }
     )
-  )
-    .filter(Boolean)
-    .flat()
-
-  // Parse any project-specific rule files
-  rules = rules.concat(
-    (
-      await pMap(
-        ruleFilePaths,
-        async (ruleFilePath) => {
-          try {
-            if (processedRuleFilePaths.has(ruleFilePath)) {
-              return
-            }
-            processedRuleFilePaths.add(ruleFilePath)
-
-            if (processedGuidelineFilePaths.has(ruleFilePath)) {
-              throw new Error(
-                'File cannot be included as both a guidelines markdown file and an individual rule markdown file'
-              )
-            }
-
-            const ruleFilePathAbsolute = path.join(cwd, ruleFilePath)
-            const ruleFileContent = await fs.readFile(
-              ruleFilePathAbsolute,
-              'utf-8'
-            )
-            const rule = await parseRuleFile({
-              content: ruleFileContent,
-              filePath: ruleFilePath
-            })
-
-            return rule
-          } catch (err: any) {
-            throw new Error(
-              `Error parsing rule file "${ruleFilePath}": ${err.message}`,
-              { cause: err }
-            )
-          }
-        },
-        {
-          concurrency: config.linterOptions.concurrency
-        }
-      )
-    ).filter(Boolean)
-  )
+  ).filter(Boolean)
 
   const processedRules = new Set<string>()
 

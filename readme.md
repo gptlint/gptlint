@@ -38,7 +38,7 @@
 
 ## Features
 
-- simple markdown format for specifying rules ([example](./guidelines/prefer-array-at-negative-indexing.md))
+- simple markdown format for specifying rules ([example](./rules/prefer-array-at-negative-indexing.md))
 - easy to add custom, project-specific rules (_rules are just markdown files_)
 - cli and config formats are ~~copied from~~ inspired by `eslint`
 - content-based caching
@@ -100,7 +100,7 @@ npx gptlint
 npx gptlint -k 'your openai api key'
 ```
 
-By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` as a file glob for source files to lint and `guidelines/**/*.md` for rule definition files.
+By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` as a file glob for source files to lint and `rules/**/*.md` for rule definition files.
 
 ## CLI
 
@@ -125,7 +125,6 @@ Flags:
       --debug-config                        When enabled, logs the resolved config and parsed rules and then exits
   -D, --debug-model                         Enables verbose LLM logging
   -e, --early-exit                          Exits after finding the first error
-  -g, --guidelines <string>                 Glob pattern to guideline markdown files containing rule definitions
   -h, --help                                Show help
       --ignore-file <string>                Path to file containing ignore patterns (default: ".gptlintignore")
       --ignore-pattern <string>             Pattern of files to ignore (in addition to .gptlintignore)
@@ -136,7 +135,7 @@ Flags:
       --no-ignore                           Disables the use of ignore files and patterns
       --no-inline-config                    Disables the use of inline rule config inside of source files
   -r, --rules <string>                      Glob pattern to rule definition markdown files. (default:
-                                            ["guidelines/**/*.md"])
+                                            ["rules/**/*.md"])
       --temperature <number>                LLM temperature parameter
 ```
 
@@ -206,7 +205,7 @@ Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your l
 
 To lint a codebase, GPTLint takes the following steps:
 
-1. Resolves a set of markdown rule definitions along with optional few-shot examples for each rule (defaults to `guidelines/**/*.md`)
+1. Resolves a set of markdown rule definitions along with optional few-shot examples for each rule (defaults to `rules/**/*.md`)
 2. Resolves a set of input source files to lint (defaults to `**/*.{js,ts,jsx,tsx,cjs,mjs}`)
 3. For each `[rule, file]` pair, creates a linter task
 4. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file
@@ -280,7 +279,7 @@ Based on these observations, the only violation found in the source code is the 
   - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
   - NOTE: for many projects, this will still be several orders of magnitude cheaper than hiring senior developers to track and fix technical debt
 - **rules in the MVP are single-file only**
-  - many architectural patterns fundamentally span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
+  - many architectural rules span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
   - this restriction will likely be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting to optimize rules which explicitly don't need multi-file context
   - if you'd like to use a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new)
 - **rules in the MVP focus on JS/TS only**
@@ -291,13 +290,8 @@ Based on these observations, the only violation found in the source code is the 
 
 - rule file format
   - support both positive and negative examples in the same code block
-  - add support to guidelines.md for organizing rules by h1 sections
-    - alternatively, just use directories and rule.md file format
-  - `prefer-page-queries.md` code examples give extra context outside of the code blocks
-  - decide if we want to support the `guidelines.md` format in addition to the one-rule-per-file format
-    - if we go with only the one-rule-per-file format, consider switching from an inline table to frontmatter for metadata
-  - support a caveats / exceptions h2
-  - support other h2s for examples / usage examples / etc
+  - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
+  - support additional h2s (ex for caveats / exceptions / usage examples)
 - config
   - use eslint, ruff, and conformance as inspiration
   - add ability to extend other configs

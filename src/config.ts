@@ -115,13 +115,6 @@ export const LinterConfigSchema = z.object({
     .optional()
     .describe('An array of glob patterns for files that should be ignored.'),
 
-  guidelineFiles: z
-    .array(z.string())
-    .optional()
-    .describe(
-      'An array of glob patterns to guideline markdown files containing project-specific rule definitions.'
-    ),
-
   ruleFiles: z
     .array(z.string())
     .optional()

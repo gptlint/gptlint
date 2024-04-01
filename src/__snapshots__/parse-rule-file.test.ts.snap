@@ -129,11 +129,11 @@ exports[`parseRuleFile - fixtures/rules/metadata-prechecks.md 1`] = `
   "positiveExamples": [],
   "prechecks": [
     {
-      "desc": "Precheck /\\b['"]axios['"]\\b/gi",
+      "desc": "Precheck /['"]axios['"]/gi",
       "fileCheckFn": [Function],
     },
     {
-      "desc": "Precheck /import\\s+.*from\\s*['"]react['"]/gi",
+      "desc": "Precheck /import\\\\s+.*from\\\\s*['"]react['"]/gi",
       "fileCheckFn": [Function],
     },
   ],
@@ -423,7 +423,7 @@ exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = 
 }
 `;
 
-exports[`parseRuleFile - guidelines/consistent-identifier-casing.md 1`] = `
+exports[`parseRuleFile - rules/consistent-identifier-casing.md 1`] = `
 {
   "desc": "Identifiers of the same type should try to use consistent casing.Variable names should use camelCase.
 Global const variable names should either use camelCase, PascalCase, or CONSTANT_CASE.
@@ -480,14 +480,14 @@ const foo = [1, 2, 3].filter((i) => i >= 0)",
       "language": "ts",
     },
   ],
-  "source": "guidelines/consistent-identifier-casing.md",
+  "source": "rules/consistent-identifier-casing.md",
   "tags": [
     "general",
   ],
 }
 `;
 
-exports[`parseRuleFile - guidelines/prefer-array-at-negative-indexing.md 1`] = `
+exports[`parseRuleFile - rules/prefer-array-at-negative-indexing.md 1`] = `
 {
   "desc": "When accessing items in an array from the end, like the last item, prefer using Array.at with a negative index because it is less error-prone. Note that using Array.at with a positive index is equivalent to indexing into the array normally, and if Array.at references a non-existing index, it will return undefined.",
   "fixable": true,
@@ -527,14 +527,14 @@ const item = items[index]",
       "language": "ts",
     },
   ],
-  "source": "guidelines/prefer-array-at-negative-indexing.md",
+  "source": "rules/prefer-array-at-negative-indexing.md",
   "tags": [
     "general",
   ],
 }
 `;
 
-exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
+exports[`parseRuleFile - rules/prefer-fetch-over-axios.md 1`] = `
 {
   "desc": "The NPM package axios should be avoided in favor of native fetch. Now that native fetch has widespread support, axios is effectively deprecated and is generally a code smell when encountered.Convenience wrappers around fetch such as ky and ofetch are encouraged.Code which doesn't use the axios module should be ignored.",
   "fixable": false,
@@ -549,18 +549,18 @@ exports[`parseRuleFile - guidelines/prefer-fetch-over-axios.md 1`] = `
   "positiveExamples": [],
   "prechecks": [
     {
-      "desc": "Precheck /\\b['"]axios['"]\\b/gi",
+      "desc": "Precheck /['"]axios['"]/gi",
       "fileCheckFn": [Function],
     },
   ],
-  "source": "guidelines/prefer-fetch-over-axios.md",
+  "source": "rules/prefer-fetch-over-axios.md",
   "tags": [
     "general",
   ],
 }
 `;
 
-exports[`parseRuleFile - guidelines/react-avoid-class-components.md 1`] = `
+exports[`parseRuleFile - rules/react-avoid-class-components.md 1`] = `
 {
   "desc": "React class components are deprecated. Use React functions and hooks instead.Note that uses classes is fine for non-react components.",
   "fixable": false,
@@ -610,14 +610,14 @@ class Foo extends EventEmitter {
       "language": "ts",
     },
   ],
-  "source": "guidelines/react-avoid-class-components.md",
+  "source": "rules/react-avoid-class-components.md",
   "tags": [
     "react",
   ],
 }
 `;
 
-exports[`parseRuleFile - guidelines/semantic-variable-names.md 1`] = `
+exports[`parseRuleFile - rules/semantic-variable-names.md 1`] = `
 {
   "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.An exception to this rule is that it is acceptable to use simple variable names like i in for loops.An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.Common acronyms like api, ast, and llm are fine even though they aren't as descriptive.Variables names which mirror the corresponding type name are okay to ignore.Keys in objects and JS/TS strings are not variable names, so they should be ignored.If a value isn't a variable name, then it should be ignored.This rule should be ignored in test files.The names of file imports from third-party APIs and modules should be ignored because we have no control over them.If you are unsure whether or not a variable name is descriptive enough, err on the side of ignoring it or setting confidence to low.",
   "fixable": false,
@@ -686,14 +686,14 @@ import { z } from 'zod'",
       "language": "ts",
     },
   ],
-  "source": "guidelines/semantic-variable-names.md",
+  "source": "rules/semantic-variable-names.md",
   "tags": [
     "general",
   ],
 }
 `;
 
-exports[`parseRuleFile - guidelines/use-esm.md 1`] = `
+exports[`parseRuleFile - rules/use-esm.md 1`] = `
 {
   "desc": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses require and module.exports and suffers from poor standardization and interoperability issues.ESM (ECMAScript Modules) is a modern standard which uses import and export statements. It is preferred for all JS/TS code going forwards.",
   "fixable": false,
@@ -721,7 +721,7 @@ export function bar() {}",
       "language": "js",
     },
   ],
-  "source": "guidelines/use-esm.md",
+  "source": "rules/use-esm.md",
   "tags": [
     "general",
   ],
