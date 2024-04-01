@@ -121,6 +121,8 @@ async function main() {
 
         if (res.cost) {
           llmStats.totalCost += res.cost
+        } else if ((res.usage as any)?.total_cost) {
+          llmStats.totalCost += 100 * (res.usage as any).total_cost
         }
 
         if (res.usage) {
@@ -174,6 +176,8 @@ async function main() {
 
         if (res.cost) {
           llmStats.totalCost += res.cost
+        } else if ((res.usage as any)?.total_cost) {
+          llmStats.totalCost += 100 * (res.usage as any).total_cost
         }
 
         if (res.usage) {

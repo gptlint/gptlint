@@ -182,6 +182,9 @@ export default [
 ]
 ```
 
+> [!WARNING]
+> Claude Opus is ~2.5x as expensive as `gpt-4-turbo`, and it consistently produces more false positives in my testing, so I would avoid using it unless you have a strong reason for using Anthropic. Linting this codebase with `anthropic/claude-3-sonnet:beta` **costs ~$10 per uncached run** which is prohibitive for testing. In contrast, Claude Haiku performs relatively well and is extremely cheap, so you may want to start from there.
+
 ### OSS Models
 
 The best way to use GPTLint with OSS models is to either [host them locally](#local-models) or to use a cloud provider that offers inference and fine-tuning APIs for common OSS language models:
@@ -271,13 +274,13 @@ Based on these observations, the only violation found in the source code is the 
 
 - this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed)
   - **all built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default
-  - keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy at a fraction of the cost and speed**
+  - keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**
 - **LLM costs can add up quickly**
   - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
   - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~70s and costs ~$0.31 cents USD
   - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~64s and costs ~$2.38 USD
   - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
-  - NOTE: for many projects, this will still be several orders of magnitude cheaper than hiring senior developers to track and fix technical debt
+  - NOTE: for many projects, this will still be _orders of magnitude cheaper_ than hiring a senior engineer to track and fix technical debt
 - **rules in the MVP are single-file only**
   - many architectural rules span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
   - this restriction will likely be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting to optimize rules which explicitly don't need multi-file context
@@ -314,14 +317,13 @@ Based on these observations, the only violation found in the source code is the 
   - update project name in multiple places once we decide on a name
   - decide on an OSS license
   - add a [security policy](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md)
-  - basic project logo
   - basic eval graphs and blog post
   - rubric for what makes a good rule
   - publish to NPM
 - post-mvp
-  - cross-file linting; v0 is strictly local to individual files
-  - add support for different programming languages
-  - add support for applying fixes to linter errors
+  - cross-file linting (the MVP focuses on single-file linting)
+  - add support for different programming languages (the MVP focuses on JS/TS)
+  - add support for applying fixes to linter errors (the MVP is readonly)
 
 ## Citations
 
