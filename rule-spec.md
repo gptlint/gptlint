@@ -38,7 +38,7 @@ export type Rule = {
 
 ## Rule File Format
 
-A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/gfm/) (GFM) document. Each GRS rule must have its own markdown file, and GRS markdown files may only contain a single rule.
+A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/gfm/) (**GFM**) document. Each GRS rule must have its own markdown file, and GRS markdown files may only contain a single rule.
 
 - GRS rule files must contain a single markdown `h1` header containing the rule's `message` property.
 - Within this `h1` section, GRS rule files may optionally contain a [metadata table](#rule-metadata-table) for customizing the rule's behavior.
@@ -99,7 +99,7 @@ In the future, we may support more "escape hatches" to enable rule authors more 
 
 See [rules/](./rules) for examples of valid rules.
 
-Parsing-wise, [fixtures/rules/](./fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules/](./fixtures/invalid-rules) contains invalid rules which violate the spec and will fail parsing.
+Parsing-wise, [fixtures/rules/](./fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules/](./fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
 
 # License
 
