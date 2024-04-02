@@ -42,7 +42,6 @@ export async function lintFiles({
           const preLintResult = await preLintFile({
             file,
             rule,
-            chatModel,
             cache,
             config
           })

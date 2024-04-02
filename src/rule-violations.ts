@@ -33,7 +33,7 @@ export const ruleViolationSchema = z.object({
       'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.'
     ),
   codeSnippetSource: z
-    .enum(['examples', 'source'])
+    .enum(['examples', 'source', 'unknown'])
     .optional()
     .describe(
       'Where the `codeSnippet` comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source".'
@@ -58,6 +58,13 @@ export type RuleViolation = z.infer<typeof ruleViolationSchema>
 export const ruleViolationsOutputSchema = z.array(ruleViolationSchema)
 export type RuleViolationsOutput = z.infer<typeof ruleViolationsOutputSchema>
 
+export const ruleViolationsValidatedOutputSchema = z.object({
+  ruleViolations: ruleViolationsOutputSchema
+})
+export type RuleViolationsValidatedOutput = z.infer<
+  typeof ruleViolationsValidatedOutputSchema
+>
+
 /**
  * Attempts to parse an array of `RuleViolation` objects from a JSON code block
  * in the given markdown response.
@@ -76,6 +83,7 @@ export function parseRuleViolationsFromModelResponse(
     const h1Nodes = findAllHeadingNodes(ast, { depth: 1 })
 
     if (h1Nodes.length === 2) {
+      // The output is formatted properly, but there are no rule violations.
       return []
     }
 
@@ -180,7 +188,7 @@ interface RULE_VIOLATION {
   codeSnippet: string
 
   // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".
-  codeSnippetSource: 'examples' | 'source'
+  codeSnippetSource: 'examples' | 'source' | 'unknown'
 
   // An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.
   reasoning: string
@@ -192,5 +200,15 @@ interface RULE_VIOLATION {
   confidence: 'low' | 'medium' | 'high'
 }
 \`\`\`
+`
+}
+
+export function stringifyRuleViolationForModel(
+  ruleViolations: Partial<RuleViolation>[]
+): string {
+  return `\`\`\`json
+{
+  ruleViolations: ${JSON.stringify(ruleViolations, null, 2)}
+}
 `
 }

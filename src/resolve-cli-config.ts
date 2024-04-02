@@ -125,7 +125,7 @@ export async function resolveLinterCLIConfig(
         weakModel: {
           type: String,
           description:
-            'Which weak LLM to use for assessing rule conformance (optioanl)',
+            'Which weak LLM to use for assessing rule conformance (optional; used for multi-pass linting)',
           alias: 'M'
         },
         temperature: {

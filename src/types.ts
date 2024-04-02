@@ -49,6 +49,7 @@ export type InputFile = {
 export type LintError = {
   filePath: string
   language: string
+  model: string
 
   // lineStart: number // TODO
   ruleName: string
