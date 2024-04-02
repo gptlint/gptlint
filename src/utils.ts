@@ -1,6 +1,5 @@
 import type { ChatModel } from '@dexaai/dexter'
 
-// import axios from 'axios'
 import type * as types from './types.js'
 
 export { default as slugify } from '@sindresorhus/slugify'
