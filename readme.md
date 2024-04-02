@@ -42,16 +42,16 @@
 ## Features
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
-- ✅️ rules can be [disabled](#how-can-i-disable-a-rule) / [customized](#how-can-i-customize-a-rule) easily
 - ✅️ simple markdown format for rules ([example](./rules/prefer-array-at-negative-indexing.md), [spec](./rule-spec.md))
-- ✅️ easy to add [custom, project-specific rules](./rule-guidelines.md#project-specific-rules)
+- ✅️ [disable](#how-can-i-disable-a-rule) or [customize](#how-can-i-customize-a-rule) rules
+- ✅️ add custom, [project-specific rules](./rule-guidelines.md#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
+- ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ content-based caching
 - ✅️ outputs LLM stats per run (cost, tokens, etc)
 - ✅️ built-in rules are extensively tested w/ [evals](#evals)
 - ✅️ supports all major [LLM providers](#llm-providers) (openai, anthropic, etc)
 - ✅️ supports all major [local LLMs](#local-models) (via ollama or vllm)
-- ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
 - ✅️ includes [guidelines](./rule-guidelines.md) for creating your own rules
 - ❌ MVP rules are [JS/TS only](#caveats) _for now_
