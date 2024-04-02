@@ -6,7 +6,7 @@
   - [Prefer AST-based rules where possible](#prefer-ast-based-rules-where-possible)
   - [Prefer rules that are well-defined](#prefer-rules-that-are-well-defined)
   - [Prefer universal rules](#prefer-universal-rules)
-  - [Prefer direct rules](#prefer-direct-rules)
+  - [Prefer direct, substantive rules](#prefer-direct-substantive-rules)
 - [MVP Rule Limitations](#mvp-rule-limitations)
 - [Library-specific rule configs](#library-specific-rule-configs)
 - [Project-specific rules](#project-specific-rules)
@@ -31,12 +31,12 @@ On the flip side, _rules which are too abstract are impossible to enforce_ – 
 
 Before adding a best practice as a GPTLint rule, double-check the following litmus tests:
 
-- [ ] This rule is high-level enough to not a good fit for AST-based linting ([details](#prefer-ast-based-rules-where-possible))
-- [ ] This rule is concrete enough to be well-defined ([details](#prefer-rules-that-are-well-defined))
-- [ ] This rule is universal and does not target a specific library ([details](#prefer-universal-rules))
-- [ ] This rule is substantive enough that a senior engineer would comment on a violation in a PR ([details](#prefer-direct-rules))
+- [ ] This rule is high-level enough to not a good fit for AST-based linting ([Prefer AST-based rules where possible](#prefer-ast-based-rules-where-possible))
+- [ ] This rule is concrete enough to be well-defined ([Prefer rules that are well-defined](#prefer-rules-that-are-well-defined))
+- [ ] This rule is universal and does not target a specific library ([Prefer universal rules](#prefer-universal-rules))
+- [ ] This rule is substantive enough that a senior engineer would comment on a violation in a PR ([Prefer direct, substantive rules](#prefer-direct-substantive-rules))
+- [ ] This rule still makes sense given the current MVP limitations ([MVP rule limitations](#mvp-rule-limitations))
 - [ ] This rule isn't already covered by an existing rule
-- [ ] This rule still makes sense given the current MVP limitations ([details](#mvp-rule-limitations))
 
 ### Prefer AST-based rules where possible
 
@@ -64,7 +64,7 @@ Rules which are aimed at best practices for a specific library (next.js, express
 
 _TODO_
 
-### Prefer direct rules
+### Prefer direct, substantive rules
 
 Rules which have a direct effect on program behavior, correctness, security, or performance OR developer velocity are preferred to rules which focus solely on code style.
 
