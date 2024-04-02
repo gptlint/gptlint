@@ -8,10 +8,10 @@ import type * as types from './types.js'
 
 export async function resolveFiles({
   config,
-  cwd
+  cwd = process.cwd()
 }: {
   config: types.ResolvedLinterConfig
-  cwd: string
+  cwd?: string
 }) {
   const inputFiles = await globby(config.files, {
     gitignore: true,

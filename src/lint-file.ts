@@ -5,8 +5,8 @@ import type * as types from './types.js'
 import { AbortError, RetryableError } from './errors.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
-  type RuleViolation,
-  parseRuleViolationsFromModelResponse
+  parseRuleViolationsFromModelResponse,
+  type RuleViolation
 } from './rule-violations.js'
 import { createLintResult } from './utils.js'
 

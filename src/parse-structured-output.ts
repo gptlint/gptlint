@@ -1,6 +1,6 @@
-import { JSONRepairError, jsonrepair } from 'jsonrepair'
 import type { JsonValue } from 'type-fest'
-import { type ZodType, z } from 'zod'
+import { jsonrepair, JSONRepairError } from 'jsonrepair'
+import { z, type ZodType } from 'zod'
 
 import { ParseError } from './errors.js'
 

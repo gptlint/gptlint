@@ -73,13 +73,13 @@ Stylistic rules are still encouraged when they are sufficiently [universal](#pre
 A good litmus test when considering a potential rule is to ask yourself the following:
 
 - If the best senior engineer on your team were to review a PR containing several violations of your proposed rule, would these issues be substantive enough for them to comment on?
-  - If your answer is yes, then that's a great sign that your rule should be added and enforced going forwards.
-  - If your answer is maybe, then you should consider if the rule is worth enforcing.
-  - If your answer is no, then you should reconsider whether or not this rule is substantive enough to be worth enforcing.
+  - If your answer is **yes**, then that's a great sign that your rule should be added and enforced going forwards.
+  - If your answer is **maybe**, then you should consider if the rule is worth enforcing.
+  - If your answer is **no**, then you should reconsider whether or not this rule is substantive enough to be worth enforcing.
 - Has this rule come up in previous PR comments from your project / organization?
-  - If your answer is yes, then that's a great sign that your rule should be added and enforced going forwards.
-  - If your answer is maybe, then you should consider if the rule is worth enforcing.
-  - If your answer is no, then you should reconsider whether or not this rule is substantive enough to be worth enforcing.
+  - If your answer is **yes**, then that's a great sign that your rule should be added and enforced going forwards.
+  - If your answer is **maybe**, then you should consider if the rule is worth enforcing.
+  - If your answer is **no**, then you should reconsider whether or not this rule is substantive enough to be worth enforcing.
 
 ## MVP Rule Limitations
 

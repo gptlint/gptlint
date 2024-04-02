@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { LinterCache, getCacheKey } from './cache.js'
+import { getCacheKey, LinterCache } from './cache.js'
 import { defaultCacheDir } from './config.js'
 
 test(`LinterCache`, async () => {

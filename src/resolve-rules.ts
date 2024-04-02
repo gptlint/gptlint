@@ -9,10 +9,10 @@ import { parseRuleFile } from './parse-rule-file.js'
 
 export async function resolveRules({
   config,
-  cwd
+  cwd = process.cwd()
 }: {
   config: types.ResolvedLinterConfig
-  cwd: string
+  cwd?: string
 }) {
   const ruleFilePaths = await globby(config.ruleFiles, {
     gitignore: true,
@@ -58,7 +58,7 @@ export async function resolveRules({
 
   const processedRules = new Set<string>()
 
-  // TODO: validate rules for duplicates and malformed rules
+  // Validate rules for duplicates
   for (const rule of rules) {
     if (processedRules.has(rule.name)) {
       throw new Error(`Duplicate rule found "${rule.name}"`)

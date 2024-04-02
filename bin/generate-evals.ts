@@ -1,9 +1,10 @@
 #!/usr/bin/env node
+import 'dotenv/config'
+
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { Msg } from '@dexaai/dexter'
-import 'dotenv/config'
 import { gracefulExit } from 'exit-hook'
 import hashObject from 'hash-object'
 import pMap from 'p-map'

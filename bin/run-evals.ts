@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+import 'dotenv/config'
+
 import path from 'node:path'
 
-import 'dotenv/config'
 import { gracefulExit } from 'exit-hook'
 import { globby } from 'globby'
 import pMap from 'p-map'

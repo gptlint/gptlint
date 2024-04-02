@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import { unified } from 'unified'
 import { inspectColor } from 'unist-util-inspect'
-import { type Test, is } from 'unist-util-is'
+import { is, type Test } from 'unist-util-is'
 
 import type * as types from './types.js'
 import {
@@ -102,13 +102,17 @@ export function parseRuleNode({
 
     const sectionLabel = toString(h3Node).toLowerCase().trim()
     const isPositive =
-      /\bgood\b/i.test(sectionLabel) || /\bcorrect\b/.test(sectionLabel)
+      /\bgood\b/i.test(sectionLabel) ||
+      /\bcorrect\b/.test(sectionLabel) ||
+      /\bpass\b/.test(sectionLabel)
     const isNegative =
-      /\bbad\b/i.test(sectionLabel) || /\bincorrect\b/.test(sectionLabel)
+      /\bbad\b/i.test(sectionLabel) ||
+      /\bincorrect\b/.test(sectionLabel) ||
+      /\bfail\b/.test(sectionLabel)
 
     assert(
       isPositive || isNegative,
-      `Rule h3 header for examples section "${sectionLabel}" must include a known positive label (good, correct) or negative label (bad, incorrect): ${rule.name} (${filePath})`
+      `Rule h3 header for examples section "${sectionLabel}" must include a known positive label (good, correct, or pass) or negative label (bad, incorrect, or fail): ${rule.name} (${filePath})`
     )
 
     const codeBlockNodes = sectionNodes.filter(
@@ -325,7 +329,7 @@ export function findAllBetween(
   return results
 
   function check(indexOrNode: Node | number | undefined) {
-    let index: number = 0
+    let index = 0
 
     if (indexOrNode === undefined) {
       return children.length

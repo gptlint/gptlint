@@ -44,9 +44,9 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
 - Within this `h1` section, GRS rule files may optionally contain a [metadata table](#rule-metadata-table) for customizing the rule's behavior.
 - The content from the `h1` section up until any optional example header sections will comprise the rule's `desc` property which is intended to explain the rule's intent in natural language.
 - The rule's `name` will be inferred from either the metadata table's `Name` row (preferred) or will fall back to a slugified version of the rule's `message` (main `h1`).
-- GRS rules may optionally contain a single markdown `h3` header named "Bad" or "Incorrect".
+- GRS rules may optionally contain a single markdown `h3` header named "Bad" or "Incorrect" or "Fail".
   - The content of this section should contain 1 or more code blocks to use as `negativeExamples`.
-- GRS rules may optionally contain a single markdown `h3` header named "Good" or "Correct".
+- GRS rules may optionally contain a single markdown `h3` header named "Good" or "Correct" or "Pass".
   - The content of this section should contain 1 or more code blocks to use as `positiveExamples`.
 - It is encouraged to specify a language for all code block examples, but it not required.
 

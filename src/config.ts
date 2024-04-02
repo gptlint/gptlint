@@ -1,6 +1,6 @@
-import findCacheDirectory from 'find-cache-dir'
 import type { MergeDeep, SetRequired, Simplify } from 'type-fest'
 import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
+import findCacheDirectory from 'find-cache-dir'
 import { z } from 'zod'
 
 import { dedupe, getEnv, pruneUndefined } from './utils.js'
@@ -8,6 +8,14 @@ import { dedupe, getEnv, pruneUndefined } from './utils.js'
 export const LinterConfigRuleSettingSchema = z.enum(['off', 'warn', 'error'])
 export type LinterConfigRuleSetting = z.infer<
   typeof LinterConfigRuleSettingSchema
+>
+
+export const LinterConfigRuleSettingsSchema = z.record(
+  z.string(),
+  LinterConfigRuleSettingSchema
+)
+export type LinterConfigRuleSettings = z.infer<
+  typeof LinterConfigRuleSettingsSchema
 >
 
 // TODO: update when we decide on a project name
@@ -120,10 +128,9 @@ export const LinterConfigSchema = z.object({
     .optional()
     .describe('An array of glob patterns to rule definition markdown files.'),
 
-  rules: z
-    .record(z.string(), LinterConfigRuleSettingSchema)
-    .optional()
-    .describe('An object customizing the configured rules.'),
+  rules: LinterConfigRuleSettingsSchema.optional().describe(
+    'An object customizing the configured rules.'
+  ),
 
   linterOptions: LinterOptionsSchema.optional().describe(
     'An object containing settings related to the linting process.'

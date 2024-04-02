@@ -37,7 +37,7 @@
     "prepare": "husky install",
     "test": "run-s test:*",
     "test:format": "prettier --check \"**/*.{js,ts,tsx}\"",
-    "test:lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "test:lint": "eslint .",
     "test:typecheck": "tsc --noEmit",
     "test:unit": "vitest run"
   },
@@ -70,9 +70,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@dexaai/eslint-config": "^1.3.0",
+    "@fisch0920/eslint-config": "^1.0.0",
     "@total-typescript/ts-reset": "^0.5.1",
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/mdast": "^4.0.3",
     "@types/node": "^20.12.2",
     "@types/parse-gitignore": "^1.0.2",
@@ -81,7 +80,7 @@
     "eslint": "^8.57.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
-    "npm-run-all": "^4.1.5",
+    "npm-run-all2": "^6.1.2",
     "prettier": "^2.8.8",
     "tsup": "^8.0.2",
     "tsx": "^4.7.1",

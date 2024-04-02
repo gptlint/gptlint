@@ -2,16 +2,18 @@
 import type { Command } from 'cleye'
 
 import type {
-  LLMOptions,
   LinterConfig,
   LinterConfigRuleSetting,
+  LinterConfigRuleSettings,
   LinterOptions,
+  LLMOptions,
   ResolvedLinterConfig
 } from './config.js'
 
 export type {
   LinterConfig,
   LinterConfigRuleSetting,
+  LinterConfigRuleSettings,
   LinterOptions,
   LLMOptions,
   ResolvedLinterConfig
