@@ -6,6 +6,7 @@
   - [Prefer AST-based rules where possible](#prefer-ast-based-rules-where-possible)
   - [Prefer rules that are well-defined](#prefer-rules-that-are-well-defined)
   - [Prefer universal rules](#prefer-universal-rules)
+  - [Prefer direct rules](#prefer-direct-rules)
 - [MVP Rule Limitations](#mvp-rule-limitations)
 - [Library-specific rule configs](#library-specific-rule-configs)
 - [Project-specific rules](#project-specific-rules)
@@ -18,11 +19,11 @@
   <img alt="GPTLint Rule Guidelines" src="/media/gptlint-rule-guidelines.png">
 </p>
 
-GPTLint is intended to augment traditional, AST-based, static analysis tools like `eslint`, `pylint`, `ruff`, etc with _higher-level coding best practices_ that are difficult or impossible to capture with these lower-level, AST-based tools. GPTLint rules are therefore meant to be higher-level in nature than traditional AST-based linting rules.
+**GPTLint is intended to augment traditional, AST-based, static analysis tools** like `eslint`, `pylint`, `ruff`, etc with _higher-level coding best practices_ that are difficult or impossible to capture with these lower-level, AST-based tools. GPTLint rules are therefore meant to be higher-level in nature than AST-based linting rules.
 
-_On the flip side, rules which are too abstract are impossible to enforce_ – even for expert human developers.
+On the flip side, _rules which are too abstract are impossible to enforce_ – both for expert human developers and for LLMs.
 
-**Ideal GPTLint rules are therefore higher-level best practices which are still concrete enough to be described, understood, and enforced by an expert human developer.**
+**Therefore, ideal GPTLint rules are higher-level best practices which are still concrete enough to be described, understood, and enforced by an expert human developer.**
 
 ## Rule Rubric
 
@@ -33,6 +34,7 @@ Before adding a best practice as a GPTLint rule, double-check the following litm
 - [ ] This rule is high-level enough to not a good fit for AST-based linting ([details](#prefer-ast-based-rules-where-possible))
 - [ ] This rule is concrete enough to be well-defined ([details](#prefer-rules-that-are-well-defined))
 - [ ] This rule is universal and does not target a specific library ([details](#prefer-universal-rules))
+- [ ] This rule is substantive enough that a senior engineer would comment on a violation in a PR ([details](#prefer-direct-rules))
 - [ ] This rule isn't already covered by an existing rule
 - [ ] This rule still makes sense given the current MVP limitations ([details](#mvp-rule-limitations))
 
@@ -61,6 +63,23 @@ _TODO_
 Rules which are aimed at best practices for a specific library (next.js, express, mongoose, etc) could be very good fits for either [project-specific rules](#project-specific-rules) or [community-driven, library-specific configs](#library-specific-rule-configs).
 
 _TODO_
+
+### Prefer direct rules
+
+Rules which have a direct effect on program behavior, correctness, security, or performance OR developer velocity are preferred to rules which focus solely on code style.
+
+Stylistic rules are still encouraged when they are sufficiently [universal](#prefer-universal-rules), or when their intent is aimed at **enforcing codebase consistency**. These rules are often targeted at uncovering code smells which may indirectly lead to decreased developer velocity or program correctness over time.
+
+A good litmus test when considering a potential rule is to ask yourself the following:
+
+- If the best senior engineer on your team were to review a PR containing several violations of your proposed rule, would these issues be substantive enough for them to comment on?
+  - If the answer is yes, then that's a great sign that your rule should be added and enforced going forwards.
+  - If the answer is maybe, then you should consider if the rule is worth enforcing.
+  - If the answer is no, then you should reconsider whether or not this rule is substantive enough to be worth enforcing.
+- Has this rule come up in previous PR comments from your project / organization?
+  - If the answer is yes, then that's a great sign that your rule should be added and enforced going forwards.
+  - If the answer is maybe, then you should consider if the rule is worth enforcing.
+  - If the answer is no, then you should reconsider whether or not this rule is substantive enough to be worth enforcing.
 
 ## MVP Rule Limitations
 
