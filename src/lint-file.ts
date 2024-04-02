@@ -6,7 +6,8 @@ import { AbortError, RetryableError } from './errors.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
   parseRuleViolationsFromModelResponse,
-  type RuleViolation
+  type RuleViolation,
+  stringifyRuleViolationSchemaForModel
 } from './rule-violations.js'
 import { createLintResult } from './utils.js'
 
@@ -90,7 +91,9 @@ ${file.content}
 
     Msg.user(`# TASK
 
-List out the portions of the SOURCE code ${file.fileName} which are related to the RULE and explain whether they VIOLATE or conform to the RULE's intent. Your answer should contain two markdown sections, EXPLANATION and VIOLATIONS.
+List out the portions of the SOURCE code ${
+      file.fileName
+    } which are related to the RULE and explain whether they VIOLATE or conform to the RULE's intent. Your answer should contain two markdown sections, EXPLANATION and VIOLATIONS.
 
 Accuracy is important, so be sure to think step-by-step and explain your reasoning in the EXPLANATION section.
 
@@ -98,27 +101,7 @@ If you find any code snippets which VIOLATE the RULE, then output them as RULE_V
 
 RULE_VIOLATION schema:
 
-\`\`\`ts
-interface RULE_VIOLATION {
-  // The name of the RULE which this \`codeSnippet\` violates.
-  ruleName: string
-
-  // The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.
-  codeSnippet: string
-
-  // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".
-  codeSnippetSource: 'examples' | 'source'
-
-  // An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.
-  reasoning: string
-
-  // Whether or not this \`codeSnippet\` violates the RULE. If this \`codeSnippet\` does VIOLATE the RULE, then \`violation\` should be \`true\`. If the \`codeSnippet\` conforms to the RULE correctly or does not appear in the SOURCE, then \`violation\` should be \`false\`.
-  violation: boolean
-
-  // Your confidence that the \`codeSnippet\` VIOLATES the RULE.
-  confidence: 'low' | 'medium' | 'high'
-}
-\`\`\`
+${stringifyRuleViolationSchemaForModel(rule)}
 
 ---
 

@@ -28,6 +28,13 @@ export const LLMOptionsSchema = z.object({
     .optional()
     .describe('Which LLM to use for assessing rule conformance.'),
 
+  weakModel: z
+    .string()
+    .optional()
+    .describe(
+      'If defined, will use a two-pass approach to assessing rule conformance. The `weakModel` should be cheaper and will be used to generate potential rule violations, with the stronger `model` being used in a second pass to validate potential rule violations and filter out false positives.'
+    ),
+
   temperature: z
     .number()
     .min(0.0)
@@ -167,8 +174,12 @@ export const defaultLinterOptions: Readonly<LinterOptions> = {
 export const defaultLLMOptions: Readonly<LLMOptions> = {
   apiKey: getEnv('OPENAI_API_KEY'),
   apiBaseUrl: 'https://api.openai.com/v1',
-  // model: 'gpt-4-turbo-preview',
+  // The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the
+  // default because some developers don't have access to it, and we're not
+  // using `gpt-3.5-turbo` as the default because it doesn't perform as well in
+  // our tests.
   model: 'gpt-4',
+  // model: 'gpt-4-turbo-preview',
   // model: 'gpt-3.5-turbo',
   temperature: 0
 }

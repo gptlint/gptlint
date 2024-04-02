@@ -102,8 +102,7 @@ export async function resolveLinterCLIConfig(
           type: String,
           description:
             'API key for the OpenAI-compatible LLM API. Defaults to the value of the `OPENAI_API_KEY` environment variable.',
-          alias: 'k',
-          default: defaultLinterConfig.llmOptions.apiKey
+          alias: 'k'
         },
         apiOrganizationId: {
           type: String,
@@ -122,6 +121,12 @@ export async function resolveLinterCLIConfig(
           description: 'Which LLM to use for assessing rule conformance',
           alias: 'm',
           default: defaultLinterConfig.llmOptions.model
+        },
+        weakModel: {
+          type: String,
+          description:
+            'Which weak LLM to use for assessing rule conformance (optioanl)',
+          alias: 'M'
         },
         temperature: {
           type: Number,
@@ -181,6 +186,7 @@ export async function resolveLinterCLIConfig(
           : args.flags.cacheDir
     },
     llmOptions: {
+      weakModel: args.flags.weakModel,
       model:
         args.flags.model === defaultLinterConfig.llmOptions.model
           ? undefined

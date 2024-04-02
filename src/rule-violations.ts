@@ -2,6 +2,7 @@ import type { Code } from 'mdast'
 import { toString } from 'mdast-util-to-string'
 import { z } from 'zod'
 
+import type * as types from './types.js'
 import { RetryableError } from './errors.js'
 import {
   findAllBetween,
@@ -164,4 +165,32 @@ export function parseRuleViolationsFromModelResponse(
 
   const ruleViolations = parsedRuleViolationsResult.data
   return ruleViolations
+}
+
+export function stringifyRuleViolationSchemaForModel(rule: types.Rule): string {
+  // TODO: Ideally, we would generate this from the zod schema to ensure a
+  // single source of truth, but this was easier for now and doesn't involve
+  // adding any larger dependencies.
+  return `\`\`\`ts
+interface RULE_VIOLATION {
+  // The name of the RULE which this \`codeSnippet\` violates.
+  ruleName: string
+
+  // The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.
+  codeSnippet: string
+
+  // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".
+  codeSnippetSource: 'examples' | 'source'
+
+  // An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.
+  reasoning: string
+
+  // Whether or not this \`codeSnippet\` violates the RULE. If this \`codeSnippet\` does VIOLATE the RULE, then \`violation\` should be \`true\`. If the \`codeSnippet\` conforms to the RULE correctly or does not appear in the SOURCE, then \`violation\` should be \`false\`.
+  violation: boolean
+
+  // Your confidence that the \`codeSnippet\` VIOLATES the RULE.
+  confidence: 'low' | 'medium' | 'high'
+}
+\`\`\`
+`
 }

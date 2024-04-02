@@ -112,8 +112,7 @@ Flags:
                                             chat completions API. Defaults to the OpenAI API (default:
                                             "https://api.openai.com/v1")
   -k, --api-key <string>                    API key for the OpenAI-compatible LLM API. Defaults to the value of the
-                                            `OPENAI_API_KEY` environment variable. (default:
-                                            "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")
+                                            `OPENAI_API_KEY` environment variable.
       --api-organization-id <string>        Optional organization ID that should be billed for LLM API requests. This is
                                             only necessary if your OpenAI API key is scoped to multiple organizations.
       --cache-dir <string>                  Customize the path to the cache directory (default:
