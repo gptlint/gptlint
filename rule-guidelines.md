@@ -2,9 +2,10 @@
 
 - [Intro](#intro)
 - [Rule Rubric](#rule-rubric)
+  - [Checklist](#checklist)
   - [Prefer AST-based rules where possible](#prefer-ast-based-rules-where-possible)
-  - [Prefer universal rules](#prefer-universal-rules)
   - [Prefer rules that are well-defined](#prefer-rules-that-are-well-defined)
+  - [Prefer universal rules](#prefer-universal-rules)
 - [MVP Rule Limitations](#mvp-rule-limitations)
 - [Library-specific rule configs](#library-specific-rule-configs)
 - [Project-specific rules](#project-specific-rules)
@@ -20,6 +21,16 @@ _On the flip side, rules which are too abstract are impossible to enforce_ – 
 **Ideal GPTLint rules are therefore higher-level best practices which are still concrete enough to be described, understood, and enforced by an expert human developer.**
 
 ## Rule Rubric
+
+### Checklist
+
+Before adding a best practice as a GPTLint rule, double-check the following litmus tests:
+
+- [ ] This rule is high-level enough to not a good fit for AST-based linting ([details](#prefer-ast-based-rules-where-possible))
+- [ ] This rule is concrete enough to be well-defined ([details](#prefer-rules-that-are-well-defined))
+- [ ] This rule is universal and does not target a specific library ([details](#prefer-universal-rules))
+- [ ] This rule isn't already covered by an existing rule
+- [ ] This rule still makes sense given the current MVP limitations ([details](#mvp-rule-limitations))
 
 ### Prefer AST-based rules where possible
 
@@ -37,13 +48,13 @@ If you have a best practice you'd like to capture with GPTLint, first ask yourse
   - However, just because it's theoretically possible to use an AST-based approach to capture a rule doesn't mean that you should always do so. Sometimes, the complexity of implementing non-trivial AST-based rules is so difficult and/or error-prone that you may be better off using a more flexible GPTLint rule instead.
   - The tradeoff here is _determinism and cost versus expressiveness_.
 
-### Prefer universal rules
-
-Rules which are aimed at best practices for a specific library (next.js, express, mongoose, etc) could be very good fits for either [project-specific rules](#project-specific-rules) or [community-driven, library-specific configs](#library-specific-rule-configs).
+### Prefer rules that are well-defined
 
 _TODO_
 
-### Prefer rules that are well-defined
+### Prefer universal rules
+
+Rules which are aimed at best practices for a specific library (next.js, express, mongoose, etc) could be very good fits for either [project-specific rules](#project-specific-rules) or [community-driven, library-specific configs](#library-specific-rule-configs).
 
 _TODO_
 
@@ -58,33 +69,33 @@ Note that we expect to lift these restrictions in future major versions of GPTLi
 
 ## Library-specific rule configs
 
-Rules which are aimed at best practices for a specific library (next.js, express, mongoose, etc) will not be added to the core GPTLint ruleset and are instead a perfect fit for **community-driven, library-specific configs**.
+Rules which are aimed at best practices for a specific library (e.g., next.js, express, mongoose, fastapi, etc) will not be added to the core GPTLint ruleset and are instead a perfect fit to be bundled as **community-driven, library-specific configs**.
 
-The MVP doesn't contain any library-specific configs _yet_. If you'd like to work on a library-specific config, [create a discussion for it](https://github.com/transitive-bullshit/eslint-plus-plus/discussions/new?category=ideas) and include as much info on the library and proposed rules. You don't need any permission from us to create a library-specific config, but it may be helpful to receive feedback on your gameplan and to deduplicate similar efforts across the ecosystem.
+The MVP doesn't contain any library-specific configs _yet_. If you'd like to contribute a library-specific config, [create a discussion for it](https://github.com/transitive-bullshit/eslint-plus-plus/discussions/new?category=ideas) and include as much info on the library and proposed rules. You don't need any permission from us to create a library-specific config, of course, but it may be helpful to receive feedback on your gameplan to deduplicate similar efforts across the community.
 
 ## Project-specific rules
 
 If a rule isn't generally applicable enough to be added to the default GPTLint rulesets, but you still want to enforce it across your codebase, then it may be a good fit for a project-specific rule.
 
-Creating project-specific rules is very simple. Just create a markdown file for your rule in your project (or copy one of the default rule definitions from GPTLint). By convention, we recommend placing custom rules under a top-level `rules/` directory. You can enable your custom rule by adding it to the `rules` glob either via a `gptlint.config.js` file or via the CLI `--rules` option.
+Creating project-specific rules is very simple. Just create a markdown file for the rule in your project (or copy one of the default rule definition files from GPTLint). By convention, we recommend placing custom rules under a top-level `rules/` directory. You can enable your custom rule by adding it to the `rules` glob either via a `gptlint.config.js` file or via the CLI `--rules` option.
 
 ```js
 import 'dotenv/config'
 
 export default [
   {
-    // Make sure your rule file is included in this field
+    // Make sure that your rule file is included in this config option
     ruleFiles: ['rules/**/*.md']
   }
 ]
 ```
 
-You can debug the fully resolved rules and config by running `gptlint --debug-config` to ensure that your custom rules are recognized correctly – without actually running the linter.
+You can debug the fully resolved rules and config options at any time by running `gptlint --debug-config` to ensure that your custom rules are recognized correctly (this command logs the resolved config and then exits without actually running the linter).
 
 ## Defense in depth
 
-TODO
+_TODO_
 
 ## Example Rules
 
-TODO
+_TODO_
