@@ -16,7 +16,7 @@
 
 # GPTLint <!-- omit from toc -->
 
-> A fundamentally new approach to code health. Use LLMs to enforce best practices across your codebase in a way that takes traditional static analysis tools like `eslint` to the next level.
+> A fundamentally new approach to code quality. Use LLMs to enforce higher-level best practices across your codebase in a way that takes traditional static analysis tools like `eslint` to the next level.
 
 - [Features](#features)
 - [How it works](#how-it-works)
@@ -34,6 +34,8 @@
   - [Caveats](#caveats)
 - [FAQ](#faq)
   - [How can I disable a rule?](#how-can-i-disable-a-rule)
+  - [How can I disable a rule for a specific file?](#how-can-i-disable-a-rule-for-a-specific-file)
+  - [How can I disable linting for a specific file?](#how-can-i-disable-linting-for-a-specific-file)
   - [How can I customize a rule?](#how-can-i-customize-a-rule)
 - [TODO](#todo)
 - [Citations](#citations)
@@ -290,35 +292,57 @@ Based on these observations, the only violation found in the source code is the 
 
 ### How can I disable a rule?
 
-_TODO_
+You can disable a rule for a project by adding a config file at the root:
+
+```js
+// gptlint.config.js
+export default [
+  {
+    rules: {
+      'prefer-fetch-over-axios': 'off'
+    }
+  }
+]
+```
+
+### How can I disable a rule for a specific file?
+
+Rules can be configured at the file-level using inline rule config comments:
+
+```ts
+/* gptlint semantic-variable-names: off */
+```
+
+Separate multiple inline rule configs with commas:
+
+```ts
+/* gptlint use-esm: off, consistent-identifier-casing: warn */
+```
+
+Or use multiple inline rule config comments:
+
+```ts
+/* gptlint use-esm: off */
+/* gptlint consistent-identifier-casing: warn */
+```
+
+### How can I disable linting for a specific file?
+
+Linting can be disabled at the file-level using an inline config comment:
+
+```ts
+/* gptlint-disable */
+```
 
 ### How can I customize a rule?
 
-_TODO_
+Since rules are just markdown files, copy the rule's markdown into your project and customize it to suit your project's needs.
 
-- simple markdown format for specifying rules ([example](./rules/prefer-array-at-negative-indexing.md))
-- easy to add custom, project-specific rules (_rules are just markdown files_)
-- cli and config formats are ~~copied from~~ inspired by `eslint`
-- content-based caching
-- outputs LLM stats per run (cost, tokens, etc)
-- community-driven rules
-- every rule is fully configurable, both at the project level (`gptlint.config.js`) and at the rule level (markdown)
-  - don't agree with a rule? simply disable it in your config like you would with `eslint`, or copy the rule's markdown into your project and customize it to suit your project's needs
-  - want to enforce a new best practice in your project? add a new markdown file for the rule, describe the rule's intent in natural language, add a few correct/incorrect examples, and you're good to go
-  - all custom rules live in your repo as simple markdown files and are self-documenting, understandable by non-devs, and can be improved over time via standard git workflows
-  - this is the way 💯
-- all built-in rules are tested extensively with a combination of _synthetic evals_ and manual tests
-- ~~supports any programming language~~ (js, ts, tsx, py, C++, java, etc)
-  - the MVP is focused on JS / TS only for now (python support coming soon)
-- supports any natural language (english, chinese, spanish, etc)
-- supports multiple LLM providers (openai, anthropic, [openrouter](https://openrouter.ai/), etc)
-  - the MVP supports any LLM provider with an OpenAI-compatible chat completions API
-  - see [LLM Providers](#llm-providers) for more info
-- supports local LLMs (via [ollama](https://github.com/ollama/ollama) or [vllm](https://github.com/vllm-project/vllm))
-  - see [LLM Providers](#llm-providers) for more info
-- designed to be used in addition to existing static analysis tools like `eslint`, `pylint`, `ruff`, etc
-- no complicated github integration, bots, or CI actions – just call the `gptlint` CLI the same way you would call a tool like `eslint`
-- supports multi-level configs just like `eslint`; use a `gptlint.config.js` file and/or CLI args and/or file overrides (`/* gptlint-disable */`, `/* gpt-lint use-esm: off */`, etc)
+You'll want to [disable the original rule](#how-can-i-disable-a-rule) and change your custom rule's name to a project-specific name. Make sure your local config includes your custom rule's markdown file in its `ruleFiles` field.
+
+If your change is generally applicable to other projects, consider opening a pull request to GPTLint.
+
+For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](gptlint@teamduality.dev).
 
 ## TODO
 

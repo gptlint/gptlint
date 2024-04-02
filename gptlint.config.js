@@ -1,6 +1,6 @@
-// /** @type {import('gptlint').GPTLintConfig} */
 import 'dotenv/config'
 
+// /** @type {import('gptlint').GPTLintConfig} */
 export default [
   {
     llmOptions: {
@@ -9,13 +9,14 @@ export default [
   }
 ]
 
+// This example uses Anthropic Claude.
 // export default [
 //   {
 //     llmOptions: {
 //       apiBaseUrl: 'https://openrouter.ai/api/v1',
 //       // eslint-disable-next-line no-process-env
 //       apiKey: process.env.OPENROUTER_API_KEY,
-//       model: 'anthropic/claude-3-sonnet:beta',
+//       model: 'anthropic/claude-3-haiku:beta',
 //       // Optional
 //       kyOptions: {
 //         headers: {

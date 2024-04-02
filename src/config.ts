@@ -139,6 +139,7 @@ export const LinterConfigSchema = z.object({
   llmOptions: LLMOptionsSchema.optional().describe('')
 })
 export type LinterConfig = z.infer<typeof LinterConfigSchema>
+export type GPTLintConfig = LinterConfig[]
 
 export type ResolvedLinterConfig = Simplify<
   Omit<
