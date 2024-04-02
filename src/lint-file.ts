@@ -216,7 +216,7 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
           )
         )
       } else {
-        throw new Error(
+        throw new TypeError(
           `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
           { cause: err }
         )
@@ -227,7 +227,7 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
   if (config.linterOptions.debug) {
     const { lintErrors } = lintResult
 
-    if (lintErrors.length) {
+    if (lintErrors.length > 0) {
       console.log(
         `\n<<< FAIL CACHE MISS Rule "${rule.name}" file "${
           file.fileRelativePath

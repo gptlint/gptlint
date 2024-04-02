@@ -247,14 +247,14 @@ export function parseBooleanOutput(output: string): boolean {
   output = output
     .toLowerCase()
     .trim()
-    .replace(/[.!?]+$/, '')
+    .replace(/[!.?]+$/, '')
 
   const booleanOutput = BOOLEAN_OUTPUTS[output]
 
-  if (booleanOutput !== undefined) {
-    return booleanOutput
-  } else {
+  if (booleanOutput === undefined) {
     throw new ParseError(`Invalid boolean output: ${output}`)
+  } else {
+    return booleanOutput
   }
 }
 
@@ -272,10 +272,10 @@ export function parseNumberOutput(
   output = output.trim()
 
   const numberOutput = outputSchema.isInt
-    ? parseInt(output)
-    : parseFloat(output)
+    ? Number.parseInt(output)
+    : Number.parseFloat(output)
 
-  if (isNaN(numberOutput)) {
+  if (Number.isNaN(numberOutput)) {
     throw new ParseError(`Invalid number output: ${output}`)
   }
 

@@ -38,7 +38,7 @@ export async function readFiles(
     filePaths,
     async (filePath) => {
       filePath = path.resolve(cwd, filePath)
-      const content = await fs.readFile(filePath, { encoding: 'utf-8' })
+      const content = await fs.readFile(filePath, { encoding: 'utf8' })
 
       const fileRelativePath = path.relative(cwd, filePath)
       const fileName = path.basename(filePath)

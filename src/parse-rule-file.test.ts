@@ -14,7 +14,7 @@ const invalidRuleFiles = globbySync('fixtures/invalid-rules/**/*.md', {
 
 for (const ruleFile of validRuleFiles) {
   test(`parseRuleFile - ${ruleFile}`, async () => {
-    const content = await fs.readFile(ruleFile, { encoding: 'utf-8' })
+    const content = await fs.readFile(ruleFile, { encoding: 'utf8' })
     const rule = await parseRuleFile({
       content,
       filePath: ruleFile
@@ -26,7 +26,7 @@ for (const ruleFile of validRuleFiles) {
 
 for (const ruleFile of invalidRuleFiles) {
   test(`parseRuleFile - invalid - ${ruleFile}`, async () => {
-    const content = await fs.readFile(ruleFile, { encoding: 'utf-8' })
+    const content = await fs.readFile(ruleFile, { encoding: 'utf8' })
     await expect(
       parseRuleFile({
         content,

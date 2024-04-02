@@ -97,7 +97,7 @@ export async function lintFiles({
     }))
   )
 
-  if (config.linterOptions.earlyExit && lintResult.lintErrors.length) {
+  if (config.linterOptions.earlyExit && lintResult.lintErrors.length > 0) {
     earlyExitTripped = true
   }
 
@@ -130,7 +130,10 @@ export async function lintFiles({
 
         lintResult = mergeLintResults(lintResult, fileLintResult)
 
-        if (config.linterOptions.earlyExit && lintResult.lintErrors.length) {
+        if (
+          config.linterOptions.earlyExit &&
+          lintResult.lintErrors.length > 0
+        ) {
           earlyExitTripped = true
         }
 

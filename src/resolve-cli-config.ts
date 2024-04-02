@@ -135,7 +135,7 @@ export async function resolveLinterCLIConfig(
   )
 
   let files = args._.fileDirGlob.slice(2)
-  if (!files.length) {
+  if (files.length === 0) {
     files = ['**/*.{js,ts,jsx,tsx,cjs,mjs}']
   }
 
@@ -143,7 +143,7 @@ export async function resolveLinterCLIConfig(
   if (args.flags.ignoreFile && !args.flags.noIgnore) {
     if (await pathExists(args.flags.ignoreFile)) {
       const ignoreFileContent = await readFile(args.flags.ignoreFile, {
-        encoding: 'utf-8'
+        encoding: 'utf8'
       })
       // `parseGitIgnore` doesn't handle single-line ignore files correctly,
       // so this is a workaround to ensure it doesn't view the file content as

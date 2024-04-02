@@ -1,6 +1,4 @@
-import { AbortError } from 'p-retry'
-
-export { AbortError }
+export { AbortError } from 'p-retry'
 
 export class RetryableError extends Error {}
 

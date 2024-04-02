@@ -1,14 +1,11 @@
 import type { ChatModel } from '@dexaai/dexter'
-import slugify from '@sindresorhus/slugify'
-import dedupe from 'array-uniq'
-import invariant from 'tiny-invariant'
 
 // import axios from 'axios'
 import type * as types from './types.js'
 
-export { dedupe }
-export { slugify }
-export { invariant as assert }
+export { default as slugify } from '@sindresorhus/slugify'
+export { default as dedupe } from 'array-uniq'
+export { default as assert } from 'tiny-invariant'
 
 /**
  * From `obj`, create a new object that does not include `keys`.
@@ -66,9 +63,9 @@ export function isValidRuleName(name: string): name is NonNullable<string> {
 
   const parts = name.split('/')
   if (parts.length === 2) {
-    if (!/^@[a-zA-Z][a-zA-Z0-9-_]*$/i.test(parts[0]!)) return false
-    if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/i.test(parts[1]!)) return false
-  } else if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/i.test(name)) return false
+    if (!/^@[a-z][\w-]*$/i.test(parts[0]!)) return false
+    if (!/^[a-z][\w-]*$/i.test(parts[1]!)) return false
+  } else if (!/^[a-z][\w-]*$/i.test(name)) return false
 
   return true
 }
@@ -239,7 +236,7 @@ export function getEnv(
           process.env?.[name]
         : undefined) ?? defaultValue
     )
-  } catch (e) {
+  } catch {
     return defaultValue
   }
 }
@@ -256,18 +253,18 @@ export function logDebugConfig({
   console.log(
     '\nlogging resolved config and then exiting because `debugConfig` is enabled'
   )
-  console.log('\nconfig', JSON.stringify(config, null, 2))
+  console.log('\nconfig', JSON.stringify(config, undefined, 2))
   if (files) {
     console.log(
       '\ninput files',
       JSON.stringify(
         files.map((file) => file.fileRelativePath),
-        null,
+        undefined,
         2
       )
     )
   }
-  console.log('\nrules', JSON.stringify(rules, null, 2))
+  console.log('\nrules', JSON.stringify(rules, undefined, 2))
 }
 
 export function logDebugStats({

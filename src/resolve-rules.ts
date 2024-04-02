@@ -35,7 +35,7 @@ export async function resolveRules({
           const ruleFilePathAbsolute = path.join(cwd, ruleFilePath)
           const ruleFileContent = await fs.readFile(
             ruleFilePathAbsolute,
-            'utf-8'
+            'utf8'
           )
           const rule = await parseRuleFile({
             content: ruleFileContent,

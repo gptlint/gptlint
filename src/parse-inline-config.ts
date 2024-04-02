@@ -26,13 +26,11 @@ export function parseInlineConfig({
     lastEnableIndex = Math.max(lastEnableIndex, match.index)
   }
 
-  if (lastDisableIndex >= 0) {
-    if (lastDisableIndex > lastEnableIndex) {
-      // Linting has been disabled for this file
-      return {
-        linterOptions: {
-          disabled: true
-        }
+  if (lastDisableIndex >= 0 && lastDisableIndex > lastEnableIndex) {
+    // Linting has been disabled for this file
+    return {
+      linterOptions: {
+        disabled: true
       }
     }
   }

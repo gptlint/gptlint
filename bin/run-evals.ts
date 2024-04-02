@@ -95,7 +95,7 @@ async function main() {
               })
 
               ++ruleEvalStats.numFiles
-              if (fileLintResult.lintErrors.length) {
+              if (fileLintResult.lintErrors.length > 0) {
                 ruleEvalStats.numFalsePositives++
 
                 console.warn(
@@ -146,7 +146,7 @@ async function main() {
               })
 
               ++ruleEvalStats.numFiles
-              if (fileLintResult.lintErrors.length) {
+              if (fileLintResult.lintErrors.length > 0) {
                 ruleEvalStats.numTruePositives++
 
                 console.log(
@@ -194,7 +194,9 @@ async function main() {
   logEvalStats({ evalStats: globalEvalStats })
 }
 
-main().catch((err) => {
-  console.error(err)
-  return gracefulExit(1)
-})
+try {
+  await main()
+} catch (err) {
+  console.error('Unexpected error', err)
+  gracefulExit(1)
+}

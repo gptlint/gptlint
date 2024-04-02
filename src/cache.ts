@@ -61,7 +61,7 @@ export class LinterCache<
 
         if (await pathExists(cacheFile)) {
           const encodedCache = await fs.readFile(cacheFile, {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
 
           this.cache = JSON.parse(encodedCache) as Record<string, string>
@@ -89,11 +89,11 @@ export class LinterCache<
     assert(this.cache, 'Must call LinterCache.init')
     const encodedValue = this.cache[getCacheKey(key)]
 
-    if (encodedValue !== undefined) {
+    if (encodedValue === undefined) {
+      return undefined
+    } else {
       const decodedValue = JSON.parse(encodedValue) as TValue
       return decodedValue
-    } else {
-      return undefined
     }
   }
 
@@ -115,7 +115,7 @@ export class LinterCache<
       if (!this.cache) return
 
       await fs.writeFile(cacheFile, stableStringify(this.cache), {
-        encoding: 'utf-8'
+        encoding: 'utf8'
       })
     }
   }

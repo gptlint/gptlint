@@ -3,7 +3,6 @@ import { toString } from 'mdast-util-to-string'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import { unified } from 'unified'
-import { inspectColor } from 'unist-util-inspect'
 import { is, type Test } from 'unist-util-is'
 
 import type * as types from './types.js'
@@ -18,7 +17,7 @@ export function parseMarkdownAST(content: string) {
   return unified().use(remarkParse).use(remarkGfm).parse(content)
 }
 
-export { inspectColor as inspectNode }
+export { inspectColor as inspectNode } from 'unist-util-inspect'
 
 export function parseRuleNode({
   headingRuleNode,
@@ -141,7 +140,7 @@ export function parseRuleNode({
 
     for (const codeBlockNode of codeBlockNodes) {
       const code = toString(codeBlockNode)
-      const language = codeBlockNode.lang ? codeBlockNode.lang : undefined
+      const language = codeBlockNode.lang || undefined
 
       if (isPositive) {
         rule.positiveExamples!.push({ code, language })
@@ -343,7 +342,11 @@ export function findAllBetween(
       index = parent.children.indexOf(indexOrNode as any)
     }
 
-    if (isNaN(index) || index < 0 || index === Infinity) {
+    if (
+      Number.isNaN(index) ||
+      index < 0 ||
+      index === Number.POSITIVE_INFINITY
+    ) {
       throw new Error('Expected positive finite index or child node')
     }
 

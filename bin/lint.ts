@@ -81,7 +81,7 @@ async function main() {
   if (lintResult.lintErrors.length > 0) {
     console.log(
       `\nlint errors:`,
-      JSON.stringify(lintResult.lintErrors, null, 2)
+      JSON.stringify(lintResult.lintErrors, undefined, 2)
     )
 
     console.log(
@@ -98,7 +98,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
+try {
+  await main()
+} catch (err) {
   console.error('Unexpected error', err)
-  return gracefulExit(1)
-})
+  gracefulExit(1)
+}

@@ -1,14 +1,7 @@
 /* eslint-disable no-use-before-define */
 import type { Command } from 'cleye'
 
-import type {
-  LinterConfig,
-  LinterConfigRuleSetting,
-  LinterConfigRuleSettings,
-  LinterOptions,
-  LLMOptions,
-  ResolvedLinterConfig
-} from './config.js'
+import type { ResolvedLinterConfig } from './config.js'
 
 export type {
   LinterConfig,
@@ -17,7 +10,7 @@ export type {
   LinterOptions,
   LLMOptions,
   ResolvedLinterConfig
-}
+} from './config.js'
 
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 export type LintRuleLevel = 'error' | 'warn' | 'off'
