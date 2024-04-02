@@ -33,6 +33,8 @@
   - [Evals](#evals)
   - [Caveats](#caveats)
 - [FAQ](#faq)
+  - [How can I disable a rule?](#how-can-i-disable-a-rule)
+  - [How can I customize a rule?](#how-can-i-customize-a-rule)
 - [TODO](#todo)
 - [Citations](#citations)
 - [License](#license)
@@ -40,16 +42,16 @@
 ## Features
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
-- ✅️ all rules are 100% customizable
+- ✅️ rules can be [disabled](#how-can-i-disable-a-rule) / [customized](#how-can-i-customize-a-rule) easily
 - ✅️ simple markdown format for rules ([example](./rules/prefer-array-at-negative-indexing.md), [spec](./rule-spec.md))
 - ✅️ easy to add [custom, project-specific rules](./rule-guidelines.md#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
-- ✅️ supports `gptlint.config.js` and inline config overrides `/* gptlint-disable */`
 - ✅️ content-based caching
 - ✅️ outputs LLM stats per run (cost, tokens, etc)
 - ✅️ built-in rules are extensively tested w/ [evals](#evals)
-- ✅️ supports all major [LLM providers](#llm-providers)
-- ✅️ supports [local LLMs](#local-models)
+- ✅️ supports all major [LLM providers](#llm-providers) (openai, anthropic, etc)
+- ✅️ supports all major [local LLMs](#local-models) (via ollama or vllm)
+- ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
 - ✅️ includes [guidelines](./rule-guidelines.md) for creating your own rules
 - ❌ MVP rules are [JS/TS only](#caveats) _for now_
@@ -285,6 +287,14 @@ Based on these observations, the only violation found in the source code is the 
   - we're hoping that rules for other programming languages will trickle in from the community
 
 ## FAQ
+
+### How can I disable a rule?
+
+_TODO_
+
+### How can I customize a rule?
+
+_TODO_
 
 - simple markdown format for specifying rules ([example](./rules/prefer-array-at-negative-indexing.md))
 - easy to add custom, project-specific rules (_rules are just markdown files_)
