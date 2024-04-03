@@ -31,8 +31,9 @@ export const LLMOptionsSchema = z.object({
   weakModel: z
     .string()
     .optional()
+    .nullable()
     .describe(
-      'If defined, will use a two-pass approach to assessing rule conformance. The `weakModel` should be cheaper and will be used to generate potential rule violations, with the stronger `model` being used in a second pass to validate potential rule violations and filter out false positives.'
+      'If defined, will use a two-pass approach to assessing rule conformance. The `weakModel` should be cheaper and will be used to generate potential rule violations, with the stronger `model` being used in a second pass to validate potential rule violations and filter out false positives. Set to "none" or `null` to disable two-pass linting.'
     ),
 
   temperature: z
@@ -187,7 +188,7 @@ export const defaultLLMOptions: Readonly<LLMOptions> = {
   // our tests.
   model: 'gpt-4',
   // model: 'gpt-4-turbo-preview',
-  // model: 'gpt-3.5-turbo',
+  weakModel: 'gpt-3.5-turbo',
   temperature: 0
 }
 
@@ -200,6 +201,12 @@ export const defaultLinterConfig: Readonly<
 
 export function parseLinterConfig(config: Partial<LinterConfig>): LinterConfig {
   return LinterConfigSchema.parse(config)
+}
+
+export function isValidModel(
+  model?: string | null
+): model is NonNullable<string> {
+  return !!model && model !== 'none'
 }
 
 export function mergeLinterConfigs<
@@ -231,5 +238,5 @@ export function mergeLinterConfigs<
             ...pruneUndefined(configB.llmOptions ?? {})
           }
         : undefined
-  } as SimplifyDeep<MergeDeep<ConfigTypeA, ConfigTypeB>>
+  } as any
 }

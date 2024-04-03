@@ -2,7 +2,7 @@ import { type ChatModel, Msg, type Prompt } from '@dexaai/dexter'
 import plur from 'plur'
 
 import type * as types from './types.js'
-import { defaultLinterConfig } from './config.js'
+import { defaultLinterConfig, isValidModel } from './config.js'
 import { AbortError, RetryableError } from './errors.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
@@ -37,7 +37,10 @@ export async function lintFile({
     retries: number
   }
 }): Promise<types.LintResult> {
-  const model = config.llmOptions.weakModel ?? config.llmOptions.model
+  const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
+  const model = isTwoPassLintingEnabled
+    ? config.llmOptions.weakModel!
+    : config.llmOptions.model
   let lintResult = createLintResult()
 
   if (config.linterOptions.debug) {
@@ -68,7 +71,7 @@ List out the portions of the SOURCE code ${
       file.fileName
     } which are related to the RULE and explain whether they VIOLATE or conform to the RULE's intent. Your answer should contain two markdown sections, EXPLANATION and VIOLATIONS.
 
-Accuracy is important, so be sure to think step-by-step and explain your reasoning in the EXPLANATION section.
+Accuracy is important, so be sure to think step-by-step and explain your reasoning briefly in the EXPLANATION section. Do not list out all variable names or identifiers in the EXPLANATION section.
 
 If you find any code snippets which VIOLATE the RULE, then output them as RULE_VIOLATION objects in the VIOLATIONS section. The VIOLATIONS section should be a JSON array of RULE_VIOLATION objects. This array may be empty if there are no RULE VIOLATIONS. Ignore code snippets which correctly conform to the RULE.
 
@@ -204,7 +207,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
     }
   } while (true)
 
-  if (lintResult.lintErrors.length > 0 && config.llmOptions.weakModel) {
+  if (lintResult.lintErrors.length > 0 && isTwoPassLintingEnabled) {
     const { lintErrors: originalLintErrors } = lintResult
     if (config.linterOptions.debug) {
       console.log(
@@ -261,6 +264,13 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
   return lintResult
 }
 
+/**
+ * If two-pass linting is enabled, then this function is called after the first
+ * pass to validate the potential rule violations from the first pass using a
+ * smarter model.
+ *
+ * This pass is aimed at reducing false positives.
+ */
 export async function validateRuleViolations({
   file,
   rule,
