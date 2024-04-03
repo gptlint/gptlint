@@ -69,6 +69,9 @@ export type LintResult = {
   numCompletionTokens: number
   numTotalTokens: number
   totalCost: number
+
+  startedAtMs: number
+  endedAtMs?: number
 }
 
 export type LintSkipReason =

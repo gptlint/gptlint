@@ -10,17 +10,16 @@ import pMap from 'p-map'
 import type * as types from '../src/types.js'
 import { createChatModel } from '../src/create-chat-model.js'
 import { lintFile } from '../src/lint-file.js'
+import { createLintResult, mergeLintResults } from '../src/lint-result.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { readFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
 import {
   createEvalStats,
-  createLintResult,
   logDebugConfig,
   logDebugStats,
   logEvalStats,
-  mergeEvalStats,
-  mergeLintResults
+  mergeEvalStats
 } from '../src/utils.js'
 
 /**

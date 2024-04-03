@@ -4,8 +4,9 @@ import pMap from 'p-map'
 import type { LinterCache } from './cache.js'
 import type * as types from './types.js'
 import { lintFile } from './lint-file.js'
+import { createLintResult, mergeLintResults } from './lint-result.js'
 import { preLintFile } from './pre-lint-file.js'
-import { createLintResult, mergeLintResults, pruneUndefined } from './utils.js'
+import { pruneUndefined } from './utils.js'
 
 export async function lintFiles({
   files,
@@ -159,5 +160,6 @@ export async function lintFiles({
     }
   )
 
+  lintResult.endedAtMs = Date.now()
   return lintResult
 }

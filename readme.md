@@ -351,8 +351,8 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 - add support for applying fixes to linter errors
 - track the positive instances where we see rule conformance as well?
   - could help us output a better picture of overall code health
-- fine-tuning pipeline both for base linting task
-- fine-tuning pipeline both for individual rules
+- fine-tuning pipeline for base linting task
+- fine-tuning pipeline for individual rules
 - explore reinforcement learning with continuous fine-tuning so rule accuracy improves over time
 
 ## Citations

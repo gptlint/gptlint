@@ -1,4 +1,7 @@
+import prettyMilliseconds from 'pretty-ms'
+
 import type * as types from './types.js'
+import { getLintDurationMs } from './lint-result.js'
 
 export { default as slugify } from '@sindresorhus/slugify'
 export { default as dedupe } from 'array-uniq'
@@ -87,35 +90,6 @@ export function trimMessage(
   message = `${message.slice(0, maxLength - 3)}...`
 
   return message
-}
-
-export function createLintResult(): types.LintResult {
-  return {
-    lintErrors: [],
-    numModelCalls: 0,
-    numModelCallsCached: 0,
-    numPromptTokens: 0,
-    numCompletionTokens: 0,
-    numTotalTokens: 0,
-    totalCost: 0
-  }
-}
-
-export function mergeLintResults(
-  lintResultA: types.LintResult,
-  lintResultB: types.LintResult
-): types.LintResult {
-  return {
-    lintErrors: lintResultA.lintErrors.concat(lintResultB.lintErrors),
-    numModelCalls: lintResultA.numModelCalls + lintResultB.numModelCalls,
-    numModelCallsCached:
-      lintResultA.numModelCallsCached + lintResultB.numModelCallsCached,
-    numPromptTokens: lintResultA.numPromptTokens + lintResultB.numPromptTokens,
-    numCompletionTokens:
-      lintResultA.numCompletionTokens + lintResultB.numCompletionTokens,
-    numTotalTokens: lintResultA.numTotalTokens + lintResultB.numTotalTokens,
-    totalCost: lintResultA.totalCost + lintResultB.totalCost
-  }
 }
 
 export function createEvalStats(): types.EvalStats {
@@ -273,6 +247,11 @@ export function logDebugStats({
   lintResult: types.LintResult
   config: types.ResolvedLinterConfig
 }) {
+  const lintDurationMs = getLintDurationMs(lintResult)
+  const lintDuration = lintDurationMs
+    ? prettyMilliseconds(lintDurationMs)
+    : undefined
+
   console.log(
     `\nLLM stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
     pruneUndefined({
@@ -284,7 +263,8 @@ export function logDebugStats({
         'numPromptTokens',
         'numCompletionTokens',
         'numTotalTokens'
-      )
+      ),
+      lintDuration
     })
   )
 }

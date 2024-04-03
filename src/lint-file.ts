@@ -4,6 +4,7 @@ import plur from 'plur'
 import type * as types from './types.js'
 import { defaultLinterConfig, isValidModel } from './config.js'
 import { AbortError, RetryableError } from './errors.js'
+import { createLintResult } from './lint-result.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
   parseRuleViolationsFromJSONModelResponse,
@@ -14,7 +15,7 @@ import {
   stringifyRuleViolationForModel,
   stringifyRuleViolationSchemaForModel
 } from './rule-violations.js'
-import { createLintResult, pruneUndefined } from './utils.js'
+import { pruneUndefined } from './utils.js'
 
 // TODO: Improve the duplication between `lintFile` and `validateRuleViolations`
 // for two-pass linting.

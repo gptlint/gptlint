@@ -3,8 +3,9 @@ import pMap from 'p-map'
 import type * as types from './types.js'
 import { type LinterCache } from './cache.js'
 import { mergeLinterConfigs } from './config.js'
+import { createLintResult } from './lint-result.js'
 import { parseInlineConfig } from './parse-inline-config.js'
-import { createCacheKey, createLintResult } from './utils.js'
+import { createCacheKey } from './utils.js'
 
 /**
  * If the result contains a `lintResult`, then that is the cached result which
