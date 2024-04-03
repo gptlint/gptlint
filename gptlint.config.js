@@ -11,7 +11,7 @@ export default [
 ]
 
 // This example uses Anthropic Claude.
-// /** @type {import('gptlint').GPTLintConfig} */
+/** @type {import('gptlint').GPTLintConfig} */
 // export default [
 //   {
 //     llmOptions: {

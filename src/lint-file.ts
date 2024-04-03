@@ -202,6 +202,13 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
           )
         )
       } else {
+        if (config.linterOptions.debug) {
+          console.error(
+            `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
+            err
+          )
+        }
+
         throw new TypeError(
           `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
           { cause: err }
@@ -489,6 +496,13 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
           )
         )
       } else {
+        if (config.linterOptions.debug) {
+          console.error(
+            `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
+            err
+          )
+        }
+
         throw new TypeError(
           `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
           { cause: err }
