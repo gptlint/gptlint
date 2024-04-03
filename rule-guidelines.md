@@ -40,11 +40,11 @@ Before adding a best practice as a GPTLint rule, double-check the following litm
 
 ### Prefer AST-based rules where possible
 
-For JS/TS devs, if one or more [eslint rules](https://eslint.org/docs/latest/rules/) is available which captures part or all of your rule's intent, then you should enable those `eslint` rules for your project.
+For JS/TS devs, if one or more [eslint rules](https://eslint.org/docs/latest/rules/) are available which capture part or all of your rule's intent, then you should enable those `eslint` rules for your project instead of adding a `gptlint` rule.
 
 For Python devs, comparable [pylint rules](https://pylint.pycqa.org/en/latest/user_guide/checkers/features.html) or [ruff rules](https://docs.astral.sh/ruff/rules/) should be preferred over GPTLint rules.
 
-These OSS linters have vibrant ecosystems of community-driven, AST-based linting rules. Compared to GPTLint, they are **deterministic, relatively standard, and free**. On the other hand, they are fundamentally restricted in the type of lower-level linting rules they can enforce.
+These OSS linters have vibrant ecosystems of community-driven rules. **Compared to GPTLint, these AST-based linters are deterministic, extremely fast, relatively standard, and free**. On the other hand, **they are fundamentally restricted in the type of AST-level linting rules they can enforce**.
 
 If you have a best practice you'd like to capture with GPTLint, first ask yourself:
 
