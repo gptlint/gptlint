@@ -1,7 +1,3 @@
-<p align="center">
-  <img alt="Single-Pass Linting" src="/media/how-gptlint-works.png">
-</p>
-
 # How GPTLint Works <!-- omit from toc -->
 
 - [Overview](#overview)
@@ -17,6 +13,10 @@
 - [License](#license)
 
 ## Overview
+
+<p align="center">
+  <img alt="Single-Pass Linting" src="/media/how-gptlint-works.png">
+</p>
 
 To lint a codebase, GPTLint takes the following steps:
 
@@ -48,7 +48,7 @@ In this approach, every lint task goes takes the following steps:
 ## Two-Pass Linting
 
 <p align="center">
-  <img alt="Two-Pass Linting" src="/media/single-pass-linting.png">
+  <img alt="Two-Pass Linting" src="/media/two-pass-linting.png">
 </p>
 
 Everything starts off the same in two-pass linting as single-pass linting.
