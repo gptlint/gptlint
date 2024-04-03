@@ -18,7 +18,6 @@ export type LinterConfigRuleSettings = z.infer<
   typeof LinterConfigRuleSettingsSchema
 >
 
-// TODO: update when we decide on a project name
 export const defaultCacheDir =
   findCacheDirectory({ name: 'gptlint' }) ?? '.gptlint'
 
