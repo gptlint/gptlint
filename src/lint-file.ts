@@ -84,7 +84,7 @@ MAKE SURE YOU TRUNCATE LONG CODE SNIPPETS using an ellipsis "..." so they are no
 
 ---
 
-Example output format:
+Example markdown output format:
 
 # EXPLANATION
 
@@ -204,7 +204,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       } else {
         if (config.linterOptions.debug) {
           console.error(
-            `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
+            `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}":`,
             err
           )
         }
@@ -363,7 +363,7 @@ ${stringifyRuleViolationForModel(potentialRuleViolations)}
 
 ---
 
-Example output format:
+Example ${modelSupportsJsonResponseFormat ? 'JSON' : 'markdown'} output format:
 
 ${
   modelSupportsJsonResponseFormat
@@ -498,7 +498,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
       } else {
         if (config.linterOptions.debug) {
           console.error(
-            `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
+            `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}":`,
             err
           )
         }

@@ -371,6 +371,7 @@ For more guidance around creating and evaluating custom rules that will work wel
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
   - output how long linting took in stats
+  - cache precheck tasks
 - project
   - update project name in multiple places once we decide on a name
   - decide on an OSS license

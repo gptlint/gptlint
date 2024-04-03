@@ -33,7 +33,7 @@ export const LLMOptionsSchema = z.object({
     .optional()
     .nullable()
     .describe(
-      'If defined, will use a two-pass approach to assessing rule conformance. The `weakModel` should be cheaper and will be used to generate potential rule violations, with the stronger `model` being used in a second pass to validate potential rule violations and filter out false positives. Set to "none" or `null` to disable two-pass linting.'
+      'If defined, will use a two-pass approach for assessing rule conformance. The `weakModel` should be cheaper and will be used to generate potential rule violations, with the stronger `model` being used in a second pass to validate these potential rule violations and filter out false positives. Set to "none" or `null` to disable two-pass linting.'
     ),
 
   temperature: z
