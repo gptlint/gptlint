@@ -3,7 +3,7 @@
 - [Overview](#overview)
 - [Single-Pass Linting](#single-pass-linting)
 - [Two-Pass Linting](#two-pass-linting)
-  - [Single-Pass vs Two-Pass Linting](#single-pass-vs-two-pass-linting)
+- [Single-Pass vs Two-Pass Linting](#single-pass-vs-two-pass-linting)
 - [LLM Output Format](#llm-output-format)
   - [RuleViolation Schema](#ruleviolation-schema)
 - [Evals](#evals)
@@ -56,7 +56,7 @@ We replace our single LLM with two models: a weaker, cheaper model (`weakModel` 
 
 In the first pass, the weak model is used to generate a set of potential `RuleViolation` candidates. In the second pass, we give these rule violation candidates to the stronger model which acts as a discriminator for filtering out false positives.
 
-### Single-Pass vs Two-Pass Linting
+## Single-Pass vs Two-Pass Linting
 
 **Two-Pass linting is significantly faster, cheaper, and more accurate than single-pass linting**, and is currently the default strategy used by GPTLint.
 
@@ -76,7 +76,7 @@ The `VIOLATIONS` section contains the actual structured JSON output of [RuleViol
 
 <details>
 <summary>
-**Example LLM markdown output**:
+<b>Example LLM markdown output:</b>
 </summary>
 
 ```md
