@@ -38,7 +38,7 @@
   - [Where can I get help integrating GPTLint into my codebase?](#where-can-i-get-help-integrating-gptlint-into-my-codebase)
 - [Roadmap](#roadmap)
   - [MVP Public Release](#mvp-public-release)
-  - [Post-MVP Roadmap](#post-mvp-roadmap)
+  - [Post-MVP](#post-mvp)
 - [Citations](#citations)
 - [License](#license)
 
@@ -146,7 +146,7 @@ This project supports any chat LLM which exposes an OpenAI-compatible chat compl
 
 This is the default. Just export an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
 
-The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it, and we're not using `gpt-3.5-turbo` as the default because it doesn't perform as consistently in our tests.
+The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it. The default `weakModel` is `gpt-3.5-turbo` which is used for [two-pass linting](./how-it-works.md#two-pass-linting).
 
 If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-4` by adding a [config file](./gptlint.config.js) to your project.
 
@@ -156,7 +156,7 @@ Anthropic Claude is supported by using a proxy such as [OpenRouter](https://open
 
 - [Claude 3 Opus](https://openrouter.ai/models/anthropic/claude-3-opus:beta) (powerful, but very expensive)
 - [Claude 3 Sonnet](https://openrouter.ai/models/anthropic/claude-3-sonnet:beta) (balanced)
-- [Claude 3 Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku:beta) (cheapest but better than `gpt-3.5-turbo`)
+- [Claude 3 Haiku](https://openrouter.ai/models/anthropic/claude-3-haiku:beta)
 
 Export your OpenRouter API key as an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
 
@@ -312,9 +312,9 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - basic eval graphs and blog post
   - publish to NPM
-  - launch! 🚀
+  - public launch! 🚀
 
-### Post-MVP Roadmap
+### Post-MVP
 
 - cross-file linting
 - add support for different programming languages
