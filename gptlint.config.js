@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-// /** @type {import('gptlint').GPTLintConfig} */
+/** @type {import('gptlint').GPTLintConfig} */
 export default [
   {
     llmOptions: {

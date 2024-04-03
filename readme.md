@@ -162,11 +162,13 @@ Export your OpenRouter API key as an `OPENAI_API_KEY` environment variable eithe
 
 ```js
 // gptlint.config.js
+/** @type {import('gptlint').GPTLintConfig} */
 export default [
   {
     llmOptions: {
       apiBaseUrl: 'https://openrouter.ai/api/v1',
-      model: 'anthropic/claude-3-haiku:beta',
+      model: 'anthropic/claude-3-opus:beta',
+      weakModel: 'anthropic/claude-3-haiku:beta',
       // Optional
       kyOptions: {
         headers: {
@@ -180,9 +182,6 @@ export default [
   }
 ]
 ```
-
-> [!WARNING]
-> Claude Opus is ~2.5x as expensive as `gpt-4-turbo`, and it consistently produces more false positives in my testing, so I would avoid using it unless you have a strong reason. Linting this codebase with `anthropic/claude-3-opus:beta` **costs ~$10 per uncached run** which is prohibitive for testing. In contrast, Claude 3 Haiku performs relatively well and is extremely cheap, so you may want to start from there.
 
 ### OSS Models
 
@@ -304,7 +303,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
     - convert this repo to a monorepo?
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
-  - output how long linting took in stats
+  - **output how long linting took in stats**
   - cache precheck tasks
 - project
   - update project name in multiple places once we decide on a name
