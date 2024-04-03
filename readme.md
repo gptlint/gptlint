@@ -45,9 +45,9 @@
 ## Features
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
-- ✅️ simple markdown format for rules ([example](./rules/prefer-array-at-negative-indexing.md), [spec](./rule-spec.md))
+- ✅️ simple markdown format for rules ([example](./rules/prefer-array-at-negative-indexing.md), [spec](./docs/rule-spec.md))
 - ✅️ easy to [disable](#how-can-i-disable-a-rule) or [customize](#how-can-i-customize-a-rule) rules
-- ✅️ add custom, [project-specific rules](./rule-guidelines.md#project-specific-rules)
+- ✅️ add custom, [project-specific rules](./docs/rule-guidelines.md#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
 - ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ content-based caching
@@ -56,7 +56,7 @@
 - ✅️ supports all major [LLM providers](#llm-providers)
 - ✅️ supports all major [local LLMs](#local-models)
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
-- ✅️ includes [guidelines](./rule-guidelines.md) for creating your own rules
+- ✅️ includes [guidelines](./docs/rule-guidelines.md) for creating your own rules
 - ❌ MVP rules are [JS/TS only](#caveats) _for now_
 - ❌ MVP rules are [single-file context only](#caveats) _for now_
 
@@ -66,7 +66,7 @@
   <img alt="How it works" src="/media/how-gptlint-works.png">
 </p>
 
-See our [docs on how it works](./how-it-works.md) for more details.
+See our [docs on how it works](./docs/how-it-works.md) for more details.
 
 ## Install
 
@@ -146,7 +146,7 @@ This project supports any chat LLM which exposes an OpenAI-compatible chat compl
 
 This is the default. Just export an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
 
-The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it. The default `weakModel` is `gpt-3.5-turbo` which is used for [two-pass linting](./how-it-works.md#two-pass-linting).
+The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it. The default `weakModel` is `gpt-3.5-turbo` which is used for [two-pass linting](./docs/how-it-works.md#two-pass-linting).
 
 If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-4` by adding a [config file](./gptlint.config.js) to your project.
 
@@ -204,7 +204,7 @@ Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your l
   - **all built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default
   - keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**
 - **LLM costs can add up quickly**
-  - [two-pass linting](./how-it-works.md#two-pass-linting) helps significantly with costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly
+  - [two-pass linting](./docs/how-it-works.md#two-pass-linting) helps significantly with costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly
   - NOTE: this variable cost goes away when using a local LLM, where you're paying directly for GPU compute instead of paying per token
   - NOTE: for many projects, this will still be _orders of magnitude cheaper_ than hiring a senior engineer to track and fix technical debt
 - **rules in the MVP are single-file only**
@@ -273,7 +273,7 @@ For more guidance around creating and evaluating custom rules that will work wel
 
 ### Why aren't you using fine-tuning?
 
-See our notes on [fine-tuning in how it works](./how-it-works.md#fine-tuning).
+See our notes on [fine-tuning in how it works](./docs/how-it-works.md#fine-tuning).
 
 ### Where can I get help integrating GPTLint into my codebase?
 
