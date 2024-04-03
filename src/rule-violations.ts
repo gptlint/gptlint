@@ -27,11 +27,11 @@ export const ruleViolationSchema = z.object({
     .string()
     .optional()
     .describe('The name of the RULE which this `codeSnippet` violates.'),
-  codeSnippet: z.string().describe(
-    // 'The offending code snippet which fails to conform to the given RULE. Prefer short code snippets and never include more than 10 lines of code.'
-    // 'The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should NEVER include more than 10 lines of code. You should truncate long code snippets with an ellipsis "..." if necessary.'
-    'The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should include an ellipsis "..." if they would be more than 10 lines of code.'
-  ),
+  codeSnippet: z
+    .string()
+    .describe(
+      'The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should include an ellipsis "..." if they would be more than 10 lines of code.'
+    ),
   codeSnippetSource: z
     .enum(['examples', 'source', 'unknown'])
     .optional()
@@ -88,7 +88,7 @@ export function parseRuleViolationsFromJSONModelResponse(
  * Will throw a `RetryableError` if the response is invalid with an error
  * message that the LLM can use to retry the request.
  */
-export function parseRuleViolationsFromModelResponse(
+export function parseRuleViolationsFromMarkdownModelResponse(
   response: string,
   {
     numExpectedMarkdownHeadings = 2

@@ -7,7 +7,7 @@ import { AbortError, RetryableError } from './errors.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
   parseRuleViolationsFromJSONModelResponse,
-  parseRuleViolationsFromModelResponse,
+  parseRuleViolationsFromMarkdownModelResponse,
   type RuleViolation,
   stringifyExampleRuleViolationsArrayOutputForModel,
   stringifyExampleRuleViolationsObjectOutputForModel,
@@ -15,6 +15,9 @@ import {
   stringifyRuleViolationSchemaForModel
 } from './rule-violations.js'
 import { createLintResult, pruneUndefined } from './utils.js'
+
+// TODO: Improve the duplication between `lintFile` and `validateRuleViolations`
+// for two-pass linting.
 
 /**
  * Core linting logic which takes in a single `rule` and a single `file` and
@@ -134,7 +137,9 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
         lintResult.numTotalTokens += res.usage.total_tokens
       }
 
-      const ruleViolations = parseRuleViolationsFromModelResponse(response)
+      const ruleViolations =
+        parseRuleViolationsFromMarkdownModelResponse(response)
+
       for (const ruleViolation of ruleViolations) {
         const {
           violation,
@@ -420,7 +425,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
 
       const ruleViolations = modelSupportsJsonResponseFormat
         ? parseRuleViolationsFromJSONModelResponse(response)
-        : parseRuleViolationsFromModelResponse(response, {
+        : parseRuleViolationsFromMarkdownModelResponse(response, {
             numExpectedMarkdownHeadings: 1
           })
 
