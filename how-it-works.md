@@ -3,8 +3,7 @@
 - [Overview](#overview)
 - [Single-Pass Linting](#single-pass-linting)
 - [Two-Pass Linting](#two-pass-linting)
-  - [Advantages of Two-Pass Linting](#advantages-of-two-pass-linting)
-  - [Disadvantages of Two-Pass Linting](#disadvantages-of-two-pass-linting)
+  - [Single-Pass vs Two-Pass Linting](#single-pass-vs-two-pass-linting)
 - [LLM Output Format](#llm-output-format)
   - [RuleViolation Schema](#ruleviolation-schema)
 - [Evals](#evals)
@@ -55,21 +54,17 @@ Everything starts off the same in two-pass linting as single-pass linting.
 
 We replace our single LLM with two models: a weaker, cheaper model (`weakModel` in the gptlint config) and a stronger, more expensive model (`model` in the gptlint config).
 
-In the first pass, the weak model is used to generate a set of potential `RuleViolation` candidates. In the second pass, we give these rule violation candidates to the stronger model which acts as a discriminator for filtering false positives from the candidates.
+In the first pass, the weak model is used to generate a set of potential `RuleViolation` candidates. In the second pass, we give these rule violation candidates to the stronger model which acts as a discriminator for filtering out false positives.
 
-This strategy is significantly **faster, cheaper, and more accurate** than single-pass linting, and is currently the default strategy used by GPTLint.
+### Single-Pass vs Two-Pass Linting
 
-### Advantages of Two-Pass Linting
+**Two-Pass linting is significantly faster, cheaper, and more accurate than single-pass linting**, and is currently the default strategy used by GPTLint.
 
-- **overall false positive rate is significantly smaller** ([example](https://github.com/transitive-bullshit/eslint-plus-plus/pull/4#issuecomment-2033395717))
-- since the faster, cheaper, weak model is used for 95% of the work, **the linter is roughly an order of magnitude faster and cheaper** ([example](https://github.com/transitive-bullshit/eslint-plus-plus/pull/4#issuecomment-2033395717))
+Here is a [side-by-side comparison](https://github.com/transitive-bullshit/eslint-plus-plus/pull/4#issuecomment-2033395717) of the two strategies using both OpenAI (`gpt-3.5-turbo` as the weak model and `gpt-4-turbo-preview` as the strong model) and Anthropic Claude (`haiku` as the weak model and `opus` as the strong model).
 
-### Disadvantages of Two-Pass Linting
+Note that one potential downside of two-pass linting is that it increases the chance for false negatives (cases where the linter should trigger an error but it doesn't). Currently, I'm a lot more worried about mitigating false positives because a noisy linter that you end up ignoring isn't useful to anybody, and I haven't seen too many false negatives in my testing.
 
-- increases the chance for false negatives
-  - currently, I'm a lot more worried about mitigating false positives because a noisy linter that you end up ignoring isn't useful to anybody, and I haven't seen too many false negatives with the current rule/file-based classifier approach
-  - if you're worried about false negatives, you can use two-pass linting with the same model for both `weakModel` and the strong `model`
-- makes the implementation slightly more complex
+If you're worried about false negatives, you can use always use two-pass linting with the same model for both `weakModel` and `model`.
 
 ## LLM Output Format
 
