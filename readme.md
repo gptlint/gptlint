@@ -270,7 +270,7 @@ You'll want to [disable the original rule](#how-can-i-disable-a-rule) and change
 
 If your change is generally applicable to other projects, consider opening a pull request to GPTLint.
 
-For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](gptlint@teamduality.dev).
+For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](mailto:gptlint@teamduality.dev).
 
 ### Why aren't you using fine-tuning?
 
@@ -280,7 +280,7 @@ See our notes on [fine-tuning in how it works](./how-it-works.md#fine-tuning).
 
 For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, feel free to [open a discussion](https://github.com/transitive-bullshit/eslint-plus-plus/discussions) on this repo if you're looking for help.
 
-For commercial projects, we've partnered with [Duality](https://teamduality.dev/) to offer AI consulting services and expertise related to GPTLint. Reach out to our team [here](gptlint@teamduality.dev), and be sure to include some info on your project and what you're looking for.
+For commercial projects, we've partnered with [Duality](https://teamduality.dev/) to offer AI consulting services and expertise related to GPTLint. Reach out to our team [here](mailto:gptlint@teamduality.dev), and be sure to include some info on your project and what you're looking for.
 
 ## Roadmap
 

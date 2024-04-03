@@ -151,7 +151,7 @@ We've made the explicit decision not to do this for a few main reasons:
 
 ## More Info
 
-For more info on how to get the most out of GPTLint, including expertise creating custom rules or fine-tunes that will work well with your codebase, feel free to [reach out to our consulting partners](gptlint@teamduality.dev).
+For more info on how to get the most out of GPTLint, including expertise creating custom rules or fine-tunes that will work well with your codebase, feel free to [reach out to our consulting partners](mailto:gptlint@teamduality.dev).
 
 ## License
 
