@@ -42,6 +42,13 @@ export const LLMOptionsSchema = z.object({
     .optional()
     .describe('LLM temperature parameter.'),
 
+  modelSupportsJsonResponseFormat: z
+    .boolean()
+    .optional()
+    .describe(
+      "A Boolean value indicating whether or not `model` supports OpenAI's JSON output mode."
+    ),
+
   apiKey: z
     .string()
     .optional()

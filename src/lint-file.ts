@@ -2,17 +2,19 @@ import { type ChatModel, Msg, type Prompt } from '@dexaai/dexter'
 import plur from 'plur'
 
 import type * as types from './types.js'
+import { defaultLinterConfig } from './config.js'
 import { AbortError, RetryableError } from './errors.js'
-import { safeParseStructuredOutput } from './parse-structured-output.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
+  parseRuleViolationsFromJSONModelResponse,
   parseRuleViolationsFromModelResponse,
   type RuleViolation,
-  ruleViolationsValidatedOutputSchema,
+  stringifyExampleRuleViolationsArrayOutputForModel,
+  stringifyExampleRuleViolationsObjectOutputForModel,
   stringifyRuleViolationForModel,
   stringifyRuleViolationSchemaForModel
 } from './rule-violations.js'
-import { createLintResult } from './utils.js'
+import { createLintResult, pruneUndefined } from './utils.js'
 
 /**
  * Core linting logic which takes in a single `rule` and a single `file` and
@@ -35,11 +37,12 @@ export async function lintFile({
     retries: number
   }
 }): Promise<types.LintResult> {
+  const model = config.llmOptions.weakModel ?? config.llmOptions.model
   let lintResult = createLintResult()
 
   if (config.linterOptions.debug) {
     console.log(
-      `>>> Linting Rule "${rule.name}" file "${file.fileRelativePath}"`
+      `>>> Linting rule "${rule.name}" file "${file.fileRelativePath}" with model "${model}"`
     )
   }
 
@@ -83,34 +86,20 @@ Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
 
 # VIOLATIONS
 
-\`\`\`json
-[
-  {
-    "ruleName": "${rule.name}",
-    "codeSnippet": "...",
-    "codeSnippetSource": "source",
-    "reasoning": "..."
-    "violation": true,
-    "confidence": "high",
-  }
-]
-\`\`\`
+${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
 `)
   ]
 
   let retries = retryOptions.retries
 
   do {
-    let response: string
-
     try {
-      const model = config.llmOptions.weakModel ?? config.llmOptions.model
       const res = await chatModel.run({
         model,
         messages
       })
 
-      response = res.message.content!
+      const response = res.message.content!
       lintResult.message = response
 
       if (config.linterOptions.debug) {
@@ -291,6 +280,22 @@ export async function validateRuleViolations({
     retries: number
   }
 }): Promise<types.LintResult> {
+  const model = config.llmOptions.model
+
+  // Determine if the model supports JSON response format, which is preferred,
+  // or fallback to the default behavior of parsing JSON in a markdown code block
+  // from the model's text response.
+  // TODO: supporting both JSON output and markdown output here isn't ideal, but
+  // for OpenAI models, the JSON output is much more reliable so we'd like to
+  // take advantage of that if possible. For compatibility with other LLMs,
+  // however, we need to support the non-JSON-mode output as well which makes
+  // the implementation harder to debug, evaluate, and maintain.
+  const modelSupportsJsonResponseFormat =
+    config.llmOptions.modelSupportsJsonResponseFormat ??
+    (config.llmOptions.apiBaseUrl === defaultLinterConfig.llmOptions.apiBaseUrl!
+      ? true
+      : false)
+
   const potentialRuleViolations: Partial<RuleViolation>[] =
     lintResult.lintErrors.map((error) => ({
       ruleName: rule.name,
@@ -335,37 +340,31 @@ ${stringifyRuleViolationForModel(potentialRuleViolations)}
 
 Example output format:
 
-\`\`\`json
-{
-  ruleViolations: [
-    {
-      "ruleName": "${rule.name}",
-      "codeSnippet": "...",
-      "codeSnippetSource": "source",
-      "reasoning": "..."
-      "violation": true,
-      "confidence": "high",
-    }
-  ]
+${
+  modelSupportsJsonResponseFormat
+    ? stringifyExampleRuleViolationsObjectOutputForModel(rule)
+    : `# VIOLATIONS
+
+${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
 }
-\`\`\`
 `)
   ]
 
   let retries = retryOptions.retries
 
   do {
-    let response: string
-
     try {
-      const model = config.llmOptions.model
-      const res = await chatModel.run({
-        model,
-        messages,
-        response_format: { type: 'json_object' }
-      })
+      const res = await chatModel.run(
+        pruneUndefined({
+          model,
+          messages,
+          response_format: modelSupportsJsonResponseFormat
+            ? { type: 'json_object' }
+            : undefined
+        })
+      )
 
-      response = res.message.content!
+      const response = res.message.content!
       lintResult.message = response
 
       if (config.linterOptions.debug) {
@@ -394,20 +393,15 @@ Example output format:
         lintResult.numTotalTokens += res.usage.total_tokens
       }
 
-      const ruleViolationsParseResult = safeParseStructuredOutput(
-        response,
-        ruleViolationsValidatedOutputSchema
-      )
-      if (!ruleViolationsParseResult.success) {
-        throw new RetryableError(
-          `Invalid output: the JSON output failed to parse according to the given RULE_VIOLATION schema. Parser error: ${ruleViolationsParseResult.error}`
-        )
-      }
+      const ruleViolations = modelSupportsJsonResponseFormat
+        ? parseRuleViolationsFromJSONModelResponse(response)
+        : parseRuleViolationsFromModelResponse(response, {
+            numExpectedMarkdownHeadings: 1
+          })
 
-      const { ruleViolations } = ruleViolationsParseResult.data
-
-      // Overwrite the lint errors from the first-pass with the validated rule
-      // violations
+      // Overwrite lint errors from the first-pass with the validated violations
+      // NOTE: This should appear after we've successfully validated the model's
+      // response, so we don't prematurely overwrite the original lint errors.
       lintResult.lintErrors = []
 
       for (const ruleViolation of ruleViolations) {

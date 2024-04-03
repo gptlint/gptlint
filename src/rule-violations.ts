@@ -65,6 +65,22 @@ export type RuleViolationsValidatedOutput = z.infer<
   typeof ruleViolationsValidatedOutputSchema
 >
 
+export function parseRuleViolationsFromJSONModelResponse(
+  response: string
+): RuleViolation[] {
+  const ruleViolationsParseResult = safeParseStructuredOutput(
+    response,
+    ruleViolationsValidatedOutputSchema
+  )
+  if (!ruleViolationsParseResult.success) {
+    throw new RetryableError(
+      `Invalid output: the JSON output failed to parse according to the given RULE_VIOLATION schema. Parser error: ${ruleViolationsParseResult.error}`
+    )
+  }
+
+  return ruleViolationsParseResult.data.ruleViolations
+}
+
 /**
  * Attempts to parse an array of `RuleViolation` objects from a JSON code block
  * in the given markdown response.
@@ -73,7 +89,12 @@ export type RuleViolationsValidatedOutput = z.infer<
  * message that the LLM can use to retry the request.
  */
 export function parseRuleViolationsFromModelResponse(
-  response: string
+  response: string,
+  {
+    numExpectedMarkdownHeadings = 2
+  }: {
+    numExpectedMarkdownHeadings?: number
+  } = {}
 ): RuleViolation[] {
   const ast = parseMarkdownAST(response)
   const codeBlocksNodes = findAllCodeBlockNodes(ast)
@@ -82,7 +103,7 @@ export function parseRuleViolationsFromModelResponse(
   if (codeBlocksNodes.length === 0) {
     const h1Nodes = findAllHeadingNodes(ast, { depth: 1 })
 
-    if (h1Nodes.length === 2) {
+    if (h1Nodes.length >= numExpectedMarkdownHeadings) {
       // The output is formatted properly, but there are no rule violations.
       return []
     }
@@ -94,9 +115,7 @@ export function parseRuleViolationsFromModelResponse(
     const h1Nodes = findAllHeadingNodes(ast, { depth: 1 })
 
     if (h1Nodes.length === 0) {
-      throw new RetryableError(
-        'Invalid output: missing EXPLANATION and VIOLATIONS header sections.'
-      )
+      throw new RetryableError('Invalid output: missing VIOLATIONS header.')
     } else {
       const headers = h1Nodes.map((node) => toString(node).toLowerCase().trim())
       const violationsHeaderIndex = headers.findLastIndex((header) =>
@@ -199,8 +218,43 @@ interface RULE_VIOLATION {
   // Your confidence that the \`codeSnippet\` VIOLATES the RULE.
   confidence: 'low' | 'medium' | 'high'
 }
-\`\`\`
-`
+\`\`\``
+}
+
+export function stringifyExampleRuleViolationsObjectOutputForModel(
+  rule: types.Rule
+): string {
+  return `\`\`\`json
+{
+  "ruleViolations": [
+    {
+      "ruleName": "${rule.name}",
+      "codeSnippet": "...",
+      "codeSnippetSource": "source",
+      "reasoning": "..."
+      "violation": true,
+      "confidence": "high"
+    }
+  ]
+}
+\`\`\``
+}
+
+export function stringifyExampleRuleViolationsArrayOutputForModel(
+  rule: types.Rule
+): string {
+  return `\`\`\`json
+[
+  {
+    "ruleName": "${rule.name}",
+    "codeSnippet": "...",
+    "codeSnippetSource": "source",
+    "reasoning": "..."
+    "violation": true,
+    "confidence": "high"
+  }
+]
+\`\`\``
 }
 
 export function stringifyRuleViolationForModel(
@@ -209,6 +263,5 @@ export function stringifyRuleViolationForModel(
   return `\`\`\`json
 {
   ruleViolations: ${JSON.stringify(ruleViolations, null, 2)}
-}
-`
+}`
 }
