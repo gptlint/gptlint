@@ -79,7 +79,8 @@ RULE_VIOLATION schema:
 
 ${stringifyRuleViolationSchemaForModel(rule)}
 
-DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than a few lines of code.
+DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than 10 lines of code.
+MAKE SURE YOU TRUNCATE LONG CODE SNIPPETS using an ellipsis "..." so they are no longer than 10 lines of code.
 
 ---
 
@@ -344,7 +345,8 @@ RULE_VIOLATION schema:
 
 ${stringifyRuleViolationSchemaForModel(rule)}
 
-DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than a few lines of code.
+DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than 10 lines of code.
+MAKE SURE YOU TRUNCATE LONG CODE SNIPPETS using an ellipsis "..." so they are no longer than 10 lines of code.
 
 ---
 
