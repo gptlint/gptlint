@@ -28,7 +28,7 @@
   - [Anthropic](#anthropic)
   - [OSS Models](#oss-models)
   - [Local Models](#local-models)
-  - [Caveats](#caveats)
+- [Caveats](#caveats)
 - [FAQ](#faq)
   - [How can I disable a rule?](#how-can-i-disable-a-rule)
   - [How can I disable a rule for a specific file?](#how-can-i-disable-a-rule-for-a-specific-file)
@@ -199,7 +199,7 @@ The best way to use GPTLint with OSS models is to either [host them locally](#lo
 
 Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your local model server.
 
-### Caveats
+## Caveats
 
 - this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed)
   - **all built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default
@@ -278,7 +278,7 @@ See our notes on [fine-tuning in how it works](./how-it-works.md#fine-tuning).
 
 ### Where can I get help integrating GPTLint into my codebase?
 
-For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, feel free to [open a discussion](https://github.com/transitive-bullshit/eslint-plus-plus/discussions) on this repo if you're looking for help.
+For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, [open a discussion](https://github.com/transitive-bullshit/eslint-plus-plus/discussions) on this repo if you're looking for help.
 
 For commercial projects, we've partnered with [Duality](https://teamduality.dev/) to offer AI consulting services and expertise related to GPTLint. Reach out to our team [here](mailto:gptlint@teamduality.dev), and be sure to include some info on your project and what you're looking for.
 
@@ -298,8 +298,9 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
   - support additional h2s (ex for caveats / exceptions / usage examples)
 - config
-  - add ability to extend other configs
-  - add built-in configs
+  - **add ability to extend other configs**
+  - **add built-in configs**
+    - need better rules
     - convert this repo to a monorepo?
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
