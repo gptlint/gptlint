@@ -29,12 +29,17 @@
   - [OSS Models](#oss-models)
   - [Local Models](#local-models)
 - [Caveats](#caveats)
+  - [Accuracy](#accuracy)
+  - [Cost](#cost)
+  - [Rules in the MVP are single-file only](#rules-in-the-mvp-are-single-file-only)
+  - [Rules in the MVP are JS/TS only](#rules-in-the-mvp-are-jsts-only)
+  - [The MVP does not support autofixing lint errors](#the-mvp-does-not-support-autofixing-lint-errors)
 - [FAQ](#faq)
   - [How can I disable a rule?](#how-can-i-disable-a-rule)
   - [How can I disable a rule for a specific file?](#how-can-i-disable-a-rule-for-a-specific-file)
   - [How can I disable linting for a specific file?](#how-can-i-disable-linting-for-a-specific-file)
   - [How can I customize a built-in rule?](#how-can-i-customize-a-built-in-rule)
-  - [Why aren't you using fine-tuning?](#why-arent-you-using-fine-tuning)
+  - [What about fine-tuning?](#what-about-fine-tuning)
   - [Where can I get help integrating GPTLint into my codebase?](#where-can-i-get-help-integrating-gptlint-into-my-codebase)
 - [Roadmap](#roadmap)
   - [MVP Public Release](#mvp-public-release)
@@ -57,8 +62,9 @@
 - ✅️ supports all major [local LLMs](#local-models)
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
 - ✅️ includes [guidelines](./docs/rule-guidelines.md) for creating your own rules
-- ❌ MVP rules are [JS/TS only](#caveats) _for now_
-- ❌ MVP rules are [single-file context only](#caveats) _for now_
+- ❌ MVP rules are [JS/TS only](#rules-in-the-mvp-are-jsts-only) _for now_
+- ❌ MVP rules are [single-file context only](#rules-in-the-mvp-are-single-file-only) _for now_
+- ❌ MVP does not support [autofixing](#the-mvp-does-not-support-autofixing-lint-errors) _for now_
 
 ## How it works
 
@@ -162,6 +168,7 @@ Export your OpenRouter API key as an `OPENAI_API_KEY` environment variable eithe
 
 ```js
 // gptlint.config.js
+
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
   {
@@ -200,20 +207,43 @@ Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your l
 
 ## Caveats
 
-- this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed)
-  - **all built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default
-  - keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**
-- **LLM costs can add up quickly**
-  - [two-pass linting](./docs/how-it-works.md#two-pass-linting) helps significantly with costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly
-  - NOTE: this variable cost goes away when using a local LLM, where you're paying directly for GPU compute instead of paying per token
-  - NOTE: for many projects, this will still be _orders of magnitude cheaper_ than hiring a senior engineer to track and fix technical debt
-- **rules in the MVP are single-file only**
-  - many architectural rules span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
-  - this restriction will likely be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting to optimize rules which explicitly don't need multi-file context
-  - if you'd like to use a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new)
-- **rules in the MVP focus on JS/TS only**
-  - this project is inherently language-agnostic, but to keep the MVP scoped, I wanted to focus on the languages & ecosystem that I'm most familiar with
-  - we're hoping that rules for other programming languages will trickle in with help from the community over time
+### Accuracy
+
+This tool passes an LLM portions of your code and the rule definitions alongside few-shot examples ([how it works](./docs/how-it-works.md)), so depending on the LLM's settings and the quality of the rules you're using, it's possible for the tool to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed).
+
+**All built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default.
+
+The main thing to keep in mind about accuracy is that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**.
+
+### Cost
+
+**LLM costs can add up quickly**.
+
+[Two-pass linting](./docs/how-it-works.md#two-pass-linting) helps to significantly reduce costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly.
+
+Every time you run `gptlint`, it will log the total cost of all LLM calls for that run (if you're using a supported provider).
+
+Note that **the variable cost goes away when using a local LLM**, where you're paying directly for GPU compute instead of paying per token
+
+For most projects, this cost will still be _orders of magnitude cheaper_ than relying on a senior engineer to track and fix technical debt.
+
+### Rules in the MVP are single-file only
+
+Many higher-level best practices inherently span multiple files of context, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_.
+
+This restriction will be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting in the future to optimize rules which explicitly don't need multi-file context.
+
+If you'd like to add a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new).
+
+### Rules in the MVP are JS/TS only
+
+This project is inherently language-agnostic, but to keep the MVP scoped, I wanted to focus on the languages & ecosystem that I'm most familiar with.
+
+Post-MVP, we're hoping that rules for other programming languages and [project-specific rule configs](./docs/rule-guidelines.md#project-specific-rules) will trickle in with help from the community over time.
+
+### The MVP does not support autofixing lint errors
+
+This is a feature we have planned in the near future once we'e validated that we have the right core rule abstraction.
 
 ## FAQ
 
@@ -234,7 +264,7 @@ export default [
 
 ### How can I disable a rule for a specific file?
 
-Rules can be configured at the file-level using inline rule config comments:
+Rules can be configured at the file-level using inline comments:
 
 ```ts
 /* gptlint semantic-variable-names: off */
@@ -255,7 +285,7 @@ Or use multiple inline rule config comments:
 
 ### How can I disable linting for a specific file?
 
-Linting can be disabled at the file-level using an inline config comment:
+Linting can be disabled at the file-level using an inline comment:
 
 ```ts
 /* gptlint-disable */
@@ -271,7 +301,7 @@ If your change is generally applicable to other projects, consider opening a pul
 
 For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](mailto:gptlint@teamduality.dev).
 
-### Why aren't you using fine-tuning?
+### What about fine-tuning?
 
 See our notes on [fine-tuning in how it works](./docs/how-it-works.md#fine-tuning).
 
@@ -309,6 +339,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - update project name in multiple places once we decide on a name
   - decide on an OSS license
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
+  - add docs on config settings and how config resolution works
   - basic eval graphs and blog post
   - publish to NPM
   - public launch! 🚀
