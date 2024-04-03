@@ -91,15 +91,15 @@ Here is an example metadata table.
 
 #### Prechecks
 
-The `Prechecks` metadata field is strictly an optimization in order to quickly skip rules that depend on specific regular expressions appearing in a file in order to run the full LLM-based linter on them. If `Prechecks` are defined, then files whose contents fail to pass any of the `Prechecks` regular expressions will be skipped. See [prefer-fetch-over-axios.md](./rules/prefer-fetch-over-axios.md) for an example of `Prechecks` in action.
+The `Prechecks` metadata field is strictly an optimization in order to quickly skip rules that depend on specific regular expressions appearing in a file in order to run the full LLM-based linter on them. If `Prechecks` are defined, then files whose contents fail to pass any of the `Prechecks` regular expressions will be skipped. See [prefer-fetch-over-axios.md](/rules/prefer-fetch-over-axios.md) for an example of `Prechecks` in action.
 
 In the future, we may support more "escape hatches" to enable rule authors more programmatic control over whether or not a file should be linted and/or customizing the linting results themselves.
 
 ## Example Rules
 
-See [rules/](./rules) for examples of valid rules.
+See [rules/](/rules) for examples of valid rules.
 
-Parsing-wise, [fixtures/rules/](./fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules/](./fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
+Parsing-wise, [fixtures/rules/](/fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules/](/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
 
 # License
 

@@ -27,7 +27,7 @@ To lint a codebase, GPTLint takes the following steps:
 
 All of the magic happens in step 5, and GPTLint supports two approaches for this core linting logic: [single-pass linting](#single-pass-linting) and [two-pass linting](#two-pass-linting), both of which have their own pros & cons.
 
-The core linting logic lives in [src/lint-file.ts](./src/lint-file.ts).
+The core linting logic lives in [src/lint-file.ts](/src/lint-file.ts).
 
 ## Single-Pass Linting
 
@@ -72,7 +72,7 @@ In both approaches, the first LLM pass outputs a markdown file with two sections
 
 The `EXPLANATION` section is important to give the LLM [time to think](https://twitter.com/karpathy/status/1708142056735228229). A previous version without this section produced false positives much more frequently.
 
-The `VIOLATIONS` section contains the actual structured JSON output of [RuleViolation](./src/rule-violations.ts) objects.
+The `VIOLATIONS` section contains the actual structured JSON output of [RuleViolation](/src/rule-violations.ts) objects.
 
 <details>
 <summary>
@@ -124,14 +124,14 @@ interface RuleViolation {
 }
 ```
 
-This [`RuleViolation` schema](./src/rule-violations.ts) has gone through many iterations, and it's worth taking a look at the descriptions of each field that are passed to the model as context.
+This [`RuleViolation` schema](/src/rule-violations.ts) has gone through many iterations, and it's worth taking a look at the descriptions of each field that are passed to the model as context.
 
 In particular, `codeSnippetSource`, `reasoning`, `violation`, and `confidence` were all added empirically to increase the LLM's accuracy and to mitigate common issues. Even with these fields, false positives are still possible, but forcing the model to fill out these additional fields has proven very effective at increasing the linter's accuracy.
 
 ## Evals
 
-- [`bin/generate-evals.ts`](./bin/generate-evals.ts) is used to generate N synthetic positive and negative example code snippets for each rule under [`fixtures/evals`](./fixtures/evals)
-- [`bin/run-evals.ts`](./bin/run-evals.ts) is used to evaluate rules for false negatives / false positives across their generated test fixtures
+- [`bin/generate-evals.ts`](/bin/generate-evals.ts) is used to generate N synthetic positive and negative example code snippets for each rule under [`fixtures/evals`](/fixtures/evals)
+- [`bin/run-evals.ts`](/bin/run-evals.ts) is used to evaluate rules for false negatives / false positives across their generated test fixtures
 
 You can think of these evals as integration tests for ensuring that the entire linting pipeline works as intended for all of the built-in rules.
 
