@@ -27,11 +27,10 @@ export const ruleViolationSchema = z.object({
     .string()
     .optional()
     .describe('The name of the RULE which this `codeSnippet` violates.'),
-  codeSnippet: z
-    .string()
-    .describe(
-      'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE and should at most a few lines of code.'
-    ),
+  codeSnippet: z.string().describe(
+    // 'The offending code snippet which fails to conform to the given RULE. Prefer short code snippets and never include more than a few lines of code.'
+    'The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should never include more than a few lines of code.'
+  ),
   codeSnippetSource: z
     .enum(['examples', 'source', 'unknown'])
     .optional()
@@ -203,7 +202,7 @@ interface RULE_VIOLATION {
   // The name of the RULE which this \`codeSnippet\` violates.
   ruleName: string
 
-  // The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE and should at most a few lines of code.
+  // The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should never include more than a few lines of code.
   codeSnippet: string
 
   // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".

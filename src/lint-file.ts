@@ -79,6 +79,8 @@ RULE_VIOLATION schema:
 
 ${stringifyRuleViolationSchemaForModel(rule)}
 
+DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than a few lines of code.
+
 ---
 
 Example output format:
@@ -341,6 +343,10 @@ For any potential RULE_VIOLATION objects which VIOLATE the RULE, include them in
 RULE_VIOLATION schema:
 
 ${stringifyRuleViolationSchemaForModel(rule)}
+
+DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than a few lines of code.
+
+---
 
 POTENTIAL RULE_VIOLATION objects to check:
 
