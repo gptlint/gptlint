@@ -1,4 +1,3 @@
-import type { ChatModel } from '@dexaai/dexter'
 import pMap from 'p-map'
 
 import type * as types from './types.js'
@@ -17,13 +16,11 @@ import { createCacheKey, createLintResult } from './utils.js'
 export async function preLintFile({
   file,
   rule,
-  chatModel,
   cache,
   config
 }: {
   file: types.InputFile
   rule: types.Rule
-  chatModel: ChatModel
   cache: LinterCache
   config: types.ResolvedLinterConfig
 }): Promise<types.PreLintResult> {
@@ -33,7 +30,7 @@ export async function preLintFile({
     file,
     rule,
     config,
-    cacheKey: createCacheKey({ file, rule, chatModel })
+    cacheKey: createCacheKey({ file, rule, config })
   }
 
   if (!file.content.trim()) {

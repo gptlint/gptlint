@@ -28,16 +28,17 @@
   - [Anthropic](#anthropic)
   - [OSS Models](#oss-models)
   - [Local Models](#local-models)
-- [How it works in-depth](#how-it-works-in-depth)
-  - [Implementation Notes](#implementation-notes)
-  - [Evals](#evals)
   - [Caveats](#caveats)
 - [FAQ](#faq)
   - [How can I disable a rule?](#how-can-i-disable-a-rule)
   - [How can I disable a rule for a specific file?](#how-can-i-disable-a-rule-for-a-specific-file)
   - [How can I disable linting for a specific file?](#how-can-i-disable-linting-for-a-specific-file)
-  - [How can I customize a rule?](#how-can-i-customize-a-rule)
-- [TODO](#todo)
+  - [How can I customize a built-in rule?](#how-can-i-customize-a-built-in-rule)
+  - [Why aren't you using fine-tuning?](#why-arent-you-using-fine-tuning)
+  - [Where can I get help integrating GPTLint into my codebase?](#where-can-i-get-help-integrating-gptlint-into-my-codebase)
+- [Roadmap](#roadmap)
+  - [MVP Public Release](#mvp-public-release)
+  - [Post-MVP Roadmap](#post-mvp-roadmap)
 - [Citations](#citations)
 - [License](#license)
 
@@ -65,7 +66,7 @@
   <img alt="How it works" src="/media/how-gptlint-works.png">
 </p>
 
-See [How it works in-depth](#how-it-works-in-depth) for more detail.
+See our [docs on how it works](./how-it-works.md) for more details.
 
 ## Install
 
@@ -198,86 +199,14 @@ The best way to use GPTLint with OSS models is to either [host them locally](#lo
 
 Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your local model server.
 
-## How it works in-depth
-
-<p align="center">
-  <img alt="How it works" src="/media/how-gptlint-works.png">
-</p>
-
-To lint a codebase, GPTLint takes the following steps:
-
-1. Resolves a set of markdown rule definitions along with optional few-shot examples for each rule (defaults to `rules/**/*.md`)
-2. Resolves a set of input source files to lint (defaults to `**/*.{js,ts,jsx,tsx,cjs,mjs}`)
-3. For each `[rule, file]` pair, creates a linter task
-4. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file
-5. For each non-cached linter task, runs it through an LLM classifier with the goal of identifying rule violations
-6. Parses the LLM's markdown output for a JSON code block containing an array of `RuleViolation` objects
-7. Retries step #5 if the LLM output fails to validate
-8. Otherwise, adds any `RuleViolation` objects to the output
-
-The core linting logic lives in [src/lint-file.ts](./src/lint-file.ts).
-
-<details>
-<summary>
-Example LLM markdown output:
-</summary>
-
-```md
-# EXPLANATION
-
-The source code provided is a TypeScript file that includes variable names, function names, and type imports. According to the "consistent-identifier-casing" rule, variable names should use camelCase, global const variable names should use camelCase, PascalCase, or CONSTANT_CASE, type names should use PascalCase, class names should use PascalCase, and function names should use camelCase.
-
-Upon reviewing the source code, the following observations were made:
-
-1. Variable names such as `ast`, `h1RuleNodes`, `headingRuleNode`, `bodyRuleNodes`, and `rule` are all in camelCase, which conforms to the rule.
-2. Function names like `parseRuleFile`, `findAllBetween`, `findAllHeadingNodes`, `parseMarkdownAST`, and `parseRuleNode` are in camelCase, which also conforms to the rule.
-3. The type import `import type * as types from './types.js'` uses PascalCase for the type alias `types`, which is acceptable since it's an import statement and the rule primarily focuses on the casing of identifiers rather than import aliases.
-4. The variable `example_rule_failure` uses snake_case, which violates the rule for consistent identifier casing for variable names.
-
-Based on these observations, the only violation found in the source code is the use of snake_case in the variable name `example_rule_failure`.
-
-# VIOLATIONS
-
-\`\`\`json
-[
-{
-"ruleName": "consistent-identifier-casing",
-"codeSnippet": "let example_rule_failure",
-"codeSnippetSource": "source",
-"reasoning": "The variable name 'example_rule_failure' uses snake_case, which violates the rule that variable names should use camelCase.",
-"violation": true,
-"confidence": "high"
-}
-]
-\`\`\`
-```
-
-</details>
-
-### Implementation Notes
-
-- the current version restricts rules to a single file of context. this is to simplify the MVP and will likely change in the future
-- the LLM classifier outputs a markdown file with two sections, `EXPLANATION` and `VIOLATIONS`
-  - the `EXPLANATION` section is important to give the LLM [time to think](https://twitter.com/karpathy/status/1708142056735228229) (a previous version without this section produced false positives a lot more frequently)
-  - the `VIOLATIONS` section contains the actual structured JSON output of [RuleViolation](./src/rule-violations.ts) objects
-    - `codeSnippetSource`, `reasoning`, `violation`, and `confidence` were all added empirically to increase the LLM's accuracy and to mitigate common forms of false positives
-    - these false positives will sometimes still appear when using less capable models, but these additional fields still help in filtering many of them
-
-### Evals
-
-- [`bin/generate-evals.ts`](./bin/generate-evals.ts) is used to generate N synthetic positive and negative example code snippets for each rule under [`fixtures/evals`](./fixtures/evals)
-- [`bin/run-evals.ts`](./bin/run-evals.ts) is used to evaluate rules for false negatives / false positives across their generated test fixtures
-
 ### Caveats
 
 - this tool passes an LLM portions of your code and the rule definitions alongside few-shot examples, so depending on the LLM's settings and the quality of your rules, it's possible for the tool to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed)
   - **all built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default
   - keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**
 - **LLM costs can add up quickly**
-  - for a codebase with `N` files and `M` rules, each run of this tool makes `NxM` LLM calls (except for any cached calls when files and rules haven't changed between runs)
-  - for instance, using `gpt-3.5-turbo` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~70s and costs ~$0.31 cents USD
-  - for instance, using `gpt-4-turbo-preview` running `gptlint` on this repo with caching disabled (22 files and 8 rules) takes ~64s and costs ~$2.38 USD
-  - NOTE: this variable cost goes away when using a local LLM, where you're instead paying directly for GPU compute instead of paying per token
+  - [two-pass linting](./how-it-works.md#two-pass-linting) helps significantly with costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly
+  - NOTE: this variable cost goes away when using a local LLM, where you're paying directly for GPU compute instead of paying per token
   - NOTE: for many projects, this will still be _orders of magnitude cheaper_ than hiring a senior engineer to track and fix technical debt
 - **rules in the MVP are single-file only**
   - many architectural rules span multiple files, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_
@@ -285,7 +214,7 @@ Based on these observations, the only violation found in the source code is the 
   - if you'd like to use a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new)
 - **rules in the MVP focus on JS/TS only**
   - this project is inherently language-agnostic, but to keep the MVP scoped, I wanted to focus on the languages & ecosystem that I'm most familiar with
-  - we're hoping that rules for other programming languages will trickle in from the community
+  - we're hoping that rules for other programming languages will trickle in with help from the community over time
 
 ## FAQ
 
@@ -333,17 +262,29 @@ Linting can be disabled at the file-level using an inline config comment:
 /* gptlint-disable */
 ```
 
-### How can I customize a rule?
+### How can I customize a built-in rule?
 
-Since rules are just markdown files, copy the rule's markdown into your project and customize it to suit your project's needs.
+Since rules are just markdown files, copy the rule's markdown file from [rules/](./rules) into your project and customize it to suit your project's needs.
 
 You'll want to [disable the original rule](#how-can-i-disable-a-rule) and change your custom rule's name to a project-specific name. Make sure your local config includes your custom rule's markdown file in its `ruleFiles` field.
 
 If your change is generally applicable to other projects, consider opening a pull request to GPTLint.
 
-For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](gptlint@teamduality.dev).
+For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](mailto:gptlint@teamduality.dev).
 
-## TODO
+### Why aren't you using fine-tuning?
+
+See our notes on [fine-tuning in how it works](./how-it-works.md#fine-tuning).
+
+### Where can I get help integrating GPTLint into my codebase?
+
+For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, feel free to [open a discussion](https://github.com/transitive-bullshit/eslint-plus-plus/discussions) on this repo if you're looking for help.
+
+For commercial projects, we've partnered with [Duality](https://teamduality.dev/) to offer AI consulting services and expertise related to GPTLint. Reach out to our team [here](mailto:gptlint@teamduality.dev), and be sure to include some info on your project and what you're looking for.
+
+## Roadmap
+
+### MVP Public Release
 
 - linter engine
   - **improve evals**
@@ -352,14 +293,6 @@ For more guidance around creating and evaluating custom rules that will work wel
   - handle context overflow properly depending on selected model
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
-    - possibly via optional regex patterns to enable / disable rules for files
-  - experiment with smart model and cheap model; cheap model computes potential rule violations and smart model verifies them, reducing the potential for false positives and significantly reducing the overall cost
-  - track the positive instances where we see rule conformance as well?
-    - could help us output a better picture of overall code health
-- rules
-  - add a rule which captures naming w/ types and consistency
-  - if you refer to something as numIterations in one place, refer to it consistently
-  - react unnecessary effects for https://react.dev/learn/you-might-not-need-an-effect
 - rule file format
   - support both positive and negative examples in the same code block
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
@@ -370,28 +303,36 @@ For more guidance around creating and evaluating custom rules that will work wel
     - convert this repo to a monorepo?
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
+  - output how long linting took in stats
+  - cache precheck tasks
 - project
   - update project name in multiple places once we decide on a name
   - decide on an OSS license
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - basic eval graphs and blog post
-  - rubric for what makes a good rule
   - publish to NPM
-- post-mvp
-  - cross-file linting (the MVP focuses on single-file linting)
-  - add support for different programming languages (the MVP focuses on JS/TS)
-  - add support for applying fixes to linter errors (the MVP is readonly)
+  - launch! 🚀
+
+### Post-MVP Roadmap
+
+- cross-file linting
+- add support for different programming languages
+- add support for applying fixes to linter errors
+- track the positive instances where we see rule conformance as well?
+  - could help us output a better picture of overall code health
+- fine-tuning pipeline both for base linting task
+- fine-tuning pipeline both for individual rules
+- explore reinforcement learning with continuous fine-tuning so rule accuracy improves over time
 
 ## Citations
 
 ```bibtex
 @software{agentic2024gptlint,
-  title        = {GPTLint},
-  author       = {Travis Fischer, Scott Silvi},
-  year         = {2024},
-  month        = {4},
-  howpublished = {GitHub},
-  url          = {https://github.com/GPTLint/GPTLint}
+  title  = {GPTLint},
+  author = {Travis Fischer, Scott Silvi},
+  year   = {2024},
+  month  = {4},
+  url    = {https://github.com/GPTLint/GPTLint}
 }
 ```
 

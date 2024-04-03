@@ -125,8 +125,9 @@ export async function resolveLinterCLIConfig(
         weakModel: {
           type: String,
           description:
-            'Which weak LLM to use for assessing rule conformance (optioanl)',
-          alias: 'M'
+            'Which weak LLM to use for assessing rule conformance (optional; used for multi-pass linting; set to "none" to disable two-pass linting)',
+          alias: 'M',
+          default: defaultLinterConfig.llmOptions.weakModel
         },
         temperature: {
           type: Number,
@@ -186,11 +187,14 @@ export async function resolveLinterCLIConfig(
           : args.flags.cacheDir
     },
     llmOptions: {
-      weakModel: args.flags.weakModel,
       model:
         args.flags.model === defaultLinterConfig.llmOptions.model
           ? undefined
           : args.flags.model,
+      weakModel:
+        args.flags.weakModel === defaultLinterConfig.llmOptions.weakModel
+          ? undefined
+          : args.flags.weakModel,
       temperature:
         args.flags.temperature === defaultLinterConfig.llmOptions.temperature
           ? undefined

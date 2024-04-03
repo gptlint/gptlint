@@ -1,5 +1,3 @@
-import type { ChatModel } from '@dexaai/dexter'
-
 import type * as types from './types.js'
 
 export { default as slugify } from '@sindresorhus/slugify'
@@ -252,7 +250,10 @@ export function logDebugConfig({
   console.log(
     '\nlogging resolved config and then exiting because `debugConfig` is enabled'
   )
+
   console.log('\nconfig', JSON.stringify(config, undefined, 2))
+  console.log('\nrules', JSON.stringify(rules, undefined, 2))
+
   if (files) {
     console.log(
       '\ninput files',
@@ -263,7 +264,6 @@ export function logDebugConfig({
       )
     )
   }
-  console.log('\nrules', JSON.stringify(rules, undefined, 2))
 }
 
 export function logDebugStats({
@@ -275,8 +275,8 @@ export function logDebugStats({
 }) {
   console.log(
     `\nLLM stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
-    {
-      model: config.llmOptions.model,
+    pruneUndefined({
+      ...pick(config.llmOptions, 'model', 'weakModel'),
       ...pick(
         lintResult,
         'numModelCalls',
@@ -285,7 +285,7 @@ export function logDebugStats({
         'numCompletionTokens',
         'numTotalTokens'
       )
-    }
+    })
   )
 }
 
@@ -316,11 +316,11 @@ export function logEvalStats({
 export function createCacheKey({
   file,
   rule,
-  chatModel
+  config
 }: {
   file: types.InputFile
   rule: types.Rule
-  chatModel: ChatModel
+  config: types.LinterConfig
 }): any {
   // TODO: add linter major version to the cache key
   return {
@@ -341,6 +341,14 @@ export function createCacheKey({
     ),
 
     // Ensure the cache key depends on how the LLM is parameterized
-    params: chatModel.getParams()
+    llmOptions: pruneUndefined(
+      pick(
+        config.llmOptions ?? {},
+        'model',
+        'weakModel',
+        'temperature',
+        'apiBaseUrl'
+      )
+    )
   }
 }

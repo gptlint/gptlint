@@ -27,28 +27,33 @@ export const ruleViolationSchema = z.object({
     .string()
     .optional()
     .describe('The name of the RULE which this `codeSnippet` violates.'),
+
   codeSnippet: z
     .string()
     .describe(
-      'The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.'
+      'The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should include an ellipsis "..." if they would be more than 10 lines of code.'
     ),
+
   codeSnippetSource: z
-    .enum(['examples', 'source'])
+    .enum(['examples', 'source', 'unknown'])
     .optional()
     .describe(
       'Where the `codeSnippet` comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source".'
     ),
+
   reasoning: z
     .string()
     .optional()
     .describe(
       'An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.'
     ),
+
   violation: z
     .boolean()
     .describe(
       'Whether or not this `codeSnippet` violates the RULE. If the `codeSnippet` does VIOLATE the RULE, then `violation` should be `true`. If the `codeSnippet` conforms to the RULE correctly or does not appear in the SOURCE, then `violation` should be `false`.'
     ),
+
   confidence: z
     .enum(['low', 'medium', 'high'])
     .describe('Your confidence that the `codeSnippet` VIOLATES the RULE.')
@@ -58,6 +63,29 @@ export type RuleViolation = z.infer<typeof ruleViolationSchema>
 export const ruleViolationsOutputSchema = z.array(ruleViolationSchema)
 export type RuleViolationsOutput = z.infer<typeof ruleViolationsOutputSchema>
 
+export const ruleViolationsValidatedOutputSchema = z.object({
+  ruleViolations: ruleViolationsOutputSchema
+})
+export type RuleViolationsValidatedOutput = z.infer<
+  typeof ruleViolationsValidatedOutputSchema
+>
+
+export function parseRuleViolationsFromJSONModelResponse(
+  response: string
+): RuleViolation[] {
+  const ruleViolationsParseResult = safeParseStructuredOutput(
+    response,
+    ruleViolationsValidatedOutputSchema
+  )
+  if (!ruleViolationsParseResult.success) {
+    throw new RetryableError(
+      `Invalid output: the JSON output failed to parse according to the given RULE_VIOLATION schema. Parser error: ${ruleViolationsParseResult.error}`
+    )
+  }
+
+  return ruleViolationsParseResult.data.ruleViolations
+}
+
 /**
  * Attempts to parse an array of `RuleViolation` objects from a JSON code block
  * in the given markdown response.
@@ -65,8 +93,13 @@ export type RuleViolationsOutput = z.infer<typeof ruleViolationsOutputSchema>
  * Will throw a `RetryableError` if the response is invalid with an error
  * message that the LLM can use to retry the request.
  */
-export function parseRuleViolationsFromModelResponse(
-  response: string
+export function parseRuleViolationsFromMarkdownModelResponse(
+  response: string,
+  {
+    numExpectedMarkdownHeadings = 2
+  }: {
+    numExpectedMarkdownHeadings?: number
+  } = {}
 ): RuleViolation[] {
   const ast = parseMarkdownAST(response)
   const codeBlocksNodes = findAllCodeBlockNodes(ast)
@@ -75,7 +108,8 @@ export function parseRuleViolationsFromModelResponse(
   if (codeBlocksNodes.length === 0) {
     const h1Nodes = findAllHeadingNodes(ast, { depth: 1 })
 
-    if (h1Nodes.length === 2) {
+    if (h1Nodes.length >= numExpectedMarkdownHeadings) {
+      // The output is formatted properly, but there are no rule violations.
       return []
     }
 
@@ -86,9 +120,7 @@ export function parseRuleViolationsFromModelResponse(
     const h1Nodes = findAllHeadingNodes(ast, { depth: 1 })
 
     if (h1Nodes.length === 0) {
-      throw new RetryableError(
-        'Invalid output: missing EXPLANATION and VIOLATIONS header sections.'
-      )
+      throw new RetryableError('Invalid output: missing VIOLATIONS header.')
     } else {
       const headers = h1Nodes.map((node) => toString(node).toLowerCase().trim())
       const violationsHeaderIndex = headers.findLastIndex((header) =>
@@ -176,11 +208,11 @@ interface RULE_VIOLATION {
   // The name of the RULE which this \`codeSnippet\` violates.
   ruleName: string
 
-  // The offending code snippet which fails to conform to the given RULE. This code snippet must come verbatim from the given SOURCE.
+  // The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should include an ellipsis "..." if they would be more than 10 lines of code.
   codeSnippet: string
 
   // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".
-  codeSnippetSource: 'examples' | 'source'
+  codeSnippetSource: 'examples' | 'source' | 'unknown'
 
   // An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.
   reasoning: string
@@ -191,6 +223,50 @@ interface RULE_VIOLATION {
   // Your confidence that the \`codeSnippet\` VIOLATES the RULE.
   confidence: 'low' | 'medium' | 'high'
 }
-\`\`\`
-`
+\`\`\``
+}
+
+export function stringifyExampleRuleViolationsObjectOutputForModel(
+  rule: types.Rule
+): string {
+  return `\`\`\`json
+{
+  "ruleViolations": [
+    {
+      "ruleName": "${rule.name}",
+      "codeSnippet": "...",
+      "codeSnippetSource": "source",
+      "reasoning": "..."
+      "violation": true,
+      "confidence": "high"
+    }
+  ]
+}
+\`\`\``
+}
+
+export function stringifyExampleRuleViolationsArrayOutputForModel(
+  rule: types.Rule
+): string {
+  return `\`\`\`json
+[
+  {
+    "ruleName": "${rule.name}",
+    "codeSnippet": "...",
+    "codeSnippetSource": "source",
+    "reasoning": "..."
+    "violation": true,
+    "confidence": "high"
+  }
+]
+\`\`\``
+}
+
+export function stringifyRuleViolationForModel(
+  ruleViolations: Partial<RuleViolation>[]
+): string {
+  return `\`\`\`json
+{
+  ruleViolations: ${JSON.stringify(ruleViolations, null, 2)}
+}`
 }
