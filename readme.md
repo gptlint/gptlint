@@ -217,33 +217,31 @@ Keep in mind that even expert human developers are unlikely to reach perfect acc
 
 ### Cost
 
-**LLM costs can add up quickly**.
+_LLM costs can add up quickly._
 
 [Two-pass linting](./docs/how-it-works.md#two-pass-linting) helps to significantly reduce costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly.
 
 Every time you run `gptlint`, it will log the total cost of all LLM calls for that run (if you're using a supported provider).
 
-Note that **this variable cost goes away when using a local LLM**, where you're paying directly for GPU compute instead of paying per token.
-
-For most projects, this cost will be _orders of magnitude cheaper_ than relying on a senior engineer to track and fix technical debt.
+Note that **this variable cost goes away when using a local LLM**, where you're paying directly for GPU compute instead of paying per token. For most projects, the cost of running `gptlint` will be _orders of magnitude cheaper_ than relying on your senior engineers to track and fix technical debt.
 
 ### Rules in the MVP are single-file only
 
-Many higher-level best practices inherently span multiple files of context, but we wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_.
+Many of the higher-level best practices we'd like to support span multiple files, but we also wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_.
 
-This restriction will be removed once we've validated the initial version with the community, but it will likely remain as an optional rule setting in the future to optimize rules which explicitly don't need multi-file context.
+This restriction will be removed once we've validated the MVP with the community, but it will likely remain as an optional rule-specific setting in the future to optimize rules which explicitly don't need multi-file context.
 
-If you'd like to add a rule which requires multi-file analysis, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new).
+If you'd like to add a rule which requires multi-file context, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new).
 
 ### Rules in the MVP are JS/TS only
 
-This project is inherently language-agnostic, but to keep the MVP scoped, I wanted to focus on the languages & ecosystem that I'm most familiar with.
+This project is inherently language-agnostic, but in order to keep the MVP scoped, we wanted to focus on the languages & ecosystem that we're most familiar with.
 
-Post-MVP, we're hoping that rules for other programming languages and [project-specific rule configs](./docs/rule-guidelines.md#project-specific-rules) will trickle in with help from the community over time.
+Post-MVP, we're hoping that rules for other programming languages and [library-specific rule configs](./docs/rule-guidelines.md#library-specific-rule-configs) will trickle in with help from the community over time.
 
 ### The MVP does not support autofixing lint errors
 
-This is a feature we have planned in the near future once we'e validated that we have the right core rule abstraction.
+This is a feature we have planned in the near future once we'e validated that we're working with the right core rule abstraction.
 
 ## FAQ
 
