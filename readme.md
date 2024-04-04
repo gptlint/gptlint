@@ -213,7 +213,7 @@ This tool passes an LLM portions of your code and the rule definitions alongside
 
 **All built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default.
 
-The main thing to keep in mind about accuracy is that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**.
+Keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**.
 
 ### Cost
 
@@ -223,9 +223,9 @@ The main thing to keep in mind about accuracy is that even expert human develope
 
 Every time you run `gptlint`, it will log the total cost of all LLM calls for that run (if you're using a supported provider).
 
-Note that **the variable cost goes away when using a local LLM**, where you're paying directly for GPU compute instead of paying per token
+Note that **this variable cost goes away when using a local LLM**, where you're paying directly for GPU compute instead of paying per token.
 
-For most projects, this cost will still be _orders of magnitude cheaper_ than relying on a senior engineer to track and fix technical debt.
+For most projects, this cost will be _orders of magnitude cheaper_ than relying on a senior engineer to track and fix technical debt.
 
 ### Rules in the MVP are single-file only
 
@@ -333,7 +333,6 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
     - convert this repo to a monorepo?
 - cli
   - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
-  - **output how long linting took in stats**
   - cache precheck tasks
 - project
   - update project name in multiple places once we decide on a name
@@ -341,6 +340,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - add docs on config settings and how config resolution works
   - basic eval graphs and blog post
+  - demo video
   - publish to NPM
   - public launch! 🚀
 

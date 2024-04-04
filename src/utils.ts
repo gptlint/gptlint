@@ -253,7 +253,7 @@ export function logDebugStats({
     : undefined
 
   console.log(
-    `\nLLM stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
+    `\nLinter stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
     pruneUndefined({
       ...pick(config.llmOptions, 'model', 'weakModel'),
       ...pick(
