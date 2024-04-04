@@ -92,12 +92,15 @@ export async function lintFiles({
       numTasksDisabled: numTasksDisabled || undefined
     })
   )
-  console.log(
-    resolvedLintTasks.map((task) => ({
-      file: task.file.fileRelativePath,
-      rule: task.rule.name
-    }))
-  )
+
+  if (config.linterOptions.debug) {
+    console.log(
+      resolvedLintTasks.map((task) => ({
+        file: task.file.fileRelativePath,
+        rule: task.rule.name
+      }))
+    )
+  }
 
   if (config.linterOptions.earlyExit && lintResult.lintErrors.length > 0) {
     earlyExitTripped = true
