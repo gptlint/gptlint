@@ -26,7 +26,6 @@
 - [LLM Providers](#llm-providers)
   - [OpenAI](#openai)
   - [Anthropic](#anthropic)
-  - [OSS Models](#oss-models)
   - [Local Models](#local-models)
 - [How it works](#how-it-works)
 - [Caveats](#caveats)
@@ -36,12 +35,6 @@
   - [Rules in the MVP are JS/TS only](#rules-in-the-mvp-are-jsts-only)
   - [The MVP does not support autofixing lint errors](#the-mvp-does-not-support-autofixing-lint-errors)
 - [FAQ](#faq)
-  - [How can I disable a rule?](#how-can-i-disable-a-rule)
-  - [How can I disable a rule for a specific file?](#how-can-i-disable-a-rule-for-a-specific-file)
-  - [How can I disable linting for a specific file?](#how-can-i-disable-linting-for-a-specific-file)
-  - [How can I customize a built-in rule?](#how-can-i-customize-a-built-in-rule)
-  - [What about fine-tuning?](#what-about-fine-tuning)
-  - [Where can I get help integrating GPTLint into my codebase?](#where-can-i-get-help-integrating-gptlint-into-my-codebase)
 - [Roadmap](#roadmap)
   - [MVP Public Release](#mvp-public-release)
   - [Post-MVP](#post-mvp)
@@ -58,7 +51,7 @@
 - ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ content-based caching
 - ✅️ outputs LLM stats per run (cost, tokens, etc)
-- ✅️ built-in rules are extensively tested w/ [evals](#evals)
+- ✅️ built-in rules are extensively tested w/ [evals](./docs/how-it-works.md#evals)
 - ✅️ supports all major [LLM providers](#llm-providers)
 - ✅️ supports all major [local LLMs](#local-models)
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
@@ -191,20 +184,18 @@ export default [
 ]
 ```
 
-### OSS Models
-
-The best way to use GPTLint with OSS models is to either [host them locally](#local-models) or to use a cloud provider that offers inference and fine-tuning APIs for common OSS language models:
-
-- [Together.ai](https://www.together.ai)
-- [Anyscale](https://www.anyscale.com/private-endpoints)
-- [Modal Labs](https://modal.com/use-cases/language-models)
-
 ### Local Models
 
 - [ollama](https://github.com/ollama/ollama) supports exposing a local [OpenAI compatible server](https://github.com/ollama/ollama/blob/main/docs/openai.md)
 - [vLLM](https://github.com/vllm-project/vllm) supports exposing a local [OpenAI compatible server](https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html)
 
 Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your local model server.
+
+In production, you may want to consider using a cloud provider that offers inference and fine-tuning APIs such as:
+
+- [Together.ai](https://www.together.ai)
+- [Anyscale](https://www.anyscale.com/private-endpoints)
+- [Modal Labs](https://modal.com/use-cases/language-models)
 
 ## How it works
 
@@ -254,7 +245,7 @@ This is a feature we have planned in the near future once we'e validated that we
 
 ## FAQ
 
-### How can I disable a rule?
+### How can I disable a rule? <!-- omit from toc -->
 
 You can disable a rule for a project by adding a config file at the root:
 
@@ -269,7 +260,7 @@ export default [
 ]
 ```
 
-### How can I disable a rule for a specific file?
+### How can I disable a rule for a specific file? <!-- omit from toc -->
 
 Rules can be configured at the file-level using inline comments:
 
@@ -290,7 +281,7 @@ Or use multiple inline rule config comments:
 /* gptlint consistent-identifier-casing: warn */
 ```
 
-### How can I disable linting for a specific file?
+### How can I disable linting for a specific file? <!-- omit from toc -->
 
 Linting can be disabled at the file-level using an inline comment:
 
@@ -298,7 +289,7 @@ Linting can be disabled at the file-level using an inline comment:
 /* gptlint-disable */
 ```
 
-### How can I customize a built-in rule?
+### How can I customize a built-in rule <!-- omit from toc -->
 
 Since rules are just markdown files, copy the rule's markdown file from [rules/](./rules) into your project and customize it to suit your project's needs.
 
@@ -308,11 +299,11 @@ If your change is generally applicable to other projects, consider opening a pul
 
 For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](mailto:gptlint@teamduality.dev).
 
-### What about fine-tuning?
+### What about fine-tuning? <!-- omit from toc -->
 
 See our notes on [fine-tuning in how it works](./docs/how-it-works.md#fine-tuning).
 
-### Where can I get help integrating GPTLint into my codebase?
+### Where can I get help integrating GPTLint into my codebase <!-- omit from toc -->
 
 For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, [open a discussion](https://github.com/transitive-bullshit/eslint-plus-plus/discussions) on this repo if you're looking for help.
 
@@ -324,12 +315,17 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 
 - linter engine
   - **improve evals**
+    - [add unit tests to evals for edge cases](https://hamel.dev/blog/posts/evals/#step-2-create-test-cases)
+      - will test the internal model outputs in addition to the top-level linting outputs
+    - track eval results across multiple llm configs during CI
   - gracefully respect [rate limits](https://platform.openai.com/account/limits)
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - handle context overflow properly depending on selected model
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
-  - fix cache can be killed during a partial write; consider `cacache` or another local JSON db package
+  - **fix cache** can be killed during a partial write; consider `cacache` or another local JSON db package
+  - experiment with clearer delimiters in prompts vs markdown h1s
+  - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
 - rule file format
   - support both positive and negative examples in the same code block
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
