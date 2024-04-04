@@ -320,6 +320,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - handle context overflow properly depending on selected model
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
     - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
+  - fix cache can be killed during a partial write; consider `cacache` or another local JSON db package
 - rule file format
   - support both positive and negative examples in the same code block
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss

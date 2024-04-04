@@ -141,7 +141,7 @@ To improve the cost, speed, accuracy, and robustness of GPTLint, a natural next 
 
 We've made the explicit decision not to do this for a few main reasons:
 
-1. One of our goals with GPTLint is totry and make the project as generally useful as an open source standard as possible. By working with off-the-shelf foundation models and not relying on any specific fine-tuned , we improve the accessibility of the project.
+1. One of our goals with GPTLint is to try and make the project as generally useful as an open source standard as possible. By working with off-the-shelf foundation models and not relying on any specific fine-tuning outputs, we improve the accessibility of the project's default settings.
 
 2. We were curious how far we could get on this task with general purpose LLMs, and it's been a great learning experience so far.
 

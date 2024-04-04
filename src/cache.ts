@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { asyncExitHook, gracefulExit } from 'exit-hook'
+import { asyncExitHook } from 'exit-hook'
 import stableStringify from 'fast-json-stable-stringify'
 import hashObject from 'hash-object'
 import { pathExists } from 'path-exists'
@@ -67,8 +67,10 @@ export class LinterCache<
           this.cache = JSON.parse(encodedCache) as Record<string, string>
         }
       } catch (err: any) {
-        console.error(`Failed to initialize cache "${cacheFile}"`, err.message)
-        gracefulExit(1)
+        console.warn(
+          `Failed to initialize cache "${cacheFile}". Continuing with empty cache.`,
+          err.message
+        )
       }
     }
 

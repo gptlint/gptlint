@@ -3,7 +3,6 @@ import 'dotenv/config'
 
 import { gracefulExit } from 'exit-hook'
 import plur from 'plur'
-import ProgressBar, { type Progress } from 'ts-progress'
 
 import type * as types from '../src/types.js'
 import { createLinterCache } from '../src/cache.js'
@@ -50,29 +49,13 @@ async function main() {
   const chatModel = createChatModel(config)
   const cache = await createLinterCache(config)
 
-  let progressBar: Progress | undefined
-
   const lintResult = await lintFiles({
     files,
     rules,
     config,
     cache,
-    chatModel,
-    onProgressInit: ({ numTasks }) => {
-      progressBar =
-        config.linterOptions.debug || numTasks <= 0
-          ? undefined
-          : ProgressBar.create({
-              total: numTasks,
-              updateFrequency: 10
-            })
-    },
-    onProgress: () => {
-      progressBar?.update()
-    }
+    chatModel
   })
-
-  progressBar?.done()
 
   if (config.linterOptions.debugStats) {
     logDebugStats({ lintResult, config })

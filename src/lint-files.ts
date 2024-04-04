@@ -1,12 +1,14 @@
 import type { ChatModel } from '@dexaai/dexter'
 import pMap from 'p-map'
+import plur from 'plur'
+import task from 'tasuku'
 
 import type { LinterCache } from './cache.js'
 import type * as types from './types.js'
 import { lintFile } from './lint-file.js'
 import { createLintResult, mergeLintResults } from './lint-result.js'
 import { preLintFile } from './pre-lint-file.js'
-import { pruneUndefined } from './utils.js'
+import { createPromiseWithResolvers, pruneUndefined } from './utils.js'
 
 export async function lintFiles({
   files,
@@ -35,7 +37,7 @@ export async function lintFiles({
 
   // Preprocess the file / rule tasks so we have a clear indication of how many
   // non-cached, non-disabled tasks need to be processed
-  const preLintResults = (
+  const rawLintTasks = (
     await pMap(
       lintTasks,
       async ({ file, rule }) => {
@@ -67,8 +69,8 @@ export async function lintFiles({
     )
   ).filter(Boolean)
 
-  const resolvedLintTasks = preLintResults.filter((r) => !r.lintResult)
-  const skippedLintTasks = preLintResults.filter((r) => r.lintResult)
+  const resolvedLintTasks = rawLintTasks.filter((r) => !r.lintResult)
+  const skippedLintTasks = rawLintTasks.filter((r) => r.lintResult)
   const numTasksCached = skippedLintTasks.filter(
     (r) => r.skipReason === 'cached'
   ).length
@@ -107,53 +109,141 @@ export async function lintFiles({
     )
   }
 
+  const lintTaskGroups: Record<string, types.LintTaskGroup> = {}
+
+  for (const lintTask of resolvedLintTasks) {
+    const group = lintTask.file.fileRelativePath
+    if (!lintTaskGroups[group]) {
+      const lintTaskP = createPromiseWithResolvers()
+
+      lintTaskGroups[group] = {
+        ...lintTaskP,
+
+        lintTasks: [],
+        lintResults: [],
+
+        taskP: undefined,
+        innerTask: undefined,
+
+        async init() {
+          if (!this.taskP) {
+            await new Promise<void>((resolve) => {
+              this.taskP = task(`Linting ${group}`, async (innerTask) => {
+                this.innerTask = innerTask
+                resolve()
+                return lintTaskP
+              })
+            })
+          }
+        }
+      }
+    }
+
+    const lintTaskGroup = lintTaskGroups[group]!
+    lintTaskGroup.lintTasks.push(lintTask)
+  }
+
+  let sortedLintTasks: types.LintTask[] = []
+  for (const lintTaskGroup of Object.values(lintTaskGroups)) {
+    sortedLintTasks = sortedLintTasks.concat(lintTaskGroup.lintTasks)
+
+    lintTaskGroup.promise = Promise.all(
+      lintTaskGroup.lintTasks.map((t) => t.promise)
+    )
+
+    lintTaskGroup.promise.then((value) => {
+      lintTaskGroup.resolve(value)
+      lintTaskGroup.taskP!.then((task) => {
+        task.clear()
+      })
+    }, lintTaskGroup.reject)
+  }
+
   // Loop over each non-cached file / rule task and lint them with the LLM
   // linting engine.
   await pMap(
-    resolvedLintTasks,
-    async ({ file, rule, cacheKey, config }, index) => {
+    sortedLintTasks,
+    async (lintTask, index) => {
       if (earlyExitTripped) {
         return
       }
 
-      try {
-        const fileLintResult = await lintFile({
-          file,
-          rule,
-          chatModel,
-          config
-        })
+      const { file, rule, cacheKey, config } = lintTask
+      const lintTaskGroup = lintTaskGroups[file.fileRelativePath]!
+      await lintTaskGroup.init()
+      const lintTaskGroupInnerTask = lintTaskGroup.innerTask!
 
-        if (cacheKey) {
-          await cache.set(cacheKey, fileLintResult)
-        }
+      let taskLintResult: types.LintResult | undefined
 
-        lintResult = mergeLintResults(lintResult, fileLintResult)
-
-        if (
-          config.linterOptions.earlyExit &&
-          lintResult.lintErrors.length > 0
-        ) {
-          earlyExitTripped = true
-        }
-
-        if (onProgress) {
-          await Promise.resolve(
-            onProgress({
-              progress: index / resolvedLintTasks.length,
-              message: `Rule "${rule.name}" file "${file.fileRelativePath}"`,
-              result: lintResult
+      const nestedTask = await lintTaskGroupInnerTask.task(
+        rule.name,
+        async (task) => {
+          try {
+            taskLintResult = await lintFile({
+              file,
+              rule,
+              chatModel,
+              config,
+              retryOptions: {
+                retries: 2,
+                onFailedAttempt: (err) => {
+                  task.setOutput(`Retrying: ${err.message}`)
+                }
+              }
             })
-          )
+
+            if (cacheKey) {
+              await cache.set(cacheKey, taskLintResult)
+            }
+
+            lintResult = mergeLintResults(lintResult, taskLintResult)
+
+            if (
+              config.linterOptions.earlyExit &&
+              lintResult.lintErrors.length > 0
+            ) {
+              earlyExitTripped = true
+            }
+
+            if (onProgress) {
+              await Promise.resolve(
+                onProgress({
+                  progress: index / sortedLintTasks.length,
+                  message: `Rule "${rule.name}" file "${file.fileRelativePath}"`,
+                  result: lintResult
+                })
+              )
+            }
+
+            if (taskLintResult.lintErrors.length > 0) {
+              task.setError(
+                `found ${taskLintResult.lintErrors.length} lint ${plur(
+                  'error',
+                  taskLintResult.lintErrors.length
+                )}`
+              )
+            }
+          } catch (err: any) {
+            const error = new Error(
+              `rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`,
+              { cause: err }
+            )
+            console.warn(error.message)
+            warnings.push(error)
+            task.setError(err.message)
+          }
         }
-      } catch (err: any) {
-        const error = new Error(
-          `rule "${rule.name}" file "${file.fileRelativePath}" unexpected error: ${err.message}`,
-          { cause: err }
-        )
-        console.warn(error.message)
-        warnings.push(error)
+      )
+
+      if (taskLintResult) {
+        if (!taskLintResult!.lintErrors.length) {
+          nestedTask.clear()
+        }
+
+        lintTaskGroup.lintResults.push(taskLintResult!)
       }
+
+      lintTask.resolve(undefined)
     },
     {
       concurrency: config.linterOptions.concurrency

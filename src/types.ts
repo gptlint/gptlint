@@ -1,7 +1,8 @@
-/* eslint-disable no-use-before-define */
 import type { Command } from 'cleye'
+import type { TaskAPI, TaskInnerAPI } from 'tasuku'
 
 import type { ResolvedLinterConfig } from './config.js'
+import type { FailedAttemptError } from './errors.js'
 
 export type {
   LinterConfig,
@@ -81,7 +82,7 @@ export type LintSkipReason =
   | 'rule-disabled'
   | 'inline-linter-disabled'
 
-export type PreLintResult = {
+export type LintTask = {
   file: InputFile
   rule: Rule
   config: ResolvedLinterConfig
@@ -89,7 +90,16 @@ export type PreLintResult = {
   lintResult?: LintResult
   skipReason?: LintSkipReason
   skipDetail?: string
-}
+} & PromiseWithResolvers<unknown>
+
+export type LintTaskGroup = {
+  lintTasks: LintTask[]
+  lintResults: LintResult[]
+
+  taskP: Promise<TaskAPI> | undefined
+  innerTask: TaskInnerAPI | undefined
+  init(): Promise<void>
+} & PromiseWithResolvers<unknown>
 
 export type MaybePromise<T> = T | Promise<T>
 
@@ -121,3 +131,8 @@ export type EvalStats = {
 }
 
 export type CLIFlags = NonNullable<Command['options']['flags']>
+
+export type RetryOptions = {
+  retries: number
+  readonly onFailedAttempt?: (error: FailedAttemptError) => MaybePromise<void>
+}

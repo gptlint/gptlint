@@ -423,6 +423,45 @@ exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = 
 }
 `;
 
+exports[`parseRuleFile - fixtures/rules/wip/use-esm.md 1`] = `
+{
+  "desc": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses require and module.exports and suffers from poor standardization and interoperability issues.ESM (ECMAScript Modules) is a modern standard which uses import and export statements. It is preferred for all JS/TS code going forwards.",
+  "eslint": [
+    "@unicorn/prefer-module",
+    "@typescript-eslint/no-require-imports",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Use ESM instead of CommonJS",
+  "name": "use-esm",
+  "negativeExamples": [
+    {
+      "code": "const path = require('path')
+
+module.exports = function foo() {}",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "import path from 'path'
+
+export default function foo() {}
+export function bar() {}",
+      "language": "js",
+    },
+  ],
+  "source": "fixtures/rules/wip/use-esm.md",
+  "tags": [
+    "general",
+  ],
+}
+`;
+
 exports[`parseRuleFile - rules/always-handle-promises.md 1`] = `
 {
   "desc": "Promises (and async functions which implicitly create Promises) must always be handled at some level of the program, either via:using await to wait for the Promise to resolve successfullyusing .then or .catch to handle Promise resolutionreturning a Promise to a calling function which itself has to handle the PromiseCreating a Promise or calling an async function and NOT awaiting or propagating the resulting Promise using one of these approaches is a code smell and violates this rule.",
@@ -751,41 +790,6 @@ import { z } from 'zod'",
     },
   ],
   "source": "rules/semantic-variable-names.md",
-  "tags": [
-    "general",
-  ],
-}
-`;
-
-exports[`parseRuleFile - rules/use-esm.md 1`] = `
-{
-  "desc": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses require and module.exports and suffers from poor standardization and interoperability issues.ESM (ECMAScript Modules) is a modern standard which uses import and export statements. It is preferred for all JS/TS code going forwards.",
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
-  "level": "error",
-  "message": "Use ESM instead of CommonJS",
-  "name": "use-esm",
-  "negativeExamples": [
-    {
-      "code": "const path = require('path')
-
-module.exports = function foo() {}",
-      "language": "js",
-    },
-  ],
-  "positiveExamples": [
-    {
-      "code": "import path from 'path'
-
-export default function foo() {}
-export function bar() {}",
-      "language": "js",
-    },
-  ],
-  "source": "rules/use-esm.md",
   "tags": [
     "general",
   ],

@@ -3,7 +3,11 @@ import plur from 'plur'
 
 import type * as types from './types.js'
 import { defaultLinterConfig, isValidModel } from './config.js'
-import { AbortError, RetryableError } from './errors.js'
+import {
+  AbortError,
+  type FailedAttemptError,
+  RetryableError
+} from './errors.js'
 import { createLintResult } from './lint-result.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
@@ -37,9 +41,7 @@ export async function lintFile({
   rule: types.Rule
   chatModel: ChatModel
   config: types.ResolvedLinterConfig
-  retryOptions?: {
-    retries: number
-  }
+  retryOptions?: types.RetryOptions
 }): Promise<types.LintResult> {
   const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
   const model = isTwoPassLintingEnabled
@@ -104,6 +106,22 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
 
   do {
     try {
+      // Useful for testing fake errors
+      // if (rule.name === 'use-esm') {
+      //   throw new RetryableError('example error for testing')
+      // } else if (rule.name === 'semantic-variable-names') {
+      //   lintResult.lintErrors.push({
+      //     filePath: file.fileRelativePath,
+      //     language: file.language,
+      //     model,
+      //     ruleName: rule.name,
+      //     codeSnippet: 'const TODO = 1',
+      //     confidence: 'high',
+      //     reasoning: 'EXAMPLE'
+      //   })
+      //   return lintResult
+      // }
+
       const res = await chatModel.run({
         model,
         messages
@@ -198,6 +216,20 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
           console.warn(
             `\nRETRYING error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
           )
+        }
+
+        if (retryOptions?.onFailedAttempt) {
+          if (retryOptions?.onFailedAttempt) {
+            ;(err as any).attemptNumber = Math.max(
+              0,
+              retryOptions.retries - retries - 1
+            )
+            ;(err as any).retriesLeft = retries
+
+            await Promise.resolve(
+              retryOptions.onFailedAttempt(err as FailedAttemptError)
+            )
+          }
         }
 
         // Retry
@@ -302,9 +334,7 @@ export async function validateRuleViolations({
   lintResult: types.LintResult
   chatModel: ChatModel
   config: types.ResolvedLinterConfig
-  retryOptions?: {
-    retries: number
-  }
+  retryOptions?: types.RetryOptions
 }): Promise<types.LintResult> {
   const model = config.llmOptions.model
 
@@ -491,6 +521,18 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
         if (config.linterOptions.debug) {
           console.warn(
             `\nRETRYING error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}\n\n`
+          )
+        }
+
+        if (retryOptions?.onFailedAttempt) {
+          ;(err as any).attemptNumber = Math.max(
+            0,
+            retryOptions.retries - retries - 1
+          )
+          ;(err as any).retriesLeft = retries
+
+          await Promise.resolve(
+            retryOptions.onFailedAttempt(err as FailedAttemptError)
           )
         }
 

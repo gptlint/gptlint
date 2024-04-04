@@ -5,7 +5,7 @@ import { type LinterCache } from './cache.js'
 import { mergeLinterConfigs } from './config.js'
 import { createLintResult } from './lint-result.js'
 import { parseInlineConfig } from './parse-inline-config.js'
-import { createCacheKey } from './utils.js'
+import { createCacheKey, createPromiseWithResolvers } from './utils.js'
 
 /**
  * If the result contains a `lintResult`, then that is the cached result which
@@ -24,10 +24,12 @@ export async function preLintFile({
   rule: types.Rule
   cache: LinterCache
   config: types.ResolvedLinterConfig
-}): Promise<types.PreLintResult> {
+}): Promise<types.LintTask> {
   const lintResult = createLintResult()
 
-  const preLintResult: types.PreLintResult = {
+  const lintTaskP = createPromiseWithResolvers()
+  const lintTask: types.LintTask = {
+    ...lintTaskP,
     file,
     rule,
     config,
@@ -36,10 +38,10 @@ export async function preLintFile({
 
   if (!file.content.trim()) {
     // Ignore empty files
-    return { ...preLintResult, lintResult, skipReason: 'empty' }
+    return { ...lintTask, lintResult, skipReason: 'empty' }
   }
 
-  const cachedResult = await cache.get(preLintResult.cacheKey)
+  const cachedResult = await cache.get(lintTask.cacheKey)
   if (cachedResult) {
     lintResult.lintErrors = cachedResult.lintErrors
     lintResult.message = cachedResult.message
@@ -64,7 +66,7 @@ export async function preLintFile({
     //   }
     // }
 
-    return { ...preLintResult, lintResult, skipReason: 'cached' }
+    return { ...lintTask, lintResult, skipReason: 'cached' }
   }
 
   // TODO: This should probably be moved to run a single time per file instead
@@ -74,25 +76,25 @@ export async function preLintFile({
     if (configFileOverride) {
       if (configFileOverride.linterOptions?.disabled) {
         // Inline config disabled linting for this file
-        await cache.set(preLintResult.cacheKey, lintResult)
+        await cache.set(lintTask.cacheKey, lintResult)
         return {
-          ...preLintResult,
+          ...lintTask,
           lintResult,
           skipReason: 'inline-linter-disabled'
         }
       } else {
         // Inline config overrides for this file
-        preLintResult.config = mergeLinterConfigs(
-          preLintResult.config,
+        lintTask.config = mergeLinterConfigs(
+          lintTask.config,
           configFileOverride
         ) as types.ResolvedLinterConfig
       }
     }
   }
 
-  if (preLintResult.config.rules[rule.name] === 'off') {
+  if (lintTask.config.rules[rule.name] === 'off') {
     // Config has this rule disabled for this file
-    return { ...preLintResult, lintResult, skipReason: 'rule-disabled' }
+    return { ...lintTask, lintResult, skipReason: 'rule-disabled' }
   }
 
   if (rule.prechecks) {
@@ -125,7 +127,7 @@ export async function preLintFile({
 
     if (precheckFailure) {
       return {
-        ...preLintResult,
+        ...lintTask,
         lintResult,
         skipReason: 'failed-precheck',
         skipDetail: precheckFailure
@@ -136,9 +138,9 @@ export async function preLintFile({
   // console.log(
   //   `rule "${rule.name}" file "${
   //     file.fileRelativePath
-  //   }" cacheKey "${getCacheKey(preLintResult.cacheKey)}"`
+  //   }" cacheKey "${getCacheKey(lintTask.cacheKey)}"`
   // )
 
   // No cached result
-  return preLintResult
+  return lintTask
 }

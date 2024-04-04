@@ -1,4 +1,4 @@
-export { AbortError } from 'p-retry'
+export { AbortError, type FailedAttemptError } from 'p-retry'
 
 export class RetryableError extends Error {}
 
