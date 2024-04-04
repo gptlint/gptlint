@@ -84,7 +84,7 @@ export async function lintFiles({
   ).length
 
   console.log(
-    'preLintResults',
+    'Linter tasks',
     pruneUndefined({
       numTasks: resolvedLintTasks.length,
       numTasksCached: numTasksCached || undefined,
