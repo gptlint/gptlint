@@ -1,12 +1,13 @@
 # Don't use React class components
 
-| Key       | Value                          |
-| --------- | ------------------------------ |
-| Name      | `react-avoid-class-components` |
-| Level     | error                          |
-| Fixable   | false                          |
-| Tags      | react                          |
-| Languages | javascript, typescript         |
+| Key       | Value                                           |
+| --------- | ----------------------------------------------- |
+| Name      | `react-avoid-class-components`                  |
+| Level     | error                                           |
+| Fixable   | false                                           |
+| Tags      | react                                           |
+| Languages | javascript, typescript                          |
+| Eslint    | `eslint-plugin-react-prefer-function-component` |
 
 React class components are deprecated. Use React functions and hooks instead.
 

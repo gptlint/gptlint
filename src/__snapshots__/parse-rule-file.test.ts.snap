@@ -529,6 +529,10 @@ Global const variable names should either use camelCase, PascalCase, or CONSTANT
 Type names should use PascalCase.
 Class names should use PascalCase.
 Function names should use camelCase.Third-party APIs may use inconsistent casing, which is an exception to this rule.Keys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and _getKey.Ignore identifiers which mix PascalCase with camelCase.Ignore the casing of common acronyms like API, IP, HTTP, and LLM.Ignore the casing of identifiers which start with acronyms like LLMOptionsSchema.Ignore parameter names used in inline functions.Ignore string literals and module names for this rule.Class variables and functions may include _ prefixes.",
+  "eslint": [
+    "@typescript-eslint/naming-convention",
+    "camelcase",
+  ],
   "fixable": false,
   "languages": [
     "javascript",
@@ -590,6 +594,9 @@ const foo = [1, 2, 3].filter((i) => i >= 0)",
 exports[`parseRuleFile - rules/prefer-array-at-negative-indexing.md 1`] = `
 {
   "desc": "When accessing items in an array from the end, like the last item, prefer using Array.at with a negative index because it is less error-prone. Note that using Array.at with a positive index is equivalent to indexing into the array normally, and if Array.at references a non-existing index, it will return undefined.",
+  "eslint": [
+    "@unicorn/prefer-negative-index",
+  ],
   "fixable": true,
   "languages": [
     "javascript",
@@ -640,6 +647,9 @@ const item = items[index]",
 exports[`parseRuleFile - rules/prefer-fetch-over-axios.md 1`] = `
 {
   "desc": "The NPM package axios should be avoided in favor of native fetch. Now that native fetch has widespread support, axios is effectively deprecated and is generally a code smell when encountered.Convenience wrappers around fetch such as ky and ofetch are encouraged.Code which doesn't use the axios module should be ignored.",
+  "eslint": [
+    "no-restricted-imports",
+  ],
   "fixable": false,
   "languages": [
     "javascript",
@@ -666,6 +676,9 @@ exports[`parseRuleFile - rules/prefer-fetch-over-axios.md 1`] = `
 exports[`parseRuleFile - rules/react-avoid-class-components.md 1`] = `
 {
   "desc": "React class components are deprecated. Use React functions and hooks instead.Note that uses classes is fine for non-react components.",
+  "eslint": [
+    "eslint-plugin-react-prefer-function-component",
+  ],
   "fixable": false,
   "languages": [
     "javascript",

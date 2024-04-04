@@ -1,12 +1,13 @@
 # Be consistent with identifier casing
 
-| Key       | Value                          |
-| --------- | ------------------------------ |
-| Name      | `consistent-identifier-casing` |
-| Level     | error                          |
-| Fixable   | false                          |
-| Tags      | general                        |
-| Languages | javascript, typescript         |
+| Key       | Value                                               |
+| --------- | --------------------------------------------------- |
+| Name      | `consistent-identifier-casing`                      |
+| Level     | error                                               |
+| Fixable   | false                                               |
+| Tags      | general                                             |
+| Eslint    | `@typescript-eslint/naming-convention`, `camelcase` |
+| Languages | javascript, typescript                              |
 
 Identifiers of the same type should try to use consistent casing.
 
