@@ -19,7 +19,7 @@
 > A fundamentally new approach to code quality. Use LLMs to enforce higher-level best practices across your codebase in a way that takes traditional static analysis tools like `eslint` to the next level.
 
 - [Features](#features)
-- [How it works](#how-it-works)
+- [Demo](#demo)
 - [Install](#install)
 - [Usage](#usage)
 - [CLI](#cli)
@@ -28,6 +28,7 @@
   - [Anthropic](#anthropic)
   - [OSS Models](#oss-models)
   - [Local Models](#local-models)
+- [How it works](#how-it-works)
 - [Caveats](#caveats)
   - [Accuracy](#accuracy)
   - [Cost](#cost)
@@ -66,13 +67,11 @@
 - ❌ MVP rules are [single-file context only](#rules-in-the-mvp-are-single-file-only) _for now_
 - ❌ MVP does not support [autofixing](#the-mvp-does-not-support-autofixing-lint-errors) _for now_
 
-## How it works
+## Demo
 
 <p align="center">
-  <img alt="How it works" src="/media/how-gptlint-works.png">
+  <img width="600" src="/media/demo.svg">
 </p>
-
-See our [docs on how it works](./docs/how-it-works.md) for more details.
 
 ## Install
 
@@ -205,6 +204,14 @@ The best way to use GPTLint with OSS models is to either [host them locally](#lo
 
 Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your local model server.
 
+## How it works
+
+<p align="center">
+  <img alt="How it works" src="/media/how-gptlint-works.png">
+</p>
+
+See our [docs on how it works](./docs/how-it-works.md) for more details.
+
 ## Caveats
 
 ### Accuracy
@@ -331,7 +338,6 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
     - need better rules
     - convert this repo to a monorepo?
 - cli
-  - improve progress bar; possibly switch to [cli-progress](https://github.com/npkgz/cli-progress)
   - cache precheck tasks
 - project
   - update project name in multiple places once we decide on a name
