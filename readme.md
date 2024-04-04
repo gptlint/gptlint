@@ -215,6 +215,8 @@ This tool passes an LLM portions of your code and the rule definitions alongside
 
 Keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**.
 
+_(we're using accuracy here as a shorthand for precision / recall)_
+
 ### Cost
 
 _LLM costs can add up quickly._
