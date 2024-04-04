@@ -69,6 +69,8 @@
 
 ## Demo
 
+Here's a demo of `gptlint` running on its own codebase:
+
 <p align="center">
   <img width="600" src="/media/demo.svg">
 </p>
@@ -207,7 +209,7 @@ Use the `apiBaseUrl` and `apiKey` config / CLI params to point GPTLint to your l
 ## How it works
 
 <p align="center">
-  <img alt="How it works" src="/media/how-gptlint-works.png">
+  <a href="/docs/how-it-works.md"><img alt="How it works" src="/media/how-gptlint-works.png"></a>
 </p>
 
 See our [docs on how it works](./docs/how-it-works.md) for more details.
