@@ -240,12 +240,14 @@ export function logDebugConfig({
   }
 }
 
-export function logDebugStats({
+export function logLintResultStats({
   lintResult,
-  config
+  config,
+  prefix
 }: {
   lintResult: types.LintResult
   config: types.ResolvedLinterConfig
+  prefix?: string
 }) {
   const lintDurationMs = getLintDurationMs(lintResult)
   const lintDuration = lintDurationMs
@@ -253,7 +255,9 @@ export function logDebugStats({
     : undefined
 
   console.log(
-    `\nLinter stats; total cost $${(lintResult.totalCost / 100).toFixed(2)}`,
+    `${prefix ?? ''}Linter stats; total cost $${(
+      lintResult.totalCost / 100
+    ).toFixed(2)}`,
     pruneUndefined({
       ...pick(config.llmOptions, 'model', 'weakModel'),
       ...pick(

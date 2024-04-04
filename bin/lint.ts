@@ -11,7 +11,7 @@ import { lintFiles } from '../src/lint-files.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { resolveFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
-import { logDebugConfig, logDebugStats } from '../src/utils.js'
+import { logDebugConfig, logLintResultStats } from '../src/utils.js'
 
 /**
  * Main CLI entrypoint.
@@ -58,7 +58,7 @@ async function main() {
   })
 
   if (config.linterOptions.debugStats) {
-    logDebugStats({ lintResult, config })
+    logLintResultStats({ lintResult, config })
   }
 
   if (lintResult.lintErrors.length > 0) {

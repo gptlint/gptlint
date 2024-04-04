@@ -17,8 +17,8 @@ import { resolveRules } from '../src/resolve-rules.js'
 import {
   createEvalStats,
   logDebugConfig,
-  logDebugStats,
   logEvalStats,
+  logLintResultStats,
   mergeEvalStats
 } from '../src/utils.js'
 
@@ -187,7 +187,7 @@ async function main() {
   )
 
   if (config.linterOptions.debugStats) {
-    logDebugStats({ lintResult: globalLintResult, config })
+    logLintResultStats({ lintResult: globalLintResult, config, prefix: '\n' })
   }
 
   logEvalStats({ evalStats: globalEvalStats })
