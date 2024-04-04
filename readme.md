@@ -72,7 +72,7 @@
 Here's a demo of `gptlint` running on its own codebase:
 
 <p align="center">
-  <img width="600" src="/media/demo.svg">
+  <img width="640" src="/media/demo.svg">
 </p>
 
 ## Install
