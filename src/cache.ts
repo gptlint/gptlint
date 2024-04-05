@@ -1,3 +1,4 @@
+import fsSync from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -60,7 +61,7 @@ export class LinterCache<
         await fs.mkdir(this.cacheDir, { recursive: true })
 
         if (await pathExists(cacheFile)) {
-          const encodedCache = await fs.readFile(cacheFile, {
+          const encodedCache = fsSync.readFileSync(cacheFile, {
             encoding: 'utf8'
           })
 
@@ -116,7 +117,7 @@ export class LinterCache<
       await fs.mkdir(this.cacheDir!, { recursive: true })
       if (!this.cache) return
 
-      await fs.writeFile(cacheFile, stableStringify(this.cache), {
+      fsSync.writeFileSync(cacheFile, stableStringify(this.cache), {
         encoding: 'utf8'
       })
     }
