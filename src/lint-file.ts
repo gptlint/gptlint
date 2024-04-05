@@ -44,9 +44,10 @@ export async function lintFile({
   retryOptions?: types.RetryOptions
 }): Promise<types.LintResult> {
   const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
-  const model = isTwoPassLintingEnabled
-    ? config.llmOptions.weakModel!
-    : config.llmOptions.model
+  const model =
+    rule.model ?? isTwoPassLintingEnabled
+      ? config.llmOptions.weakModel!
+      : config.llmOptions.model
   let lintResult = createLintResult()
 
   if (config.linterOptions.debug) {
@@ -336,7 +337,7 @@ export async function validateRuleViolations({
   config: types.ResolvedLinterConfig
   retryOptions?: types.RetryOptions
 }): Promise<types.LintResult> {
-  const model = config.llmOptions.model
+  const model = rule.model ?? config.llmOptions.model
 
   // Determine if the model supports JSON response format, which is preferred,
   // or fallback to the default behavior of parsing JSON in a markdown code block

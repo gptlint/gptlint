@@ -24,13 +24,16 @@ export type Rule = {
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
 
+  source?: string
+
+  // metadata
   fixable?: boolean
   level?: LintRuleLevel
   languages?: string[]
   tags?: string[]
   eslint?: string[]
   resources?: string[]
-  source?: string
+  model?: string
   prechecks?: FileCheck[]
 }
 

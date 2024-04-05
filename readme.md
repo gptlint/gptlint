@@ -148,7 +148,21 @@ This is the default. Just export an `OPENAI_API_KEY` environment variable either
 
 The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it. The default `weakModel` is `gpt-3.5-turbo` which is used for [two-pass linting](./docs/how-it-works.md#two-pass-linting).
 
-If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-4` by adding a [config file](./gptlint.config.js) to your project.
+If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-4` by adding a [config file](./gptlint.config.js) to your project. For example:
+
+```js
+// gptlint.config.js
+
+/** @type {import('gptlint').GPTLintConfig} */
+export default [
+  {
+    llmOptions: {
+      model: 'gpt-4-turbo-preview',
+      weakModel: 'gpt-3.5-turbo'
+    }
+  }
+]
+```
 
 ### Anthropic
 
@@ -209,9 +223,9 @@ See our [docs on how it works](./docs/how-it-works.md) for more details.
 
 ### Accuracy
 
-This tool passes an LLM portions of your code and the rule definitions alongside few-shot examples ([how it works](./docs/how-it-works.md)), so depending on the LLM's settings and the quality of the rules you're using, it's possible for the tool to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed).
+This tool uses one or more LLMs to identify rule violations in your code (see [how it works](./docs/how-it-works.md) for details), so depending on the languag models and the quality of the rules you're using, it's possible for the linter to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed).
 
-**All built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default.
+**All built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default. We're also working on a more integrated feedback loop to gather data and improve the linter's quality over time. If you're in this feature, please [reach out to our team](#where-can-i-get-help-integrating-gptlint-into-my-codebase).
 
 Keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**.
 
@@ -351,14 +365,15 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 
 ### Post-MVP
 
-- cross-file linting
+- cross-file linting (likely using [tree-sitter](https://tree-sitter.github.io/tree-sitter/))
 - add support for different programming languages
-- add support for applying fixes to linter errors
+- add support for applying autofixes to linter errors
 - track the positive instances where we see rule conformance as well?
   - could help us output a better picture of overall code health
 - fine-tuning pipeline for base linting task
 - fine-tuning pipeline for individual rules
 - explore reinforcement learning with continuous fine-tuning so rule accuracy improves over time
+- explore generating rule definitions from an existing repo (PRs, unique code patterns, etc)
 
 ## Citations
 

@@ -208,6 +208,7 @@ export function parseRuleTableNode({
 
   const validRuleTableKeys = new Set<string>([
     'name',
+    'model',
     'level',
     'fixable',
     'tags',
@@ -237,6 +238,8 @@ export function parseRuleTableNode({
       )
 
       rule.name = value
+    } else if (key === 'model') {
+      rule.model = value
     } else if (key === 'level') {
       assert(
         isValidRuleSetting(value),
