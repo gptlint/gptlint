@@ -1,3 +1,4 @@
+import hashObject from 'hash-object'
 import prettyMilliseconds from 'pretty-ms'
 
 import type * as types from './types.js'
@@ -313,9 +314,9 @@ export function createCacheKey({
   file: types.InputFile
   rule: types.Rule
   config: types.LinterConfig
-}): any {
+}): string {
   // TODO: add linter major version to the cache key
-  return {
+  const cacheKeySource = {
     // Only keep the relative file path, content, and detected language
     file: pruneUndefined(pick(file, 'fileRelativePath', 'content', 'language')),
 
@@ -343,6 +344,8 @@ export function createCacheKey({
       )
     )
   }
+
+  return hashObject(cacheKeySource)
 }
 
 export function createPromiseWithResolvers<

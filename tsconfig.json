@@ -33,5 +33,6 @@
     // "composite": true,
     // "declarationMap": true
   },
-  "include": ["src", "bin"]
+  "include": ["src", "bin"],
+  "exclude": ["fixtures"]
 }

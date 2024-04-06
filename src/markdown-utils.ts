@@ -1,6 +1,6 @@
 import { basename } from 'node:path'
 
-import type { Code, Heading, Node, Parent, Root, Table } from 'mdast'
+import type { Code, Heading, Node, Nodes, Parent, Root, Table } from 'mdast'
 import { gfmToMarkdown } from 'mdast-util-gfm'
 import { toMarkdown } from 'mdast-util-to-markdown'
 import { toString } from 'mdast-util-to-string'
@@ -22,6 +22,18 @@ export function parseMarkdownAST(content: string) {
 }
 
 export { inspectColor as inspectNode } from 'unist-util-inspect'
+
+export function convertASTToMarkdown(nodes: Nodes) {
+  return toMarkdown(nodes, {
+    bullet: '-',
+    rule: '-',
+    extensions: [gfmToMarkdown()]
+  })
+}
+
+export function convertASTToPlaintext(node?: Node) {
+  return toString(node)
+}
 
 export function parseRuleNode({
   headingRuleNode,
@@ -54,7 +66,7 @@ export function parseRuleNode({
     children: bodyRuleNodes as any
   }
 
-  const message = toString(headingRuleNode)
+  const message = convertASTToPlaintext(headingRuleNode)
   assert(message, 'Rule message must not be empty')
 
   const fileNameRuleName = basename(filePath).replace(/\.\w+$/, '')
@@ -62,11 +74,7 @@ export function parseRuleNode({
     ? fileNameRuleName
     : slugify(message).trim()
 
-  const desc = toMarkdown(bodyRuleNode, {
-    bullet: '-',
-    rule: '-',
-    extensions: [gfmToMarkdown()]
-  })
+  const desc = convertASTToMarkdown(bodyRuleNode)
 
   const rule: types.Rule = {
     message,
@@ -114,7 +122,7 @@ export function parseRuleNode({
     const h3Node = h3Nodes[i]!
     const sectionNodes = findAllBetween(exampleRuleNode, h3Node, h3Nodes[i + 1])
 
-    const sectionLabel = toString(h3Node).toLowerCase().trim()
+    const sectionLabel = convertASTToPlaintext(h3Node).toLowerCase().trim()
     const isPositive =
       /\bgood\b/i.test(sectionLabel) ||
       /\bcorrect\b/.test(sectionLabel) ||
@@ -154,7 +162,7 @@ export function parseRuleNode({
     // )
 
     for (const codeBlockNode of codeBlockNodes) {
-      const code = toString(codeBlockNode)
+      const code = convertASTToPlaintext(codeBlockNode)
       const language = codeBlockNode.lang || undefined
 
       if (isPositive) {
@@ -209,11 +217,12 @@ export function parseRuleTableNode({
     `Rule contains invalid table (must have 2 columns): ${rule.message} (${filePath})`
   )
   assert(
-    toString(headerRow.children[0]).toLowerCase().trim() === 'key',
+    convertASTToPlaintext(headerRow.children[0]).toLowerCase().trim() === 'key',
     `Rule contains invalid table (first column must be "key"): ${rule.message} (${filePath})`
   )
   assert(
-    toString(headerRow.children[1]).toLowerCase().trim() === 'value',
+    convertASTToPlaintext(headerRow.children[1]).toLowerCase().trim() ===
+      'value',
     `Rule contains invalid table (first column must be "value"): ${rule.message} (${filePath})`
   )
   assert(
@@ -239,13 +248,15 @@ export function parseRuleTableNode({
       `Rule contains invalid table (body rows must have 2 columns): ${rule.message} (${filePath})`
     )
 
-    const key = toString(bodyRow.children[0]).toLowerCase().trim()
+    const key = convertASTToPlaintext(bodyRow.children[0]).toLowerCase().trim()
     assert(
       validRuleTableKeys.has(key),
       `Rule contains invalid table (unsupported key "${key}"): ${rule.message} (${filePath})`
     )
 
-    const value = toString(bodyRow.children[1]).toLowerCase().trim()
+    const value = convertASTToPlaintext(bodyRow.children[1])
+      .toLowerCase()
+      .trim()
     if (key === 'name') {
       assert(
         value,

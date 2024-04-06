@@ -13,8 +13,8 @@ export function parseInlineConfig({
 }): types.LinterConfig | undefined {
   const rules: types.LinterConfig['rules'] = {}
 
-  const inlineDisableRe = /\/\*+\s*gptlint-disable\s*\*+\//gi
-  const inlineEnableRe = /\/\*+\s*gptlint-enable\s*\*+\//gi
+  const inlineDisableRe = /^\s*\/\*+\s*gptlint-disable\s*\*+\//gim
+  const inlineEnableRe = /^\s*\/\*+\s*gptlint-enable\s*\*+\//gim
   let lastDisableIndex = -1
   let lastEnableIndex = -1
 
@@ -35,7 +35,7 @@ export function parseInlineConfig({
     }
   }
 
-  const inlineConfigRe = /\/\*+\s*gptlint\s+([^*]+)\s*\*+\//gi
+  const inlineConfigRe = /^\s*\/\*+\s*gptlint\s+([^*]+)\s*\*+\//gim
   for (const match of file.content.matchAll(inlineConfigRe)) {
     const inlineConfig = match[1]?.trim()
     if (!inlineConfig) continue

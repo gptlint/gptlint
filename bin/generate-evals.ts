@@ -125,7 +125,7 @@ ${stringifyRuleForModel(rule)}
             ),
 
             Msg.user(
-              `Generate ${numExamples} diverse code snippets which CORRECTLY adhere to the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code CORRECTLY adheres to the given RULE. Do not include any prose or descriptions outside of the code blocks.`
+              `Generate ${numExamples} **diverse** code snippets which CORRECTLY adhere to the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code CORRECTLY adheres to the given RULE. Do not include any prose or descriptions outside of the code blocks. Remember to make the code snippets diverse both in terms of different ways of CORRECTLY adhering to the given RULE, as well as in terms of the code itself.`
             )
           ]
         })
@@ -187,7 +187,7 @@ ${stringifyRuleForModel(rule)}
             ),
 
             Msg.user(
-              `Generate ${numExamples} diverse code snippets which VIOLATE the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code VIOLATES to the given RULE. Do not include any prose or descriptions outside of the code blocks.`
+              `Generate ${numExamples} diverse code snippets which VIOLATE the given RULE. Separate each code snippet within markdown code blocks. Include brief comments inside each code snippet which explain why the code VIOLATES to the given RULE. Do not include any prose or descriptions outside of the code blocks. Remember to make the code snippets diverse both in terms of different ways of VIOLATING the given RULE, as well as in terms of the code itself.`
             )
           ]
         })

@@ -1,10 +1,11 @@
+import hashObject from 'hash-object'
 import { expect, test } from 'vitest'
 
-import { getCacheKey, LinterCache } from './cache.js'
+import { LinterCache } from './cache.js'
 import { defaultCacheDir } from './config.js'
 
 test(`LinterCache`, async () => {
-  const cache = new LinterCache<any, any>({
+  const cache = new LinterCache<string, any>({
     cacheDir: defaultCacheDir,
     cacheFileName: 'test.json'
   })
@@ -12,48 +13,30 @@ test(`LinterCache`, async () => {
   await cache.init()
 
   const obj1 = { foo: [1, 2, { hello: 'world' }], bar: true }
+  const key1 = hashObject(obj1)
   const value1 = { nala: true }
 
   const obj2 = { foo: [1, 2, { hello: 'world' }], bar: true }
+  const key2 = hashObject(obj2)
   const value2 = { nala: true }
 
-  const obj3 = JSON.parse(JSON.stringify(obj1))
+  const obj3: any = JSON.parse(JSON.stringify(obj1))
+  const key3 = hashObject(obj3)
   const value3 = value1
 
-  await cache.set(obj1, value1)
-  await expect(cache.get(obj1)).resolves.toEqual(value1)
-  await expect(cache.get(obj1)).resolves.toEqual(value1)
+  await cache.set(key1, value1)
+  await expect(cache.get(key1)).resolves.toEqual(value1)
+  await expect(cache.get(key1)).resolves.toEqual(value1)
 
-  await cache.set(obj2, value2)
-  await expect(cache.get(obj1)).resolves.toEqual(value1)
-  await expect(cache.get(obj2)).resolves.toEqual(value2)
+  await cache.set(key2, value2)
+  await expect(cache.get(key1)).resolves.toEqual(value1)
+  await expect(cache.get(key2)).resolves.toEqual(value2)
 
-  await cache.set(obj3, value3)
-  await expect(cache.get(obj1)).resolves.toEqual(value1)
-  await expect(cache.get(obj3)).resolves.toEqual(value3)
-  await expect(cache.get(obj1)).resolves.toEqual(value3)
+  await cache.set(key3, value3)
+  await expect(cache.get(key1)).resolves.toEqual(value1)
+  await expect(cache.get(key3)).resolves.toEqual(value3)
+  await expect(cache.get(key1)).resolves.toEqual(value3)
 
   await cache.flush()
   await cache.close()
-})
-
-test(`getCacheKey`, async () => {
-  expect(getCacheKey({ foo: 'bar' })).toEqual(getCacheKey({ foo: 'bar' }))
-  expect(getCacheKey({ foo: 'bar' })).toEqual(
-    getCacheKey({ foo: 'bar', baz: undefined })
-  )
-
-  expect(
-    getCacheKey({
-      foo: 'bar',
-      bar: [1, 2, { a: -1.4, nala: 'cat' }],
-      dog: false
-    })
-  ).toEqual(
-    getCacheKey({
-      dog: false,
-      foo: 'bar',
-      bar: [1, 2, { nala: 'cat', a: -1.4 }]
-    })
-  )
 })

@@ -89,7 +89,7 @@ export type LintTask = {
   file: InputFile
   rule: Rule
   config: ResolvedLinterConfig
-  cacheKey: any
+  cacheKey: string
   lintResult?: LintResult
   skipReason?: LintSkipReason
   skipDetail?: string

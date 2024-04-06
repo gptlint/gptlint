@@ -4,7 +4,6 @@ import path from 'node:path'
 
 import { asyncExitHook } from 'exit-hook'
 import stableStringify from 'fast-json-stable-stringify'
-import hashObject from 'hash-object'
 import { pathExists } from 'path-exists'
 
 import type * as types from './types.js'
@@ -14,7 +13,7 @@ import { assert } from './utils.js'
  * Content-based cache of previous linter results.
  */
 export class LinterCache<
-  TKey extends object = any,
+  TKey extends string = string,
   TValue extends object = types.LintResult
 > {
   noCache: boolean
@@ -90,7 +89,7 @@ export class LinterCache<
     if (this.noCache) return
 
     assert(this.cache, 'Must call LinterCache.init')
-    const encodedValue = this.cache[getCacheKey(key)]
+    const encodedValue = this.cache[key]
 
     if (encodedValue === undefined) {
       return undefined
@@ -103,7 +102,7 @@ export class LinterCache<
   async set(key: TKey, value: TValue) {
     assert(this.cache, 'Must call LinterCache.init')
     const encodedValue = JSON.stringify(value)
-    this.cache[getCacheKey(key)] = encodedValue
+    this.cache[key] = encodedValue
 
     // TODO: don't write the value every time or move to a different local json db abstraction
     await this.flush()
@@ -124,12 +123,8 @@ export class LinterCache<
   }
 }
 
-export function getCacheKey<T extends object = any>(obj: T): string {
-  return hashObject(obj)
-}
-
 export async function createLinterCache<
-  TKey extends object = any,
+  TKey extends string = string,
   TValue extends object = types.LintResult
 >(config: types.ResolvedLinterConfig): Promise<LinterCache<TKey, TValue>> {
   const cache = new LinterCache<TKey, TValue>({

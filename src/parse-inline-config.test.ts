@@ -128,3 +128,23 @@ test(`parseInlineConfig invalid`, () => {
     })
   ).toThrow()
 })
+
+test(`parseInlineConfig should be ignored`, () => {
+  expect(
+    parseInlineConfig({
+      file: {
+        fileRelativePath: 'test.ts',
+        content: `const foo = bar; /* gptlint-disable */`
+      }
+    })
+  ).toEqual(undefined)
+
+  expect(
+    parseInlineConfig({
+      file: {
+        fileRelativePath: 'test.ts',
+        content: `const foo = bar; /* gptlint foo: off */`
+      }
+    })
+  ).toEqual(undefined)
+})
