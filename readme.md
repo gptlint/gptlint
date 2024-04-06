@@ -225,7 +225,7 @@ See our [docs on how it works](./docs/how-it-works.md) for more details.
 
 This tool uses one or more LLMs to identify rule violations in your code (see [how it works](./docs/how-it-works.md) for details), so depending on the languag models and the quality of the rules you're using, it's possible for the linter to produce **false positives** (hallucinated errors which shouldn't have been reported) and/or **false negatives** (real errors that the tool missed).
 
-**All built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default. We're also working on a more integrated feedback loop to gather data and improve the linter's quality over time. If you're in this feature, please [reach out to our team](#where-can-i-get-help-integrating-gptlint-into-my-codebase).
+**All built-in rules are extensively tested** with evals to ensure that the linter is as accurate as possible by default. We're also working on a more integrated feedback loop to gather data and improve the linter's quality over time. If you're in this feature, please [reach out to our team](#where-can-i-get-help).
 
 Keep in mind that even expert human developers are unlikely to reach perfect accuracy when reviewing large codebases (we all miss things, get tired, get distracted, etc), **so the goal of this project is not to achieve 100% accuracy, but rather to surpass human expert-level accuracy on this narrow task at a fraction of the cost and speed**.
 
@@ -319,11 +319,11 @@ For more guidance around creating and evaluating custom rules that will work wel
 
 See our notes on [fine-tuning in how it works](./docs/how-it-works.md#fine-tuning).
 
-### Where can I get help integrating GPTLint into my codebase <!-- omit from toc -->
+### Where can I get help? <!-- omit from toc -->
 
 For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, [open a discussion](https://github.com/transitive-bullshit/eslint-plus-plus/discussions) on this repo if you're looking for help.
 
-For commercial projects, we've partnered with [Duality](https://teamduality.dev/) to offer AI consulting services and expertise related to GPTLint. Reach out to our team [here](mailto:gptlint@teamduality.dev), and be sure to include some info on your project and what you're looking for.
+For commercial projects, we've partnered with [Duality](https://teamduality.dev/) to offer AI consulting services and expertise related to GPTLint. Reach out to our team [here](mailto:gptlint@teamduality.dev), and be sure to include some background info on your project and what you're looking for.
 
 ## Roadmap
 
