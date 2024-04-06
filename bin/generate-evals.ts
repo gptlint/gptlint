@@ -78,7 +78,7 @@ async function main() {
   try {
     rules = await resolveRules({ cwd, config })
   } catch (err: any) {
-    console.error(err.message)
+    console.error('Error:', err.message, '\n')
     args.showHelp()
     return gracefulExit(1)
   }

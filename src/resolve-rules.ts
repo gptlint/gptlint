@@ -69,6 +69,10 @@ export async function resolveRules({
     // TODO: validate rule
   }
 
+  if (!rules.length) {
+    throw new Error('No rules found')
+  }
+
   if (config.rules) {
     // Remove rules which have been disabled in the config
     rules = rules.filter((rule) => config.rules[rule.name] !== 'off')

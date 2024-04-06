@@ -131,7 +131,3 @@ function focusOnFeature(f: Feature) {
 This time the type of zoom is number, rather than `number|undefined`. The `viewport ForBounds` function is now much easier to use. If there were any other functions that produced bounds, you would also need to introduce a canonical form and a distinction between `LngLatBounds` and `LngLatBoundsLike`.
 
 Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.
-
-### Bad
-
-### Good

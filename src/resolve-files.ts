@@ -19,6 +19,10 @@ export async function resolveFiles({
     cwd
   })
 
+  if (!inputFiles.length) {
+    throw new Error('No source files found')
+  }
+
   return readFiles(inputFiles, {
     concurrency: config.linterOptions.concurrency
   })
