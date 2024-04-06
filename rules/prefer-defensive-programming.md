@@ -7,13 +7,13 @@
 | Tags      | best practices         |
 | Languages | javascript, typescript |
 
-Defensive programming is a mindset where aimed at proving software quality and reliability by writing code with unexpected failures or inputs in mind. Defensive coding is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that programs behave correctly even in unforeseen scenarios.
+Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs / states at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
 
-The following defensive programming techniques should be used whenever applicable:
+The following defensive programming techniques should be preferred as best practices:
 
 - [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
 - [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
-- [Prefer loose array indexing checks over brittle exact checks](#prefer-loose-array-indexing-checks-over-brittle-exact-checks)
+- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
 - [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
 - [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
 - [Use defensive error handling](#use-defensive-error-handling)
@@ -59,9 +59,9 @@ function getFirstName(user?: User, defaultName = 'john'): string {
 
 You can accomplish the same logic without these newer ECMAScript features, but the code will be a lot more verbose and error-prone.
 
-## Prefer loose array indexing checks over brittle exact checks
+## Prefer loose array bounds checks over more brittle exact checks
 
-Array bounds checks within loops should verify if a variable is `>=` or `<=` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays is brittle and a common cause of subtle bugs.
+Array bounds checks within loops should verify if a variable is `>=` or `<=` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays in loops is brittle and a common cause of subtle bugs.
 
 ```js
 function handleTasks() {
@@ -119,7 +119,7 @@ function createUser(user: Readonly<Partial<User>>) {
   }
 }
 
-createUser({ name: 'Alex' }) // OK, even without 'id'
+createUser({ name: 'Alex' })
 ```
 
 ## Ensure exhaustiveness in switch statements
