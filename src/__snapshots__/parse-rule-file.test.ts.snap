@@ -1065,6 +1065,36 @@ const item = items[index]",
 }
 `;
 
+exports[`parseRuleFile - rules/prefer-defensive-programming.md 1`] = `
+{
+  "desc": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs / states at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+
+The following defensive programming techniques should be preferred as best practices:
+
+- [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
+- [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
+- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
+- [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
+- [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
+- [Use defensive error handling](#use-defensive-error-handling)
+",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer defensive programming techniques <!-- omit from toc -->",
+  "name": "prefer-defensive-programming",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "source": "rules/prefer-defensive-programming.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
 exports[`parseRuleFile - rules/prefer-early-return.md 1`] = `
 {
   "desc": "Prefer returning early from functions in order to keep them as flat as possible.
