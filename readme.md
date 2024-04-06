@@ -344,8 +344,9 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 - rule file format
   - support both positive and negative examples in the same code block
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
-  - support additional h2s (ex for caveats / exceptions / usage examples)
 - config
+  - support rule overrides for specific file globs like eslint
+  - rules should be configurable
   - **add ability to extend other configs**
   - **add built-in configs**
     - need better rules

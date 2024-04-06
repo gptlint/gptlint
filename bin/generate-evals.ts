@@ -62,7 +62,7 @@ async function main() {
 
   const chatModel = createChatModel(config)
 
-  const numExamples = 10
+  const numExamples = 25
   const outputDir = path.join('fixtures', 'evals')
   await fs.mkdir(outputDir, { recursive: true })
 
@@ -84,6 +84,8 @@ async function main() {
         // Positive examples
         const positiveRuleExamplesDir = path.join(ruleExamplesDir, 'correct')
         await fs.mkdir(positiveRuleExamplesDir, { recursive: true })
+
+        console.log(`\n${rule.name} generating ${numExamples} correct examples`)
 
         const res = await chatModel.run({
           messages: [
@@ -142,6 +144,10 @@ ${stringifyRuleForModel(rule)}
         // Negative examples
         const negativeRuleExamplesDir = path.join(ruleExamplesDir, 'incorrect')
         await fs.mkdir(negativeRuleExamplesDir, { recursive: true })
+
+        console.log(
+          `\n${rule.name} generating ${numExamples} incorrect examples`
+        )
 
         const res = await chatModel.run({
           messages: [

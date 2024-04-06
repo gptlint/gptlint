@@ -591,6 +591,59 @@ const foo = [1, 2, 3].filter((i) => i >= 0)",
 }
 `;
 
+exports[`parseRuleFile - rules/no-hardcoded-secrets.md 1`] = `
+{
+  "desc": "Sensitive secrets should never be hardcoded in git because they represent a serious security risk.Common use cases for secrets include:private API keys and tokensauthentication and authorizationthird-party service configprivate encryption keyscryptographic secrets for signing requestsThe most common solution is to only access secrets from environment variables so they aren't committed as code.",
+  "fixable": false,
+  "languages": [
+    "all",
+  ],
+  "level": "error",
+  "message": "No hardcoded secrets",
+  "name": "no-hardcoded-secrets",
+  "negativeExamples": [
+    {
+      "code": "const apiKey = 'sk-J6tsSvil9M7zF76PkyU...'",
+      "language": "js",
+    },
+    {
+      "code": "import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: 'sk-J6tsSvil9M7zF76PkyU...'
+})",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const apiKey = process.env.OPENAI_API_KEY",
+      "language": "js",
+    },
+    {
+      "code": "const apiKey = process.env['OPENAI_API_KEY']",
+      "language": "js",
+    },
+    {
+      "code": "const apiKey = getEnv('OPENAI_API_KEY')",
+      "language": "js",
+    },
+    {
+      "code": "import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})",
+      "language": "ts",
+    },
+  ],
+  "source": "rules/no-hardcoded-secrets.md",
+  "tags": [
+    "security",
+  ],
+}
+`;
+
 exports[`parseRuleFile - rules/prefer-array-at-negative-indexing.md 1`] = `
 {
   "desc": "When accessing items in an array from the end, like the last item, prefer using Array.at with a negative index because it is less error-prone. Note that using Array.at with a positive index is equivalent to indexing into the array normally, and if Array.at references a non-existing index, it will return undefined.",

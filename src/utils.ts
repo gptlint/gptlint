@@ -225,7 +225,15 @@ export function logDebugConfig({
     '\nlogging resolved config and then exiting because `debugConfig` is enabled'
   )
 
-  console.log('\nconfig', JSON.stringify(config, undefined, 2))
+  const sanitizedConfig = pruneUndefined({
+    ...config,
+    llmOptions: pruneUndefined({
+      ...config.llmOptions,
+      apiKey: '<redacted>'
+    })
+  })
+
+  console.log('\nconfig', JSON.stringify(sanitizedConfig, undefined, 2))
   console.log('\nrules', JSON.stringify(rules, undefined, 2))
 
   if (files) {

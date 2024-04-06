@@ -1,3 +1,5 @@
+import { basename } from 'node:path'
+
 import type { Code, Heading, Node, Parent, Root, Table } from 'mdast'
 import { toString } from 'mdast-util-to-string'
 import remarkGfm from 'remark-gfm'
@@ -53,9 +55,14 @@ export function parseRuleNode({
   const message = toString(headingRuleNode)
   assert(message, 'Rule message must not be empty')
 
+  const fileNameRuleName = basename(filePath)
+  const defaultRuleName = isValidRuleName(fileNameRuleName)
+    ? fileNameRuleName
+    : slugify(message).trim()
+
   const rule: types.Rule = {
     message,
-    name: slugify(message).trim(),
+    name: defaultRuleName,
     desc: toString(bodyRuleNode),
     positiveExamples: [],
     negativeExamples: [],
