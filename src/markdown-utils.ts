@@ -55,7 +55,7 @@ export function parseRuleNode({
   const message = toString(headingRuleNode)
   assert(message, 'Rule message must not be empty')
 
-  const fileNameRuleName = basename(filePath)
+  const fileNameRuleName = basename(filePath).replace(/\.\w+$/, '')
   const defaultRuleName = isValidRuleName(fileNameRuleName)
     ? fileNameRuleName
     : slugify(message).trim()

@@ -156,9 +156,15 @@ export async function lintFiles({
 
     lintTaskGroup.promise.then((value) => {
       lintTaskGroup.resolve(value)
-      lintTaskGroup.taskP!.then((task) => {
-        task.clear()
-      })
+      const hasLintErrors = lintTaskGroup.lintResults.some(
+        (result) => result.lintErrors.length > 0
+      )
+
+      if (!hasLintErrors) {
+        lintTaskGroup.taskP!.then((task) => {
+          task.clear()
+        })
+      }
     }, lintTaskGroup.reject)
   }
 

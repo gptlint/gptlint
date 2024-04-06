@@ -13,7 +13,8 @@ export async function resolveLinterCLIConfig(
   {
     name,
     cwd,
-    linterConfigDefaults
+    linterConfigDefaults,
+    flagsToAdd
   }: {
     name: string
     cwd: string
@@ -27,6 +28,7 @@ export async function resolveLinterCLIConfig(
       name,
       parameters: ['[file/dir/glob ...]'],
       flags: {
+        ...flagsToAdd,
         config: {
           type: String,
           description: 'Path to a configuration file',

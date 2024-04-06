@@ -41,9 +41,37 @@ async function main() {
           // Use GPT-4 as the default for evals
           model: 'gpt-4-turbo-preview'
         }
+      },
+      flagsToAdd: {
+        numExamples: {
+          type: Number,
+          description:
+            'Number of examples to generate per rule category (correct / incorrect).',
+          alias: 'n',
+          default: 15
+        },
+        onlyPositive: {
+          type: Boolean,
+          description: 'Only generate positive examples',
+          default: false
+        },
+        onlyNegative: {
+          type: Boolean,
+          description: 'Only generate negative examples',
+          default: false
+        }
       }
     }
   )
+
+  const onlyPositive = !!(args.flags as any).onlyPositive
+  const onlyNegative = !!(args.flags as any).onlyNegative
+
+  if (onlyPositive && onlyNegative) {
+    console.error('Cannot specify both --only-positive and --only-negative')
+    args.showHelp()
+    return gracefulExit(1)
+  }
 
   let rules: types.Rule[]
 
@@ -62,7 +90,7 @@ async function main() {
 
   const chatModel = createChatModel(config)
 
-  const numExamples = 25
+  const numExamples: number = (args.flags as any).numExamples
   const outputDir = path.join('fixtures', 'evals')
   await fs.mkdir(outputDir, { recursive: true })
 
@@ -80,7 +108,7 @@ async function main() {
       console.log(`\nprocessing rule ${rule.name} ⇒ ${ruleExamplesDir}`)
       await fs.mkdir(ruleExamplesDir, { recursive: true })
 
-      {
+      if (!onlyNegative) {
         // Positive examples
         const positiveRuleExamplesDir = path.join(ruleExamplesDir, 'correct')
         await fs.mkdir(positiveRuleExamplesDir, { recursive: true })
@@ -140,7 +168,7 @@ ${stringifyRuleForModel(rule)}
         }
       }
 
-      {
+      if (!onlyPositive) {
         // Negative examples
         const negativeRuleExamplesDir = path.join(ruleExamplesDir, 'incorrect')
         await fs.mkdir(negativeRuleExamplesDir, { recursive: true })
