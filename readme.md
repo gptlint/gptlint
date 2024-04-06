@@ -305,7 +305,7 @@ Linting can be disabled at the file-level using an inline comment:
 /* gptlint-disable */
 ```
 
-### How can I customize a built-in rule <!-- omit from toc -->
+### How can I customize a built-in rule? <!-- omit from toc -->
 
 Since rules are just markdown files, copy the rule's markdown file from [rules/](./rules) into your project and customize it to suit your project's needs.
 
