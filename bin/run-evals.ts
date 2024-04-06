@@ -119,7 +119,7 @@ async function main() {
             }
           },
           {
-            concurrency: 4
+            concurrency: 8
           }
         )
       }
@@ -170,7 +170,7 @@ async function main() {
             }
           },
           {
-            concurrency: 4
+            concurrency: 8
           }
         )
       }
