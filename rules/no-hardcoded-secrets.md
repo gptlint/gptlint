@@ -2,7 +2,6 @@
 
 | Key       | Value    |
 | --------- | -------- |
-| Level     | error    |
 | Fixable   | false    |
 | Tags      | security |
 | Languages | all      |

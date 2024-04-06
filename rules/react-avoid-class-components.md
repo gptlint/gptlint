@@ -2,8 +2,6 @@
 
 | Key       | Value                                           |
 | --------- | ----------------------------------------------- |
-| Name      | `react-avoid-class-components`                  |
-| Level     | error                                           |
 | Fixable   | false                                           |
 | Tags      | react                                           |
 | Languages | javascript, typescript                          |

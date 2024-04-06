@@ -494,7 +494,6 @@ Creating a Promise or calling an \`async\` function and NOT awaiting or propagat
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Always handle Promises",
   "name": "always-handle-promises",
   "negativeExamples": [
@@ -541,7 +540,7 @@ await Promise.all([saveFile(), saveFile()])",
   ],
   "source": "rules/always-handle-promises.md",
   "tags": [
-    "general",
+    "best practices",
   ],
 }
 `;
@@ -566,7 +565,7 @@ function getForegroundColor(page?: string) {
 }
 \`\`\`
 
-This is a VIOLATION because the comment describes the types of the function parameters and return type which duplicates the more precise TS definition. Even worse, this example is a VIOLATION because the code and the comment disagree.
+This is a VIOLATION because the comment describes the types of the function parameters and return type which duplicates the more precise TS definition. Even worse, this example is a VIOLATION because the code and the comment contradict each other.
 
 Let’s assume that the code represents the desired behavior. There are a few issues with this comment:
 
@@ -604,6 +603,7 @@ function sort(nums: readonly number[]) {
 
 Note that you do NOT have to include JSDoc comments for a function, and you do NOT have to include \`@param\` or \`@returns\` JSDoc properties. These are purely optional, but if they are included, they should not discuss the types of function parameters because TypeScript does a better job of capturing this info in the function definition itself.
 ",
+  "fixable": false,
   "languages": [
     "typescript",
   ],
@@ -733,7 +733,6 @@ Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBas
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Be consistent with identifier casing",
   "name": "consistent-identifier-casing",
   "negativeExamples": [
@@ -781,7 +780,7 @@ const foo = [1, 2, 3].filter((i) => i >= 0)",
   ],
   "source": "rules/consistent-identifier-casing.md",
   "tags": [
-    "general",
+    "best practices",
   ],
 }
 `;
@@ -914,6 +913,7 @@ This time the type of zoom is number, rather than \`number|undefined\`. The \`vi
 
 Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.
 ",
+  "fixable": false,
   "languages": [
     "typescript",
   ],
@@ -949,7 +949,6 @@ The most common solution is to only access secrets from environment variables so
   "languages": [
     "all",
   ],
-  "level": "error",
   "message": "No hardcoded secrets",
   "name": "no-hardcoded-secrets",
   "negativeExamples": [
@@ -1007,7 +1006,6 @@ exports[`parseRuleFile - rules/prefer-array-at-negative-indexing.md 1`] = `
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Prefer using Array.at when indexing from the end of an array",
   "name": "prefer-array-at-negative-indexing",
   "negativeExamples": [
@@ -1044,7 +1042,7 @@ const item = items[index]",
   ],
   "source": "rules/prefer-array-at-negative-indexing.md",
   "tags": [
-    "general",
+    "best practices",
   ],
 }
 `;
@@ -1067,7 +1065,6 @@ The following defensive programming techniques should be preferred as best pract
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Prefer defensive programming techniques <!-- omit from toc -->",
   "name": "prefer-defensive-programming",
   "negativeExamples": [],
@@ -1095,7 +1092,6 @@ Ignore \`if\` statements with multiple \`else\` branches.
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Prefer early returns from functions",
   "name": "prefer-early-return",
   "negativeExamples": [
@@ -1228,7 +1224,6 @@ Code which doesn't use the \`axios\` module should be ignored.
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Prefer fetch over axios",
   "name": "prefer-fetch-over-axios",
   "negativeExamples": [],
@@ -1241,7 +1236,7 @@ Code which doesn't use the \`axios\` module should be ignored.
   ],
   "source": "rules/prefer-fetch-over-axios.md",
   "tags": [
-    "general",
+    "best practices",
   ],
 }
 `;
@@ -1393,6 +1388,7 @@ class Product {
 }
 \`\`\`
 ",
+  "fixable": false,
   "languages": [
     "typescript",
   ],
@@ -1424,7 +1420,6 @@ Note that uses \`classes\` is fine for non-react components.
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Don't use React class components",
   "name": "react-avoid-class-components",
   "negativeExamples": [
@@ -1482,7 +1477,6 @@ exports[`parseRuleFile - rules/semantic-variable-names.md 1`] = `
     "javascript",
     "typescript",
   ],
-  "level": "error",
   "message": "Use semantic variable names",
   "name": "semantic-variable-names",
   "negativeExamples": [
@@ -1545,7 +1539,7 @@ import { z } from 'zod'",
   ],
   "source": "rules/semantic-variable-names.md",
   "tags": [
-    "general",
+    "best practices",
   ],
 }
 `;

@@ -2,10 +2,8 @@
 
 | Key       | Value                                                   |
 | --------- | ------------------------------------------------------- |
-| Name      | `prefer-array-at-negative-indexing`                     |
-| Level     | error                                                   |
 | Fixable   | true                                                    |
-| Tags      | general                                                 |
+| Tags      | best practices                                          |
 | Languages | javascript, typescript                                  |
 | Eslint    | `@unicorn/prefer-negative-index`                        |
 | Resources | https://twitter.com/housecor/status/1768622518179369036 |

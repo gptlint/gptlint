@@ -2,7 +2,6 @@
 
 | Key       | Value                                                            |
 | --------- | ---------------------------------------------------------------- |
-| Level     | error                                                            |
 | Fixable   | false                                                            |
 | Tags      | best practices                                                   |
 | Languages | javascript, typescript                                           |

@@ -2,10 +2,8 @@
 
 | Key       | Value                                               |
 | --------- | --------------------------------------------------- |
-| Name      | `consistent-identifier-casing`                      |
-| Level     | error                                               |
 | Fixable   | false                                               |
-| Tags      | general                                             |
+| Tags      | best practices                                      |
 | Eslint    | `@typescript-eslint/naming-convention`, `camelcase` |
 | Languages | javascript, typescript                              |
 

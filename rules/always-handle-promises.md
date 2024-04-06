@@ -1,12 +1,10 @@
 # Always handle Promises
 
-| Key       | Value                    |
-| --------- | ------------------------ |
-| Name      | `always-handle-promises` |
-| Level     | error                    |
-| Fixable   | false                    |
-| Tags      | general                  |
-| Languages | javascript, typescript   |
+| Key       | Value                  |
+| --------- | ---------------------- |
+| Fixable   | false                  |
+| Tags      | best practices         |
+| Languages | javascript, typescript |
 
 Promises (and `async` functions which implicitly create Promises) must always be handled at some level of the program, either via:
 

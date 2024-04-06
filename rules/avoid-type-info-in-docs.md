@@ -2,6 +2,7 @@
 
 | Key       | Value                           |
 | --------- | ------------------------------- |
+| Fixable   | false                           |
 | Tags      | best practices                  |
 | Languages | typescript                      |
 | Resources | https://effectivetypescript.com |
@@ -24,7 +25,7 @@ function getForegroundColor(page?: string) {
 }
 ```
 
-This is a VIOLATION because the comment describes the types of the function parameters and return type which duplicates the more precise TS definition. Even worse, this example is a VIOLATION because the code and the comment disagree.
+This is a VIOLATION because the comment describes the types of the function parameters and return type which duplicates the more precise TS definition. Even worse, this example is a VIOLATION because the code and the comment contradict each other.
 
 Let’s assume that the code represents the desired behavior. There are a few issues with this comment:
 

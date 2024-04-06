@@ -2,6 +2,7 @@
 
 | Key       | Value                           |
 | --------- | ------------------------------- |
+| Fixable   | false                           |
 | Tags      | best practices                  |
 | Languages | typescript                      |
 | Resources | https://effectivetypescript.com |

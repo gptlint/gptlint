@@ -1,14 +1,12 @@
 # Prefer fetch over axios
 
-| Key       | Value                     |
-| --------- | ------------------------- |
-| Name      | `prefer-fetch-over-axios` |
-| Level     | error                     |
-| Fixable   | false                     |
-| Tags      | general                   |
-| Languages | javascript, typescript    |
-| Eslint    | `no-restricted-imports`   |
-| Prechecks | `['"]axios['"]`           |
+| Key       | Value                   |
+| --------- | ----------------------- |
+| Fixable   | false                   |
+| Tags      | best practices          |
+| Languages | javascript, typescript  |
+| Eslint    | `no-restricted-imports` |
+| Prechecks | `['"]axios['"]`         |
 
 The NPM package `axios` should be avoided in favor of native `fetch`. Now that native `fetch` has widespread support, `axios` is effectively deprecated and is generally a code smell when encountered.
 
