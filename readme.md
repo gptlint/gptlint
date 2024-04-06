@@ -342,6 +342,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - experiment with clearer delimiters in prompts vs markdown h1s
   - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
 - rule file format
+  - relax the examples parsing and lean into more flexible markdown support
   - support both positive and negative examples in the same code block
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
 - config
