@@ -17,11 +17,13 @@ Type names should use PascalCase.
 Class names should use PascalCase.
 Function names should use camelCase.
 
+Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and \_getKey.
+
+## Caveats
+
 Third-party APIs may use inconsistent casing, which is an exception to this rule.
 
 Keys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.
-
-Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and \_getKey.
 
 Ignore identifiers which mix PascalCase with camelCase.
 

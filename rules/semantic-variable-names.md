@@ -10,6 +10,8 @@
 
 Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
 
+## Caveats
+
 An exception to this rule is that it is acceptable to use simple variable names like `i` in `for` loops.
 
 An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.
