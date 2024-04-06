@@ -338,16 +338,19 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - handle context overflow properly depending on selected model
   - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
-    - possibly using bin packing to optimize context usage, but that's still same `O(tokens)`
-  - experiment with clearer delimiters in prompts vs markdown h1s
+    - experiment with using bin packing to optimize context usage, but that's still same `O(tokens)`
   - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
+    - experiment with clearer delimiters in prompts vs markdown h1s
+  - **improve error reporting to include approx line numbers**
 - rule file format
   - relax the examples parsing and lean into more flexible markdown support
   - support both positive and negative examples in the same code block
   - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
+- rules
+  - rewrite `liberal-accept-strict-produce` to be less verbose and have better examples
 - config
   - support rule overrides for specific file globs like eslint
-  - rules should be configurable
+  - add ability to customize rule behavior with configs like eslint
   - **add ability to extend other configs**
   - **add built-in configs**
     - need better rules
