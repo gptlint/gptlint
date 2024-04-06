@@ -59,6 +59,8 @@
     "globby": "^14.0.1",
     "hash-object": "^5.0.1",
     "jsonrepair": "^3.6.0",
+    "mdast-util-gfm": "^3.0.0",
+    "mdast-util-to-markdown": "^2.1.0",
     "mdast-util-to-string": "^4.0.0",
     "p-map": "^7.0.1",
     "p-retry": "^6.2.0",

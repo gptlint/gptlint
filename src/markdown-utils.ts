@@ -1,6 +1,8 @@
 import { basename } from 'node:path'
 
 import type { Code, Heading, Node, Parent, Root, Table } from 'mdast'
+import { gfmToMarkdown } from 'mdast-util-gfm'
+import { toMarkdown } from 'mdast-util-to-markdown'
 import { toString } from 'mdast-util-to-string'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
@@ -37,7 +39,7 @@ export function parseRuleNode({
   bodyRuleNodes = bodyRuleNodes.filter((node) => node.type !== 'table')
 
   const firstNonBodyRuleNodeIndex = bodyRuleNodes.findIndex(
-    (node) => node.type === 'heading' || node.type === 'code'
+    (node) => node.type === 'heading'
   )
 
   let exampleRuleNodes: Node[] = []
@@ -60,10 +62,16 @@ export function parseRuleNode({
     ? fileNameRuleName
     : slugify(message).trim()
 
+  const desc = toMarkdown(bodyRuleNode, {
+    bullet: '-',
+    rule: '-',
+    extensions: [gfmToMarkdown()]
+  })
+
   const rule: types.Rule = {
     message,
+    desc,
     name: defaultRuleName,
-    desc: toString(bodyRuleNode),
     positiveExamples: [],
     negativeExamples: [],
     source: filePath

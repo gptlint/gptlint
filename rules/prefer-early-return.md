@@ -5,7 +5,7 @@
 | Level     | error                                                            |
 | Fixable   | false                                                            |
 | Tags      | best practices                                                   |
-| Languages | all                                                              |
+| Languages | javascript, typescript                                           |
 | Eslint    | `prefer-early-return`                                            |
 | Resources | https://gomakethings.com/the-early-return-pattern-in-javascript/ |
 
