@@ -29,23 +29,22 @@ export type Rule = {
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
 
-  // metadata
-  source?: string
-
   // optional, user-defined metadata
   fixable?: boolean
-  level?: LintRuleLevel
+  level?: LintRuleLevel // TODO: rename this to `severity`?
   languages?: string[]
   tags?: string[]
   eslint?: string[]
   resources?: string[]
   model?: string
-  prechecks?: FileCheck[]
 
   // optional custom functionality for rules
   preProcessFile?: PreProcessFileFn
   processFile?: ProcessFileFn
   postProcessFile?: PostProcessFileFn
+
+  // internal metadata
+  source?: string
 }
 
 export type PreProcessFileFnParams = Readonly<{
@@ -58,7 +57,7 @@ export type PreProcessFileFnParams = Readonly<{
 }>
 export type PreProcessFileFn = (
   opts: PreProcessFileFnParams
-) => MaybePromise<LintTask>
+) => MaybePromise<PartialLintResult | undefined>
 
 export type ProcessFileFnParams = Readonly<{
   file: SourceFile
@@ -95,19 +94,30 @@ export type SourceFile = {
 }
 
 export type LintError = {
+  ruleName: string
   filePath: string
   language: string
   model: string
 
   // lineStart: number // TODO
-  ruleName: string
-  codeSnippet: string
-  confidence: LintRuleErrorConfidence
+  message: string
+  codeSnippet?: string
+  confidence?: LintRuleErrorConfidence
   reasoning?: string
 }
 
+export type PartialLintError = Omit<
+  LintError,
+  'ruleName' | 'filePath' | 'language' | 'model'
+>
+
 export type LintResult = {
   lintErrors: LintError[]
+  skipped?: boolean
+  skipReason?: LintSkipReason
+  skipDetail?: string
+
+  // model message: TODO: rename this?
   message?: string
 
   numModelCalls: number
@@ -122,10 +132,16 @@ export type LintResult = {
   endedAtMs?: number
 }
 
+export type PartialLintResult = Partial<
+  Omit<LintResult, 'lintErrors' | 'startedAtMs' | 'endedAtMs'>
+> & {
+  lintErrors?: PartialLintError[]
+}
+
 export type LintSkipReason =
   | 'cached'
   | 'empty'
-  | 'failed-precheck'
+  | 'pre-process-file'
   | 'rule-disabled'
   | 'inline-linter-disabled'
 
@@ -135,9 +151,9 @@ export type LintTask = {
   config: ResolvedLinterConfig
   cacheKey: string
   lintResult?: LintResult
-  skipReason?: LintSkipReason
-  skipDetail?: string
 } & PromiseWithResolvers<unknown>
+
+export type ResolvedLintTask = SetRequired<LintTask, 'lintResult'>
 
 export type LintTaskGroup = {
   lintTasks: LintTask[]

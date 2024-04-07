@@ -1,5 +1,3 @@
-import pMap from 'p-map'
-
 import type * as types from './types.js'
 import { mergeLinterConfigs } from './config.js'
 import { createLintResult } from './lint-result.js'
@@ -32,7 +30,10 @@ export async function preProcessFile({
 
   if (!file.content.trim()) {
     // Ignore empty files
-    return { ...lintTask, lintResult, skipReason: 'empty' }
+    return {
+      ...lintTask,
+      lintResult: { ...lintResult, skipped: true, skipReason: 'empty' }
+    }
   }
 
   const cachedResult = await cache.get(lintTask.cacheKey)
@@ -40,6 +41,8 @@ export async function preProcessFile({
     lintResult.lintErrors = cachedResult.lintErrors
     lintResult.message = cachedResult.message
     lintResult.numModelCallsCached++
+    lintResult.skipped = true
+    lintResult.skipReason = 'cached'
 
     // if (config.linterOptions.debug) {
     //   const { lintErrors } = lintResult
@@ -60,7 +63,7 @@ export async function preProcessFile({
     //   }
     // }
 
-    return { ...lintTask, lintResult, skipReason: 'cached' }
+    return { ...lintTask, lintResult }
   }
 
   // TODO: This should probably be moved to run a single time per file instead
@@ -73,8 +76,11 @@ export async function preProcessFile({
         await cache.set(lintTask.cacheKey, lintResult)
         return {
           ...lintTask,
-          lintResult,
-          skipReason: 'inline-linter-disabled'
+          lintResult: {
+            ...lintResult,
+            skipped: true,
+            skipReason: 'inline-linter-disabled'
+          }
         }
       } else {
         // Inline config overrides for this file
@@ -88,44 +94,9 @@ export async function preProcessFile({
 
   if (lintTask.config.rules[rule.name] === 'off') {
     // Config has this rule disabled for this file
-    return { ...lintTask, lintResult, skipReason: 'rule-disabled' }
-  }
-
-  if (rule.prechecks) {
-    let precheckFailure: string | undefined
-
-    await pMap(
-      rule.prechecks,
-      async (precheck) => {
-        if (precheckFailure) return
-
-        try {
-          const passedPrecheck = await Promise.resolve(
-            precheck.fileCheckFn({ file })
-          )
-
-          if (!passedPrecheck) {
-            precheckFailure = precheck.desc
-          }
-        } catch (err: any) {
-          precheckFailure = `Unexpected precheck error: ${err.message} (${precheck.desc})`
-          throw new Error(precheckFailure)
-        }
-      },
-      { concurrency: config.linterOptions.concurrency }
-    )
-
-    // console.log(
-    //   `rule "${rule.name}" file "${file.fileRelativePath}" precheck failure: ${precheckFailure}`
-    // )
-
-    if (precheckFailure) {
-      return {
-        ...lintTask,
-        lintResult,
-        skipReason: 'failed-precheck',
-        skipDetail: precheckFailure
-      }
+    return {
+      ...lintTask,
+      lintResult: { ...lintResult, skipped: true, skipReason: 'rule-disabled' }
     }
   }
 

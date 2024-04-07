@@ -8,7 +8,12 @@ import type * as types from './types.js'
 import { lintFile } from './lint-file.js'
 import { createLintResult, mergeLintResults } from './lint-result.js'
 import { preProcessFile } from './pre-process-file.js'
-import { createPromiseWithResolvers, pruneUndefined } from './utils.js'
+import {
+  assert,
+  createPromiseWithResolvers,
+  omit,
+  pruneUndefined
+} from './utils.js'
 
 export async function lintFiles({
   files,
@@ -31,7 +36,7 @@ export async function lintFiles({
   onProgress?: types.ProgressHandlerFn
   onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
-  // TODO: Experiment with different types of file <> rule mappings
+  // TODO: Experiment with different types of file <> rule mappings.
   const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))
   )
@@ -41,20 +46,33 @@ export async function lintFiles({
   const warnings: Error[] = []
 
   // Preprocess the file / rule tasks so we have a clear indication of how many
-  // non-cached, non-disabled tasks need to be processed
-  const rawLintTasks = (
+  // non-cached, non-disabled tasks need to be processed.
+  const rawLintTasks: types.LintTask[] = (
     await pMap(
       lintTasks,
       async ({ file, rule }) => {
-        const preProcessFileFns: types.PreProcessFileFn[] = [
-          preProcessFile,
-          rule.preProcessFile
-        ].filter(Boolean)
-
         try {
-          for (const preProcessFileFn of preProcessFileFns) {
-            const preProcessResult = await Promise.resolve(
-              preProcessFileFn({
+          // Always run the built-in pre-processing logic for caching and validation
+          // purposes. Then run any custom, rule-specific pre-processing logic if
+          // it exists.
+          const fileLintTask = await preProcessFile({
+            rule,
+            file,
+            chatModel,
+            cache,
+            config,
+            retryOptions
+          })
+
+          if (fileLintTask.lintResult) {
+            lintResult = mergeLintResults(lintResult, fileLintTask.lintResult)
+
+            return fileLintTask
+          }
+
+          if (rule.preProcessFile) {
+            const partialFileLintResults = await Promise.resolve(
+              rule.preProcessFile({
                 rule,
                 file,
                 chatModel,
@@ -64,17 +82,42 @@ export async function lintFiles({
               })
             )
 
-            if (preProcessResult.lintResult) {
-              lintResult = mergeLintResults(
-                lintResult,
-                preProcessResult.lintResult
-              )
+            if (partialFileLintResults) {
+              if (
+                partialFileLintResults.lintErrors ||
+                partialFileLintResults.skipped
+              ) {
+                // Convert partial lint result to full lint result.
+                fileLintTask.lintResult = createLintResult({
+                  ...partialFileLintResults,
+                  skipped: true,
+                  skipReason: 'pre-process-file',
+                  lintErrors: partialFileLintResults.lintErrors?.map(
+                    (partialLintError) => ({
+                      model:
+                        rule.model ??
+                        config.llmOptions.weakModel ??
+                        config.llmOptions.model,
+                      ...partialLintError,
+                      ruleName: rule.name,
+                      filePath: file.fileRelativePath,
+                      language: file.language
+                    })
+                  )
+                })
 
-              return preProcessResult
+                return fileLintTask
+              } else {
+                // Preprocessing added some metadata to the lint result, but didn't
+                // preempt the rest of the linting process.
+                fileLintTask.lintResult = createLintResult(
+                  omit(partialFileLintResults, 'lintErrors')
+                )
+              }
             }
-
-            return preProcessResult
           }
+
+          return fileLintTask
         } catch (err: any) {
           const error = new Error(
             `rule "${rule.name}" file "${file.fileRelativePath}" unexpected preProcess error: ${err.message}`,
@@ -90,33 +133,41 @@ export async function lintFiles({
     )
   ).filter(Boolean)
 
-  const resolvedLintTasks = rawLintTasks.filter((r) => !r.lintResult)
-  const skippedLintTasks = rawLintTasks.filter((r) => r.lintResult)
+  const outstandingLintTasks = rawLintTasks.filter(
+    (r) => !r.lintResult?.skipped && !r.lintResult?.lintErrors
+  )
+  const skippedLintTasks = rawLintTasks.filter(
+    (r) => r.lintResult?.skipped || r.lintResult?.lintErrors
+  ) as types.ResolvedLintTask[]
   const numTasksCached = skippedLintTasks.filter(
-    (r) => r.skipReason === 'cached'
+    (r) => r.lintResult.skipReason === 'cached'
+  ).length
+  const numTasksEmpty = skippedLintTasks.filter(
+    (r) => r.lintResult.skipReason === 'empty'
   ).length
   const numTasksPrecheck = skippedLintTasks.filter(
-    (r) => r.skipReason === 'failed-precheck'
+    (r) => r.lintResult.skipReason === 'pre-process-file'
   ).length
   const numTasksDisabled = skippedLintTasks.filter(
     (r) =>
-      r.skipReason === 'inline-linter-disabled' ||
-      r.skipReason === 'rule-disabled'
+      r.lintResult.skipReason === 'inline-linter-disabled' ||
+      r.lintResult.skipReason === 'rule-disabled'
   ).length
 
   console.log(
     'Linter tasks',
     pruneUndefined({
-      numTasks: resolvedLintTasks.length,
+      numTasks: outstandingLintTasks.length,
       numTasksCached: numTasksCached || undefined,
       numTasksPrecheck: numTasksPrecheck || undefined,
+      numTasksEmpty: numTasksEmpty || undefined,
       numTasksDisabled: numTasksDisabled || undefined
     })
   )
 
   if (config.linterOptions.debug) {
     console.log(
-      resolvedLintTasks.map((task) => ({
+      outstandingLintTasks.map((task) => ({
         file: task.file.fileRelativePath,
         rule: task.rule.name
       }))
@@ -129,13 +180,13 @@ export async function lintFiles({
 
   if (onProgressInit) {
     await Promise.resolve(
-      onProgressInit({ numTasks: resolvedLintTasks.length })
+      onProgressInit({ numTasks: outstandingLintTasks.length })
     )
   }
 
   const lintTaskGroups: Record<string, types.LintTaskGroup> = {}
 
-  for (const lintTask of resolvedLintTasks) {
+  for (const lintTask of outstandingLintTasks) {
     const group = lintTask.file.fileRelativePath
     if (!lintTaskGroups[group]) {
       const lintTaskP = createPromiseWithResolvers()
@@ -215,6 +266,8 @@ export async function lintFiles({
         rule.name,
         async (task) => {
           try {
+            // Allow rules to override the default linting process with their
+            // own, custom linting logic.
             const processFileFn: types.ProcessFileFn =
               rule.processFile ?? lintFile
 
@@ -235,6 +288,10 @@ export async function lintFiles({
             }
 
             taskLintResult = await processFileFn(processFileFnParams)
+            assert(
+              taskLintResult,
+              `rule "${rule.name}" processFile returned undefined`
+            )
 
             if (rule.postProcessFile) {
               taskLintResult = await Promise.resolve(

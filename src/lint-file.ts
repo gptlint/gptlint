@@ -108,6 +108,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       //   throw new RetryableError('example error for testing')
       // } else if (rule.name === 'semantic-variable-names') {
       //   lintResult.lintErrors.push({
+      //     message: 'Mock rule violation',
       //     filePath: file.fileRelativePath,
       //     language: file.language,
       //     model,
@@ -186,6 +187,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
         // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
 
         lintResult.lintErrors.push({
+          message: `Rule violation`,
           filePath: file.filePath,
           language: file.language,
           ruleName: rule.name,
@@ -487,6 +489,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
         // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
 
         lintResult.lintErrors.push({
+          message: `Rule violation`,
           filePath: file.filePath,
           language: file.language,
           ruleName: rule.name,

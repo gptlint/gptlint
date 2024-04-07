@@ -5,6 +5,7 @@ export function createLintResult(
 ): types.LintResult {
   return {
     lintErrors: [],
+    skipped: false,
     numModelCalls: 0,
     numModelCallsCached: 0,
     numPromptTokens: 0,
@@ -22,6 +23,10 @@ export function mergeLintResults(
 ): types.LintResult {
   return {
     lintErrors: lintResultA.lintErrors.concat(lintResultB.lintErrors),
+    skipped: lintResultA.skipped || lintResultB.skipped,
+    skipReason: lintResultB.skipReason ?? lintResultA.skipReason,
+    skipDetail: lintResultB.skipDetail ?? lintResultA.skipDetail,
+    message: lintResultB.message ?? lintResultA.message,
     numModelCalls: lintResultA.numModelCalls + lintResultB.numModelCalls,
     numModelCallsCached:
       lintResultA.numModelCallsCached + lintResultB.numModelCallsCached,
@@ -34,7 +39,7 @@ export function mergeLintResults(
     endedAtMs:
       lintResultA.endedAtMs !== undefined && lintResultB.endedAtMs !== undefined
         ? Math.max(lintResultA.endedAtMs, lintResultB.endedAtMs)
-        : undefined
+        : lintResultB.endedAtMs ?? lintResultB.endedAtMs
   }
 }
 

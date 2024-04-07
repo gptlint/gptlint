@@ -125,28 +125,6 @@ exports[`parseRuleFile - fixtures/rules/metadata-2.md 1`] = `
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/metadata-prechecks.md 1`] = `
-{
-  "desc": "This example should parse correctly. It uses 2 regex prechecks.
-",
-  "message": "Example",
-  "name": "example-name",
-  "negativeExamples": [],
-  "positiveExamples": [],
-  "prechecks": [
-    {
-      "desc": "Precheck /['"]axios['"]/gi",
-      "fileCheckFn": [Function],
-    },
-    {
-      "desc": "Precheck /import\\\\s+.*from\\\\s*['"]react['"]/gi",
-      "fileCheckFn": [Function],
-    },
-  ],
-  "source": "fixtures/rules/metadata-prechecks.md",
-}
-`;
-
 exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
 {
   "desc": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
@@ -1228,12 +1206,6 @@ Code which doesn't use the \`axios\` module should be ignored.
   "name": "prefer-fetch-over-axios",
   "negativeExamples": [],
   "positiveExamples": [],
-  "prechecks": [
-    {
-      "desc": "Precheck /['"]axios['"]/gi",
-      "fileCheckFn": [Function],
-    },
-  ],
   "source": "rules/prefer-fetch-over-axios.md",
   "tags": [
     "best practices",
