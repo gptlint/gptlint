@@ -7,7 +7,7 @@ import type { LinterCache } from './cache.js'
 import type * as types from './types.js'
 import { lintFile } from './lint-file.js'
 import { createLintResult, mergeLintResults } from './lint-result.js'
-import { preLintFile } from './pre-lint-file.js'
+import { preProcessFile } from './pre-process-file.js'
 import { createPromiseWithResolvers, pruneUndefined } from './utils.js'
 
 export async function lintFiles({
@@ -16,14 +16,18 @@ export async function lintFiles({
   config,
   cache,
   chatModel,
+  retryOptions = {
+    retries: 2
+  },
   onProgress,
   onProgressInit
 }: {
-  files: types.InputFile[]
+  files: types.SourceFile[]
   rules: types.Rule[]
   config: types.ResolvedLinterConfig
   cache: LinterCache
   chatModel: ChatModel
+  retryOptions?: types.RetryOptions
   onProgress?: types.ProgressHandlerFn
   onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
@@ -31,6 +35,7 @@ export async function lintFiles({
   const lintTasks = rules.flatMap((rule) =>
     files.map((file) => ({ file, rule }))
   )
+
   let lintResult = createLintResult()
   let earlyExitTripped = false
   const warnings: Error[] = []
@@ -41,22 +46,38 @@ export async function lintFiles({
     await pMap(
       lintTasks,
       async ({ file, rule }) => {
+        const preProcessFileFns: types.PreProcessFileFn[] = [
+          preProcessFile,
+          rule.preProcessFile
+        ].filter(Boolean)
+
         try {
-          const preLintResult = await preLintFile({
-            file,
-            rule,
-            cache,
-            config
-          })
+          for (const preProcessFileFn of preProcessFileFns) {
+            const preProcessResult = await Promise.resolve(
+              preProcessFileFn({
+                rule,
+                file,
+                chatModel,
+                cache,
+                config,
+                retryOptions
+              })
+            )
 
-          if (preLintResult.lintResult) {
-            lintResult = mergeLintResults(lintResult, preLintResult.lintResult)
+            if (preProcessResult.lintResult) {
+              lintResult = mergeLintResults(
+                lintResult,
+                preProcessResult.lintResult
+              )
+
+              return preProcessResult
+            }
+
+            return preProcessResult
           }
-
-          return preLintResult
         } catch (err: any) {
           const error = new Error(
-            `rule "${rule.name}" file "${file.fileRelativePath}" unexpected prelint error: ${err.message}`,
+            `rule "${rule.name}" file "${file.fileRelativePath}" unexpected preProcess error: ${err.message}`,
             { cause: err }
           )
           console.warn(error.message)
@@ -177,7 +198,13 @@ export async function lintFiles({
         return
       }
 
-      const { file, rule, cacheKey, config } = lintTask
+      const {
+        file,
+        rule,
+        cacheKey,
+        config,
+        lintResult: preProcessedTaskLintResult
+      } = lintTask
       const lintTaskGroup = lintTaskGroups[file.fileRelativePath]!
       await lintTaskGroup.init()
       const lintTaskGroupInnerTask = lintTaskGroup.innerTask!
@@ -188,18 +215,35 @@ export async function lintFiles({
         rule.name,
         async (task) => {
           try {
-            taskLintResult = await lintFile({
+            const processFileFn: types.ProcessFileFn =
+              rule.processFile ?? lintFile
+
+            const processFileFnParams: types.ProcessFileFnParams = {
               file,
               rule,
+              lintResult: preProcessedTaskLintResult,
               chatModel,
+              cache,
               config,
               retryOptions: {
-                retries: 2,
+                ...retryOptions,
                 onFailedAttempt: (err) => {
                   task.setOutput(`Retrying: ${err.message}`)
+                  return retryOptions.onFailedAttempt?.(err)
                 }
               }
-            })
+            }
+
+            taskLintResult = await processFileFn(processFileFnParams)
+
+            if (rule.postProcessFile) {
+              taskLintResult = await Promise.resolve(
+                rule.postProcessFile({
+                  ...processFileFnParams,
+                  lintResult: taskLintResult
+                })
+              )
+            }
 
             if (cacheKey) {
               await cache.set(cacheKey, taskLintResult)

@@ -9,7 +9,7 @@ import { assert, isValidRuleName, isValidRuleSetting } from './utils.js'
 export function parseInlineConfig({
   file
 }: {
-  file: Pick<types.InputFile, 'content' | 'fileRelativePath'>
+  file: Pick<types.SourceFile, 'content' | 'fileRelativePath'>
 }): types.LinterConfig | undefined {
   const rules: types.LinterConfig['rules'] = {}
 

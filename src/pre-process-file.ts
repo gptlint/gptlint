@@ -1,7 +1,6 @@
 import pMap from 'p-map'
 
 import type * as types from './types.js'
-import { type LinterCache } from './cache.js'
 import { mergeLinterConfigs } from './config.js'
 import { createLintResult } from './lint-result.js'
 import { parseInlineConfig } from './parse-inline-config.js'
@@ -14,17 +13,12 @@ import { createCacheKey, createPromiseWithResolvers } from './utils.js'
  * If the result does not contain a `lintResult`, then the file / rule is not
  * cached and needs to be processed.
  */
-export async function preLintFile({
+export async function preProcessFile({
   file,
   rule,
   cache,
   config
-}: {
-  file: types.InputFile
-  rule: types.Rule
-  cache: LinterCache
-  config: types.ResolvedLinterConfig
-}): Promise<types.LintTask> {
+}: types.PreProcessFileFnParams): Promise<types.LintTask> {
   const lintResult = createLintResult()
 
   const lintTaskP = createPromiseWithResolvers()

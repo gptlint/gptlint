@@ -8,11 +8,12 @@ import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from '../src/types.js'
+import { createLinterCache } from '../src/cache.js'
 import { createChatModel } from '../src/create-chat-model.js'
 import { lintFile } from '../src/lint-file.js'
 import { createLintResult, mergeLintResults } from '../src/lint-result.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
-import { readFiles } from '../src/resolve-files.js'
+import { readSourceFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
 import {
   createEvalStats,
@@ -60,6 +61,7 @@ async function main() {
   }
 
   const chatModel = createChatModel(config)
+  const cache = await createLinterCache(config)
 
   const evalsDir = path.join('fixtures', 'evals')
   const ruleToEvalStats: Record<string, types.EvalStats> = {}
@@ -80,7 +82,7 @@ async function main() {
           gitignore: true,
           cwd
         })
-        const files = await readFiles(exampleFiles, { cwd })
+        const files = await readSourceFiles(exampleFiles, { cwd })
 
         await pMap(
           files,
@@ -90,6 +92,7 @@ async function main() {
                 file,
                 rule,
                 chatModel,
+                cache,
                 config
               })
 
@@ -131,7 +134,7 @@ async function main() {
           gitignore: true,
           cwd
         })
-        const files = await readFiles(exampleFiles, { cwd })
+        const files = await readSourceFiles(exampleFiles, { cwd })
 
         await pMap(
           files,
@@ -141,6 +144,7 @@ async function main() {
                 file,
                 rule,
                 chatModel,
+                cache,
                 config
               })
 

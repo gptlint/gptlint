@@ -218,7 +218,7 @@ export function logDebugConfig({
   rules,
   config
 }: {
-  files?: types.InputFile[]
+  files?: types.SourceFile[]
   rules: types.Rule[]
   config: types.ResolvedLinterConfig
 }) {
@@ -311,7 +311,7 @@ export function createCacheKey({
   rule,
   config
 }: {
-  file: types.InputFile
+  file: types.SourceFile
   rule: types.Rule
   config: types.LinterConfig
 }): string {

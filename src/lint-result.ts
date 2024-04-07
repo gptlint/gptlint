@@ -1,6 +1,8 @@
 import type * as types from './types.js'
 
-export function createLintResult(): types.LintResult {
+export function createLintResult(
+  partialLintResult?: Readonly<Partial<types.LintResult>>
+): types.LintResult {
   return {
     lintErrors: [],
     numModelCalls: 0,
@@ -9,7 +11,8 @@ export function createLintResult(): types.LintResult {
     numCompletionTokens: 0,
     numTotalTokens: 0,
     totalCost: 0,
-    startedAtMs: Date.now()
+    startedAtMs: Date.now(),
+    ...partialLintResult
   }
 }
 

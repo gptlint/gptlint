@@ -1,6 +1,9 @@
+import type { ChatModel } from '@dexaai/dexter'
 import type { Command } from 'cleye'
 import type { TaskAPI, TaskInnerAPI } from 'tasuku'
+import type { SetRequired } from 'type-fest'
 
+import type { LinterCache } from './cache.js'
 import type { ResolvedLinterConfig } from './config.js'
 import type { FailedAttemptError } from './errors.js'
 
@@ -13,20 +16,23 @@ export type {
   ResolvedLinterConfig
 } from './config.js'
 
+export type MaybePromise<T> = T | Promise<T>
+
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 export type LintRuleLevel = 'error' | 'warn' | 'off'
 
 export type Rule = {
+  // core rule definition
   name: string
   message: string
   desc: string
-
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
 
+  // metadata
   source?: string
 
-  // metadata
+  // optional, user-defined metadata
   fixable?: boolean
   level?: LintRuleLevel
   languages?: string[]
@@ -35,14 +41,52 @@ export type Rule = {
   resources?: string[]
   model?: string
   prechecks?: FileCheck[]
+
+  // optional custom functionality for rules
+  preProcessFile?: PreProcessFileFn
+  processFile?: ProcessFileFn
+  postProcessFile?: PostProcessFileFn
 }
+
+export type PreProcessFileFnParams = Readonly<{
+  file: SourceFile
+  rule: Rule
+  chatModel: ChatModel
+  cache: LinterCache
+  config: ResolvedLinterConfig
+  retryOptions?: RetryOptions
+}>
+export type PreProcessFileFn = (
+  opts: PreProcessFileFnParams
+) => MaybePromise<LintTask>
+
+export type ProcessFileFnParams = Readonly<{
+  file: SourceFile
+  rule: Rule
+  lintResult?: LintResult
+  chatModel: ChatModel
+  cache: LinterCache
+  config: ResolvedLinterConfig
+  retryOptions?: RetryOptions
+}>
+export type ProcessFileFn = (
+  opts: ProcessFileFnParams
+) => MaybePromise<LintResult>
+
+export type PostProcessFileFnParams = SetRequired<
+  ProcessFileFnParams,
+  'lintResult'
+>
+export type PostProcessFileFn = (
+  opts: ProcessFileFnParams
+) => MaybePromise<LintResult>
 
 export type RuleExample = {
   code: string
   language?: string
 }
 
-export type InputFile = {
+export type SourceFile = {
   filePath: string
   fileName: string
   fileRelativePath: string
@@ -86,7 +130,7 @@ export type LintSkipReason =
   | 'inline-linter-disabled'
 
 export type LintTask = {
-  file: InputFile
+  file: SourceFile
   rule: Rule
   config: ResolvedLinterConfig
   cacheKey: string
@@ -104,8 +148,6 @@ export type LintTaskGroup = {
   init(): Promise<void>
 } & PromiseWithResolvers<unknown>
 
-export type MaybePromise<T> = T | Promise<T>
-
 export type ProgressHandlerFn = (opts: {
   progress: number
   message: string
@@ -116,7 +158,7 @@ export type ProgressHandlerInitFn = (opts: {
   numTasks: number
 }) => MaybePromise<void>
 
-export type FileCheckFn = (opts: { file: InputFile }) => MaybePromise<boolean>
+export type FileCheckFn = (opts: { file: SourceFile }) => MaybePromise<boolean>
 
 export type FileCheck = {
   desc: string

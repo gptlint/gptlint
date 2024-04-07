@@ -27,7 +27,7 @@ async function main() {
     }
   )
 
-  let files: types.InputFile[]
+  let files: types.SourceFile[]
   let rules: types.Rule[]
 
   try {

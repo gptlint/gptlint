@@ -1,4 +1,4 @@
-import { type ChatModel, Msg, type Prompt } from '@dexaai/dexter'
+import { Msg, type Prompt } from '@dexaai/dexter'
 import plur from 'plur'
 
 import type * as types from './types.js'
@@ -31,24 +31,20 @@ import { pruneUndefined } from './utils.js'
 export async function lintFile({
   file,
   rule,
+  lintResult,
   chatModel,
+  cache,
   config,
   retryOptions = {
     retries: 2
   }
-}: {
-  file: types.InputFile
-  rule: types.Rule
-  chatModel: ChatModel
-  config: types.ResolvedLinterConfig
-  retryOptions?: types.RetryOptions
-}): Promise<types.LintResult> {
+}: types.ProcessFileFnParams): Promise<types.LintResult> {
   const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
   const model =
     rule.model ?? isTwoPassLintingEnabled
       ? config.llmOptions.weakModel!
       : config.llmOptions.model
-  let lintResult = createLintResult()
+  lintResult = createLintResult(lintResult)
 
   if (config.linterOptions.debug) {
     console.log(
@@ -273,6 +269,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       rule,
       lintResult,
       chatModel,
+      cache,
       config,
       retryOptions
     })
@@ -329,15 +326,9 @@ export async function validateRuleViolations({
   retryOptions = {
     retries: 2
   }
-}: {
-  file: types.InputFile
-  rule: types.Rule
-  lintResult: types.LintResult
-  chatModel: ChatModel
-  config: types.ResolvedLinterConfig
-  retryOptions?: types.RetryOptions
-}): Promise<types.LintResult> {
+}: types.PostProcessFileFnParams): Promise<types.LintResult> {
   const model = rule.model ?? config.llmOptions.model
+  lintResult = createLintResult(lintResult)
 
   // Determine if the model supports JSON response format, which is preferred,
   // or fallback to the default behavior of parsing JSON in a markdown code block
