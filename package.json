@@ -34,6 +34,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "postbuild": "cp -f rules/custom/*.md dist/rules/custom",
     "dev": "tsup --watch",
     "clean": "del dist",
     "prebuild": "run-s clean",

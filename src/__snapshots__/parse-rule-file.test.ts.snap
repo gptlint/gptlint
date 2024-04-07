@@ -763,6 +763,33 @@ const foo = [1, 2, 3].filter((i) => i >= 0)",
 }
 `;
 
+exports[`parseRuleFile - rules/custom/prefer-fetch-over-axios.md 1`] = `
+{
+  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
+
+Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
+
+Code which doesn't use the \`axios\` module should be ignored.
+",
+  "eslint": [
+    "no-restricted-imports",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "message": "Prefer fetch over axios",
+  "name": "prefer-fetch-over-axios",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "source": "rules/custom/prefer-fetch-over-axios.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
 exports[`parseRuleFile - rules/liberal-accept-strict-produce.md 1`] = `
 {
   "desc": "This idea is known as the robustness principle or Postel’s Law.
