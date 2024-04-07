@@ -93,7 +93,7 @@ export const LinterOptionsSchema = z.object({
     ),
 
   debug: z.boolean().optional().describe('Enables debug logging.'),
-  debugConfig: z
+  printConfig: z
     .boolean()
     .optional()
     .describe(
@@ -281,7 +281,7 @@ export const defaultLinterOptions: Readonly<LinterOptions> = {
   earlyExit: false,
   concurrency: 16,
   debug: false,
-  debugConfig: false,
+  printConfig: false,
   debugModel: false,
   debugStats: true,
   disabled: false,
@@ -330,10 +330,11 @@ export function mergeLinterConfigs<
     ...pruneUndefined(configA),
     ...pruneUndefined(configB),
     rules: { ...configA.rules, ...configB.rules },
-    ruleFiles: dedupe([
-      ...(configA.ruleFiles ?? []),
-      ...(configB.ruleFiles ?? [])
-    ]),
+    ruleFiles: configB.ruleFiles ?? configA.ruleFiles,
+    // ruleFiles: dedupe([
+    //   ...(configA.ruleFiles ?? []),
+    //   ...(configB.ruleFiles ?? [])
+    // ]),
     ruleDefinitions: [
       ...(configA.ruleDefinitions ?? []),
       ...(configB.ruleDefinitions ?? [])

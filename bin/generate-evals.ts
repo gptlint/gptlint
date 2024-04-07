@@ -83,7 +83,7 @@ async function main() {
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.debugConfig) {
+  if (config.linterOptions.printConfig) {
     logDebugConfig({ rules, config })
     return gracefulExit(0)
   }

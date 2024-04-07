@@ -85,7 +85,6 @@
     "@types/mdast": "^4.0.3",
     "@types/node": "^20.12.5",
     "@types/parse-gitignore": "^1.0.2",
-    "@types/prettier": "2",
     "del-cli": "^5.1.0",
     "eslint": "^8.57.0",
     "eslint-plugin-unicorn": "^52.0.0",

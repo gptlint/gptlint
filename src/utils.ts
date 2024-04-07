@@ -223,7 +223,7 @@ export function logDebugConfig({
   config: types.ResolvedLinterConfig
 }) {
   console.log(
-    '\nlogging resolved config and then exiting because `debugConfig` is enabled'
+    '\nlogging resolved config and then exiting because `printConfig` is enabled'
   )
 
   const sanitizedConfig = pruneUndefined({

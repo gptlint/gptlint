@@ -79,7 +79,7 @@ export async function resolveLinterCLIConfig(
           description: 'Enables debug logging',
           alias: 'd'
         },
-        debugConfig: {
+        printConfig: {
           type: Boolean,
           description:
             'When enabled, logs the resolved config and parsed rules and then exits'
@@ -176,7 +176,7 @@ export async function resolveLinterCLIConfig(
           ? undefined
           : args.flags.concurrency,
       debug: args.flags.debug,
-      debugConfig: args.flags.debugConfig,
+      printConfig: args.flags.printConfig,
       debugModel: args.flags.debugModel,
       debugStats:
         args.flags.noDebugStats === undefined

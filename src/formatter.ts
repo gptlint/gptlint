@@ -39,7 +39,7 @@ export async function formatSource(
 
   if (!parser) {
     // If the source is an an unrecognized or unknown format, don't try to format
-    // it and instead just return the original, unformatted source untouched
+    // it and instead just return the original, unformatted source.
     return source
   }
 

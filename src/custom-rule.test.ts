@@ -1,7 +1,7 @@
 import { assert, expect, test } from 'vitest'
 
 import type * as types from './types.js'
-import customRule from '../rules/prefer-fetch-over-axios.js'
+import customRule from '../rules/custom/prefer-fetch-over-axios.js'
 import { parseLinterConfig } from './config.js'
 
 test('custom rule - prefer-fetch-over-axios', async () => {
@@ -20,5 +20,5 @@ test('custom rule - prefer-fetch-over-axios', async () => {
   expect(rule.preProcessFile).toBeTruthy()
   expect(rule).toMatchSnapshot()
 
-  console.log(rule)
+  // console.log(rule)
 })
