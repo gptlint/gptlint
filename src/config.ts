@@ -136,14 +136,12 @@ export const RuleDefinitionExampleSchema = z.object({
 export const RuleDefinitionSchema = z.object({
   name: z
     .string()
-    .optional()
     .describe(
       "Primary identifier for the rule. All lowercase. Example: 'consistent-identifier-casing'."
     ),
 
   message: z
     .string()
-    .optional()
     .describe('Short message used to describe rule violations.'),
 
   desc: z
@@ -332,6 +330,14 @@ export function mergeLinterConfigs<
     ...pruneUndefined(configA),
     ...pruneUndefined(configB),
     rules: { ...configA.rules, ...configB.rules },
+    ruleFiles: dedupe([
+      ...(configA.ruleFiles ?? []),
+      ...(configB.ruleFiles ?? [])
+    ]),
+    ruleDefinitions: [
+      ...(configA.ruleDefinitions ?? []),
+      ...(configB.ruleDefinitions ?? [])
+    ],
     ignores:
       configA.ignores || configB.ignores
         ? dedupe([...(configA.ignores ?? []), ...(configB.ignores ?? [])])

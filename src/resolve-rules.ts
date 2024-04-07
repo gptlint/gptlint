@@ -5,7 +5,9 @@ import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from './types.js'
+import { RuleDefinitionSchema } from './config.js'
 import { parseRuleFile } from './parse-rule-file.js'
+import { assert, isValidRuleName, isValidRuleSetting } from './utils.js'
 
 export async function resolveRules({
   config,
@@ -56,18 +58,53 @@ export async function resolveRules({
     )
   ).filter(Boolean)
 
+  const customRules: types.Rule[] = (config.ruleDefinitions ?? []).map(
+    (ruleDefinition) => {
+      const parsedRule = RuleDefinitionSchema.safeParse(ruleDefinition)
+
+      if (parsedRule.success) {
+        const rule: types.Rule = {
+          desc: 'Custom rule',
+          level: 'error',
+          fixable: false,
+          ...parsedRule.data
+        }
+
+        assert(
+          isValidRuleName(rule.name),
+          `Invalid custom rule name "${rule.name}"`
+        )
+
+        assert(
+          isValidRuleSetting(rule.level!),
+          `Invalid custom rule level "${rule.level!}"`
+        )
+
+        return rule
+      } else {
+        throw new Error(
+          `Error parsing custom rule "${ruleDefinition.name}": ${parsedRule.error.message}`
+        )
+      }
+    }
+  )
+
+  // Custom rules should always go first because they may import other rule
+  // markdown files, and we want the custom rules to take precedence
+  rules = customRules.concat(rules)
+
   const processedRules = new Set<string>()
 
-  // Validate rules for duplicates
-  for (const rule of rules) {
+  rules = rules.filter((rule) => {
+    assert(isValidRuleName(rule.name), `Invalid rule name "${rule.name}"`)
+
     if (processedRules.has(rule.name)) {
-      throw new Error(`Duplicate rule found "${rule.name}"`)
+      return false
     }
 
     processedRules.add(rule.name)
-
-    // TODO: validate rule
-  }
+    return true
+  })
 
   if (!rules.length) {
     throw new Error('No rules found')
