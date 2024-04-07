@@ -1,4 +1,4 @@
-import { basename } from 'node:path'
+import path from 'node:path'
 
 import type { Code, Heading, Node, Nodes, Parent, Root, Table } from 'mdast'
 import { gfmToMarkdown } from 'mdast-util-gfm'
@@ -69,7 +69,7 @@ export function parseRuleNode({
   const message = convertASTToPlaintext(headingRuleNode)
   assert(message, 'Rule message must not be empty')
 
-  const fileNameRuleName = basename(filePath).replace(/\.\w+$/, '')
+  const fileNameRuleName = path.basename(filePath).replace(/\.\w+$/, '')
   const defaultRuleName = isValidRuleName(fileNameRuleName)
     ? fileNameRuleName
     : slugify(message).trim()
@@ -295,6 +295,7 @@ export function parseRuleTableNode({
       try {
         const reFlags = 'gi'
         const precheckRegexes = prechecks.map(
+          // eslint-disable-next-line security/detect-non-literal-regexp
           (precheck) => new RegExp(precheck, reFlags)
         )
 

@@ -54,8 +54,8 @@ export async function readFiles(
       const language = jsExtensions.has(ext)
         ? 'javascript'
         : tsExtensions.has(ext)
-        ? 'typescript'
-        : 'unknown'
+          ? 'typescript'
+          : 'unknown'
 
       return {
         filePath,
