@@ -23,6 +23,7 @@ Code which doesn't use the \`axios\` module should be ignored.
   "positiveExamples": [],
   "preProcessFile": [Function],
   "scope": "file",
+  "source": "./prefer-fetch-over-axios.md",
   "tags": [
     "best practices",
   ],
