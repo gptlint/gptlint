@@ -1,6 +1,5 @@
 import 'dotenv/config'
 
-// import preferAxiosOverFetchRule from './rules/custom/prefer-fetch-over-axios.js'
 import * as ruleDefinitions from './dist/rules/custom/index.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
@@ -34,9 +33,6 @@ export default [
       model: 'gpt-4-turbo-preview',
       weakModel: 'gpt-3.5-turbo'
     }
-    // rules: {
-    //   'always-handle-promises': 'error'
-    // }
   }
 ]
 
