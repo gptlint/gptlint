@@ -242,6 +242,8 @@ export function parseRuleTableNode({
     'tags',
     'languages',
     'eslint',
+    'include',
+    'exclude',
     'resources'
   ])
 
@@ -296,6 +298,12 @@ export function parseRuleTableNode({
       rule.languages = value.split(',').map((v) => v.trim())
     } else if (key === 'eslint') {
       rule.eslint = value.split(',').map((v) => v.trim())
+    } else if (key === 'include') {
+      // TODO: improve this and support multiple regexes
+      rule.include = [value]
+    } else if (key === 'exclude') {
+      // TODO: improve this and support multiple regexes
+      rule.exclude = [value]
     } else if (key === 'resources') {
       // TODO: support markdown links for resources
       rule.resources = value.split(',').map((v) => v.trim())

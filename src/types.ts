@@ -35,6 +35,8 @@ export type Rule = {
   languages?: string[]
   tags?: string[]
   eslint?: string[]
+  include?: string[]
+  exclude?: string[]
   resources?: string[]
   model?: string
   level: LintRuleLevel // TODO: rename this to `severity`?

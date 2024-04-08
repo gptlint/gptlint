@@ -1,11 +1,12 @@
 # Be liberal in what you accept and strict in what you produce
 
-| Key       | Value                           |
-| --------- | ------------------------------- |
-| Fixable   | false                           |
-| Tags      | best practices                  |
-| Languages | typescript                      |
-| Resources | https://effectivetypescript.com |
+| Key       | Value                                |
+| --------- | ------------------------------------ |
+| Fixable   | false                                |
+| Tags      | best practices                       |
+| Languages | typescript                           |
+| Exclude   | `**/*.test\.{js,ts,jsx,tsx,cjs,mjs}` |
+| Resources | https://effectivetypescript.com      |
 
 This idea is known as the robustness principle or Postel’s Law.
 

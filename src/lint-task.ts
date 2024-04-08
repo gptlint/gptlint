@@ -1,5 +1,7 @@
+import multimatch from 'multimatch'
+
 import type * as types from './types.js'
-import { createCacheKey, createPromiseWithResolvers } from './utils.js'
+import { assert, createCacheKey, createPromiseWithResolvers } from './utils.js'
 
 export function createLintTask({
   rule,
@@ -9,12 +11,32 @@ export function createLintTask({
   rule: types.Rule
   file?: types.SourceFile
   config: types.ResolvedLinterConfig
-}): types.LintTask {
+}): types.LintTask | null {
+  const { scope } = rule
+
+  if (scope === 'file') {
+    assert(file)
+
+    if (rule.include) {
+      const matches = multimatch(file.fileRelativePath, rule.include)
+      if (!matches.length) {
+        return null
+      }
+    }
+
+    if (rule.exclude) {
+      const matches = multimatch(file.fileRelativePath, rule.exclude)
+      if (matches.length) {
+        return null
+      }
+    }
+  }
+
   const lintTaskP = createPromiseWithResolvers()
   const lintTask = {
     ...lintTaskP,
-    scope: rule.scope,
-    group: rule.scope === 'file' ? file!.fileRelativePath : rule.scope,
+    scope,
+    group: scope === 'file' ? file!.fileRelativePath : scope,
     rule,
     file,
     config,

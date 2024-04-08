@@ -1,3 +1,4 @@
+/* gptlint prefer-fetch-over-axios: off */
 import { assert, expect, test } from 'vitest'
 
 import type * as types from './types.js'

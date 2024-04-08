@@ -64,6 +64,7 @@
     "mdast-util-gfm": "^3.0.0",
     "mdast-util-to-markdown": "^2.1.0",
     "mdast-util-to-string": "^4.0.0",
+    "multimatch": "^7.0.0",
     "p-map": "^7.0.2",
     "p-retry": "^6.2.0",
     "parse-gitignore": "^2.0.0",

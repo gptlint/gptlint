@@ -940,6 +940,9 @@ This time the type of zoom is number, rather than \`number|undefined\`. The \`vi
 
 Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.
 ",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
   "fixable": false,
   "languages": [
     "typescript",

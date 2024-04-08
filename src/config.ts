@@ -213,6 +213,20 @@ export const RuleDefinitionSchema = z.object({
       "Specific model to use for this rule. Useful for using a fine-tuned model which is specfic to a single rule. If a `model` is given, it will override the general config's `model` and `weakModel` when enforcing this rule with the built-in LLM-based linting engine."
     ),
 
+  exclude: z
+    .array(z.string())
+    .optional()
+    .describe(
+      'An optional array of file glob patterns to ignore when enforcing this rule.'
+    ),
+
+  include: z
+    .array(z.string())
+    .optional()
+    .describe(
+      'An optional array of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`.'
+    ),
+
   preProcessFile: z
     .function(z.tuple([z.any()]), z.any())
     .optional()

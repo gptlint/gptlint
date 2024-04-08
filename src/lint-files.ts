@@ -47,16 +47,18 @@ export async function lintFiles({
   onProgress?: types.ProgressHandlerFn
   onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
-  const initialLintTasks = rules.flatMap((rule) => {
-    if (rule.scope === 'file') {
-      // TODO: Experiment with different types of file <> rule mappings.
-      return files.map((file) => createLintTask({ file, rule, config }))
-    } else if (rule.scope === 'project' || rule.scope === 'repo') {
-      return [createLintTask({ rule, config })]
-    } else {
-      return []
-    }
-  })
+  const initialLintTasks: types.LintTask[] = rules
+    .flatMap((rule) => {
+      if (rule.scope === 'file') {
+        // TODO: Experiment with different types of file <> rule mappings.
+        return files.map((file) => createLintTask({ file, rule, config }))
+      } else if (rule.scope === 'project' || rule.scope === 'repo') {
+        return [createLintTask({ rule, config })]
+      } else {
+        return []
+      }
+    })
+    .filter(Boolean)
 
   let lintResult = createLintResult()
   let earlyExitTripped = false
