@@ -50,7 +50,7 @@ export default [
 //       kyOptions: {
 //         headers: {
 //           // Optional, for including your app on openrouter.ai rankings.
-//           'HTTP-Referer': 'https://github.com/GPTLint/GPTLint',
+//           'HTTP-Referer': 'https://github.com/gptlint/gptlint',
 //           // Optional, shows in rankings on openrouter.ai.
 //           'X-Title': 'gptlint'
 //         }

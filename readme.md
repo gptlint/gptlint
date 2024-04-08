@@ -188,7 +188,7 @@ export default [
       kyOptions: {
         headers: {
           // Optional, for including your app on openrouter.ai rankings.
-          'HTTP-Referer': 'https://github.com/GPTLint/GPTLint',
+          'HTTP-Referer': 'https://github.com/gptlint/gptlint',
           // Optional, shows in rankings on openrouter.ai.
           'X-Title': 'gptlint'
         }
@@ -369,7 +369,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 
 ### Post-MVP
 
-- cross-file linting (likely using [tree-sitter](https://tree-sitter.github.io/tree-sitter/))
+- cross-file linting (likely using [tree-sitter](https://tree-sitter.github.io/tree-sitter/); see my [initial exploration](https://twitter.com/transitive_bs/status/1776353458813112353))
 - add support for different programming languages
 - add support for applying autofixes to linter errors
 - track the positive instances where we see rule conformance as well?
@@ -387,7 +387,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   author = {Travis Fischer, Scott Silvi},
   year   = {2024},
   month  = {4},
-  url    = {https://github.com/GPTLint/GPTLint}
+  url    = {https://github.com/gptlint/gptlint}
 }
 ```
 
