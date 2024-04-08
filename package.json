@@ -104,5 +104,17 @@
       "eslint --fix",
       "prettier --ignore-unknown --write"
     ]
-  }
+  },
+  "keywords": [
+    "lint",
+    "linter",
+    "linting",
+    "ai",
+    "gpt",
+    "llms",
+    "code quality",
+    "code health",
+    "best practices",
+    "static analysis"
+  ]
 }
