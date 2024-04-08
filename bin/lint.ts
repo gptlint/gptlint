@@ -27,7 +27,7 @@ async function main() {
     }
   )
 
-  let files: types.InputFile[]
+  let files: types.SourceFile[]
   let rules: types.Rule[]
 
   try {
@@ -41,7 +41,7 @@ async function main() {
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.debugConfig) {
+  if (config.linterOptions.printConfig) {
     logDebugConfig({ files, rules, config })
     return gracefulExit(0)
   }
@@ -54,7 +54,8 @@ async function main() {
     rules,
     config,
     cache,
-    chatModel
+    chatModel,
+    cwd
   })
 
   if (config.linterOptions.debugStats) {

@@ -4,10 +4,12 @@ exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
 {
   "desc": "This rule doesn't contain any examples which is fine because they are optional.
 ",
+  "level": "error",
   "message": "Example",
   "name": "empty-examples",
   "negativeExamples": [],
   "positiveExamples": [],
+  "scope": "file",
   "source": "fixtures/rules/empty-examples.md",
 }
 `;
@@ -51,6 +53,7 @@ type Query {
       "language": "graphql",
     },
   ],
+  "scope": "file",
   "source": "fixtures/rules/force-list-pagination.md",
   "tags": [
     "graphql",
@@ -76,6 +79,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
   "name": "example-name",
   "negativeExamples": [],
   "positiveExamples": [],
+  "scope": "file",
   "source": "fixtures/rules/metadata-0.md",
   "tags": [
     "general",
@@ -101,6 +105,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
   "name": "example-name",
   "negativeExamples": [],
   "positiveExamples": [],
+  "scope": "file",
   "source": "fixtures/rules/metadata-1.md",
   "tags": [
     "general",
@@ -113,6 +118,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-2.md 1`] = `
 {
   "desc": "This example should parse correctly because we stringify the values.
 ",
+  "level": "error",
   "message": "Example",
   "name": "example-name",
   "negativeExamples": [],
@@ -121,29 +127,8 @@ exports[`parseRuleFile - fixtures/rules/metadata-2.md 1`] = `
     "foo",
     "bar",
   ],
+  "scope": "file",
   "source": "fixtures/rules/metadata-2.md",
-}
-`;
-
-exports[`parseRuleFile - fixtures/rules/metadata-prechecks.md 1`] = `
-{
-  "desc": "This example should parse correctly. It uses 2 regex prechecks.
-",
-  "message": "Example",
-  "name": "example-name",
-  "negativeExamples": [],
-  "positiveExamples": [],
-  "prechecks": [
-    {
-      "desc": "Precheck /['"]axios['"]/gi",
-      "fileCheckFn": [Function],
-    },
-    {
-      "desc": "Precheck /import\\\\s+.*from\\\\s*['"]react['"]/gi",
-      "fileCheckFn": [Function],
-    },
-  ],
-  "source": "fixtures/rules/metadata-prechecks.md",
 }
 `;
 
@@ -190,6 +175,7 @@ type Mutation {
       "language": "graphql",
     },
   ],
+  "scope": "file",
   "source": "fixtures/rules/mutations.md",
   "tags": [
     "graphql",
@@ -258,6 +244,7 @@ type Query {
       "language": "graphql",
     },
   ],
+  "scope": "file",
   "source": "fixtures/rules/prefer-edge-node.md",
   "tags": [
     "graphql",
@@ -330,6 +317,7 @@ export default gql\`
       "language": "tsx",
     },
   ],
+  "scope": "file",
   "source": "fixtures/rules/prefer-page-queries.md",
   "tags": [
     "graphql",
@@ -377,6 +365,7 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
       "language": "ts",
     },
   ],
+  "scope": "file",
   "source": "fixtures/rules/prefer-strapi-env-vars.md",
   "tags": [
     "code smells",
@@ -407,6 +396,7 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
       "language": "ts",
     },
   ],
+  "scope": "file",
   "source": "fixtures/rules/wip/format-comments-like-sentences.md",
   "tags": [
     "general",
@@ -430,6 +420,7 @@ TODO
   "name": "react-prefer-derived-state",
   "negativeExamples": [],
   "positiveExamples": [],
+  "scope": "file",
   "source": "fixtures/rules/wip/react-prefer-derived-state.md",
   "tags": [
     "react",
@@ -472,6 +463,7 @@ export function bar() {}",
       "language": "js",
     },
   ],
+  "scope": "file",
   "source": "fixtures/rules/wip/use-esm.md",
   "tags": [
     "general",
@@ -494,6 +486,7 @@ Creating a Promise or calling an \`async\` function and NOT awaiting or propagat
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Always handle Promises",
   "name": "always-handle-promises",
   "negativeExamples": [
@@ -538,6 +531,7 @@ await Promise.all([saveFile(), saveFile()])",
       "language": "js",
     },
   ],
+  "scope": "file",
   "source": "rules/always-handle-promises.md",
   "tags": [
     "best practices",
@@ -607,6 +601,7 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
   "languages": [
     "typescript",
   ],
+  "level": "error",
   "message": "Don’t repeat type information in documentation",
   "name": "avoid-type-info-in-docs",
   "negativeExamples": [
@@ -705,6 +700,7 @@ export function parseStructuredOutput<T>(
   "resources": [
     "https://effectivetypescript.com",
   ],
+  "scope": "file",
   "source": "rules/avoid-type-info-in-docs.md",
   "tags": [
     "best practices",
@@ -733,6 +729,7 @@ Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBas
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Be consistent with identifier casing",
   "name": "consistent-identifier-casing",
   "negativeExamples": [
@@ -759,7 +756,7 @@ function helloTwitter() {}",
     {
       "code": "import foo from 'foo'
 
-// This is fine because \`foo\` is a third-party API which this rule should to ignore.
+// This is fine because \`foo\` is a third-party API which this rule should ignore.
 foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })",
       "language": "ts",
     },
@@ -773,12 +770,42 @@ const cwd = process.cwd",
       "language": "ts",
     },
     {
-      "code": "// This is fine because \`i\` is a parameter for an inline function.
+      "code": "// This is fine because \`i\` is a parameter of an inline function.
 const foo = [1, 2, 3].filter((i) => i >= 0)",
       "language": "ts",
     },
   ],
+  "scope": "file",
   "source": "rules/consistent-identifier-casing.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - rules/custom/prefer-fetch-over-axios.md 1`] = `
+{
+  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
+
+Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
+
+Code which doesn't use the \`axios\` module should be ignored.
+",
+  "eslint": [
+    "no-restricted-imports",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer fetch over axios",
+  "name": "prefer-fetch-over-axios",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": "rules/custom/prefer-fetch-over-axios.md",
   "tags": [
     "best practices",
   ],
@@ -913,10 +940,14 @@ This time the type of zoom is number, rather than \`number|undefined\`. The \`vi
 
 Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.
 ",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
   "fixable": false,
   "languages": [
     "typescript",
   ],
+  "level": "error",
   "message": "Be liberal in what you accept and strict in what you produce",
   "name": "liberal-accept-strict-produce",
   "negativeExamples": [],
@@ -924,6 +955,7 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
   "resources": [
     "https://effectivetypescript.com",
   ],
+  "scope": "file",
   "source": "rules/liberal-accept-strict-produce.md",
   "tags": [
     "best practices",
@@ -949,6 +981,7 @@ The most common solution is to only access secrets from environment variables so
   "languages": [
     "all",
   ],
+  "level": "error",
   "message": "No hardcoded secrets",
   "name": "no-hardcoded-secrets",
   "negativeExamples": [
@@ -987,6 +1020,7 @@ const openai = new OpenAI({
       "language": "ts",
     },
   ],
+  "scope": "file",
   "source": "rules/no-hardcoded-secrets.md",
   "tags": [
     "security",
@@ -1006,6 +1040,7 @@ exports[`parseRuleFile - rules/prefer-array-at-negative-indexing.md 1`] = `
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Prefer using Array.at when indexing from the end of an array",
   "name": "prefer-array-at-negative-indexing",
   "negativeExamples": [
@@ -1040,6 +1075,7 @@ const item = items[index]",
   "resources": [
     "https://twitter.com/housecor/status/1768622518179369036",
   ],
+  "scope": "file",
   "source": "rules/prefer-array-at-negative-indexing.md",
   "tags": [
     "best practices",
@@ -1049,9 +1085,9 @@ const item = items[index]",
 
 exports[`parseRuleFile - rules/prefer-defensive-programming.md 1`] = `
 {
-  "desc": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs / states at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+  "desc": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
 
-The following defensive programming techniques should be preferred as best practices:
+The following defensive programming techniques should be preferred whenever possible:
 
 - [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
 - [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
@@ -1065,10 +1101,12 @@ The following defensive programming techniques should be preferred as best pract
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Prefer defensive programming techniques <!-- omit from toc -->",
   "name": "prefer-defensive-programming",
   "negativeExamples": [],
   "positiveExamples": [],
+  "scope": "file",
   "source": "rules/prefer-defensive-programming.md",
   "tags": [
     "best practices",
@@ -1092,6 +1130,7 @@ Ignore \`if\` statements with multiple \`else\` branches.
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Prefer early returns from functions",
   "name": "prefer-early-return",
   "negativeExamples": [
@@ -1201,40 +1240,8 @@ Ignore \`if\` statements with multiple \`else\` branches.
   "resources": [
     "https://gomakethings.com/the-early-return-pattern-in-javascript/",
   ],
+  "scope": "file",
   "source": "rules/prefer-early-return.md",
-  "tags": [
-    "best practices",
-  ],
-}
-`;
-
-exports[`parseRuleFile - rules/prefer-fetch-over-axios.md 1`] = `
-{
-  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
-
-Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
-
-Code which doesn't use the \`axios\` module should be ignored.
-",
-  "eslint": [
-    "no-restricted-imports",
-  ],
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
-  "message": "Prefer fetch over axios",
-  "name": "prefer-fetch-over-axios",
-  "negativeExamples": [],
-  "positiveExamples": [],
-  "prechecks": [
-    {
-      "desc": "Precheck /['"]axios['"]/gi",
-      "fileCheckFn": [Function],
-    },
-  ],
-  "source": "rules/prefer-fetch-over-axios.md",
   "tags": [
     "best practices",
   ],
@@ -1392,6 +1399,7 @@ class Product {
   "languages": [
     "typescript",
   ],
+  "level": "error",
   "message": "Prefer types that always represent valid states",
   "name": "prefer-types-always-valid-states",
   "negativeExamples": [],
@@ -1399,6 +1407,7 @@ class Product {
   "resources": [
     "https://effectivetypescript.com",
   ],
+  "scope": "file",
   "source": "rules/prefer-types-always-valid-states.md",
   "tags": [
     "best practices",
@@ -1420,6 +1429,7 @@ Note that uses \`classes\` is fine for non-react components.
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Don't use React class components",
   "name": "react-avoid-class-components",
   "negativeExamples": [
@@ -1461,6 +1471,7 @@ class Foo extends EventEmitter {
       "language": "ts",
     },
   ],
+  "scope": "file",
   "source": "rules/react-avoid-class-components.md",
   "tags": [
     "react",
@@ -1472,11 +1483,15 @@ exports[`parseRuleFile - rules/semantic-variable-names.md 1`] = `
 {
   "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
 ",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
   "fixable": false,
   "languages": [
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Use semantic variable names",
   "name": "semantic-variable-names",
   "negativeExamples": [
@@ -1537,6 +1552,7 @@ import { z } from 'zod'",
       "language": "ts",
     },
   ],
+  "scope": "file",
   "source": "rules/semantic-variable-names.md",
   "tags": [
     "best practices",

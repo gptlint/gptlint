@@ -113,7 +113,7 @@ export default [
 ]
 ```
 
-You can debug the fully resolved rules and config options at any time by running `gptlint --debug-config` to ensure that your custom rules are recognized correctly (this command logs the resolved config and then exits without actually running the linter).
+You can debug the fully resolved rules and config options at any time by running `gptlint --print-config` to ensure that your custom rules are recognized correctly (this command logs the resolved config and then exits without actually running the linter).
 
 ## Defense in depth
 

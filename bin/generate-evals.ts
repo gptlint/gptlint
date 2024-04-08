@@ -83,7 +83,10 @@ async function main() {
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.debugConfig) {
+  // TODO
+  rules = rules.filter((rule) => rule.scope === 'file')
+
+  if (config.linterOptions.printConfig) {
     logDebugConfig({ rules, config })
     return gracefulExit(0)
   }

@@ -8,11 +8,12 @@ import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from '../src/types.js'
+import { createLinterCache } from '../src/cache.js'
 import { createChatModel } from '../src/create-chat-model.js'
 import { lintFile } from '../src/lint-file.js'
 import { createLintResult, mergeLintResults } from '../src/lint-result.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
-import { readFiles } from '../src/resolve-files.js'
+import { readSourceFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
 import {
   createEvalStats,
@@ -40,9 +41,30 @@ async function main() {
           // Use GPT-4 as the default for evals
           model: 'gpt-4-turbo-preview'
         }
+      },
+      flagsToAdd: {
+        onlyPositive: {
+          type: Boolean,
+          description: 'Only generate positive examples',
+          default: false
+        },
+        onlyNegative: {
+          type: Boolean,
+          description: 'Only generate negative examples',
+          default: false
+        }
       }
     }
   )
+
+  const onlyPositive = !!(args.flags as any).onlyPositive
+  const onlyNegative = !!(args.flags as any).onlyNegative
+
+  if (onlyPositive && onlyNegative) {
+    console.error('Cannot specify both --only-positive and --only-negative')
+    args.showHelp()
+    return gracefulExit(1)
+  }
 
   let rules: types.Rule[]
 
@@ -54,12 +76,16 @@ async function main() {
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.debugConfig) {
+  // TODO
+  rules = rules.filter((rule) => rule.scope === 'file')
+
+  if (config.linterOptions.printConfig) {
     logDebugConfig({ rules, config })
     return gracefulExit(0)
   }
 
   const chatModel = createChatModel(config)
+  const cache = await createLinterCache(config)
 
   const evalsDir = path.join('fixtures', 'evals')
   const ruleToEvalStats: Record<string, types.EvalStats> = {}
@@ -73,14 +99,14 @@ async function main() {
       const ruleEvalStats = createEvalStats()
       let ruleLintResult = createLintResult()
 
-      {
+      if (!onlyNegative) {
         // Positive examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'correct', '*')
         const exampleFiles = await globby(fileExamplesGlob, {
           gitignore: true,
           cwd
         })
-        const files = await readFiles(exampleFiles, { cwd })
+        const files = await readSourceFiles(exampleFiles, { cwd })
 
         await pMap(
           files,
@@ -90,7 +116,9 @@ async function main() {
                 file,
                 rule,
                 chatModel,
-                config
+                cache,
+                config,
+                cwd
               })
 
               ++ruleEvalStats.numFiles
@@ -124,14 +152,14 @@ async function main() {
         )
       }
 
-      {
+      if (!onlyPositive) {
         // Negative examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'incorrect', '*')
         const exampleFiles = await globby(fileExamplesGlob, {
           gitignore: true,
           cwd
         })
-        const files = await readFiles(exampleFiles, { cwd })
+        const files = await readSourceFiles(exampleFiles, { cwd })
 
         await pMap(
           files,
@@ -141,7 +169,9 @@ async function main() {
                 file,
                 rule,
                 chatModel,
-                config
+                cache,
+                config,
+                cwd
               })
 
               ++ruleEvalStats.numFiles

@@ -1,4 +1,4 @@
-import { type ChatModel, Msg, type Prompt } from '@dexaai/dexter'
+import { Msg, type Prompt } from '@dexaai/dexter'
 import plur from 'plur'
 
 import type * as types from './types.js'
@@ -31,24 +31,21 @@ import { pruneUndefined } from './utils.js'
 export async function lintFile({
   file,
   rule,
+  lintResult,
   chatModel,
+  cache,
   config,
+  cwd,
   retryOptions = {
     retries: 2
   }
-}: {
-  file: types.InputFile
-  rule: types.Rule
-  chatModel: ChatModel
-  config: types.ResolvedLinterConfig
-  retryOptions?: types.RetryOptions
-}): Promise<types.LintResult> {
+}: types.ProcessFileFnParams): Promise<types.LintResult> {
   const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
   const model =
     rule.model ?? isTwoPassLintingEnabled
       ? config.llmOptions.weakModel!
       : config.llmOptions.model
-  let lintResult = createLintResult()
+  lintResult = createLintResult(lintResult)
 
   if (config.linterOptions.debug) {
     console.log(
@@ -112,6 +109,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       //   throw new RetryableError('example error for testing')
       // } else if (rule.name === 'semantic-variable-names') {
       //   lintResult.lintErrors.push({
+      //     message: 'Mock rule violation',
       //     filePath: file.fileRelativePath,
       //     language: file.language,
       //     model,
@@ -190,9 +188,11 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
         // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
 
         lintResult.lintErrors.push({
+          message: `Rule violation`,
           filePath: file.filePath,
           language: file.language,
           ruleName: rule.name,
+          level: rule.level,
           model,
           codeSnippet,
           confidence,
@@ -273,8 +273,10 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       rule,
       lintResult,
       chatModel,
+      cache,
       config,
-      retryOptions
+      retryOptions,
+      cwd
     })
 
     if (config.linterOptions.debug) {
@@ -329,15 +331,9 @@ export async function validateRuleViolations({
   retryOptions = {
     retries: 2
   }
-}: {
-  file: types.InputFile
-  rule: types.Rule
-  lintResult: types.LintResult
-  chatModel: ChatModel
-  config: types.ResolvedLinterConfig
-  retryOptions?: types.RetryOptions
-}): Promise<types.LintResult> {
+}: types.PostProcessFileFnParams): Promise<types.LintResult> {
   const model = rule.model ?? config.llmOptions.model
+  lintResult = createLintResult(lintResult)
 
   // Determine if the model supports JSON response format, which is preferred,
   // or fallback to the default behavior of parsing JSON in a markdown code block
@@ -496,9 +492,11 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
         // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
 
         lintResult.lintErrors.push({
+          message: `Rule violation`,
           filePath: file.filePath,
           language: file.language,
           ruleName: rule.name,
+          level: rule.level,
           model,
           codeSnippet,
           confidence,

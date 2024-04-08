@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
 import type * as types from './types.js'
 import {
   findAllBetween,
@@ -30,4 +33,21 @@ export async function parseRuleFile({
 
   const rule = parseRuleNode({ headingRuleNode, bodyRuleNodes, filePath })
   return rule
+}
+
+export async function parseRuleFilePath(
+  filePath: string,
+  {
+    cwd = process.cwd()
+  }: {
+    cwd?: string
+  } = {}
+): Promise<types.Rule> {
+  const filePathResolved = cwd ? path.resolve(cwd, filePath) : filePath
+  const content = await fs.readFile(filePathResolved, { encoding: 'utf8' })
+
+  return parseRuleFile({
+    content,
+    filePath
+  })
 }

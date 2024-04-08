@@ -6,9 +6,9 @@
 | Tags      | best practices         |
 | Languages | javascript, typescript |
 
-Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs / states at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
 
-The following defensive programming techniques should be preferred as best practices:
+The following defensive programming techniques should be preferred whenever possible:
 
 - [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
 - [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
@@ -19,7 +19,7 @@ The following defensive programming techniques should be preferred as best pract
 
 ## Validate external data with type guards or schema validation
 
-When dealing with data from external sources (like APIs), don't just trust the payload matches your interfaces. Use type guards to validate the shape and type of the data at runtime.
+When dealing with data from external sources (like public APIs), don't just trust that the payload matches your internal types. If you're dealing with external data which you can't trust, then prefer using a validation library like `zod` with type guards to validate the shape and type of the external data at runtime.
 
 ```ts
 import { z } from 'zod'
@@ -45,6 +45,8 @@ try {
   console.error('Validation Failed:', error.errors)
 }
 ```
+
+NOTE: **You do not always need to validate function arguments**. This suggestion is only meant for when you are sure you're dealing with **external data that your program does not trust**. For normal function arguments, you can safely ignore this rule.
 
 ## Use optional chaining and nullish coalescing where appropriate
 

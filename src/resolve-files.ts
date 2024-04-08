@@ -13,22 +13,22 @@ export async function resolveFiles({
   config: types.ResolvedLinterConfig
   cwd?: string
 }) {
-  const inputFiles = await globby(config.files, {
+  const sourceFiles = await globby(config.files, {
     gitignore: true,
     ignore: config.ignores,
     cwd
   })
 
-  if (!inputFiles.length) {
+  if (!sourceFiles.length) {
     throw new Error('No source files found')
   }
 
-  return readFiles(inputFiles, {
+  return readSourceFiles(sourceFiles, {
     concurrency: config.linterOptions.concurrency
   })
 }
 
-export async function readFiles(
+export async function readSourceFiles(
   filePaths: string[],
   {
     concurrency = 16,
@@ -37,7 +37,9 @@ export async function readFiles(
     concurrency?: number
     cwd?: string
   } = {}
-): Promise<types.InputFile[]> {
+): Promise<types.SourceFile[]> {
+  filePaths.sort((a, b) => b.localeCompare(a))
+
   return pMap(
     filePaths,
     async (filePath) => {

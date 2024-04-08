@@ -13,7 +13,7 @@
 
     "strict": true,
     "noUncheckedIndexedAccess": true,
-    "forceConsistentCasingInFileNames": true,
+    // "forceConsistentCasingInFileNames": true,
 
     // transpiling w/ TS
     "module": "NodeNext",
@@ -33,6 +33,6 @@
     // "composite": true,
     // "declarationMap": true
   },
-  "include": ["src", "bin"],
+  "include": ["src", "bin", "rules"],
   "exclude": ["fixtures"]
 }

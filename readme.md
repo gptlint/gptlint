@@ -351,6 +351,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 - config
   - support rule overrides for specific file globs like eslint
   - add ability to customize rule behavior with configs like eslint
+  - consider moving default rules to `.gptlint` directory
   - **add ability to extend other configs**
   - **add built-in configs**
     - need better rules

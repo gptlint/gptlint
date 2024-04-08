@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`custom rule - prefer-fetch-over-axios 1`] = `
+{
+  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
+
+Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
+
+Code which doesn't use the \`axios\` module should be ignored.
+",
+  "eslint": [
+    "no-restricted-imports",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer fetch over axios",
+  "name": "prefer-fetch-over-axios",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "preProcessFile": [Function],
+  "scope": "file",
+  "source": "./prefer-fetch-over-axios.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
