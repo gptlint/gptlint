@@ -13,11 +13,10 @@ const rule: Readonly<Rule> = {
   message: 'Follow tsconfig best practices.',
   level: 'error',
   scope: 'project',
+  resources: ['https://typescriptlang.org/tsconfig'],
 
   preProcessProject: async ({ rule, cache, config, cwd }) => {
     const parsedTSConfig = getTsconfig(cwd, 'tsconfig.json', tsConfigCache)
-
-    // console.log('tsconfig?', parsedTSConfig)
 
     if (!parsedTSConfig) {
       return {
@@ -35,13 +34,6 @@ const rule: Readonly<Rule> = {
     // TODO: how to pass cacheKey along? need `lintTask` instead of just spread `lintTask`?
     const cacheKey = createCacheKey({ rule, config, filePath, tsconfig })
     const cachedResult = await cache.get(cacheKey)
-    // console.log('>>> tsconfig', {
-    //   tsconfig,
-    //   filePath,
-    //   cacheKey,
-    //   cachedResult
-    // })
-
     if (cachedResult) {
       return cachedResult
     }
@@ -75,19 +67,7 @@ const rule: Readonly<Rule> = {
       })
     }
 
-    // TODO
     await cache.set(cacheKey, { lintErrors } as any)
-
-    // console.log('<<< tsconfig', {
-    //   tsconfig,
-    //   filePath,
-    //   cacheKey,
-    //   lintErrors
-    // })
-
-    // TODO
-    // noImplicitAny
-
     return { lintErrors }
   }
 }
