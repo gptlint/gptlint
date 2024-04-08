@@ -8,8 +8,8 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/gptlint"><img alt="NPM" src="https://img.shields.io/npm/v/gptlint.svg" /></a>
-  <a href="https://github.com/transitive-bullshit/eslint-plus-plus/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/transitive-bullshit/eslint-plus-plus/actions/workflows/main.yml/badge.svg" /></a>
-  <a href="https://github.com/transitive-bullshit/eslint-plus-plus/blob/main/license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue" /></a>
+  <a href="https://github.com/gptlint/gptlint/actions/workflows/test.yml"><img alt="Build Status" src="https://github.com/gptlint/gptlint/actions/workflows/main.yml/badge.svg" /></a>
+  <a href="https://github.com/gptlint/gptlint/blob/main/license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue" /></a>
   <a href="https://prettier.io"><img alt="Prettier Code Formatting" src="https://img.shields.io/badge/code_style-prettier-brightgreen.svg" /></a>
   <a href="https://twitter.com/transitive_bs"><img alt="Discuss on Twitter" src="https://img.shields.io/badge/twitter-discussion-blue" /></a>
 </p>
@@ -247,7 +247,7 @@ Many of the higher-level best practices we'd like to support span multiple files
 
 This restriction will be removed once we've validated the MVP with the community, but it will likely remain as an optional rule-specific setting in the future to optimize rules which explicitly don't need multi-file context.
 
-If you'd like to add a rule which requires multi-file context, [please open an issue to discuss](https://github.com/transitive-bullshit/eslint-plus-plus/issues/new).
+If you'd like to add a rule which requires multi-file context, [please open an issue to discuss](https://github.com/gptlint/gptlint/issues/new).
 
 ### Rules in the MVP are JS/TS only
 
@@ -321,7 +321,7 @@ See our notes on [fine-tuning in how it works](./docs/how-it-works.md#fine-tunin
 
 ### Where can I get help? <!-- omit from toc -->
 
-For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, [open a discussion](https://github.com/transitive-bullshit/eslint-plus-plus/discussions) on this repo if you're looking for help.
+For free, open source projects, feel free to DM me [@transitive_bs](@transitive_bs) or my co-founder, [Scott Silvi](https://twitter.com/scottsilvi), on twitter. Alternatively, [open a discussion](https://github.com/gptlint/gptlint/discussions) on this repo if you're looking for help.
 
 For commercial projects, we've partnered with [Duality](https://teamduality.dev/) to offer AI consulting services and expertise related to GPTLint. Reach out to our team [here](mailto:gptlint@teamduality.dev), and be sure to include some background info on your project and what you're looking for.
 
