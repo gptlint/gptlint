@@ -344,15 +344,14 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
   - **improve error reporting to include approx line numbers**
 - rule file format
   - relax the examples parsing and lean into more flexible markdown support
-  - support both positive and negative examples in the same code block
-  - `prefer-page-queries.md` code examples give extra context outside of the code blocks that we'd rather not miss
 - rules
   - rewrite `liberal-accept-strict-produce` to be less verbose and have better examples
 - config
+  - **refactor config resolution** - needs a major cleanup
+    - reconsider rule `scope`
   - support rule overrides for specific file globs like eslint
   - add ability to customize rule behavior with configs like eslint
   - consider moving default rules to `.gptlint` directory
-  - **add ability to extend other configs**
   - **add built-in configs**
     - need better rules
     - convert this repo to a monorepo?
