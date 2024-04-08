@@ -391,6 +391,8 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 }
 ```
 
+Huge shoutout to [Laurentiu Raducu](https://twitter.com/Bitheap_tech) for gifting us the NPM package name. 🙏
+
 ## License
 
 MIT © [Travis Fischer](https://twitter.com/transitive_bs)
