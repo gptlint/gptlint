@@ -756,7 +756,7 @@ function helloTwitter() {}",
     {
       "code": "import foo from 'foo'
 
-// This is fine because \`foo\` is a third-party API which this rule should to ignore.
+// This is fine because \`foo\` is a third-party API which this rule should ignore.
 foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })",
       "language": "ts",
     },
@@ -770,7 +770,7 @@ const cwd = process.cwd",
       "language": "ts",
     },
     {
-      "code": "// This is fine because \`i\` is a parameter for an inline function.
+      "code": "// This is fine because \`i\` is a parameter of an inline function.
 const foo = [1, 2, 3].filter((i) => i >= 0)",
       "language": "ts",
     },
@@ -1483,6 +1483,9 @@ exports[`parseRuleFile - rules/semantic-variable-names.md 1`] = `
 {
   "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
 ",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
   "fixable": false,
   "languages": [
     "javascript",

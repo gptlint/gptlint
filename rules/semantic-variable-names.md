@@ -1,10 +1,11 @@
 # Use semantic variable names
 
-| Key       | Value                  |
-| --------- | ---------------------- |
-| Fixable   | false                  |
-| Tags      | best practices         |
-| Languages | javascript, typescript |
+| Key       | Value                                |
+| --------- | ------------------------------------ |
+| Fixable   | false                                |
+| Tags      | best practices                       |
+| Languages | javascript, typescript               |
+| Exclude   | `**/*.test\.{js,ts,jsx,tsx,cjs,mjs}` |
 
 Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
 

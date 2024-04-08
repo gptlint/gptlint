@@ -33,7 +33,7 @@ Ignore parameter names used in inline functions.
 
 Ignore string literals and module names for this rule.
 
-Class variables and functions may include `_` prefixes.
+Class member variables and functions may include `_` prefixes.
 
 ### Bad
 
@@ -60,7 +60,7 @@ function helloTwitter() {}
 ```ts
 import foo from 'foo'
 
-// This is fine because `foo` is a third-party API which this rule should to ignore.
+// This is fine because `foo` is a third-party API which this rule should ignore.
 foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })
 ```
 
@@ -74,6 +74,6 @@ const cwd = process.cwd
 ```
 
 ```ts
-// This is fine because `i` is a parameter for an inline function.
+// This is fine because `i` is a parameter of an inline function.
 const foo = [1, 2, 3].filter((i) => i >= 0)
 ```
