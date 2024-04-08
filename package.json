@@ -12,10 +12,10 @@
     "node": ">=18"
   },
   "type": "module",
-  "source": "./bin/lint.ts",
-  "types": "./dist/lint.d.ts",
+  "source": "./bin/gptlint.ts",
+  "types": "./dist/gptlint.d.ts",
   "bin": {
-    "gptlint": "./dist/bin/lint.js"
+    "gptlint": "./dist/bin/gptlint.js"
   },
   "exports": {
     ".": {

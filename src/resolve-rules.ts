@@ -15,7 +15,7 @@ export async function resolveRules({
 }: {
   config: types.ResolvedLinterConfig
   cwd?: string
-}) {
+}): Promise<types.Rule[]> {
   const ruleFilePaths = await globby(config.ruleFiles, {
     gitignore: true,
     cwd
