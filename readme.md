@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <em>Use LLMs to enforce best practices across your codebase</em>
+  <em>Use LLMs to enforce best practices across your codebase.</em>
 </p>
 
 <p align="center">
