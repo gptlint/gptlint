@@ -8,6 +8,7 @@ import {
   mergeLinterConfigs,
   parseLinterConfig
 } from './config.js'
+import { assert } from './utils.js'
 
 export async function resolveLinterConfig(
   linterConfig: types.LinterConfig,
@@ -35,7 +36,16 @@ export async function resolveLinterConfig(
       continue
     }
 
-    const { default: rawConfigs } = await import(configFilePath)
+    const configFile = await import(configFilePath)
+    assert(
+      configFile?.default,
+      `Config file "${configFilePath}" must export a valid config array`
+    )
+    const rawConfigs = configFile.default
+    assert(
+      Array.isArray(rawConfigs),
+      `Config file "${configFilePath}" must export a valid config array`
+    )
 
     // TODO: each of these sub-configs should only be enabled if `files` + `ignores` match, so it's not a strict merge
     for (const rawConfig of rawConfigs) {

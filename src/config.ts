@@ -330,7 +330,9 @@ export const defaultLinterConfig: Readonly<
   llmOptions: defaultLLMOptions
 }
 
-export function parseLinterConfig(config: Partial<LinterConfig>): LinterConfig {
+export function parseLinterConfig(
+  config: Partial<LinterConfig> | unknown
+): LinterConfig {
   return LinterConfigSchema.parse(config)
 }
 
