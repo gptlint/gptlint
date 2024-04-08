@@ -12,7 +12,7 @@ export { default as assert } from 'tiny-invariant'
  * From `obj`, create a new object that does not include `keys`.
  *
  * @example
- * ```
+ * ```js
  * omit({ a: 1, b: 2, c: 3 }, 'a', 'c') // { b: 2 }
  * ```
  */
@@ -33,7 +33,7 @@ export const omit = <
  * From `obj`, create a new object that only includes `keys`.
  *
  * @example
- * ```
+ * ```js
  * pick({ a: 1, b: 2, c: 3 }, 'a', 'c') // { a: 1, c: 3 }
  * ```
  */
@@ -78,6 +78,15 @@ export function isValidRuleSetting(
   if (value.toLowerCase() !== value) return false
 
   return value === 'off' || value === 'warn' || value === 'error'
+}
+
+export function isValidRuleScope(
+  value: string
+): value is types.LinterConfigRuleSetting {
+  if (!value) return false
+  if (value.toLowerCase() !== value) return false
+
+  return value === 'file' || value === 'project' || value === 'repo'
 }
 
 export function trimMessage(
@@ -307,20 +316,22 @@ export function logEvalStats({
 }
 
 export function createCacheKey({
-  file,
   rule,
+  file,
   config
 }: {
-  file: types.SourceFile
   rule: types.Rule
+  file?: types.SourceFile
   config: types.LinterConfig
 }): string {
   // TODO: add linter major version to the cache key
-  const cacheKeySource = {
-    // Only keep the relative file path, content, and detected language
-    file: pruneUndefined(pick(file, 'fileRelativePath', 'content', 'language')),
+  const cacheKeySource = pruneUndefined({
+    file: file
+      ? // Only keep the relative file path, content, and detected language
+        pruneUndefined(pick(file, 'fileRelativePath', 'content', 'language'))
+      : undefined,
 
-    // Remove rule fields which don't affect LLM logic
+    // Only keep the rule fields which affect the linting logic
     rule: pruneUndefined(
       pick(
         rule,
@@ -329,6 +340,8 @@ export function createCacheKey({
         'desc',
         'positiveExamples',
         'negativeExamples',
+        'model',
+        'scope',
         'languages'
       )
     ),
@@ -343,11 +356,12 @@ export function createCacheKey({
         'apiBaseUrl'
       )
     )
-  }
+  })
 
   return hashObject(cacheKeySource)
 }
 
+/** Polyfill for `Promise.withResolvers()` */
 export function createPromiseWithResolvers<
   T = unknown
 >(): PromiseWithResolvers<T> {

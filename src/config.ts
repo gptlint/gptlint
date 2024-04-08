@@ -169,7 +169,14 @@ export const RuleDefinitionSchema = z.object({
   level: z
     .enum(['off', 'warn', 'error'])
     .optional()
+    .default('error')
     .describe('Default rule serverity.'),
+
+  scope: z
+    .enum(['file', 'project', 'repo'])
+    .optional()
+    .default('file')
+    .describe('Granularity at which this rule is applied.'),
 
   languages: z
     .array(z.string())

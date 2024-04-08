@@ -1,7 +1,7 @@
 import type { ChatModel } from '@dexaai/dexter'
 import type { Command } from 'cleye'
 import type { TaskAPI, TaskInnerAPI } from 'tasuku'
-import type { SetRequired } from 'type-fest'
+import type { SetOptional, SetRequired, Simplify } from 'type-fest'
 
 import type { LinterCache } from './cache.js'
 import type { ResolvedLinterConfig } from './config.js'
@@ -20,28 +20,35 @@ export type MaybePromise<T> = T | Promise<T>
 
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 export type LintRuleLevel = 'error' | 'warn' | 'off'
+export type LintRuleScope = 'file' | 'project' | 'repo'
 
 export type Rule = {
   // core rule definition
   name: string
   message: string
-  desc: string
+  desc?: string
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
 
   // optional, user-defined metadata
   fixable?: boolean
-  level?: LintRuleLevel // TODO: rename this to `severity`?
   languages?: string[]
   tags?: string[]
   eslint?: string[]
   resources?: string[]
   model?: string
+  level: LintRuleLevel // TODO: rename this to `severity`?
+  scope: LintRuleScope
 
-  // optional custom functionality for rules
+  // optional custom functionality for rules scoped to the file-level
   preProcessFile?: PreProcessFileFn
   processFile?: ProcessFileFn
   postProcessFile?: PostProcessFileFn
+
+  // optional custom functionality for rules scoped to the project-level
+  preProcessProject?: PreProcessProjectFn
+  processProject?: ProcessProjectFn
+  postProcessProject?: PostProcessProjectFn
 
   // internal metadata
   source?: string
@@ -54,6 +61,7 @@ export type PreProcessFileFnParams = Readonly<{
   cache: LinterCache
   config: ResolvedLinterConfig
   retryOptions?: RetryOptions
+  cwd: string
 }>
 export type PreProcessFileFn = (
   opts: PreProcessFileFnParams
@@ -67,6 +75,7 @@ export type ProcessFileFnParams = Readonly<{
   cache: LinterCache
   config: ResolvedLinterConfig
   retryOptions?: RetryOptions
+  cwd: string
 }>
 export type ProcessFileFn = (
   opts: ProcessFileFnParams
@@ -78,6 +87,39 @@ export type PostProcessFileFnParams = SetRequired<
 >
 export type PostProcessFileFn = (
   opts: ProcessFileFnParams
+) => MaybePromise<LintResult>
+
+export type PreProcessProjectFnParams = Readonly<{
+  rule: Rule
+  chatModel: ChatModel
+  cache: LinterCache
+  config: ResolvedLinterConfig
+  retryOptions?: RetryOptions
+  cwd: string
+}>
+export type PreProcessProjectFn = (
+  opts: PreProcessProjectFnParams
+) => MaybePromise<PartialLintResult | undefined>
+
+export type ProcessProjectFnParams = Readonly<{
+  rule: Rule
+  lintResult?: LintResult
+  chatModel: ChatModel
+  cache: LinterCache
+  config: ResolvedLinterConfig
+  retryOptions?: RetryOptions
+  cwd: string
+}>
+export type ProcessProjectFn = (
+  opts: ProcessProjectFnParams
+) => MaybePromise<LintResult>
+
+export type PostProcessProjectFnParams = SetRequired<
+  ProcessProjectFnParams,
+  'lintResult'
+>
+export type PostProcessProjectFn = (
+  opts: ProcessProjectFnParams
 ) => MaybePromise<LintResult>
 
 export type RuleExample = {
@@ -96,19 +138,20 @@ export type SourceFile = {
 export type LintError = {
   ruleName: string
   filePath: string
-  language: string
-  model: string
+  language?: string
+  model?: string
 
   // lineStart: number // TODO
   message: string
+  level: LintRuleLevel
   codeSnippet?: string
   confidence?: LintRuleErrorConfidence
   reasoning?: string
 }
 
-export type PartialLintError = Omit<
-  LintError,
-  'ruleName' | 'filePath' | 'language' | 'model'
+export type PartialLintError = SetOptional<
+  Omit<LintError, 'ruleName' | 'language' | 'model'>,
+  'filePath' | 'level'
 >
 
 export type LintResult = {
@@ -142,16 +185,31 @@ export type LintSkipReason =
   | 'cached'
   | 'empty'
   | 'pre-process-file'
+  | 'pre-process-project'
   | 'rule-disabled'
   | 'inline-linter-disabled'
 
-export type LintTask = {
-  file: SourceFile
-  rule: Rule
-  config: ResolvedLinterConfig
-  cacheKey: string
-  lintResult?: LintResult
-} & PromiseWithResolvers<unknown>
+export type LintTask = Simplify<
+  {
+    scope: LintRuleScope
+    rule: Rule
+    file?: SourceFile
+    config: ResolvedLinterConfig
+    cacheKey: string
+    group: string
+    lintResult?: LintResult
+  } & PromiseWithResolvers<unknown> &
+    (
+      | {
+          scope: 'file'
+          file: SourceFile
+        }
+      | {
+          scope: 'project' | 'repo'
+          file: never
+        }
+    )
+>
 
 export type ResolvedLintTask = SetRequired<LintTask, 'lintResult'>
 

@@ -57,6 +57,7 @@
     "exit-hook": "^4.0.0",
     "fast-json-stable-stringify": "^2.1.0",
     "find-cache-dir": "^5.0.0",
+    "get-tsconfig": "^4.7.3",
     "globby": "^14.0.1",
     "hash-object": "^5.0.1",
     "jsonrepair": "^3.6.0",

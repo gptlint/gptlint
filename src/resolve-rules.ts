@@ -7,7 +7,12 @@ import pMap from 'p-map'
 import type * as types from './types.js'
 import { RuleDefinitionSchema } from './config.js'
 import { parseRuleFile } from './parse-rule-file.js'
-import { assert, isValidRuleName, isValidRuleSetting } from './utils.js'
+import {
+  assert,
+  isValidRuleName,
+  isValidRuleScope,
+  isValidRuleSetting
+} from './utils.js'
 
 export async function resolveRules({
   config,
@@ -63,12 +68,11 @@ export async function resolveRules({
       const parsedRule = RuleDefinitionSchema.safeParse(ruleDefinition)
 
       if (parsedRule.success) {
-        const rule: types.Rule = {
+        const rule = {
           desc: 'Custom rule',
-          level: 'error',
           fixable: false,
           ...parsedRule.data
-        }
+        } as types.Rule
 
         assert(
           isValidRuleName(rule.name),
@@ -78,6 +82,11 @@ export async function resolveRules({
         assert(
           isValidRuleSetting(rule.level!),
           `Invalid custom rule level "${rule.level!}"`
+        )
+
+        assert(
+          isValidRuleScope(rule.scope),
+          `Invalid custom rule scope "${rule.scope}"`
         )
 
         return rule

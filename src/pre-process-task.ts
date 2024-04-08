@@ -1,8 +1,9 @@
+import type { LinterCache } from './cache.js'
 import type * as types from './types.js'
 import { mergeLinterConfigs } from './config.js'
 import { createLintResult } from './lint-result.js'
 import { parseInlineConfig } from './parse-inline-config.js'
-import { createCacheKey, createPromiseWithResolvers } from './utils.js'
+import { assert } from './utils.js'
 
 /**
  * If the result contains a `lintResult`, then that is the cached result which
@@ -11,24 +12,14 @@ import { createCacheKey, createPromiseWithResolvers } from './utils.js'
  * If the result does not contain a `lintResult`, then the file / rule is not
  * cached and needs to be processed.
  */
-export async function preProcessFile({
-  file,
-  rule,
-  cache,
-  config
-}: types.PreProcessFileFnParams): Promise<types.LintTask> {
+export async function preProcessTask(
+  lintTask: types.LintTask,
+  { cache }: { cache: LinterCache }
+): Promise<types.LintTask> {
   const lintResult = createLintResult()
+  const { rule, file, config } = lintTask
 
-  const lintTaskP = createPromiseWithResolvers()
-  const lintTask: types.LintTask = {
-    ...lintTaskP,
-    file,
-    rule,
-    config,
-    cacheKey: createCacheKey({ file, rule, config })
-  }
-
-  if (!file.content.trim()) {
+  if (rule.scope === 'file' && !file!.content.trim()) {
     // Ignore empty files
     return {
       ...lintTask,
@@ -68,8 +59,10 @@ export async function preProcessFile({
 
   // TODO: This should probably be moved to run a single time per file instead
   // of per lint task
-  if (!config.linterOptions.noInlineConfig) {
+  if (!config.linterOptions.noInlineConfig && rule.scope === 'file') {
+    assert(file)
     const configFileOverride = parseInlineConfig({ file })
+
     if (configFileOverride) {
       if (configFileOverride.linterOptions?.disabled) {
         // Inline config disabled linting for this file

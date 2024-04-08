@@ -54,7 +54,8 @@ async function main() {
     rules,
     config,
     cache,
-    chatModel
+    chatModel,
+    cwd
   })
 
   if (config.linterOptions.debugStats) {

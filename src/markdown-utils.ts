@@ -13,6 +13,7 @@ import type * as types from './types.js'
 import {
   assert,
   isValidRuleName,
+  isValidRuleScope,
   isValidRuleSetting,
   slugify
 } from './utils.js'
@@ -82,7 +83,9 @@ export function parseRuleNode({
     name: defaultRuleName,
     positiveExamples: [],
     negativeExamples: [],
-    source: filePath
+    source: filePath,
+    level: 'error',
+    scope: 'file'
   }
   assert(rule.name, `Rule name must not be empty: ${message}`)
 
@@ -234,6 +237,7 @@ export function parseRuleTableNode({
     'name',
     'model',
     'level',
+    'scope',
     'fixable',
     'tags',
     'languages',
@@ -244,13 +248,13 @@ export function parseRuleTableNode({
   for (const bodyRow of bodyRows) {
     assert(
       bodyRow.children.length === 2,
-      `Rule contains invalid table (body rows must have 2 columns): ${rule.message} (${filePath})`
+      `Rule contains invalid metadata table (body rows must have 2 columns): ${rule.message} (${filePath})`
     )
 
     const key = convertASTToPlaintext(bodyRow.children[0]).toLowerCase().trim()
     assert(
       validRuleTableKeys.has(key),
-      `Rule contains invalid table (unsupported key "${key}"): ${rule.message} (${filePath})`
+      `Rule contains invalid metadata table (unsupported key "${key}"): ${rule.message} (${filePath})`
     )
 
     const value = convertASTToPlaintext(bodyRow.children[1])
@@ -259,7 +263,7 @@ export function parseRuleTableNode({
     if (key === 'name') {
       assert(
         value,
-        `Rule contains invalid table ("name" must not be empty): ${rule.message} (${filePath})`
+        `Rule contains invalid metadata ("name" must not be empty): ${rule.message} (${filePath})`
       )
 
       rule.name = value
@@ -268,14 +272,21 @@ export function parseRuleTableNode({
     } else if (key === 'level') {
       assert(
         isValidRuleSetting(value),
-        `Rule contains invalid table ("level" must be one of "warn" | "error" | "off"): ${rule.message} (${filePath})`
+        `Rule contains invalid metadata ("level" must be one of "warn" | "error" | "off"): ${rule.message} (${filePath})`
+      )
+
+      rule.level = value
+    } else if (key === 'scope') {
+      assert(
+        isValidRuleScope(value),
+        `Rule contains invalid metadata ("scope" must be one of "file" | "project" | "repo"): ${rule.message} (${filePath})`
       )
 
       rule.level = value
     } else if (key === 'fixable') {
       assert(
         value === 'true' || value === 'false',
-        `Rule contains invalid table ("fixable" must be one of "true" | "false"): ${rule.message} (${filePath})`
+        `Rule contains invalid metadata ("fixable" must be one of "true" | "false"): ${rule.message} (${filePath})`
       )
 
       rule.fixable = value === 'true'
@@ -291,7 +302,7 @@ export function parseRuleTableNode({
     } else {
       assert(
         false,
-        `Rule contains invalid table (unsupported key "${key}"): ${rule.message} (${filePath})`
+        `Rule contains invalid metadata table (unsupported key "${key}"): ${rule.message} (${filePath})`
       )
     }
   }

@@ -35,6 +35,7 @@ export async function lintFile({
   chatModel,
   cache,
   config,
+  cwd,
   retryOptions = {
     retries: 2
   }
@@ -191,6 +192,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
           filePath: file.filePath,
           language: file.language,
           ruleName: rule.name,
+          level: rule.level,
           model,
           codeSnippet,
           confidence,
@@ -273,7 +275,8 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       chatModel,
       cache,
       config,
-      retryOptions
+      retryOptions,
+      cwd
     })
 
     if (config.linterOptions.debug) {
@@ -493,6 +496,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
           filePath: file.filePath,
           language: file.language,
           ruleName: rule.name,
+          level: rule.level,
           model,
           codeSnippet,
           confidence,

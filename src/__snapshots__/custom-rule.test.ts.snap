@@ -16,11 +16,13 @@ Code which doesn't use the \`axios\` module should be ignored.
     "javascript",
     "typescript",
   ],
+  "level": "error",
   "message": "Prefer fetch over axios",
   "name": "prefer-fetch-over-axios",
   "negativeExamples": [],
   "positiveExamples": [],
   "preProcessFile": [Function],
+  "scope": "file",
   "tags": [
     "best practices",
   ],

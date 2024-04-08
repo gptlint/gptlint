@@ -20,5 +20,21 @@ test('custom rule - prefer-fetch-over-axios', async () => {
   expect(rule.preProcessFile).toBeTruthy()
   expect(rule).toMatchSnapshot()
 
+  expect(
+    rule.preProcessFile!({
+      file: {
+        content: 'import axios from "axios"'
+      }
+    })
+  ).resolves.toEqual(undefined)
+
+  expect(
+    rule.preProcessFile!({
+      file: {
+        content: 'import foo from "bar"\n\n'
+      }
+    })
+  ).resolves.toEqual({ lintErrors: [] })
+
   // console.log(rule)
 })
