@@ -17,70 +17,73 @@ export async function preProcessTask(
   { cache }: { cache: LinterCache }
 ): Promise<types.LintTask> {
   const lintResult = createLintResult()
-  const { rule, file, config } = lintTask
+  const { scope, rule, file, config } = lintTask
 
-  if (rule.scope === 'file' && !file!.content.trim()) {
-    // Ignore empty files
-    return {
-      ...lintTask,
-      lintResult: { ...lintResult, skipped: true, skipReason: 'empty' }
-    }
-  }
-
-  const cachedResult = await cache.get(lintTask.cacheKey)
-  if (cachedResult) {
-    lintResult.lintErrors = cachedResult.lintErrors
-    lintResult.message = cachedResult.message
-    lintResult.numModelCallsCached++
-    lintResult.skipped = true
-    lintResult.skipReason = 'cached'
-
-    // if (config.linterOptions.debug) {
-    //   const { lintErrors } = lintResult
-
-    //   if (lintErrors.length) {
-    //     console.log(
-    //       `\nFAIL CACHE HIT Rule "${rule.name}" file "${
-    //         file.fileRelativePath
-    //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
-    //       lintErrors
-    //     )
-    //   } else {
-    //     console.log(
-    //       `\nPASS CACHE HIT Rule "${rule.name}" file "${
-    //         file.fileRelativePath
-    //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
-    //     )
-    //   }
-    // }
-
-    return { ...lintTask, lintResult }
-  }
-
-  // TODO: This should probably be moved to run a single time per file instead
-  // of per lint task
-  if (!config.linterOptions.noInlineConfig && rule.scope === 'file') {
+  if (scope === 'file') {
     assert(file)
-    const configFileOverride = parseInlineConfig({ file })
 
-    if (configFileOverride) {
-      if (configFileOverride.linterOptions?.disabled) {
-        // Inline config disabled linting for this file
-        await cache.set(lintTask.cacheKey, lintResult)
-        return {
-          ...lintTask,
-          lintResult: {
-            ...lintResult,
-            skipped: true,
-            skipReason: 'inline-linter-disabled'
+    if (!file.content.trim()) {
+      // Ignore empty files
+      return {
+        ...lintTask,
+        lintResult: { ...lintResult, skipped: true, skipReason: 'empty' }
+      }
+    }
+
+    const cachedResult = await cache.get(lintTask.cacheKey)
+    if (cachedResult) {
+      lintResult.lintErrors = cachedResult.lintErrors
+      lintResult.message = cachedResult.message
+      lintResult.numModelCallsCached++
+      lintResult.skipped = true
+      lintResult.skipReason = 'cached'
+
+      // if (config.linterOptions.debug) {
+      //   const { lintErrors } = lintResult
+
+      //   if (lintErrors.length) {
+      //     console.log(
+      //       `\nFAIL CACHE HIT Rule "${rule.name}" file "${
+      //         file.fileRelativePath
+      //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
+      //       lintErrors
+      //     )
+      //   } else {
+      //     console.log(
+      //       `\nPASS CACHE HIT Rule "${rule.name}" file "${
+      //         file.fileRelativePath
+      //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
+      //     )
+      //   }
+      // }
+
+      return { ...lintTask, lintResult }
+    }
+
+    // TODO: This should probably be moved to run a single time per file instead
+    // of per lint task
+    if (!config.linterOptions.noInlineConfig) {
+      const configFileOverride = parseInlineConfig({ file })
+
+      if (configFileOverride) {
+        if (configFileOverride.linterOptions?.disabled) {
+          // Inline config disabled linting for this file
+          await cache.set(lintTask.cacheKey, lintResult)
+          return {
+            ...lintTask,
+            lintResult: {
+              ...lintResult,
+              skipped: true,
+              skipReason: 'inline-linter-disabled'
+            }
           }
+        } else {
+          // Inline config overrides for this file
+          lintTask.config = mergeLinterConfigs(
+            lintTask.config,
+            configFileOverride
+          ) as types.ResolvedLinterConfig
         }
-      } else {
-        // Inline config overrides for this file
-        lintTask.config = mergeLinterConfigs(
-          lintTask.config,
-          configFileOverride
-        ) as types.ResolvedLinterConfig
       }
     }
   }
@@ -92,12 +95,6 @@ export async function preProcessTask(
       lintResult: { ...lintResult, skipped: true, skipReason: 'rule-disabled' }
     }
   }
-
-  // console.log(
-  //   `rule "${rule.name}" file "${
-  //     file.fileRelativePath
-  //   }" cacheKey "${getCacheKey(lintTask.cacheKey)}"`
-  // )
 
   // No cached result
   return lintTask

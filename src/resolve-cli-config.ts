@@ -39,8 +39,7 @@ export async function resolveLinterCLIConfig(
         rules: {
           type: [String],
           description: 'Glob pattern to rule definition markdown files.',
-          alias: 'r',
-          default: ['rules/**/*.md']
+          alias: 'r'
         },
         ignoreFile: {
           type: String,
@@ -201,6 +200,9 @@ export async function resolveLinterCLIConfig(
           : args.flags.cacheDir
     },
     llmOptions: {
+      // TODO: These overrides are s.t. if the user specifies the default valueo
+      // via the CLI, they won't be included in the resolved config which is
+      // wrong!
       model:
         args.flags.model === defaultLinterConfig.llmOptions.model
           ? undefined

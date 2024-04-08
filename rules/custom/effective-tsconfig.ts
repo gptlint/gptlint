@@ -1,6 +1,10 @@
 import { getTsconfig } from 'get-tsconfig'
 
-import type { PartialLintError, Rule } from '../../src/index.js'
+import {
+  createCacheKey,
+  type PartialLintError,
+  type Rule
+} from '../../src/index.js'
 
 const tsConfigCache = new Map<string, any>()
 
@@ -10,8 +14,10 @@ const rule: Readonly<Rule> = {
   level: 'error',
   scope: 'project',
 
-  preProcessProject: async (ctx) => {
-    const parsedTSConfig = getTsconfig(ctx.cwd, 'tsconfig.json', tsConfigCache)
+  preProcessProject: async ({ rule, cache, config, cwd }) => {
+    const parsedTSConfig = getTsconfig(cwd, 'tsconfig.json', tsConfigCache)
+
+    // console.log('tsconfig?', parsedTSConfig)
 
     if (!parsedTSConfig) {
       return {
@@ -26,10 +32,19 @@ const rule: Readonly<Rule> = {
     const { config: tsconfig, path: filePath } = parsedTSConfig
     const lintErrors: PartialLintError[] = []
 
-    // TODO: caching this without the tsconfig file content is not correct
-    console.error(
-      '\n\n\n\nTODO: handle caching at the project / file level\n\n\n\n'
-    )
+    // TODO: how to pass cacheKey along? need `lintTask` instead of just spread `lintTask`?
+    const cacheKey = createCacheKey({ rule, config, filePath, tsconfig })
+    const cachedResult = await cache.get(cacheKey)
+    // console.log('>>> tsconfig', {
+    //   tsconfig,
+    //   filePath,
+    //   cacheKey,
+    //   cachedResult
+    // })
+
+    if (cachedResult) {
+      return cachedResult
+    }
 
     // TODO: should these checks be in processProject or processFile?
     // maybe add a new file-level task for tsconfig and disable caching on
@@ -37,7 +52,7 @@ const rule: Readonly<Rule> = {
 
     if (!tsconfig.compilerOptions?.strict) {
       lintErrors.push({
-        message: 'Recommended setting `strict` to `true`.',
+        message: 'Recommended setting "strict" to `true`.',
         level: 'warn',
         filePath
       })
@@ -46,7 +61,7 @@ const rule: Readonly<Rule> = {
     if (!tsconfig.compilerOptions?.forceConsistentCasingInFileNames) {
       lintErrors.push({
         message:
-          'Recommended setting `forceConsistentCasingInFileNames` to `true`.',
+          'Recommended setting "forceConsistentCasingInFileNames" to `true`.',
         level: 'warn',
         filePath
       })
@@ -54,12 +69,23 @@ const rule: Readonly<Rule> = {
 
     if (!tsconfig.compilerOptions?.noUncheckedIndexedAccess) {
       lintErrors.push({
-        message: 'Recommended setting `noUncheckedIndexedAccess` to `true`.',
+        message: 'Recommended setting "noUncheckedIndexedAccess" to `true`.',
         level: 'warn',
         filePath
       })
     }
 
+    // TODO
+    await cache.set(cacheKey, { lintErrors } as any)
+
+    // console.log('<<< tsconfig', {
+    //   tsconfig,
+    //   filePath,
+    //   cacheKey,
+    //   lintErrors
+    // })
+
+    // TODO
     // noImplicitAny
 
     return { lintErrors }

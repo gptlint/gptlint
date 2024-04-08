@@ -27,7 +27,7 @@ export default [
   //   }
   // },
   {
-    // ruleFiles: [],
+    // ruleFiles: ['rules/**/*.md'],
     // ruleDefinitions: Object.values(ruleDefinitions),
     llmOptions: {
       model: 'gpt-4-turbo-preview',

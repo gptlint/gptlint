@@ -318,14 +318,17 @@ export function logEvalStats({
 export function createCacheKey({
   rule,
   file,
-  config
+  config,
+  ...extra
 }: {
   rule: types.Rule
   file?: types.SourceFile
   config: types.LinterConfig
-}): string {
+} & Record<string, unknown>): string {
   // TODO: add linter major version to the cache key
   const cacheKeySource = pruneUndefined({
+    ...extra,
+
     file: file
       ? // Only keep the relative file path, content, and detected language
         pruneUndefined(pick(file, 'fileRelativePath', 'content', 'language'))

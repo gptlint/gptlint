@@ -128,13 +128,14 @@ export async function lintFiles({
                     )
                   })
 
-                  return lintTask
+                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
                 } else {
                   // Preprocessing added some metadata to the lint result, but didn't
                   // preempt the rest of the linting process.
                   lintTask.lintResult = createLintResult(
                     omit(partialFileLintResults, 'lintErrors')
                   )
+                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
                 }
               }
             }
@@ -171,13 +172,14 @@ export async function lintFiles({
                     )
                   })
 
-                  return lintTask
+                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
                 } else {
                   // Preprocessing added some metadata to the lint result, but didn't
                   // preempt the rest of the linting process.
                   lintTask.lintResult = createLintResult(
                     omit(partialProjectLintResults, 'lintErrors')
                   )
+                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
                 }
               }
             }
