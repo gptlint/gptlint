@@ -41,9 +41,30 @@ async function main() {
           // Use GPT-4 as the default for evals
           model: 'gpt-4-turbo-preview'
         }
+      },
+      flagsToAdd: {
+        onlyPositive: {
+          type: Boolean,
+          description: 'Only generate positive examples',
+          default: false
+        },
+        onlyNegative: {
+          type: Boolean,
+          description: 'Only generate negative examples',
+          default: false
+        }
       }
     }
   )
+
+  const onlyPositive = !!(args.flags as any).onlyPositive
+  const onlyNegative = !!(args.flags as any).onlyNegative
+
+  if (onlyPositive && onlyNegative) {
+    console.error('Cannot specify both --only-positive and --only-negative')
+    args.showHelp()
+    return gracefulExit(1)
+  }
 
   let rules: types.Rule[]
 
@@ -78,7 +99,7 @@ async function main() {
       const ruleEvalStats = createEvalStats()
       let ruleLintResult = createLintResult()
 
-      {
+      if (!onlyNegative) {
         // Positive examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'correct', '*')
         const exampleFiles = await globby(fileExamplesGlob, {
@@ -131,7 +152,7 @@ async function main() {
         )
       }
 
-      {
+      if (!onlyPositive) {
         // Negative examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'incorrect', '*')
         const exampleFiles = await globby(fileExamplesGlob, {

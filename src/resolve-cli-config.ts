@@ -1,8 +1,10 @@
 import { readFile } from 'node:fs/promises'
 
 import { cli } from 'cleye'
+import { gracefulExit } from 'exit-hook'
 import parseGitIgnore from 'parse-gitignore'
 import { pathExists } from 'path-exists'
+import plur from 'plur'
 
 import type * as types from './types.js'
 import { defaultLinterConfig, parseLinterConfig } from './config.js'
@@ -141,6 +143,16 @@ export async function resolveLinterCLIConfig(
     () => {},
     cliArgs
   )
+
+  if (Object.keys(args.unknownFlags).length > 0) {
+    const message = `Error unknown ${plur('flag', Object.keys(args.unknownFlags).length)}: ${Object.keys(args.unknownFlags).join(', ')}`
+    console.error(`${message}\n`)
+
+    args.showHelp()
+    gracefulExit(1)
+
+    throw new Error(message)
+  }
 
   let files = args._.fileDirGlob.slice(2)
   if (files.length === 0) {

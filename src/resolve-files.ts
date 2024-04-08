@@ -38,6 +38,8 @@ export async function readSourceFiles(
     cwd?: string
   } = {}
 ): Promise<types.SourceFile[]> {
+  filePaths.sort((a, b) => b.localeCompare(a))
+
   return pMap(
     filePaths,
     async (filePath) => {
