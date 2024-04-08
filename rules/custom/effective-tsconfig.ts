@@ -60,6 +60,8 @@ const rule: Readonly<Rule> = {
       })
     }
 
+    // noImplicitAny
+
     return { lintErrors }
   }
 }
