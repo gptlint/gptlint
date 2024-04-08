@@ -45,7 +45,7 @@
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
 - ✅️ simple markdown format for rules ([example](./rules/prefer-array-at-negative-indexing.md), [spec](./docs/rule-spec.md))
-- ✅️ easy to [disable](#how-can-i-disable-a-rule) or [customize](#how-can-i-customize-a-rule) rules
+- ✅️ easy to [disable](#how-can-i-disable-a-rule-) or [customize](#how-can-i-customize-a-built-in-rule-) rules
 - ✅️ add custom, [project-specific rules](./docs/rule-guidelines.md#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
 - ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
@@ -309,7 +309,7 @@ Linting can be disabled at the file-level using an inline comment:
 
 Since rules are just markdown files, copy the rule's markdown file from [rules/](./rules) into your project and customize it to suit your project's needs.
 
-You'll want to [disable the original rule](#how-can-i-disable-a-rule) and change your custom rule's name to a project-specific name. Make sure your local config includes your custom rule's markdown file in its `ruleFiles` field.
+You'll want to [disable the original rule](#how-can-i-disable-a-rule-) and change your custom rule's name to a project-specific name. Make sure your local config includes your custom rule's markdown file in its `ruleFiles` field.
 
 If your change is generally applicable to other projects, consider opening a pull request to GPTLint.
 
