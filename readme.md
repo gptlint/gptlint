@@ -284,13 +284,13 @@ Rules can be configured at the file-level using inline comments:
 /* gptlint semantic-variable-names: off */
 ```
 
-Separate multiple inline rule configs with commas:
+Separate multiple inline configs with commas:
 
 ```ts
 /* gptlint use-esm: off, consistent-identifier-casing: warn */
 ```
 
-Or use multiple inline rule config comments:
+Or use multiple inline comments:
 
 ```ts
 /* gptlint use-esm: off */
@@ -314,6 +314,22 @@ You'll want to [disable the original rule](#how-can-i-disable-a-rule-) and chang
 If your change is generally applicable to other projects, consider opening a pull request to GPTLint.
 
 For more guidance around creating and evaluating custom rules that will work well across large codebases as well as expertise on fine-tuning models for use with custom rules, please [reach out to our consulting partners](mailto:gptlint@teamduality.dev).
+
+### Are there file size limits? <!-- omit from toc -->
+
+The following source files will automatically be excluded:
+
+- files matching `.gitignore`
+- files matching an optional `.gptlintignore`
+- binary files
+- empty files
+- large files over 200kb
+- files with over 10k lines
+- lines with over 1024 characters will be truncated
+- files with more than one line over 1024 characters
+- known generated files (`package-lock.json`, etc)
+
+These filters are similar to [github code search's limits](https://docs.github.com/en/search-github/github-code-search/about-github-code-search#limitations).
 
 ### What about fine-tuning? <!-- omit from toc -->
 

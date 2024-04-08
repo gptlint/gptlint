@@ -1096,6 +1096,9 @@ The following defensive programming techniques should be preferred whenever poss
 - [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
 - [Use defensive error handling](#use-defensive-error-handling)
 ",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
   "fixable": false,
   "languages": [
     "javascript",
@@ -1556,6 +1559,30 @@ import { z } from 'zod'",
   "source": "rules/semantic-variable-names.md",
   "tags": [
     "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - rules/soc2-no-leak-user-data.md 1`] = `
+{
+  "desc": "Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
+
+Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
+",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "SOC2 Don't leak user data",
+  "name": "soc2-no-leak-user-data",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": "rules/soc2-no-leak-user-data.md",
+  "tags": [
+    "security",
   ],
 }
 `;
