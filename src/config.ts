@@ -177,7 +177,7 @@ export const RuleDefinitionSchema = z
       .enum(['off', 'warn', 'error'])
       .optional()
       .default('error')
-      .describe('Default rule serverity.'),
+      .describe('Default rule severity.'),
 
     scope: z
       .enum(['file', 'project', 'repo'])
@@ -278,7 +278,7 @@ export const RuleDefinitionSchema = z
 
     source: z.string().optional()
   })
-  .passthrough()
+  .strict()
 
 export const LinterConfigSchema = z
   .object({
@@ -333,7 +333,7 @@ export type ResolvedLinterConfig = Simplify<
 export const defaultLinterOptions: Readonly<LinterOptions> = {
   noInlineConfig: false,
   earlyExit: false,
-  concurrency: 16,
+  concurrency: 24,
   debug: false,
   printConfig: false,
   debugModel: false,
@@ -388,11 +388,11 @@ export function mergeLinterConfigs<
     ...pruneUndefined(configB),
     rules: { ...configA.rules, ...configB.rules },
     // TODO: fix this
-    // ruleFiles: configB.ruleFiles ?? configA.ruleFiles,
-    ruleFiles: dedupe([
-      ...(configA.ruleFiles ?? []),
-      ...(configB.ruleFiles ?? [])
-    ]),
+    ruleFiles: configB.ruleFiles ?? configA.ruleFiles,
+    // ruleFiles: dedupe([
+    //   ...(configA.ruleFiles ?? []),
+    //   ...(configB.ruleFiles ?? [])
+    // ]),
     ruleDefinitions: [
       ...(configA.ruleDefinitions ?? []),
       ...(configB.ruleDefinitions ?? [])

@@ -7,7 +7,7 @@ import { pathExists } from 'path-exists'
 import plur from 'plur'
 
 import type * as types from './types.js'
-import { defaultLinterConfig, parseLinterConfig } from './config.js'
+import { parseLinterConfig } from './config.js'
 import { resolveLinterConfig } from './resolve-config.js'
 
 export async function resolveLinterCLIConfig(
@@ -67,13 +67,11 @@ export async function resolveLinterCLIConfig(
         },
         cacheDir: {
           type: String,
-          description: 'Customize the path to the cache directory',
-          default: defaultLinterConfig.linterOptions.cacheDir
+          description: 'Customize the path to the cache directory'
         },
         concurrency: {
           type: Number,
-          description: 'Limits the maximum number of concurrent tasks',
-          default: 16
+          description: 'Limits the maximum number of concurrent tasks'
         },
         debug: {
           type: Boolean,
@@ -110,32 +108,28 @@ export async function resolveLinterCLIConfig(
         apiOrganizationId: {
           type: String,
           description:
-            'Optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.',
-          default: defaultLinterConfig.llmOptions.apiOrganizationId
+            'Optional organization ID that should be billed for LLM API requests. This is only necessary if your OpenAI API key is scoped to multiple organizations.'
         },
         apiBaseUrl: {
           type: String,
           description:
-            'Base URL for the LLM API to use which must be compatible with the OpenAI chat completions API. Defaults to the OpenAI API',
-          default: defaultLinterConfig.llmOptions.apiBaseUrl
+            'Base URL for the LLM API to use which must be compatible with the OpenAI chat completions API. Defaults to the OpenAI API.'
         },
         model: {
           type: String,
-          description: 'Which LLM to use for assessing rule conformance',
-          alias: 'm',
-          default: defaultLinterConfig.llmOptions.model
+          description:
+            'Which LLM to use for assessing rule conformance. Defaults to gpt-4.',
+          alias: 'm'
         },
         weakModel: {
           type: String,
           description:
-            'Which weak LLM to use for assessing rule conformance (optional; used for multi-pass linting; set to "none" to disable two-pass linting)',
-          alias: 'M',
-          default: defaultLinterConfig.llmOptions.weakModel
+            'Which weak LLM to use for assessing rule conformance (optional; used for multi-pass linting; set to "none" to disable two-pass linting). Defaults to gpt-3.5-turbo.',
+          alias: 'M'
         },
         temperature: {
           type: Number,
-          description: 'LLM temperature parameter',
-          default: defaultLinterConfig.llmOptions.temperature
+          description: 'LLM temperature parameter'
         }
       }
     },
@@ -182,10 +176,7 @@ export async function resolveLinterCLIConfig(
     linterOptions: {
       noInlineConfig: args.flags.noInlineConfig,
       earlyExit: args.flags.earlyExit,
-      concurrency:
-        args.flags.concurrency === undefined
-          ? undefined
-          : args.flags.concurrency,
+      concurrency: args.flags.concurrency,
       debug: args.flags.debug,
       printConfig: args.flags.printConfig,
       debugModel: args.flags.debugModel,
@@ -194,40 +185,15 @@ export async function resolveLinterCLIConfig(
           ? undefined
           : !args.flags.noDebugStats,
       noCache: args.flags.noCache,
-      cacheDir:
-        args.flags.cacheDir === defaultLinterConfig.linterOptions.cacheDir
-          ? undefined
-          : args.flags.cacheDir
+      cacheDir: args.flags.cacheDir
     },
     llmOptions: {
-      // TODO: These overrides are s.t. if the user specifies the default valueo
-      // via the CLI, they won't be included in the resolved config which is
-      // wrong!
-      model:
-        args.flags.model === defaultLinterConfig.llmOptions.model
-          ? undefined
-          : args.flags.model,
-      weakModel:
-        args.flags.weakModel === defaultLinterConfig.llmOptions.weakModel
-          ? undefined
-          : args.flags.weakModel,
-      temperature:
-        args.flags.temperature === defaultLinterConfig.llmOptions.temperature
-          ? undefined
-          : args.flags.temperature,
-      apiKey:
-        args.flags.apiKey === defaultLinterConfig.llmOptions.apiKey
-          ? undefined
-          : args.flags.apiKey,
-      apiOrganizationId:
-        args.flags.apiOrganizationId ===
-        defaultLinterConfig.llmOptions.apiOrganizationId
-          ? undefined
-          : args.flags.apiOrganizationId,
-      apiBaseUrl:
-        args.flags.apiBaseUrl === defaultLinterConfig.llmOptions.apiBaseUrl
-          ? undefined
-          : args.flags.apiBaseUrl
+      model: args.flags.model,
+      weakModel: args.flags.weakModel,
+      temperature: args.flags.temperature,
+      apiKey: args.flags.apiKey,
+      apiOrganizationId: args.flags.apiOrganizationId,
+      apiBaseUrl: args.flags.apiBaseUrl
     }
   })
 
