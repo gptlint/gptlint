@@ -121,9 +121,6 @@ devDependencies:
   eslint:
     specifier: ^8.57.0
     version: 8.57.0
-  eslint-plugin-unicorn:
-    specifier: ^52.0.0
-    version: 52.0.0(eslint@8.57.0)
   husky:
     specifier: ^9.0.11
     version: 9.0.11

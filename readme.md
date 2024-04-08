@@ -86,16 +86,16 @@ It is recommended to install `gptlint` as a dev dep just like `eslint`.
 
 ```sh
 echo "OPENAI_API_KEY='your openai api key'" >> .env
-npx gptlint
+gptlint
 
 # or
 
 export OPENAI_API_KEY='your openai api key'
-npx gptlint
+gptlint
 
 # or
 
-npx gptlint -k 'your openai api key'
+gptlint -k 'your openai api key'
 ```
 
 By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` as a file glob for source files to lint and `rules/**/*.md` for rule definition files.
@@ -358,7 +358,6 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
 - cli
   - cache precheck tasks
 - project
-  - update project name in multiple places once we decide on a name
   - decide on an OSS license
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - add docs on config settings and how config resolution works

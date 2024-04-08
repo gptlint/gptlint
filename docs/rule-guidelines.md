@@ -94,7 +94,7 @@ Note that we expect to lift these restrictions in future major versions of GPTLi
 
 Rules which are aimed at best practices for a specific library (e.g., next.js, express, mongoose, fastapi, etc) will not be added to the core GPTLint ruleset and are instead a perfect fit to be bundled as **community-driven, library-specific configs**.
 
-The MVP doesn't contain any library-specific configs _yet_. If you'd like to contribute a library-specific config, [create a discussion for it](https://github.com/transitive-bullshit/eslint-plus-plus/discussions/new?category=ideas) and include as much info on the library and proposed rules. You don't need any permission from us to create a library-specific config, of course, but it may be helpful to receive feedback on your gameplan to deduplicate similar efforts across the community.
+The MVP doesn't contain any library-specific configs _yet_. If you'd like to contribute a library-specific config, [create a discussion for it](https://github.com/gptlint/gptlint/discussions/new?category=ideas) and include as much info on the library and proposed rules. You don't need any permission from us to create a library-specific config, of course, but it may be helpful to receive feedback on your gameplan to deduplicate similar efforts across the community.
 
 ## Project-specific rules
 
