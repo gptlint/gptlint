@@ -388,7 +388,9 @@ export function mergeLinterConfigs<
     ...pruneUndefined(configB),
     rules: { ...configA.rules, ...configB.rules },
     // TODO: fix this
-    ruleFiles: configB.ruleFiles ?? configA.ruleFiles,
+    ruleFiles: configB.ruleFiles?.length
+      ? configB.ruleFiles
+      : configA.ruleFiles,
     // ruleFiles: dedupe([
     //   ...(configA.ruleFiles ?? []),
     //   ...(configB.ruleFiles ?? [])
