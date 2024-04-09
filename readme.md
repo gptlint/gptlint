@@ -369,7 +369,7 @@ For commercial projects, we've partnered with [Duality](https://teamduality.dev/
     - reconsider rule `scope`
   - support rule overrides for specific file globs like eslint
   - add ability to customize rule behavior with configs like eslint
-  - consider moving default rules to `.gptlint` directory
+  - consider moving default rules to `.gptlint` or `.rules` directory
   - **add built-in configs**
     - need better rules
     - convert this repo to a monorepo?

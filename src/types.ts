@@ -18,9 +18,9 @@ export type {
 
 export type MaybePromise<T> = T | Promise<T>
 
-export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 export type LintRuleLevel = 'error' | 'warn' | 'off'
 export type LintRuleScope = 'file' | 'project' | 'repo'
+export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 
 export type Rule = {
   // core rule definition

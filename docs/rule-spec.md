@@ -15,24 +15,43 @@ The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define 
 GRS rules are parsed into the following TypeScript format:
 
 ```ts
+/** @see https://github.com/gptlint/gptlint/blob/main/src/types.ts */
+
 export type LintRuleLevel = 'error' | 'warn' | 'off'
+export type LintRuleScope = 'file' | 'project' | 'repo'
 
 export type Rule = {
+  // core rule definition
   name: string
   message: string
-  desc: string
-
+  desc?: string
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
 
+  // optional, user-defined metadata
   fixable?: boolean
-  level?: LintRuleLevel
   languages?: string[]
   tags?: string[]
   eslint?: string[]
+  include?: string[]
+  exclude?: string[]
   resources?: string[]
+  model?: string
+  level: LintRuleLevel
+  scope: LintRuleScope
+
+  // optional custom functionality for rules scoped to the file-level
+  preProcessFile?: PreProcessFileFn
+  processFile?: ProcessFileFn
+  postProcessFile?: PostProcessFileFn
+
+  // optional custom functionality for rules scoped to the project-level
+  preProcessProject?: PreProcessProjectFn
+  processProject?: ProcessProjectFn
+  postProcessProject?: PostProcessProjectFn
+
+  // internal metadata
   source?: string
-  prechecks?: FileCheck[]
 }
 ```
 
@@ -58,16 +77,18 @@ All metadata fields are optional.
 
 Here is a breakdown of the supported metadata fields and their expected types.
 
-| Key       | Type                   | Description                                                                                               |
-| --------- | ---------------------- | --------------------------------------------------------------------------------------------------------- |
-| Name      | `string`               | Short name of this rule                                                                                   |
-| Level     | `warn \| error \| off` | Default error level of this rule                                                                          |
-| Fixable   | `boolean`              | Whether or not this rule supports auto-fixing errors                                                      |
-| Tags      | `string[]`             | CSV of tags / labels                                                                                      |
-| Eslint    | `string[]`             | CSV of lower-level [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule   |
-| Languages | `string[]`             | CSV of programming languages this rule should be enabled for. Defaults to `all`.                          |
-| Resources | `string[]`             | CSV of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs  |
-| Prechecks | `string[]`             | CSV of JS `RegExp` strings which must pass in order to enable this rule for a given file's string content |
+| Key       | Type                      | Description                                                                                                                                        |
+| --------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name      | `string`                  | Short name of this rule. Defaults to the rule's filename without the `.md` extension.                                                              |
+| Level     | `warn \| error \| off`    | Default error level of this rule                                                                                                                   |
+| Scope     | `file \| project \| repo` | Granularity at which this rule is applied. Defaults to `file`.                                                                                     |
+| Fixable   | `boolean`                 | Whether or not this rule supports auto-fixing errors                                                                                               |
+| Tags      | `string[]`                | CSV of tags / labels                                                                                                                               |
+| Eslint    | `string[]`                | CSV of lower-level [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule                                            |
+| Languages | `string[]`                | CSV of programming languages this rule should be enabled for. Defaults to `all`.                                                                   |
+| Include   | `string[]`                | CSV of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`. |
+| Exclude   | `string[]`                | CSV of file glob patterns to ignore when enforcing this rule.                                                                                      |
+| Resources | `string[]`                | CSV of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs                                           |
 
 - Arrays like `Tags` and `Languages` are parsed as comma-separated values.
 - Arrays with one elements (no commas) are supported.
@@ -88,12 +109,6 @@ Here is an example metadata table.
 | Tags      | general                                                 |
 | Languages | javascript, typescript                                  |
 | Resources | https://twitter.com/housecor/status/1768622518179369036 |
-
-#### Prechecks
-
-The `Prechecks` metadata field is strictly an optimization in order to quickly skip rules that depend on specific regular expressions appearing in a file in order to run the full LLM-based linter on them. If `Prechecks` are defined, then files whose contents fail to pass any of the `Prechecks` regular expressions will be skipped. See [prefer-fetch-over-axios.md](/rules/prefer-fetch-over-axios.md) for an example of `Prechecks` in action.
-
-In the future, we may support more "escape hatches" to enable rule authors more programmatic control over whether or not a file should be linted and/or customizing the linting results themselves.
 
 ## Example Rules
 
