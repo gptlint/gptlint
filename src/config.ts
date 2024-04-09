@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import type { MergeDeep, SetRequired, Simplify } from 'type-fest'
 import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
 import findCacheDirectory from 'find-cache-dir'
@@ -171,6 +173,26 @@ export type LinterConfigOverride = z.infer<typeof LinterConfigOverrideSchema>
 export const LinterConfigOverridesSchema = z.array(LinterConfigOverrideSchema)
 export type LinterConfigOverrides = z.infer<typeof LinterConfigOverridesSchema>
 
+export const LanceDBOptionsSchema = z
+  .object({
+    uri: z.string().optional(),
+
+    apiKey: z
+      .string()
+      .optional()
+      .describe(
+        'API key for the LanceDB connection. Defaults to the value of the `LANCEDB_API_KEY` environment variable.'
+      ),
+
+    hostOverride: z.string().optional(),
+    readConsistencyInterval: z.number().optional()
+  })
+  .strict()
+export type LanceDBOptions = z.infer<typeof LanceDBOptionsSchema>
+export type ResolvedLanceDBOptions = Simplify<
+  SetRequired<LanceDBOptions, 'uri'>
+>
+
 export const LinterConfigSchema = z
   .object({
     files: z
@@ -209,6 +231,8 @@ export const LinterConfigSchema = z
 
     llmOptions: LLMOptionsSchema.optional().describe(''),
 
+    lanceDBOptions: LLMOptionsSchema.optional().describe(''),
+
     overrides: LinterConfigOverridesSchema.optional().describe(
       'Rule config overrides for specific file patterns.'
     )
@@ -229,6 +253,7 @@ export type FullyResolvedLinterConfig = Simplify<
   > & {
     linterOptions: ResolvedLinterOptions
     llmOptions: ResolvedLLMOptions
+    lanceDBOptions: ResolvedLanceDBOptions
   }
 >
 
@@ -256,12 +281,18 @@ export const defaultLLMOptions: Readonly<LLMOptions> = {
   temperature: 0
 }
 
+export const defaultLanceDBOptions: Readonly<LanceDBOptions> = pruneUndefined({
+  uri: path.join(defaultCacheDir, 'lancedb'),
+  apiKey: getEnv('LANCEDB_API_KEY')
+})
+
 export const defaultLinterConfig: Readonly<
   SetRequired<LinterConfig, 'linterOptions' | 'llmOptions'>
 > = {
   ruleFiles: ['.gptlint/**/*.md', '!.gptlint/readme.md', '!.gptlint/README.md'],
   linterOptions: defaultLinterOptions,
-  llmOptions: defaultLLMOptions
+  llmOptions: defaultLLMOptions,
+  lanceDBOptions: defaultLanceDBOptions
 }
 
 export function parseLinterConfig(config: Partial<LinterConfig>): LinterConfig {
@@ -352,6 +383,13 @@ export function mergeLinterConfigs<
         ? [...(configA.overrides ?? []), ...(configB.overrides ?? [])].filter(
             Boolean
           )
+        : undefined,
+    lanceDBOptions:
+      configA.lanceDBOptions || configB.lanceDBOptions
+        ? {
+            ...pruneUndefined(configA.lanceDBOptions ?? {}),
+            ...pruneUndefined(configB.lanceDBOptions ?? {})
+          }
         : undefined
   }) as any
 }
@@ -400,6 +438,13 @@ export function mergeLinterConfigsOverride<
         ? [...(configA.overrides ?? []), ...(configB.overrides ?? [])].filter(
             Boolean
           )
+        : undefined,
+    lanceDBOptions:
+      configA.lanceDBOptions || configB.lanceDBOptions
+        ? {
+            ...pruneUndefined(configA.lanceDBOptions ?? {}),
+            ...pruneUndefined(configB.lanceDBOptions ?? {})
+          }
         : undefined
   }) as any
 }
