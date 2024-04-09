@@ -19,7 +19,7 @@
 
 To lint a codebase, GPTLint takes the following steps:
 
-1. Resolves a set of markdown rule definitions along with optional few-shot examples for each rule (defaults to `rules/**/*.md`)
+1. Resolves a set of markdown rule definitions along with optional few-shot examples for each rule (defaults to `.gptlint/**/*.md`)
 2. Resolves a set of input source files to lint (defaults to `**/*.{js,ts,jsx,tsx,cjs,mjs}`)
 3. For each `[rule, file]` pair, creates a **linter task**
 4. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file

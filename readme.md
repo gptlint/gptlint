@@ -44,7 +44,7 @@
 ## Features
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
-- ✅️ simple markdown format for rules ([example](./rules/prefer-array-at-negative-indexing.md), [spec](./docs/rule-spec.md))
+- ✅️ simple markdown format for rules ([example](./.gptlint/prefer-array-at-negative-indexing.md), [spec](./docs/rule-spec.md))
 - ✅️ easy to [disable](#how-can-i-disable-a-rule-) or [customize](#how-can-i-customize-a-built-in-rule-) rules
 - ✅️ add custom, [project-specific rules](./docs/rule-guidelines.md#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
@@ -98,7 +98,7 @@ gptlint
 gptlint -k 'your openai api key'
 ```
 
-By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` as a file glob for source files to lint and `rules/**/*.md` for rule definition files.
+By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` as a file glob for source files to lint and `.gptlint/**/*.md` for rule definition files.
 
 `gptlint` respects `.gitignore` and optionally `.gptlintignore` as well if it exists.
 
@@ -134,7 +134,7 @@ Flags:
       --no-ignore                           Disables the use of ignore files and patterns
       --no-inline-config                    Disables the use of inline rule config inside of source files
   -r, --rules <string>                      Glob pattern to rule definition markdown files. (default:
-                                            ["rules/**/*.md"])
+                                            [".gptlint/**/*.md"])
       --temperature <number>                LLM temperature parameter
 ```
 
@@ -307,7 +307,7 @@ Linting can be disabled at the file-level using an inline comment:
 
 ### How can I customize a built-in rule? <!-- omit from toc -->
 
-Since rules are just markdown files, copy the rule's markdown file from [rules/](./rules) into your project and customize it to suit your project's needs.
+Since rules are just markdown files, copy the rule's markdown file from [.gptlint/](./.gptlint) into your project and customize it to suit your project's needs.
 
 You'll want to [disable the original rule](#how-can-i-disable-a-rule-) and change your custom rule's name to a project-specific name. Make sure your local config includes your custom rule's markdown file in its `ruleFiles` field.
 

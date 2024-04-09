@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "postbuild": "cp -f rules/custom/*.md dist/rules/custom",
+    "postbuild": "cp -f .gptlint/custom/*.md dist/.gptlint/custom",
     "dev": "tsup --watch",
     "clean": "del dist",
     "prebuild": "run-s clean",

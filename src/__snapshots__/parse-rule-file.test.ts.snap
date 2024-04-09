@@ -1,5 +1,2237 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`parseRuleFile - .gptlint/always-handle-promises.md 1`] = `
+{
+  "desc": "Promises (and \`async\` functions which implicitly create Promises) must always be handled at some level of the program, either via:
+
+- using \`await\` to wait for the Promise to resolve successfully
+- using \`.then\` or \`.catch\` to handle Promise resolution
+- returning a Promise to a calling function which itself has to handle the Promise
+
+Creating a Promise or calling an \`async\` function and NOT awaiting or propagating the resulting Promise using one of these approaches is a code smell and violates this rule.
+",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Always handle Promises",
+  "name": "always-handle-promises",
+  "negativeExamples": [
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is bad because we're not handling the Promise returned by \`saveFile\`
+saveFile()",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because we explicitly \`await\` the Promise returned by \`saveFile\`
+await saveFile()",
+      "language": "js",
+    },
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because the Promise returned from \`saveFile\` is propagated to \`main\`'s caller
+async function main() {
+  return saveFile()
+}",
+      "language": "js",
+    },
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because we explicitly \`await\` the promise results
+await Promise.all([saveFile(), saveFile()])",
+      "language": "js",
+    },
+  ],
+  "scope": "file",
+  "source": ".gptlint/always-handle-promises.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/avoid-type-info-in-docs.md 1`] = `
+{
+  "desc": "Avoid repeating type information in comments and variable names. In the best case it is duplicative of type declarations, and in the worst it will lead to conflicting information.
+
+Consider including units in variable names if they aren’t clear from the type (e.g., timeMs or temperatureC).
+
+Here is an example of incorrect code:
+
+\`\`\`ts
+/**
+ * Returns a string with the foreground color.
+ * Takes zero or one arguments. With no arguments, returns the
+ * standard foreground color. With one argument, returns the foreground color
+ * for a particular page.
+ */
+function getForegroundColor(page?: string) {
+  return page === 'login' ? { r: 127, g: 127, b: 127 } : { r: 0, g: 0, b: 0 }
+}
+\`\`\`
+
+This is a VIOLATION because the comment describes the types of the function parameters and return type which duplicates the more precise TS definition. Even worse, this example is a VIOLATION because the code and the comment contradict each other.
+
+Let’s assume that the code represents the desired behavior. There are a few issues with this comment:
+
+- It says that the function returns the color as a string when it actually returns an \`{r, g, b}\` object.
+- It explains that the function takes zero or one arguments, which is already clear from the type signature.
+- It’s needlessly wordy: the comment is longer than the function declaration and implementation.
+
+Since your type annotations are checked by the TypeScript compiler, they’ll never get out of sync with the implementation.
+
+A better comment might look like this:
+
+\`\`\`ts
+/** Get the foreground color for the application or a specific page. */
+function getForegroundColor(page?: string): Color {
+  // ...
+}
+\`\`\`
+
+Comments about a lack of mutation are also suspect. Don’t just say that you don’t modify a parameter:
+
+\`\`\`ts
+/** Does not modify nums */
+function sort(nums: number[]) {
+  /* ... */
+}
+\`\`\`
+
+Instead, declare it \`readonly\` and let TypeScript enforce the contract:
+
+\`\`\`ts
+function sort(nums: readonly number[]) {
+  /* ... */
+}
+\`\`\`
+
+Note that you do NOT have to include JSDoc comments for a function, and you do NOT have to include \`@param\` or \`@returns\` JSDoc properties. These are purely optional, but if they are included, they should not discuss the types of function parameters because TypeScript does a better job of capturing this info in the function definition itself.
+",
+  "fixable": false,
+  "languages": [
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Don’t repeat type information in documentation",
+  "name": "avoid-type-info-in-docs",
+  "negativeExamples": [
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ *
+ * Takes either an existing user or data describing a new user.
+ * Also takes an optional context.
+ *
+ * Returns a new user.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}
+
+// This example VIOLATES the rule because the JSDoc comment describes the type
+// of \`user\` when the TS types do a better job of this. Another issue is that
+// the return type is described, when the TS types do a better job of this.
+// A better version would use JSDoc \`@param\` and \`@returns\` to describe the
+// behavior without mentioning the types.",
+      "language": "ts",
+    },
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ *
+ * @param {User} user - The user to upsert.
+ * @param {Context} ctx - Optional context for the database operation.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}
+
+// This example VIOLATES the rule because the JSDoc comment includes duplicate
+// type info for the function parameters.",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}",
+      "language": "ts",
+    },
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ *
+ * @param user - The user to upsert.
+ * @param ctx - Optional context for the database operation.
+ *
+ * @returns The upserted user.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}",
+      "language": "ts",
+    },
+    {
+      "code": "/**
+ * Parses a string using a zod schema.
+ *
+ * @param output - string to parse
+ * @param outputSchema - zod schema
+ *
+ * @returns parsed output
+ */
+export function parseStructuredOutput<T>(
+  output: string,
+  outputSchema: ZodType<T>
+): T {
+  // ...
+}
+
+// This example is fine because the type info in the JSDoc \`@param\` comments is relevant and simple.",
+      "language": "ts",
+    },
+  ],
+  "resources": [
+    "https://effectivetypescript.com",
+  ],
+  "scope": "file",
+  "source": ".gptlint/avoid-type-info-in-docs.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/consistent-identifier-casing.md 1`] = `
+{
+  "desc": "Identifiers of the same type should try to use consistent casing.
+
+Variable names should use camelCase.
+Global const variable names should either use camelCase, PascalCase, or CONSTANT\\_CASE.
+Type names should use PascalCase.
+Class names should use PascalCase.
+Function names should use camelCase.
+
+Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and \\_getKey.
+",
+  "eslint": [
+    "@typescript-eslint/naming-convention",
+    "camelcase",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Be consistent with identifier casing",
+  "name": "consistent-identifier-casing",
+  "negativeExamples": [
+    {
+      "code": "// These are bad because variable identifiers should use consistent casing.
+const fooBar = true
+const default_timeout = 5000
+
+// These are bad because function identifiers should use consistent casing.
+function helloWorld() {}
+function hello_twitter() {}",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const fooBar = true
+const defaultTimeout = 5000
+
+function helloWorld() {}
+function helloTwitter() {}",
+      "language": "ts",
+    },
+    {
+      "code": "import foo from 'foo'
+
+// This is fine because \`foo\` is a third-party API which this rule should ignore.
+foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })",
+      "language": "ts",
+    },
+    {
+      "code": "// These are all fine as common exceptions to this rule
+export const HTTPConfig = {}
+const LLMOptions = {}
+const validKeysL = new Set()
+const loadingP = new Promise()
+const cwd = process.cwd",
+      "language": "ts",
+    },
+    {
+      "code": "// This is fine because \`i\` is a parameter of an inline function.
+const foo = [1, 2, 3].filter((i) => i >= 0)",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".gptlint/consistent-identifier-casing.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/custom/prefer-fetch-over-axios.md 1`] = `
+{
+  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
+
+Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
+
+Code which doesn't use the \`axios\` module should be ignored.
+",
+  "eslint": [
+    "no-restricted-imports",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer fetch over axios",
+  "name": "prefer-fetch-over-axios",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": ".gptlint/custom/prefer-fetch-over-axios.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/liberal-accept-strict-produce.md 1`] = `
+{
+  "desc": "This idea is known as the robustness principle or Postel’s Law.
+
+As a general best practice, input types should be broader than output types. Optional properties and union types are more common in parameter types than return types.
+
+To reuse types between parameters and return types, it's often useful to introduce a canonical form (for return types) and a looser form (for parameters).
+
+---
+
+As an example, a 3D mapping API might provide a way to position the camera and to calculate a viewport for a bounding box:
+
+\`\`\`ts
+declare function setCamera(camera: CameraOptions): void
+declare function viewportForBounds(bounds: LngLatBounds): CameraOptions
+\`\`\`
+
+It is convenient that the result of \`viewportForBounds\` can be passed directly to \`setCamera\` to position the camera.
+
+Let’s look at the definitions of these types:
+
+\`\`\`ts
+interface CameraOptions {
+  center?: LngLat
+  zoom?: number
+  bearing?: number
+  pitch?: number
+}
+
+type LngLat =
+  | { lng: number; lat: number }
+  | { lon: number; lat: number }
+  | [number, number]
+\`\`\`
+
+The fields in \`CameraOptions\` are all optional because you might want to set just the center or zoom without changing the bearing or pitch. The \`LngLat\` type also makes \`setCamera\` liberal in what it accepts: you can pass in a \`{lng, lat}\` object, a \`{lon, lat}\` object, or a \`[lng, lat]\` pair if you’re confident you got the order right. These accommodations make the function easy to call.
+
+The viewportForBounds function takes in another “liberal” type:
+
+\`\`\`ts
+type LngLatBounds =
+  | { northeast: LngLat; southwest: LngLat }
+  | [LngLat, LngLat]
+  | [number, number, number, number]
+\`\`\`
+
+You can specify the bounds either using named corners, a pair of lat/lngs, or a four- tuple if you’re confident you got the order right. Since LngLat already accommodates three forms, there are no fewer than 19 possible forms for LngLatBounds. Liberal indeed!
+
+Now let’s write a function that adjusts the viewport to accommodate a GeoJSON Fea‐ ture and stores the new viewport in the URL:
+
+\`\`\`ts
+function focusOnFeature(f: Feature) {
+  const bounds = calculateBoundingBox(f)
+  const camera = viewportForBounds(bounds)
+  setCamera(camera)
+  const {
+    center: { lat, lng },
+    zoom
+  } = camera
+  // ~~~ Property 'lat' does not exist on type ...
+  // ~~~ Property 'lng' does not exist on type ... zoom; // Type is number | undefined
+  window.location.search = \`?v=@\${lat},\${lng}z\${zoom}\`
+}
+\`\`\`
+
+Whoops! Only the zoom property exists, but its type is inferred as \`number|undefined\`, which is also problematic. The issue is that the type declaration for \`viewportFor Bounds\` indicates that it is liberal not just in what it accepts but also in what it pro‐ duces. The only type-safe way to use the camera result is to introduce a code branch for each component of the union type.
+
+The return type with lots of optional properties and union types makes \`viewportFor Bounds\` difficult to use. **Its broad parameter type is convenient, but its broad return type is not. A more convenient API would be strict in what it produces.**
+
+One way to do this is to distinguish a canonical format for coordinates. Following JavaScript’s convention of distinguishing “Array” and “Array-like”, you can draw a distinction between \`LngLat\` and \`LngLatLike\`. You can also distinguish between a fully defined Camera type and the partial version accepted by setCamera:
+
+\`\`\`ts
+interface LngLat {
+  lng: number
+  lat: number
+}
+type LngLatLike = LngLat | { lon: number; lat: number } | [number, number]
+interface Camera {
+  center: LngLat
+  zoom: number
+  bearing: number
+  pitch: number
+}
+interface CameraOptions extends Omit<Partial<Camera>, 'center'> {
+  center?: LngLatLike
+}
+type LngLatBounds =
+  | { northeast: LngLatLike; southwest: LngLatLike }
+  | [LngLatLike, LngLatLike]
+  | [number, number, number, number]
+
+declare function setCamera(camera: CameraOptions): void
+declare function viewportForBounds(bounds: LngLatBounds): Camera
+\`\`\`
+
+The loose \`CameraOptions\` type adapts the stricter \`Camera\` type.
+
+Using \`Partial<Camera>\` as the parameter type in \`setCamera\` would not work here since you do want to allow \`LngLatLike\` objects for the \`center\` property. And you can’t write \`"CameraOptions extends Partial<Camera>"\` since \`LngLatLike\` is a superset of \`LngLat\`, not a subset. If this seems too complicated, you could also write the type out explicitly at the cost of some repetition:
+
+\`\`\`ts
+interface CameraOptions {
+  center?: LngLatLike
+  zoom?: number
+  bearing?: number
+  pitch?: number
+}
+\`\`\`
+
+In either case, with these new type declarations the \`focusOnFeature\` function passes the type checker:
+
+\`\`\`ts
+function focusOnFeature(f: Feature) {
+  const bounds = calculateBoundingBox(f)
+  const camera = viewportForBounds(bounds)
+  setCamera(camera)
+
+  const {
+    center: { lat, lng },
+    zoom
+  } = camera // OK zoom; // Type is number
+  window.location.search = \`?v=@\${lat},\${lng}z\${zoom}\`
+}
+\`\`\`
+
+This time the type of zoom is number, rather than \`number|undefined\`. The \`viewport ForBounds\` function is now much easier to use. If there were any other functions that produced bounds, you would also need to introduce a canonical form and a distinction between \`LngLatBounds\` and \`LngLatBoundsLike\`.
+
+Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Be liberal in what you accept and strict in what you produce",
+  "name": "liberal-accept-strict-produce",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "resources": [
+    "https://effectivetypescript.com",
+  ],
+  "scope": "file",
+  "source": ".gptlint/liberal-accept-strict-produce.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/no-hardcoded-secrets.md 1`] = `
+{
+  "desc": "Sensitive secrets should never be hardcoded in git because they represent a serious security risk.
+
+Common use cases for secrets include:
+
+- private API keys and tokens
+- authentication and authorization
+- third-party service config
+- private encryption keys
+- cryptographic secrets for signing requests
+
+The most common solution is to only access secrets from environment variables so they aren't committed as code.
+",
+  "fixable": false,
+  "languages": [
+    "all",
+  ],
+  "level": "error",
+  "message": "No hardcoded secrets",
+  "name": "no-hardcoded-secrets",
+  "negativeExamples": [
+    {
+      "code": "const apiKey = 'sk-J6tsSvil9M7zF76PkyU...'",
+      "language": "js",
+    },
+    {
+      "code": "import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: 'sk-J6tsSvil9M7zF76PkyU...'
+})",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const apiKey = process.env.OPENAI_API_KEY",
+      "language": "js",
+    },
+    {
+      "code": "const apiKey = process.env['OPENAI_API_KEY']",
+      "language": "js",
+    },
+    {
+      "code": "const apiKey = getEnv('OPENAI_API_KEY')",
+      "language": "js",
+    },
+    {
+      "code": "import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".gptlint/no-hardcoded-secrets.md",
+  "tags": [
+    "security",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/prefer-array-at-negative-indexing.md 1`] = `
+{
+  "desc": "When accessing items in an array from the end, like the last item, prefer using \`Array.at\` with a negative index because it is less error-prone. Note that using \`Array.at\` with a positive index is equivalent to indexing into the array normally, and if \`Array.at\` references a non-existing index, it will return \`undefined\`.
+",
+  "eslint": [
+    "@unicorn/prefer-negative-index",
+  ],
+  "fixable": true,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer using Array.at when indexing from the end of an array",
+  "name": "prefer-array-at-negative-indexing",
+  "negativeExamples": [
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const lastItem = items[items.length - 1]",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const lastItem = items.at(-1)",
+      "language": "ts",
+    },
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+
+// This example is fine because it uses a normal, positive index
+const firstItem = items[0]",
+      "language": "ts",
+    },
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const index = example()
+
+// This example is fine because it uses a variable index
+const item = items[index]",
+      "language": "ts",
+    },
+  ],
+  "resources": [
+    "https://twitter.com/housecor/status/1768622518179369036",
+  ],
+  "scope": "file",
+  "source": ".gptlint/prefer-array-at-negative-indexing.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/prefer-defensive-programming.md 1`] = `
+{
+  "desc": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+
+The following defensive programming techniques should be preferred whenever possible:
+
+- [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
+- [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
+- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
+- [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
+- [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
+- [Use defensive error handling](#use-defensive-error-handling)
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer defensive programming techniques <!-- omit from toc -->",
+  "name": "prefer-defensive-programming",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": ".gptlint/prefer-defensive-programming.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/prefer-early-return.md 1`] = `
+{
+  "desc": "Prefer returning early from functions in order to keep them as flat as possible.
+
+Ignore \`if\` statements with multiple \`else\` branches.
+
+\`if\` statements containing only a single statement in their body are okay and should be ignored by this rule.
+",
+  "eslint": [
+    "prefer-early-return",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer early returns from functions",
+  "name": "prefer-early-return",
+  "negativeExamples": [
+    {
+      "code": "function foo() {
+  if (a) {
+    b()
+    c()
+  }
+}",
+      "language": "js",
+    },
+    {
+      "code": "function handleClick(event) {
+  if (event.target.matches('.save-data')) {
+    let id = event.target.getAttribute('data-id')
+
+    if (id) {
+      let token = localStorage.getItem('token')
+
+      if (token) {
+        localStorage.setItem(\`\${token}_\${id}\`, true)
+      }
+    }
+  }
+}",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) {
+    return
+  }
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) return
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function foo() {
+  if (!a) {
+    return
+  }
+
+  b()
+  c()
+}",
+      "language": "js",
+    },
+    {
+      "code": "function bar() {
+  if (a) {
+    b()
+    c()
+  }
+
+  d()
+}",
+      "language": "js",
+    },
+    {
+      "code": "function baz() {
+  if (a) {
+    b()
+    c()
+  } else {
+    d()
+  }
+}",
+      "language": "js",
+    },
+    {
+      "code": "function foo() {
+  if (a) {
+    b()
+  }
+}",
+      "language": "js",
+    },
+    {
+      "code": "function handleClick(event) {
+  if (!event.target.matches('.save-data')) return
+
+  let id = event.target.getAttribute('data-id')
+  if (!id) return
+
+  let token = localStorage.getItem('token')
+  if (!token) return
+
+  localStorage.setItem(\`\${token}_\${id}\`, true)
+}",
+      "language": "js",
+    },
+  ],
+  "resources": [
+    "https://gomakethings.com/the-early-return-pattern-in-javascript/",
+  ],
+  "scope": "file",
+  "source": ".gptlint/prefer-early-return.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/prefer-types-always-valid-states.md 1`] = `
+{
+  "desc": "A key to effective type design is crafting types that can only represent a valid state. This rule walks through a few examples of how this can go wrong and shows you how to fix them.
+
+As an example, suppose you’re building a web application that lets you select a page, loads the con‐ tent of that page, and then displays it. You might write the state like this:
+
+\`\`\`ts
+interface State {
+  pageText: string
+  isLoading: boolean
+  error?: string
+}
+\`\`\`
+
+When you write your code to render the page, you need to consider all of these fields:
+
+\`\`\`ts
+function renderPage(state: State) {
+  if (state.error) {
+    return \`Error! Unable to load \${currentPage}: \${state.error}\`
+  } else if (state.isLoading) {
+    return \`Loading \${currentPage}...\`
+  }
+  return \`<h1>\${currentPage}</h1>\\n\${state.pageText}\`
+}
+\`\`\`
+
+Is this right, though? What if \`isLoading\` and \`error\` are both set? What would that mean? Is it better to display the loading message or the error message? It’s hard to say! There’s not enough information available.
+
+Or what if you’re writing a \`changePage\` function? Here’s an attempt:
+
+\`\`\`ts
+async function changePage(state: State, newPage: string) {
+  state.isLoading = true
+  try {
+    const response = await fetch(getUrlForPage(newPage))
+    if (!response.ok) {
+      throw new Error(\`Unable to load \${newPage}: \${response.statusText}\`)
+    }
+    const text = await response.text()
+    state.isLoading = false
+    state.pageText = text
+  } catch (e) {
+    state.error = '' + e
+  }
+}
+\`\`\`
+
+There are many problems with this! Here are a few:
+
+- We forgot to set \`state.isLoading\` to \`false\` in the error case.
+- We didn’t clear out \`state.error\`, so if the previous request failed, then you’ll keep seeing that error message instead of a loading message.
+- If the user changes pages again while the page is loading, who knows what will happen. They might see a new page and then an error, or the first page and not the second depending on the order in which the responses come back.
+
+The problem is that the state includes both too little information (which request failed? which is loading?) and too much: the \`State\` type allows both \`isLoading\` and \`error\` to be set, **even though this represents an invalid state**. This makes both \`render()\` and \`changePage()\` impossible to implement well.
+
+Here’s a better way to represent the application state:
+
+\`\`\`ts
+interface RequestPending {
+  state: 'pending'
+}
+interface RequestError {
+  state: 'error'
+  error: string
+}
+interface RequestSuccess {
+  state: 'ok'
+  pageText: string
+}
+type RequestState = RequestPending | RequestError | RequestSuccess
+interface State {
+  currentPage: string
+  requests: { [page: string]: RequestState }
+}
+\`\`\`
+
+This uses a tagged union (also known as a “discriminated union”) to explicitly model the different states that a network request can be in. This version of the state is three to four times longer, but it has the enormous advantage of not admitting invalid states. The current page is modeled explicitly, as is the state of every request that you issue. As a result, the \`renderPage\` and \`changePage\` functions are easy to implement:
+
+\`\`\`ts
+function renderPage(state: State) {
+  const { currentPage } = state
+  const requestState = state.requests[currentPage]
+
+  switch (requestState.state) {
+    case 'pending':
+      return \`Loading \${currentPage}...\`
+    case 'error':
+      return \`Error! Unable to load \${currentPage}: \${requestState.error}\`
+    case 'ok':
+      return \`<h1>\${currentPage}</h1>\\n\${requestState.pageText}\`
+  }
+}
+
+async function changePage(state: State, newPage: string) {
+  state.requests[newPage] = { state: 'pending' }
+  state.currentPage = newPage
+
+  try {
+    const response = await fetch(getUrlForPage(newPage))
+    if (!response.ok) {
+      throw new Error(\`Unable to load \${newPage}: \${response.statusText}\`)
+    }
+    const pageText = await response.text()
+    state.requests[newPage] = { state: 'ok', pageText }
+  } catch (e) {
+    state.requests[newPage] = { state: 'error', error: '' + e }
+  }
+}
+\`\`\`
+
+The ambiguity from the first implementation is entirely gone: it’s clear what the cur‐ rent page is, and every request is in exactly one state. If the user changes the page after a request has been issued, that’s no problem either. The old request still com‐ pletes, but it doesn’t affect the UI.
+
+---
+
+Oftentimes this rule pairs with the ideal of having as little mutable state as possible and preferring to derive state based on a small source of truth which is always valid.
+
+For example, let's say you have a product resource:
+
+\`\`\`ts
+class Product {
+  isInStock: boolean
+  quantityAvailable: number
+}
+\`\`\`
+
+\`Product\` has a few problems here:
+
+- \`isInStock\` can be false with \`quantityAvailable > 0\` which doesn't make any sense
+- \`isInStock\` can be true with \`quantityAvailable === 0\` which doesn't make any sense
+
+The problem comes from \`Product.isInStock\` and \`Product.quantityAvailable\` both representing different aspects of the same underling data: in this case, how much of a product is currently available.
+
+A better solution would be to only store the minimal state necessary to model the \`Product\`'s valid states, and then derive any additional fields based on the model's minimal, valid state:
+
+\`\`\`ts
+class Product {
+  quantityAvailable: number
+
+  get isInStock() {
+    // Derived based on \`quantityAvailable\` which guarantees that the product's
+    // state is always valid.
+    return this.quantityAvailable > 0
+  }
+}
+\`\`\`
+",
+  "fixable": false,
+  "languages": [
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer types that always represent valid states",
+  "name": "prefer-types-always-valid-states",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "resources": [
+    "https://effectivetypescript.com",
+  ],
+  "scope": "file",
+  "source": ".gptlint/prefer-types-always-valid-states.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/react-avoid-class-components.md 1`] = `
+{
+  "desc": "React class components are deprecated. Use React functions and hooks instead.
+
+Note that uses \`classes\` is fine for non-react components.
+",
+  "eslint": [
+    "eslint-plugin-react-prefer-function-component",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Don't use React class components",
+  "name": "react-avoid-class-components",
+  "negativeExamples": [
+    {
+      "code": "import { Component } from 'react'
+
+export class Label extends Component {
+  render() {
+    return <div>Hello</div>
+  }
+}",
+      "language": "tsx",
+    },
+    {
+      "code": "import react from 'react'
+
+export class Label extends react.Component {
+  render() {
+    return <div />
+  }
+}",
+      "language": "tsx",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "export function Button() {
+  return <div>Hello</div>
+}",
+      "language": "tsx",
+    },
+    {
+      "code": "import EventEmitter from 'eventemitter3'
+
+// This is fine because it is a normal class and not a React component.
+class Foo extends EventEmitter {
+  constructor() {}
+}",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".gptlint/react-avoid-class-components.md",
+  "tags": [
+    "react",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/semantic-variable-names.md 1`] = `
+{
+  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Use semantic variable names",
+  "name": "semantic-variable-names",
+  "negativeExamples": [
+    {
+      "code": "// Bad because "a" is not a descriptive variable name
+const a = 5
+
+// Bad because "b" is not a descriptive variable name
+const b = false",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "// Good because "numTokens" is descriptive
+const numTokens = 5
+
+// Good because "isFinished" is descriptive
+const isFinished = true
+
+// Good because "ast" is an acronym
+const ast = parseAST()
+
+// Good because "fileTypeToParserMap" is very descriptive
+const fileTypeToParserMap: Record<string, string> = {}",
+      "language": "ts",
+    },
+    {
+      "code": "// "i" is okay here because it is a simple for loop
+for (let i = 0; i < 10; i++) {}",
+      "language": "ts",
+    },
+    {
+      "code": "// "x", "y", and "r" are all okay here because they represent real, mathematical
+// concepts, and concise variable names are often preferred in math-heavy code.
+function normalDist(mu = 0, sigma = 1) {
+  let x: number, y: number, r: number
+
+  do {
+    x = Math.random() * 2 - 1
+    y = Math.random() * 2 - 1
+    r = x * x + y * y
+  } while (!r || r > 1)
+
+  return mu + sigma * y * Math.sqrt((-2 * Math.log(r)) / r)
+}",
+      "language": "ts",
+    },
+    {
+      "code": "// These are fine because the simple variable names match the corresponding type names.
+const rule: Rule = {}
+const data: Data = {}",
+      "language": "ts",
+    },
+    {
+      "code": "// This is fine because \`z\` is an external dependency that we have no control over.
+import { z } from 'zod'",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".gptlint/semantic-variable-names.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .gptlint/soc2-no-leak-user-data.md 1`] = `
+{
+  "desc": "Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
+
+Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
+",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "SOC2 Don't leak user data",
+  "name": "soc2-no-leak-user-data",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": ".gptlint/soc2-no-leak-user-data.md",
+  "tags": [
+    "security",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/always-handle-promises.md 1`] = `
+{
+  "desc": "Promises (and \`async\` functions which implicitly create Promises) must always be handled at some level of the program, either via:
+
+- using \`await\` to wait for the Promise to resolve successfully
+- using \`.then\` or \`.catch\` to handle Promise resolution
+- returning a Promise to a calling function which itself has to handle the Promise
+
+Creating a Promise or calling an \`async\` function and NOT awaiting or propagating the resulting Promise using one of these approaches is a code smell and violates this rule.
+",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Always handle Promises",
+  "name": "always-handle-promises",
+  "negativeExamples": [
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is bad because we're not handling the Promise returned by \`saveFile\`
+saveFile()",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because we explicitly \`await\` the Promise returned by \`saveFile\`
+await saveFile()",
+      "language": "js",
+    },
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because the Promise returned from \`saveFile\` is propagated to \`main\`'s caller
+async function main() {
+  return saveFile()
+}",
+      "language": "js",
+    },
+    {
+      "code": "async function saveFile() {
+  // ...
+}
+
+// This is fine because we explicitly \`await\` the promise results
+await Promise.all([saveFile(), saveFile()])",
+      "language": "js",
+    },
+  ],
+  "scope": "file",
+  "source": ".rules/always-handle-promises.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/avoid-type-info-in-docs.md 1`] = `
+{
+  "desc": "Avoid repeating type information in comments and variable names. In the best case it is duplicative of type declarations, and in the worst it will lead to conflicting information.
+
+Consider including units in variable names if they aren’t clear from the type (e.g., timeMs or temperatureC).
+
+Here is an example of incorrect code:
+
+\`\`\`ts
+/**
+ * Returns a string with the foreground color.
+ * Takes zero or one arguments. With no arguments, returns the
+ * standard foreground color. With one argument, returns the foreground color
+ * for a particular page.
+ */
+function getForegroundColor(page?: string) {
+  return page === 'login' ? { r: 127, g: 127, b: 127 } : { r: 0, g: 0, b: 0 }
+}
+\`\`\`
+
+This is a VIOLATION because the comment describes the types of the function parameters and return type which duplicates the more precise TS definition. Even worse, this example is a VIOLATION because the code and the comment contradict each other.
+
+Let’s assume that the code represents the desired behavior. There are a few issues with this comment:
+
+- It says that the function returns the color as a string when it actually returns an \`{r, g, b}\` object.
+- It explains that the function takes zero or one arguments, which is already clear from the type signature.
+- It’s needlessly wordy: the comment is longer than the function declaration and implementation.
+
+Since your type annotations are checked by the TypeScript compiler, they’ll never get out of sync with the implementation.
+
+A better comment might look like this:
+
+\`\`\`ts
+/** Get the foreground color for the application or a specific page. */
+function getForegroundColor(page?: string): Color {
+  // ...
+}
+\`\`\`
+
+Comments about a lack of mutation are also suspect. Don’t just say that you don’t modify a parameter:
+
+\`\`\`ts
+/** Does not modify nums */
+function sort(nums: number[]) {
+  /* ... */
+}
+\`\`\`
+
+Instead, declare it \`readonly\` and let TypeScript enforce the contract:
+
+\`\`\`ts
+function sort(nums: readonly number[]) {
+  /* ... */
+}
+\`\`\`
+
+Note that you do NOT have to include JSDoc comments for a function, and you do NOT have to include \`@param\` or \`@returns\` JSDoc properties. These are purely optional, but if they are included, they should not discuss the types of function parameters because TypeScript does a better job of capturing this info in the function definition itself.
+",
+  "fixable": false,
+  "languages": [
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Don’t repeat type information in documentation",
+  "name": "avoid-type-info-in-docs",
+  "negativeExamples": [
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ *
+ * Takes either an existing user or data describing a new user.
+ * Also takes an optional context.
+ *
+ * Returns a new user.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}
+
+// This example VIOLATES the rule because the JSDoc comment describes the type
+// of \`user\` when the TS types do a better job of this. Another issue is that
+// the return type is described, when the TS types do a better job of this.
+// A better version would use JSDoc \`@param\` and \`@returns\` to describe the
+// behavior without mentioning the types.",
+      "language": "ts",
+    },
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ *
+ * @param {User} user - The user to upsert.
+ * @param {Context} ctx - Optional context for the database operation.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}
+
+// This example VIOLATES the rule because the JSDoc comment includes duplicate
+// type info for the function parameters.",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}",
+      "language": "ts",
+    },
+    {
+      "code": "/**
+ * Upserts a user into the database.
+ *
+ * @param user - The user to upsert.
+ * @param ctx - Optional context for the database operation.
+ *
+ * @returns The upserted user.
+ */
+export async function upsertUser(
+  user: User | NewUserData,
+  ctx?: Context
+): Promise<User> {
+  // ...
+}",
+      "language": "ts",
+    },
+    {
+      "code": "/**
+ * Parses a string using a zod schema.
+ *
+ * @param output - string to parse
+ * @param outputSchema - zod schema
+ *
+ * @returns parsed output
+ */
+export function parseStructuredOutput<T>(
+  output: string,
+  outputSchema: ZodType<T>
+): T {
+  // ...
+}
+
+// This example is fine because the type info in the JSDoc \`@param\` comments is relevant and simple.",
+      "language": "ts",
+    },
+  ],
+  "resources": [
+    "https://effectivetypescript.com",
+  ],
+  "scope": "file",
+  "source": ".rules/avoid-type-info-in-docs.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/consistent-identifier-casing.md 1`] = `
+{
+  "desc": "Identifiers of the same type should try to use consistent casing.
+
+Variable names should use camelCase.
+Global const variable names should either use camelCase, PascalCase, or CONSTANT\\_CASE.
+Type names should use PascalCase.
+Class names should use PascalCase.
+Function names should use camelCase.
+
+Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and \\_getKey.
+",
+  "eslint": [
+    "@typescript-eslint/naming-convention",
+    "camelcase",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Be consistent with identifier casing",
+  "name": "consistent-identifier-casing",
+  "negativeExamples": [
+    {
+      "code": "// These are bad because variable identifiers should use consistent casing.
+const fooBar = true
+const default_timeout = 5000
+
+// These are bad because function identifiers should use consistent casing.
+function helloWorld() {}
+function hello_twitter() {}",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const fooBar = true
+const defaultTimeout = 5000
+
+function helloWorld() {}
+function helloTwitter() {}",
+      "language": "ts",
+    },
+    {
+      "code": "import foo from 'foo'
+
+// This is fine because \`foo\` is a third-party API which this rule should ignore.
+foo({ camelCase: true, snake_case: true, SNAKE_CASE: true })",
+      "language": "ts",
+    },
+    {
+      "code": "// These are all fine as common exceptions to this rule
+export const HTTPConfig = {}
+const LLMOptions = {}
+const validKeysL = new Set()
+const loadingP = new Promise()
+const cwd = process.cwd",
+      "language": "ts",
+    },
+    {
+      "code": "// This is fine because \`i\` is a parameter of an inline function.
+const foo = [1, 2, 3].filter((i) => i >= 0)",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".rules/consistent-identifier-casing.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/custom/prefer-fetch-over-axios.md 1`] = `
+{
+  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
+
+Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
+
+Code which doesn't use the \`axios\` module should be ignored.
+",
+  "eslint": [
+    "no-restricted-imports",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer fetch over axios",
+  "name": "prefer-fetch-over-axios",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": ".rules/custom/prefer-fetch-over-axios.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/liberal-accept-strict-produce.md 1`] = `
+{
+  "desc": "This idea is known as the robustness principle or Postel’s Law.
+
+As a general best practice, input types should be broader than output types. Optional properties and union types are more common in parameter types than return types.
+
+To reuse types between parameters and return types, it's often useful to introduce a canonical form (for return types) and a looser form (for parameters).
+
+---
+
+As an example, a 3D mapping API might provide a way to position the camera and to calculate a viewport for a bounding box:
+
+\`\`\`ts
+declare function setCamera(camera: CameraOptions): void
+declare function viewportForBounds(bounds: LngLatBounds): CameraOptions
+\`\`\`
+
+It is convenient that the result of \`viewportForBounds\` can be passed directly to \`setCamera\` to position the camera.
+
+Let’s look at the definitions of these types:
+
+\`\`\`ts
+interface CameraOptions {
+  center?: LngLat
+  zoom?: number
+  bearing?: number
+  pitch?: number
+}
+
+type LngLat =
+  | { lng: number; lat: number }
+  | { lon: number; lat: number }
+  | [number, number]
+\`\`\`
+
+The fields in \`CameraOptions\` are all optional because you might want to set just the center or zoom without changing the bearing or pitch. The \`LngLat\` type also makes \`setCamera\` liberal in what it accepts: you can pass in a \`{lng, lat}\` object, a \`{lon, lat}\` object, or a \`[lng, lat]\` pair if you’re confident you got the order right. These accommodations make the function easy to call.
+
+The viewportForBounds function takes in another “liberal” type:
+
+\`\`\`ts
+type LngLatBounds =
+  | { northeast: LngLat; southwest: LngLat }
+  | [LngLat, LngLat]
+  | [number, number, number, number]
+\`\`\`
+
+You can specify the bounds either using named corners, a pair of lat/lngs, or a four- tuple if you’re confident you got the order right. Since LngLat already accommodates three forms, there are no fewer than 19 possible forms for LngLatBounds. Liberal indeed!
+
+Now let’s write a function that adjusts the viewport to accommodate a GeoJSON Fea‐ ture and stores the new viewport in the URL:
+
+\`\`\`ts
+function focusOnFeature(f: Feature) {
+  const bounds = calculateBoundingBox(f)
+  const camera = viewportForBounds(bounds)
+  setCamera(camera)
+  const {
+    center: { lat, lng },
+    zoom
+  } = camera
+  // ~~~ Property 'lat' does not exist on type ...
+  // ~~~ Property 'lng' does not exist on type ... zoom; // Type is number | undefined
+  window.location.search = \`?v=@\${lat},\${lng}z\${zoom}\`
+}
+\`\`\`
+
+Whoops! Only the zoom property exists, but its type is inferred as \`number|undefined\`, which is also problematic. The issue is that the type declaration for \`viewportFor Bounds\` indicates that it is liberal not just in what it accepts but also in what it pro‐ duces. The only type-safe way to use the camera result is to introduce a code branch for each component of the union type.
+
+The return type with lots of optional properties and union types makes \`viewportFor Bounds\` difficult to use. **Its broad parameter type is convenient, but its broad return type is not. A more convenient API would be strict in what it produces.**
+
+One way to do this is to distinguish a canonical format for coordinates. Following JavaScript’s convention of distinguishing “Array” and “Array-like”, you can draw a distinction between \`LngLat\` and \`LngLatLike\`. You can also distinguish between a fully defined Camera type and the partial version accepted by setCamera:
+
+\`\`\`ts
+interface LngLat {
+  lng: number
+  lat: number
+}
+type LngLatLike = LngLat | { lon: number; lat: number } | [number, number]
+interface Camera {
+  center: LngLat
+  zoom: number
+  bearing: number
+  pitch: number
+}
+interface CameraOptions extends Omit<Partial<Camera>, 'center'> {
+  center?: LngLatLike
+}
+type LngLatBounds =
+  | { northeast: LngLatLike; southwest: LngLatLike }
+  | [LngLatLike, LngLatLike]
+  | [number, number, number, number]
+
+declare function setCamera(camera: CameraOptions): void
+declare function viewportForBounds(bounds: LngLatBounds): Camera
+\`\`\`
+
+The loose \`CameraOptions\` type adapts the stricter \`Camera\` type.
+
+Using \`Partial<Camera>\` as the parameter type in \`setCamera\` would not work here since you do want to allow \`LngLatLike\` objects for the \`center\` property. And you can’t write \`"CameraOptions extends Partial<Camera>"\` since \`LngLatLike\` is a superset of \`LngLat\`, not a subset. If this seems too complicated, you could also write the type out explicitly at the cost of some repetition:
+
+\`\`\`ts
+interface CameraOptions {
+  center?: LngLatLike
+  zoom?: number
+  bearing?: number
+  pitch?: number
+}
+\`\`\`
+
+In either case, with these new type declarations the \`focusOnFeature\` function passes the type checker:
+
+\`\`\`ts
+function focusOnFeature(f: Feature) {
+  const bounds = calculateBoundingBox(f)
+  const camera = viewportForBounds(bounds)
+  setCamera(camera)
+
+  const {
+    center: { lat, lng },
+    zoom
+  } = camera // OK zoom; // Type is number
+  window.location.search = \`?v=@\${lat},\${lng}z\${zoom}\`
+}
+\`\`\`
+
+This time the type of zoom is number, rather than \`number|undefined\`. The \`viewport ForBounds\` function is now much easier to use. If there were any other functions that produced bounds, you would also need to introduce a canonical form and a distinction between \`LngLatBounds\` and \`LngLatBoundsLike\`.
+
+Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Be liberal in what you accept and strict in what you produce",
+  "name": "liberal-accept-strict-produce",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "resources": [
+    "https://effectivetypescript.com",
+  ],
+  "scope": "file",
+  "source": ".rules/liberal-accept-strict-produce.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/no-hardcoded-secrets.md 1`] = `
+{
+  "desc": "Sensitive secrets should never be hardcoded in git because they represent a serious security risk.
+
+Common use cases for secrets include:
+
+- private API keys and tokens
+- authentication and authorization
+- third-party service config
+- private encryption keys
+- cryptographic secrets for signing requests
+
+The most common solution is to only access secrets from environment variables so they aren't committed as code.
+",
+  "fixable": false,
+  "languages": [
+    "all",
+  ],
+  "level": "error",
+  "message": "No hardcoded secrets",
+  "name": "no-hardcoded-secrets",
+  "negativeExamples": [
+    {
+      "code": "const apiKey = 'sk-J6tsSvil9M7zF76PkyU...'",
+      "language": "js",
+    },
+    {
+      "code": "import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: 'sk-J6tsSvil9M7zF76PkyU...'
+})",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const apiKey = process.env.OPENAI_API_KEY",
+      "language": "js",
+    },
+    {
+      "code": "const apiKey = process.env['OPENAI_API_KEY']",
+      "language": "js",
+    },
+    {
+      "code": "const apiKey = getEnv('OPENAI_API_KEY')",
+      "language": "js",
+    },
+    {
+      "code": "import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".rules/no-hardcoded-secrets.md",
+  "tags": [
+    "security",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/prefer-array-at-negative-indexing.md 1`] = `
+{
+  "desc": "When accessing items in an array from the end, like the last item, prefer using \`Array.at\` with a negative index because it is less error-prone. Note that using \`Array.at\` with a positive index is equivalent to indexing into the array normally, and if \`Array.at\` references a non-existing index, it will return \`undefined\`.
+",
+  "eslint": [
+    "@unicorn/prefer-negative-index",
+  ],
+  "fixable": true,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer using Array.at when indexing from the end of an array",
+  "name": "prefer-array-at-negative-indexing",
+  "negativeExamples": [
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const lastItem = items[items.length - 1]",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const lastItem = items.at(-1)",
+      "language": "ts",
+    },
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+
+// This example is fine because it uses a normal, positive index
+const firstItem = items[0]",
+      "language": "ts",
+    },
+    {
+      "code": "const items = [1, 2, 3, 4, 5, 6, 7]
+const index = example()
+
+// This example is fine because it uses a variable index
+const item = items[index]",
+      "language": "ts",
+    },
+  ],
+  "resources": [
+    "https://twitter.com/housecor/status/1768622518179369036",
+  ],
+  "scope": "file",
+  "source": ".rules/prefer-array-at-negative-indexing.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/prefer-defensive-programming.md 1`] = `
+{
+  "desc": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+
+The following defensive programming techniques should be preferred whenever possible:
+
+- [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
+- [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
+- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
+- [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
+- [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
+- [Use defensive error handling](#use-defensive-error-handling)
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer defensive programming techniques <!-- omit from toc -->",
+  "name": "prefer-defensive-programming",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": ".rules/prefer-defensive-programming.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/prefer-early-return.md 1`] = `
+{
+  "desc": "Prefer returning early from functions in order to keep them as flat as possible.
+
+Ignore \`if\` statements with multiple \`else\` branches.
+
+\`if\` statements containing only a single statement in their body are okay and should be ignored by this rule.
+",
+  "eslint": [
+    "prefer-early-return",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer early returns from functions",
+  "name": "prefer-early-return",
+  "negativeExamples": [
+    {
+      "code": "function foo() {
+  if (a) {
+    b()
+    c()
+  }
+}",
+      "language": "js",
+    },
+    {
+      "code": "function handleClick(event) {
+  if (event.target.matches('.save-data')) {
+    let id = event.target.getAttribute('data-id')
+
+    if (id) {
+      let token = localStorage.getItem('token')
+
+      if (token) {
+        localStorage.setItem(\`\${token}_\${id}\`, true)
+      }
+    }
+  }
+}",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) {
+    return
+  }
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) return
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function foo() {
+  if (!a) {
+    return
+  }
+
+  b()
+  c()
+}",
+      "language": "js",
+    },
+    {
+      "code": "function bar() {
+  if (a) {
+    b()
+    c()
+  }
+
+  d()
+}",
+      "language": "js",
+    },
+    {
+      "code": "function baz() {
+  if (a) {
+    b()
+    c()
+  } else {
+    d()
+  }
+}",
+      "language": "js",
+    },
+    {
+      "code": "function foo() {
+  if (a) {
+    b()
+  }
+}",
+      "language": "js",
+    },
+    {
+      "code": "function handleClick(event) {
+  if (!event.target.matches('.save-data')) return
+
+  let id = event.target.getAttribute('data-id')
+  if (!id) return
+
+  let token = localStorage.getItem('token')
+  if (!token) return
+
+  localStorage.setItem(\`\${token}_\${id}\`, true)
+}",
+      "language": "js",
+    },
+  ],
+  "resources": [
+    "https://gomakethings.com/the-early-return-pattern-in-javascript/",
+  ],
+  "scope": "file",
+  "source": ".rules/prefer-early-return.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/prefer-types-always-valid-states.md 1`] = `
+{
+  "desc": "A key to effective type design is crafting types that can only represent a valid state. This rule walks through a few examples of how this can go wrong and shows you how to fix them.
+
+As an example, suppose you’re building a web application that lets you select a page, loads the con‐ tent of that page, and then displays it. You might write the state like this:
+
+\`\`\`ts
+interface State {
+  pageText: string
+  isLoading: boolean
+  error?: string
+}
+\`\`\`
+
+When you write your code to render the page, you need to consider all of these fields:
+
+\`\`\`ts
+function renderPage(state: State) {
+  if (state.error) {
+    return \`Error! Unable to load \${currentPage}: \${state.error}\`
+  } else if (state.isLoading) {
+    return \`Loading \${currentPage}...\`
+  }
+  return \`<h1>\${currentPage}</h1>\\n\${state.pageText}\`
+}
+\`\`\`
+
+Is this right, though? What if \`isLoading\` and \`error\` are both set? What would that mean? Is it better to display the loading message or the error message? It’s hard to say! There’s not enough information available.
+
+Or what if you’re writing a \`changePage\` function? Here’s an attempt:
+
+\`\`\`ts
+async function changePage(state: State, newPage: string) {
+  state.isLoading = true
+  try {
+    const response = await fetch(getUrlForPage(newPage))
+    if (!response.ok) {
+      throw new Error(\`Unable to load \${newPage}: \${response.statusText}\`)
+    }
+    const text = await response.text()
+    state.isLoading = false
+    state.pageText = text
+  } catch (e) {
+    state.error = '' + e
+  }
+}
+\`\`\`
+
+There are many problems with this! Here are a few:
+
+- We forgot to set \`state.isLoading\` to \`false\` in the error case.
+- We didn’t clear out \`state.error\`, so if the previous request failed, then you’ll keep seeing that error message instead of a loading message.
+- If the user changes pages again while the page is loading, who knows what will happen. They might see a new page and then an error, or the first page and not the second depending on the order in which the responses come back.
+
+The problem is that the state includes both too little information (which request failed? which is loading?) and too much: the \`State\` type allows both \`isLoading\` and \`error\` to be set, **even though this represents an invalid state**. This makes both \`render()\` and \`changePage()\` impossible to implement well.
+
+Here’s a better way to represent the application state:
+
+\`\`\`ts
+interface RequestPending {
+  state: 'pending'
+}
+interface RequestError {
+  state: 'error'
+  error: string
+}
+interface RequestSuccess {
+  state: 'ok'
+  pageText: string
+}
+type RequestState = RequestPending | RequestError | RequestSuccess
+interface State {
+  currentPage: string
+  requests: { [page: string]: RequestState }
+}
+\`\`\`
+
+This uses a tagged union (also known as a “discriminated union”) to explicitly model the different states that a network request can be in. This version of the state is three to four times longer, but it has the enormous advantage of not admitting invalid states. The current page is modeled explicitly, as is the state of every request that you issue. As a result, the \`renderPage\` and \`changePage\` functions are easy to implement:
+
+\`\`\`ts
+function renderPage(state: State) {
+  const { currentPage } = state
+  const requestState = state.requests[currentPage]
+
+  switch (requestState.state) {
+    case 'pending':
+      return \`Loading \${currentPage}...\`
+    case 'error':
+      return \`Error! Unable to load \${currentPage}: \${requestState.error}\`
+    case 'ok':
+      return \`<h1>\${currentPage}</h1>\\n\${requestState.pageText}\`
+  }
+}
+
+async function changePage(state: State, newPage: string) {
+  state.requests[newPage] = { state: 'pending' }
+  state.currentPage = newPage
+
+  try {
+    const response = await fetch(getUrlForPage(newPage))
+    if (!response.ok) {
+      throw new Error(\`Unable to load \${newPage}: \${response.statusText}\`)
+    }
+    const pageText = await response.text()
+    state.requests[newPage] = { state: 'ok', pageText }
+  } catch (e) {
+    state.requests[newPage] = { state: 'error', error: '' + e }
+  }
+}
+\`\`\`
+
+The ambiguity from the first implementation is entirely gone: it’s clear what the cur‐ rent page is, and every request is in exactly one state. If the user changes the page after a request has been issued, that’s no problem either. The old request still com‐ pletes, but it doesn’t affect the UI.
+
+---
+
+Oftentimes this rule pairs with the ideal of having as little mutable state as possible and preferring to derive state based on a small source of truth which is always valid.
+
+For example, let's say you have a product resource:
+
+\`\`\`ts
+class Product {
+  isInStock: boolean
+  quantityAvailable: number
+}
+\`\`\`
+
+\`Product\` has a few problems here:
+
+- \`isInStock\` can be false with \`quantityAvailable > 0\` which doesn't make any sense
+- \`isInStock\` can be true with \`quantityAvailable === 0\` which doesn't make any sense
+
+The problem comes from \`Product.isInStock\` and \`Product.quantityAvailable\` both representing different aspects of the same underling data: in this case, how much of a product is currently available.
+
+A better solution would be to only store the minimal state necessary to model the \`Product\`'s valid states, and then derive any additional fields based on the model's minimal, valid state:
+
+\`\`\`ts
+class Product {
+  quantityAvailable: number
+
+  get isInStock() {
+    // Derived based on \`quantityAvailable\` which guarantees that the product's
+    // state is always valid.
+    return this.quantityAvailable > 0
+  }
+}
+\`\`\`
+",
+  "fixable": false,
+  "languages": [
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Prefer types that always represent valid states",
+  "name": "prefer-types-always-valid-states",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "resources": [
+    "https://effectivetypescript.com",
+  ],
+  "scope": "file",
+  "source": ".rules/prefer-types-always-valid-states.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/react-avoid-class-components.md 1`] = `
+{
+  "desc": "React class components are deprecated. Use React functions and hooks instead.
+
+Note that uses \`classes\` is fine for non-react components.
+",
+  "eslint": [
+    "eslint-plugin-react-prefer-function-component",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Don't use React class components",
+  "name": "react-avoid-class-components",
+  "negativeExamples": [
+    {
+      "code": "import { Component } from 'react'
+
+export class Label extends Component {
+  render() {
+    return <div>Hello</div>
+  }
+}",
+      "language": "tsx",
+    },
+    {
+      "code": "import react from 'react'
+
+export class Label extends react.Component {
+  render() {
+    return <div />
+  }
+}",
+      "language": "tsx",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "export function Button() {
+  return <div>Hello</div>
+}",
+      "language": "tsx",
+    },
+    {
+      "code": "import EventEmitter from 'eventemitter3'
+
+// This is fine because it is a normal class and not a React component.
+class Foo extends EventEmitter {
+  constructor() {}
+}",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".rules/react-avoid-class-components.md",
+  "tags": [
+    "react",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/semantic-variable-names.md 1`] = `
+{
+  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "Use semantic variable names",
+  "name": "semantic-variable-names",
+  "negativeExamples": [
+    {
+      "code": "// Bad because "a" is not a descriptive variable name
+const a = 5
+
+// Bad because "b" is not a descriptive variable name
+const b = false",
+      "language": "ts",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "// Good because "numTokens" is descriptive
+const numTokens = 5
+
+// Good because "isFinished" is descriptive
+const isFinished = true
+
+// Good because "ast" is an acronym
+const ast = parseAST()
+
+// Good because "fileTypeToParserMap" is very descriptive
+const fileTypeToParserMap: Record<string, string> = {}",
+      "language": "ts",
+    },
+    {
+      "code": "// "i" is okay here because it is a simple for loop
+for (let i = 0; i < 10; i++) {}",
+      "language": "ts",
+    },
+    {
+      "code": "// "x", "y", and "r" are all okay here because they represent real, mathematical
+// concepts, and concise variable names are often preferred in math-heavy code.
+function normalDist(mu = 0, sigma = 1) {
+  let x: number, y: number, r: number
+
+  do {
+    x = Math.random() * 2 - 1
+    y = Math.random() * 2 - 1
+    r = x * x + y * y
+  } while (!r || r > 1)
+
+  return mu + sigma * y * Math.sqrt((-2 * Math.log(r)) / r)
+}",
+      "language": "ts",
+    },
+    {
+      "code": "// These are fine because the simple variable names match the corresponding type names.
+const rule: Rule = {}
+const data: Data = {}",
+      "language": "ts",
+    },
+    {
+      "code": "// This is fine because \`z\` is an external dependency that we have no control over.
+import { z } from 'zod'",
+      "language": "ts",
+    },
+  ],
+  "scope": "file",
+  "source": ".rules/semantic-variable-names.md",
+  "tags": [
+    "best practices",
+  ],
+}
+`;
+
+exports[`parseRuleFile - .rules/soc2-no-leak-user-data.md 1`] = `
+{
+  "desc": "Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
+
+Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
+",
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "message": "SOC2 Don't leak user data",
+  "name": "soc2-no-leak-user-data",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": ".rules/soc2-no-leak-user-data.md",
+  "tags": [
+    "security",
+  ],
+}
+`;
+
 exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
 {
   "desc": "This rule doesn't contain any examples which is fine because they are optional.
