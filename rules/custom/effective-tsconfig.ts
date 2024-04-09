@@ -13,7 +13,10 @@ const rule: Readonly<Rule> = {
   message: 'Follow tsconfig best practices.',
   level: 'error',
   scope: 'project',
-  resources: ['https://typescriptlang.org/tsconfig'],
+  resources: [
+    'https://typescriptlang.org/tsconfig',
+    'https://www.youtube.com/watch?v=eJXVEju3XLM&ab_channel=MattPocock'
+  ],
 
   preProcessProject: async ({ rule, cache, config, cwd }) => {
     const parsedTSConfig = getTsconfig(cwd, 'tsconfig.json', tsConfigCache)
