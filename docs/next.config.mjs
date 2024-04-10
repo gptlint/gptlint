@@ -17,11 +17,7 @@ export default withNextra({
     return [
       {
         source: '/guide',
-        destination: '/guide/install'
-      },
-      {
-        source: '/docs',
-        destination: '/docs/exports'
+        destination: '/guide/quick-start'
       }
     ]
   }
