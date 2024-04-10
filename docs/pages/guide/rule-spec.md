@@ -2,7 +2,7 @@
 
 <table>
 <tr><td>Version</td><td>0.1.0</td></tr>
-<tr><td>Date</td><td>April 1, 2024</td></tr>
+<tr><td>Last Updated</td><td>April 9, 2024</td></tr>
 <tr><td>Author</td><td><a href="https://twitter.com/transitive_bs">Travis Fischer</a></td></tr>
 </table>
 
@@ -15,11 +15,6 @@ The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define 
 GRS rules are parsed into the following TypeScript format:
 
 ```ts
-/** @see https://github.com/gptlint/gptlint/blob/main/src/types.ts */
-
-export type LintRuleLevel = 'error' | 'warn' | 'off'
-export type LintRuleScope = 'file' | 'project' | 'repo'
-
 export type Rule = {
   // core rule definition
   name: string
@@ -37,8 +32,8 @@ export type Rule = {
   exclude?: string[]
   resources?: string[]
   model?: string
-  level: LintRuleLevel
-  scope: LintRuleScope
+  scope: LintRuleScope // defaults to 'file'
+  level: LintRuleLevel // defaults to 'error'
 
   // optional custom functionality for rules scoped to the file-level
   preProcessFile?: PreProcessFileFn
@@ -53,7 +48,12 @@ export type Rule = {
   // internal metadata
   source?: string
 }
+
+export type LintRuleScope = 'file' | 'project' | 'repo'
+export type LintRuleLevel = 'error' | 'warn' | 'off'
 ```
+
+See the [full types](https://github.com/gptlint/gptlint/blob/main/src/types.ts) for more details.
 
 ## Rule File Format
 
@@ -112,12 +112,6 @@ Here is an example metadata table.
 
 ## Example Rules
 
-See [.gptlint/](/.gptlint) for examples of valid rules.
+Built-in rules are available in [.gptlint](https://github.com/gptlint/gptlint/tree/main/.gptlint).
 
-Parsing-wise, [fixtures/rules/](/fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules/](/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
-
-# License
-
-The GPTLint Rule Spec is licensed under the Creative Commons License [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
-
-If you found this project interesting, please consider [sponsoring me](https://github.com/sponsors/transitive-bullshit) or <a href="https://twitter.com/transitive_bs">following me on twitter <img src="https://storage.googleapis.com/saasify-assets/twitter-logo.svg" alt="twitter" height="24px" align="center"></a>
+Parsing-wise, [fixtures/rules](https://github.com/gptlint/gptlint/tree/main/fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules](https://github.com/gptlint/gptlint/tree/main/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.

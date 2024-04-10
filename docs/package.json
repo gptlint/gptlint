@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "gptlint-docs",
+  "type": "module",
+  "author": "Travis Fischer <travis@transitivebullsh.it>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "gptlint/gptlint"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.2.2",
+    "next": "^14.1.4",
+    "nextra": "3.0.0-alpha.22",
+    "nextra-theme-docs": "3.0.0-alpha.22",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.75"
+  }
+}
