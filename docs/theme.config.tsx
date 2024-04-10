@@ -143,6 +143,10 @@ ul li._my-2 {
 img {
   display: inline-block !important;
 }
+
+aside ul li button {
+  font-weight: 700;
+}
 `}
         </style>
       </>

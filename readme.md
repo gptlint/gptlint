@@ -52,7 +52,7 @@ Here's a demo of `gptlint` running on its own codebase:
   <img width="640" src="/docs/public/demo.svg">
 </p>
 
-Check out our [docs](https://gptlint.dev/guide) to learn more.
+Check out our [docs](https://gptlint.dev/guide) to get started.
 
 ## How it works
 
@@ -66,7 +66,7 @@ Check out our [docs on how it works](https://gptlint.dev/project/how-it-works) t
 
 Installation is simple, with the only external dependency required by default being an OpenAI API key.
 
-[Visit our docs to get started](https://gptlint.dev/guide).
+Check out our [docs](https://gptlint.dev/guide) to get started.
 
 ## FAQ
 

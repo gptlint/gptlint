@@ -1,6 +1,6 @@
 # LLM Providers
 
-This project supports any chat LLM which exposes an OpenAI-compatible chat completions API. Specific instructions for the most popular LLM providers and local, open source models are included below.
+GPTLint supports any chat LLM which exposes an OpenAI-compatible chat completions API. Specific instructions for the most popular LLM providers and local, open source models are included below.
 
 ## OpenAI
 
