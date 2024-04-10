@@ -2,7 +2,7 @@
 
 _LLM costs can add up quickly._
 
-[Two-pass linting](./guide/how-it-works.md#two-pass-linting) helps to significantly reduce costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly.
+[Two-pass linting](./guide/how-it-works#two-pass-linting) helps to significantly reduce costs by using a cheaper, weaker model for 95% of the work, but if you're running the linter on very large codebases, LLM costs can still add up quickly.
 
 Every time you run `gptlint`, it will log the total cost of all LLM calls for that run (if you're using a supported provider).
 

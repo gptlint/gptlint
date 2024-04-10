@@ -17,7 +17,7 @@ GPTLint defaults to using the OpenAI API, so you'll need to sign up for an [Open
 
 Add your `OPENAI_API_KEY` as an environment variable or store it in a `.env` file in your project's root.
 
-**GPTLint supports all LLM providers** including **local LLMs**, so if you don't want to use OpenAI, follow the docs for configuring other [LLM providers](./llm-providers.md).
+**GPTLint supports all LLM providers** including **local LLMs**, so if you don't want to use OpenAI, follow the docs for configuring other [LLM providers](./llm-providers).
 
 ## Usage
 
@@ -25,6 +25,6 @@ Add your `OPENAI_API_KEY` as an environment variable or store it in a `.env` fil
 npx gptlint --help
 ```
 
-By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files and `.gptlint/**/*.md` for rule definition files.
+By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files and `.gptlint/**/*.md` for any project-specific rule definition files you may want to add.
 
 `gptlint` respects `.gitignore` and optionally `.gptlintignore` as well if it exists.

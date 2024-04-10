@@ -17,20 +17,20 @@
 ## Features
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
-- ✅️ simple markdown format for rules ([example](https://github.com/gptlint/gptlint/tree/main/rules/prefer-array-at-negative-indexing.md), [spec](./guide/rule-spec.md))
-- ✅️ easy to [disable](./faq.md#how-can-i-disable-a-rule) or [customize](#how-can-i-customize-a-built-in-rule-) rules
-- ✅️ add custom, [project-specific rules](./guide/rule-guidelines.md#project-specific-rules)
+- ✅️ simple markdown format for rules ([example](https://github.com/gptlint/gptlint/tree/main/rules/prefer-array-at-negative-indexing), [spec](./guide/rule-spec))
+- ✅️ easy to [disable](./faq#how-can-i-disable-a-rule) or [customize](#how-can-i-customize-a-built-in-rule-) rules
+- ✅️ add custom, [project-specific rules](./guide/rule-guidelines#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
 - ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ content-based caching
 - ✅️ outputs LLM stats per run (cost, tokens, etc)
-- ✅️ built-in rules are extensively tested w/ [evals](./guide/how-it-works.md#evals)
-- ✅️ supports all major [LLM providers](./guide/llm-providers.md) and [local models](./guide/llm-providers.md#local-models)
+- ✅️ built-in rules are extensively tested w/ [evals](./guide/how-it-works#evals)
+- ✅️ supports all major [LLM providers](./guide/llm-providers) and [local models](./guide/llm-providers#local-models)
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
-- ✅️ includes [guidelines](./guide/rule-guidelines.md) for creating your own rules
-- ❌ MVP rules are [JS/TS only](./limitations.md#rules-in-the-mvp-are-jsts-only) _for now_
-- ❌ MVP rules are [single-file context only](./limitations.md#rules-in-the-mvp-are-single-file-only) _for now_
-- ❌ MVP does not support [autofixing](./limitations.md#the-mvp-does-not-support-autofixing-lint-errors) _for now_
+- ✅️ includes [guidelines](./guide/rule-guidelines) for creating your own rules
+- ❌ MVP rules are [JS/TS only](./limitations#rules-in-the-mvp-are-jsts-only) _for now_
+- ❌ MVP rules are [single-file context only](./limitations#rules-in-the-mvp-are-single-file-only) _for now_
+- ❌ MVP does not support [autofixing](./limitations#the-mvp-does-not-support-autofixing-lint-errors) _for now_
 
 ## Demo
 
@@ -43,10 +43,10 @@ Here's a demo of `gptlint` running on its own codebase:
 ## How it works
 
 <p align="center">
-  <a href="./guide/how-it-works.md"><img alt="How it works" src="/how-gptlint-works.png"></a>
+  <a href="./guide/how-it-works"><img alt="How it works" src="/how-gptlint-works.png"></a>
 </p>
 
-See our [docs on how it works](./guide/how-it-works.md) for more details.
+See our [docs on how it works](./guide/how-it-works) for more details.
 
 ## Getting Started
 

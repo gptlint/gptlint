@@ -6,7 +6,7 @@ This project supports any chat LLM which exposes an OpenAI-compatible chat compl
 
 This is the default. Just export an `OPENAI_API_KEY` environment variable either via your environment, a local `.env` file, or via the CLI `--apiKey` flag.
 
-The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it. The default `weakModel` is `gpt-3.5-turbo` which is used for [two-pass linting](./how-it-works.md#two-pass-linting).
+The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the default because some developers don't have access to it. The default `weakModel` is `gpt-3.5-turbo` which is used for [two-pass linting](./how-it-works#two-pass-linting).
 
 If you have access to `gpt-4-turbo-preview`, it is recommended to use over `gpt-4` by adding a [config file](https://github.com/gptlint/gptlint/tree/main/gptlint.config.js) to your project. For example:
 

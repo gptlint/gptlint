@@ -53,7 +53,7 @@ export type LintRuleScope = 'file' | 'project' | 'repo'
 export type LintRuleLevel = 'error' | 'warn' | 'off'
 ```
 
-See the [full types](https://github.com/gptlint/gptlint/blob/main/src/types.ts) for more details.
+See the [full types](https://github.com/gptlint/gptlint/blob/main/src/rule.ts) for more details.
 
 ## Rule File Format
 

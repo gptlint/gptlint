@@ -60,6 +60,7 @@ export type LinterConfig = {
   linterOptions?: LinterOptions
 
   // customize LLM model and provider options
+  // most important are: `model`, `weakModel`, `apiKey`, and `apiBaseUrl`
   llmOptions?: LLMOptions
 }
 ```
@@ -117,7 +118,7 @@ export default [
 
 ## Example Config Files
 
-**Using `gpt-4-turbo-preview`:**
+**Using `gpt-4-turbo-preview`** as the strong model:
 
 ```js
 // gptlint.config.js
@@ -135,7 +136,7 @@ export default [
 
 **Using Anthropic Claude via OpenRouter:**
 
-See [Using Anthropic](./llm-providers.md#anthropic) for more info.
+See [Using Anthropic](./llm-providers#anthropic) for more info.
 
 ```js
 // gptlint.config.js
