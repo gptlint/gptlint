@@ -2,19 +2,19 @@
 
 ### How accurate / reliable is gptlint?
 
-See [accuracy](./accuracy).
+See [accuracy](./accuracy.md).
 
 ### How much will it cost to run gptlint on my codebase?
 
-See [cost](./cost).
+See [cost](./cost.md).
 
 ### How can I use GPTLint with a custom, local model?
 
-See [local models](./guide/llm-providers#local-models).
+See [local models](../guide/llm-providers.md#local-models).
 
 ### How can I use GPTLint with a different LLM provider?
 
-See [LLM providers](./guide/llm-providers).
+See [LLM providers](../guide/llm-providers.md).
 
 ### How can I disable a rule?
 
@@ -88,7 +88,7 @@ These filters are similar to [github code search's limits](https://docs.github.c
 
 ### What limitations does this GPTLint have?
 
-See [limitations](./limitations), [accuracy](./accuracy), and [cost](./cost).
+See [limitations](./limitations.md), [accuracy](./accuracy.md), and [cost](./cost.md).
 
 ### How does GPTLint compare to ESLint?
 
@@ -98,20 +98,20 @@ _We absolutely love `eslint`_ and strongly recommend that you use an AST-based l
 
 **The power of GPTLint comes in enforcing higher-level rules that are difficult or impossible to capture with AST-based linters like `eslint`**. GPTLint is therefore _intended to augment AST-based linters_ like `eslint` to catch potential issues and enforce project-specific standards as early as possible without having to rely solely on PRs from human reviewers.
 
-| AST-based linting (`eslint`) | LLM-based linting (`gptlint`)                                                       |
-| ---------------------------- | ----------------------------------------------------------------------------------- |
-| deterministic                | mostly deterministic                                                                |
-| fast                         | slow                                                                                |
-| low-level                    | low-level or high-level                                                             |
-| mature tooling & standards   | nascent tooling & standards                                                         |
-| free                         | [expensive](./cost) or [cheap using local LLMs](./guide/llm-providers#local-models) |
-| low-impact                   | **high-impact**                                                                     |
+| AST-based linting (`eslint`) | LLM-based linting (`gptlint`)                                                          |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
+| deterministic                | mostly deterministic                                                                   |
+| fast                         | slow                                                                                   |
+| low-level                    | low-level or high-level                                                                |
+| mature tooling & standards   | nascent tooling & standards                                                            |
+| free                         | [expensive](./cost.md) or [cheap using local LLMs](./guide/llm-providers#local-models) |
+| low-impact                   | **high-impact**                                                                        |
 
-So what does a higher-level linting rule look like, and when should you use an AST-based linting rule versus an LLM-based linting rule? We answer this in-depth in our [rule guidelines](./guide/rule-guidelines), but the short answer is that we recommend using deterministic, AST-based linting wherever possible and augmenting this AST-based linting with LLM-based linting and code reviews to provide a _defense-in-depth approach to code quality_.
+So what does a higher-level linting rule look like, and when should you use an AST-based linting rule versus an LLM-based linting rule? We answer this in-depth in our [rule guidelines](./extend/rule-guidelines.md), but the short answer is that we recommend using deterministic, AST-based linting wherever possible and augmenting this AST-based linting with LLM-based linting and code reviews to provide a _defense-in-depth approach to code quality_.
 
 ### What about fine-tuning?
 
-See our notes on [fine-tuning in how it works](./guide/how-it-works#fine-tuning).
+See our notes on [fine-tuning in how it works](./how-it-works.md#fine-tuning).
 
 ### Where can I get support?
 

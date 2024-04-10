@@ -1,4 +1,4 @@
-# Getting Started
+# Quick Start
 
 ## Install
 
@@ -11,13 +11,11 @@ npm install -D gptlint
 
 We recommended installing `gptlint` as a dev dependency just like `eslint`.
 
-## OpenAI API Key
+## OpenAI
 
-GPTLint defaults to using the OpenAI API, so you'll need to sign up for an [OpenAI API key](https://platform.openai.com/docs/quickstart?context=node) and add it to
+GPTLint defaults to using the OpenAI API, so you'll need to sign up for an [OpenAI API key](https://platform.openai.com/docs/quickstart?context=node). Add your `OPENAI_API_KEY` as an environment variable or store it in a `.env` file in your project's root.
 
-Add your `OPENAI_API_KEY` as an environment variable or store it in a `.env` file in your project's root.
-
-**GPTLint supports all LLM providers** including **local LLMs**, so if you don't want to use OpenAI, follow the docs for configuring other [LLM providers](./llm-providers).
+**GPTLint supports all LLM providers** including **local LLMs**, so if you don't want to use OpenAI, [see here](./llm-providers.md).
 
 ## Usage
 
@@ -25,6 +23,12 @@ Add your `OPENAI_API_KEY` as an environment variable or store it in a `.env` fil
 npx gptlint --help
 ```
 
-By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files and `.gptlint/**/*.md` for any project-specific rule definition files you may want to add.
+By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files and `.gptlint/**/*.md` to match any project-specific rule definition files you may want to add.
 
 `gptlint` respects `.gitignore` and optionally `.gptlintignore` as well if it exists.
+
+**TODO**
+
+**TODO**: add `--dry-run` example and then walk through running it for real.
+
+**TODO**

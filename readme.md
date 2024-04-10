@@ -29,20 +29,20 @@
 ## Features
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
-- ✅️ simple markdown format for rules ([example](./.gptlint/prefer-array-at-negative-indexing.md), [spec](https://gptlint.dev/guide/rule-spec))
-- ✅️ easy to [disable](https://gptlint.dev/faq#how-can-i-disable-a-rule) or [customize](https://gptlint.dev/faq#how-can-i-customize-a-built-in-rule) rules
+- ✅️ simple markdown format for rules ([example](./.gptlint/prefer-array-at-negative-indexing.md), [spec](https://gptlint.dev/extend/rule-spec))
+- ✅️ easy to [disable](https://gptlint.dev/project/faq#how-can-i-disable-a-rule) or [customize](https://gptlint.dev/project/faq#how-can-i-customize-a-built-in-rule) rules
 - ✅️ add custom, [project-specific rules](https://gptlint.dev/guide/rule-guidelines#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
 - ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ content-based caching
 - ✅️ outputs LLM stats per run (cost, tokens, etc)
-- ✅️ built-in rules are extensively tested w/ [evals](https://gptlint.dev/guide/how-it-works#evals)
+- ✅️ built-in rules are extensively tested w/ [evals](https://gptlint.dev/project/how-it-works#evals)
 - ✅️ supports all major [LLM providers](https://gptlint.dev/guide/llm-providers) and [local models](https://gptlint.dev/guide/llm-providers#local-models)
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
 - ✅️ includes [guidelines](https://gptlint.dev/guide/rule-guidelines) for creating your own rules
-- ❌ MVP rules are [JS/TS only](https://gptlint.dev/limitations#rules-in-the-mvp-are-jsts-only) _for now_
-- ❌ MVP rules are [single-file context only](https://gptlint.dev/limitations#rules-in-the-mvp-are-single-file-only) _for now_
-- ❌ MVP does not support [autofixing](https://gptlint.dev/limitations#the-mvp-does-not-support-autofixing-lint-errors) _for now_
+- ❌ MVP rules are [JS/TS only](https://gptlint.dev/project/limitations#rules-in-the-mvp-are-jsts-only) _for now_
+- ❌ MVP rules are [single-file context only](https://gptlint.dev/project/limitations#rules-in-the-mvp-are-single-file-only) _for now_
+- ❌ MVP does not support [autofixing](https://gptlint.dev/project/limitations#the-mvp-does-not-support-autofixing-lint-errors) _for now_
 
 ## Demo
 
@@ -57,10 +57,10 @@ Check out our [docs](https://gptlint.dev/guide) to learn more.
 ## How it works
 
 <p align="center">
-  <a href="https://gptlint.dev/guide/how-it-works"><img alt="How it works" src="/docs/public/how-gptlint-works.png"></a>
+  <a href="https://gptlint.dev/project/how-it-works"><img alt="How it works" src="/docs/public/how-gptlint-works.png"></a>
 </p>
 
-Check out our [docs on how it works](https://gptlint.dev/guide/how-it-works) to learn more.
+Check out our [docs on how it works](https://gptlint.dev/project/how-it-works) to learn more.
 
 ## Getting Started
 
@@ -70,19 +70,19 @@ Installation is simple, with the only external dependency required by default be
 
 ## FAQ
 
-- [How accurate / reliable is gptlint?](https://gptlint.dev/accuracy)
-- [How much will it cost to run gptlint on my codebase?](https://gptlint.dev/cost)
+- [How accurate / reliable is gptlint?](https://gptlint.dev/project/accuracy)
+- [How much will it cost to run gptlint on my codebase?](https://gptlint.dev/project/cost)
 - [How can I use GPTLint with a custom, local model?](https://gptlint.dev/guide/llm-providers#local-models)
 - [How can I use GPTLint with a different LLM provider?](https://gptlint.dev/guide/llm-providers)
-- [How can I disable a rule?](https://gptlint.dev/faq)
-- [How can I disable a rule for a specific file?](https://gptlint.dev/faq)
-- [How can I disable linting for a specific file?](https://gptlint.dev/faq)
-- [How can I customize a built-in rule?](https://gptlint.dev/faq)
-- [Are there file size limits?](https://gptlint.dev/faq)
-- [What limitations does this GPTLint have?](https://gptlint.dev/limitations)
-- [How does GPTLint compare to ESLint?](https://gptlint.dev/faq)
-- [What about fine-tuning?](https://gptlint.dev/faq)
-- [Where can I get support?](https://gptlint.dev/faq)
+- [How can I disable a rule?](https://gptlint.dev/project/faq)
+- [How can I disable a rule for a specific file?](https://gptlint.dev/project/faq)
+- [How can I disable linting for a specific file?](https://gptlint.dev/project/faq)
+- [How can I customize a built-in rule?](https://gptlint.dev/project/faq)
+- [Are there file size limits?](https://gptlint.dev/project/faq)
+- [What limitations does this GPTLint have?](https://gptlint.dev/project/limitations)
+- [How does GPTLint compare to ESLint?](https://gptlint.dev/project/faq)
+- [What about fine-tuning?](https://gptlint.dev/project/faq)
+- [Where can I get support?](https://gptlint.dev/project/faq)
 
 ## Citations
 

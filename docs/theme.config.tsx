@@ -149,7 +149,6 @@ img {
     )
   },
   sidebar: {
-    defaultMenuCollapseLevel: 1,
     toggleButton: true
   },
   footer: {

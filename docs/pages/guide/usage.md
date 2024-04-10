@@ -1,3 +1,3 @@
 # Usage
 
-TODO
+TODO: discuss recommended usage, workflow, and CI.

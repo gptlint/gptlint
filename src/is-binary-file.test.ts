@@ -12,9 +12,11 @@ test('isBinaryFile non-binary files', async () => {
   expect(isBinaryFile('readme.md')).resolves.toBe(false)
   expect(isBinaryFile('license')).resolves.toBe(false)
   expect(isBinaryFile('.editorconfig')).resolves.toBe(false)
-  expect(isBinaryFile('docs/pages/guide/how-it-works.md')).resolves.toBe(false)
-  expect(isBinaryFile('docs/pages/guide/rule-guidelines.md')).resolves.toBe(
+  expect(isBinaryFile('docs/pages/project/how-it-works.md')).resolves.toBe(
     false
   )
-  expect(isBinaryFile('docs/pages/guide/rule-spec.md')).resolves.toBe(false)
+  expect(isBinaryFile('docs/pages/extend/rule-guidelines.md')).resolves.toBe(
+    false
+  )
+  expect(isBinaryFile('docs/pages/extend/rule-spec.md')).resolves.toBe(false)
 })

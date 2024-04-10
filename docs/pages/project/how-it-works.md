@@ -71,7 +71,7 @@ In both approaches, the first LLM pass outputs a markdown file with two sections
 
 The `EXPLANATION` section is important to give the LLM [time to think](https://twitter.com/karpathy/status/1708142056735228229). A previous version without this section produced false positives much more frequently.
 
-The `VIOLATIONS` section contains the actual structured JSON output of [RuleViolation](/src/rule-violations.ts) objects.
+The `VIOLATIONS` section contains the actual structured JSON output of [RuleViolation](https://github.com/gptlint/gptlint/tree/main/src/rule-violations.ts) objects.
 
 <details>
 <summary>

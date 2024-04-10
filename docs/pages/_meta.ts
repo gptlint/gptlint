@@ -1,16 +1,8 @@
 export default {
-  index: 'Home',
+  index: 'Overview',
   guide: 'Guide',
-  '-- Project': {
-    type: 'separator',
-    title: 'Project'
-  },
-  accuracy: 'Accuracy',
-  cost: 'Cost',
-  limitations: 'Limitations',
-  faq: 'FAQ',
-  roadmap: 'Roadmap',
-  license: 'License',
+  extend: 'Extending GPTLint',
+  project: 'Project',
   '-- Links': {
     type: 'separator',
     title: 'Links'

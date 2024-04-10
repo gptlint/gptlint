@@ -136,7 +136,7 @@ export default [
 
 **Using Anthropic Claude via OpenRouter:**
 
-See [Using Anthropic](./llm-providers#anthropic) for more info.
+See [Using Anthropic](./llm-providers.md#anthropic) for more info.
 
 ```js
 // gptlint.config.js
