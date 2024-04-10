@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="How it works" src="https://raw.githubusercontent.com/gptlint/gptlint/main/media/gptlint-logo.png" width="256">
+  <img alt="How it works" src="/gptlint-logo.png" width="256">
 </p>
 
 <p align="center">
@@ -37,7 +37,7 @@
 Here's a demo of `gptlint` running on its own codebase:
 
 <p align="center">
-  <img width="640" src="https://github.com/gptlint/gptlint/tree/main/docs/public/demo.svg">
+  <img width="640" src="/demo.svg">
 </p>
 
 ## How it works

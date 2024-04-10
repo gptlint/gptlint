@@ -6,6 +6,7 @@ import type { SetOptional, SetRequired, Simplify } from 'type-fest'
 import type { LinterCache } from './cache.js'
 import type { ResolvedLinterConfig } from './config.js'
 import type { FailedAttemptError } from './errors.js'
+import type { Rule } from './rule.js'
 
 export type {
   LinterConfig,
@@ -20,41 +21,8 @@ export type MaybePromise<T> = T | Promise<T>
 
 export type LintRuleLevel = 'error' | 'warn' | 'off'
 export type LintRuleScope = 'file' | 'project' | 'repo'
+
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
-
-export type Rule = {
-  // core rule definition
-  name: string
-  message: string
-  desc?: string
-  positiveExamples?: RuleExample[]
-  negativeExamples?: RuleExample[]
-
-  // optional, user-defined metadata
-  fixable?: boolean
-  languages?: string[]
-  tags?: string[]
-  eslint?: string[]
-  include?: string[]
-  exclude?: string[]
-  resources?: string[]
-  model?: string
-  level: LintRuleLevel // TODO: rename this to `severity`?
-  scope: LintRuleScope
-
-  // optional custom functionality for rules scoped to the file-level
-  preProcessFile?: PreProcessFileFn
-  processFile?: ProcessFileFn
-  postProcessFile?: PostProcessFileFn
-
-  // optional custom functionality for rules scoped to the project-level
-  preProcessProject?: PreProcessProjectFn
-  processProject?: ProcessProjectFn
-  postProcessProject?: PostProcessProjectFn
-
-  // internal metadata
-  source?: string
-}
 
 export type PreProcessFileFnParams = Readonly<{
   file: SourceFile
@@ -257,3 +225,5 @@ export type RetryOptions = {
   retries: number
   readonly onFailedAttempt?: (error: FailedAttemptError) => MaybePromise<void>
 }
+
+export { type Rule } from './rule.js'

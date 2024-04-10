@@ -1,5 +1,5 @@
 export default {
-  install: 'Install',
+  'quick-start': 'Quick Start',
   usage: 'Usage',
   cli: 'CLI',
   config: 'Config',

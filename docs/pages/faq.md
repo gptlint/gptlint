@@ -12,7 +12,7 @@ See [cost](./cost.md).
 
 See [local models](./guide/llm-providers.md#local-models).
 
-### How can I use GPTLint with a different LLM provider
+### How can I use GPTLint with a different LLM provider?
 
 See [LLM providers](./guide/llm-providers.md).
 

@@ -5,8 +5,8 @@ import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from './types.js'
-import { RuleDefinitionSchema } from './config.js'
 import { parseRuleFile } from './parse-rule-file.js'
+import { RuleDefinitionSchema } from './rule.js'
 import { assert, isValidRuleName } from './utils.js'
 
 export async function resolveRules({
