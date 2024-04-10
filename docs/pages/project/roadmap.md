@@ -37,8 +37,7 @@
   - add built-in rules to docs
   - decide on an OSS license
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
-  - add docs on config settings and how config resolution works
-  - add built-in rules to readme
+  - add social image to docs website
   - demo video
   - publish to NPM
   - public launch! 🚀
