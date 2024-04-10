@@ -7,7 +7,7 @@ Just like ESLint, GPTLint supports a variety of ways to customize and extend it'
 - default settings
 - project-specific config file (`gptlint.config.{js,mjs,cjs}`)
 - CLI flags (all of the main config settings have CLI flags which override any config file settings)
-- inline config overrides (`/** gptlint-disable */`)
+- inline config overrides (`/* gptlint-disable */`)
 
 In the near future, we'll be moving the current set of default JS/TS rules into an NPM package `@gptlint/typescript-config`, and in general this is the expected way to provide reusable third-party rules and bundles of customized, pre-configured rules. In general, we're trying to follow ESLint's config design as closely as possible.
 
@@ -15,7 +15,7 @@ In the near future, we'll be moving the current set of default JS/TS rules into 
 
 You can always run `gptlint --print-config` to print out exactly what rules, files, and settings are being resolved by GPTLint.
 
-**The `--print-config` option is extremely useful** for making sure your project is set up correctly and to validate that you understand how it's working under the hood.
+**The `--print-config` option is extremely useful** for making sure your project is set up correctly and for validating your understanding of how the linter works under the hood.
 
 ## Config File
 
@@ -81,8 +81,8 @@ An example of a code-based rule (the equivalent of a plugin in `eslint`) is [eff
 Here's an example:
 
 ```js
-// my-custom-rule.ts
-/** @type {Readonly<import('gptlint').Rule>} */
+// my-custom-rule.js
+/** @type {import('gptlint').Rule} */
 export default {
   name: 'my-custom-rule',
   message: 'Example rule message.',
@@ -105,7 +105,7 @@ export default {
 
 ```js
 // gptlint.config.js
-import myCustomRule from './build/my-custom-rule.js'
+import myCustomRule from './my-custom-rule.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
