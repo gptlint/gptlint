@@ -8,7 +8,7 @@
 
 ## About
 
-The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define a standard for how to describe higher-level linting rules and best practices that can be enforced across codebases using LLM-based tools compatible with [GPTLint](https://github.com/gptlint/gptlint).
+The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define a standard for how to describe higher-level lint rules that can be enforced across codebases using LLM-based tools compatible with [GPTLint](https://github.com/gptlint/gptlint).
 
 ## Rule Format
 
