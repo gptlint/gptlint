@@ -79,7 +79,7 @@ Check out our [docs](https://gptlint.dev/guide) to get started.
 - [How can I disable linting for a specific file?](https://gptlint.dev/project/faq)
 - [How can I customize a built-in rule?](https://gptlint.dev/project/faq)
 - [Are there file size limits?](https://gptlint.dev/project/faq)
-- [What limitations does this GPTLint have?](https://gptlint.dev/project/limitations)
+- [What limitations does GPTLint have?](https://gptlint.dev/project/limitations)
 - [How does GPTLint compare to ESLint?](https://gptlint.dev/project/faq)
 - [What about fine-tuning?](https://gptlint.dev/project/faq)
 - [Where can I get support?](https://gptlint.dev/project/faq)

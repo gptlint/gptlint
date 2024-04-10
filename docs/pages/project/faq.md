@@ -86,7 +86,7 @@ The following source files will automatically be excluded:
 
 These filters are similar to [github code search's limits](https://docs.github.com/en/search-github/github-code-search/about-github-code-search#limitations).
 
-### What limitations does this GPTLint have?
+### What limitations does GPTLint have?
 
 See [limitations](./limitations.md), [accuracy](./accuracy.md), and [cost](./cost.md).
 
