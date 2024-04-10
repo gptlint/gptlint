@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import * as ruleDefinitions from './dist/rules/custom/index.js'
+import * as ruleDefinitions from './dist/.gptlint/custom/index.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
@@ -27,7 +27,7 @@ export default [
   //   }
   // },
   {
-    // ruleFiles: ['rules/**/*.md'],
+    // ruleFiles: ['.gptlint/**/*.md'],
     ruleDefinitions: Object.values(ruleDefinitions),
     llmOptions: {
       model: 'gpt-4-turbo-preview',

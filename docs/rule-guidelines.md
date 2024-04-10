@@ -100,7 +100,7 @@ The MVP doesn't contain any library-specific configs _yet_. If you'd like to con
 
 If a rule isn't generally applicable enough to be added to the default GPTLint rulesets, but you still want to enforce it across your codebase, then it may be a good fit for a project-specific rule.
 
-Creating project-specific rules is very simple. Just create a markdown file for the rule in your project (or copy one of the default rule definition files from GPTLint). By convention, we recommend placing custom rules under a top-level `rules/` directory. You can enable your custom rule by adding it to the `rules` glob either via a `gptlint.config.js` file or via the CLI `--rules` option.
+Creating project-specific rules is very simple. Just create a markdown file for the rule in your project (or copy one of the default rule definition files from GPTLint). By convention, we recommend placing custom rules under a top-level `.gptlint/` directory. You can enable your custom rule by adding it to the `rules` glob either via a `gptlint.config.js` file or via the CLI `--rules` option.
 
 ```js
 import 'dotenv/config'
@@ -108,7 +108,7 @@ import 'dotenv/config'
 export default [
   {
     // Make sure that your rule file is included in this config option
-    ruleFiles: ['rules/**/*.md']
+    ruleFiles: ['.gptlint/**/*.md']
   }
 ]
 ```

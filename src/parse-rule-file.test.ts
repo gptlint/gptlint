@@ -5,9 +5,12 @@ import { assert, expect, test } from 'vitest'
 
 import { parseRuleFile } from './parse-rule-file.js'
 
-const validRuleFiles = globbySync(['fixtures/rules/**/*.md', 'rules/**/*.md'], {
-  gitignore: true
-})
+const validRuleFiles = globbySync(
+  ['fixtures/rules/**/*.md', '.gptlint/**/*.md'],
+  {
+    gitignore: true
+  }
+)
 const invalidRuleFiles = globbySync('fixtures/invalid-rules/**/*.md', {
   gitignore: true
 })

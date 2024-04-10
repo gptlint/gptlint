@@ -112,7 +112,7 @@ Here is an example metadata table.
 
 ## Example Rules
 
-See [rules/](/rules) for examples of valid rules.
+See [.gptlint/](/.gptlint) for examples of valid rules.
 
 Parsing-wise, [fixtures/rules/](/fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules/](/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
 
