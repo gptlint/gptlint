@@ -1,22 +1,7 @@
-# GPTLint Rule Guidelines <!-- omit from toc -->
-
-- [Intro](#intro)
-- [Rule Rubric](#rule-rubric)
-  - [Checklist](#checklist)
-  - [Prefer AST-based rules where possible](#prefer-ast-based-rules-where-possible)
-  - [Prefer rules that are well-defined](#prefer-rules-that-are-well-defined)
-  - [Prefer universal rules](#prefer-universal-rules)
-  - [Prefer direct, substantive rules](#prefer-direct-substantive-rules)
-- [MVP Rule Limitations](#mvp-rule-limitations)
-- [Library-specific rule configs](#library-specific-rule-configs)
-- [Project-specific rules](#project-specific-rules)
-- [Defense in depth](#defense-in-depth)
-- [Example Rules](#example-rules)
-
-## Intro
+# Rule Guidelines
 
 <p align="center">
-  <img alt="GPTLint Rule Guidelines" src="/media/gptlint-rule-guidelines.png">
+  <img alt="GPTLint Rule Guidelines" src="/gptlint-rule-guidelines.png">
 </p>
 
 **GPTLint is intended to augment traditional, AST-based, static analysis tools** like `eslint`, `pylint`, `ruff`, etc with _higher-level coding best practices_ that are difficult or impossible to capture with these lower-level, AST-based tools. GPTLint rules are therefore meant to be higher-level in nature than AST-based linting rules.

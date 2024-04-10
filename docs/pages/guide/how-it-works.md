@@ -1,4 +1,4 @@
-# How GPTLint Works <!-- omit from toc -->
+# How It Works <!-- omit from toc -->
 
 - [Overview](#overview)
 - [Single-Pass Linting](#single-pass-linting)
@@ -9,12 +9,11 @@
 - [Evals](#evals)
 - [Fine-Tuning](#fine-tuning)
 - [More Info](#more-info)
-- [License](#license)
 
 ## Overview
 
 <p align="center">
-  <img alt="Single-Pass Linting" src="/media/how-gptlint-works.png">
+  <img alt="Single-Pass Linting" src="/how-gptlint-works.png">
 </p>
 
 To lint a codebase, GPTLint takes the following steps:
@@ -27,17 +26,17 @@ To lint a codebase, GPTLint takes the following steps:
 
 All of the magic happens in step 5, and GPTLint supports two approaches for this core linting logic: [single-pass linting](#single-pass-linting) and [two-pass linting](#two-pass-linting), both of which have their own pros & cons.
 
-The core linting logic lives in [src/lint-file.ts](/src/lint-file.ts).
+The core linting logic lives in [src/lint-file.ts](https://github.com/gptlint/gptlint/tree/main/src/lint-file.ts).
 
 ## Single-Pass Linting
 
 <p align="center">
-  <img alt="Single-Pass Linting" src="/media/single-pass-linting.png">
+  <img alt="Single-Pass Linting" src="/single-pass-linting.png">
 </p>
 
-In single-pass linting, a single LLM inference call is used to both evaluate a lint task (rule x file pair) as well as to act as a classifier in identifying rule violations.
+In single-pass linting, a single LLM inference call is used to both evaluate a lint task (rule x file pair) as well as to act as a classifier in identifying potential rule violations.
 
-In this approach, every lint task goes takes the following steps:
+In this approach, every lint task goes through the following steps:
 
 1. Passes the rule and file to an LLM with the task of identifying rule violations
 2. Parses the LLM's markdown output for a JSON code block containing an array of `RuleViolation` objects
@@ -47,7 +46,7 @@ In this approach, every lint task goes takes the following steps:
 ## Two-Pass Linting
 
 <p align="center">
-  <img alt="Two-Pass Linting" src="/media/two-pass-linting.png">
+  <img alt="Two-Pass Linting" src="/two-pass-linting.png">
 </p>
 
 Everything starts off the same in two-pass linting as single-pass linting.
@@ -124,14 +123,14 @@ interface RuleViolation {
 }
 ```
 
-This [`RuleViolation` schema](/src/rule-violations.ts) has gone through many iterations, and it's worth taking a look at the descriptions of each field that are passed to the model as context.
+This [`RuleViolation` schema](https://github.com/gptlint/gptlint/tree/main/src/rule-violations.ts) has gone through many iterations, and it's worth taking a look at the descriptions of each field that are passed to the model as context.
 
 In particular, `codeSnippetSource`, `reasoning`, `violation`, and `confidence` were all added empirically to increase the LLM's accuracy and to mitigate common issues. Even with these fields, false positives are still possible, but forcing the model to fill out these additional fields has proven very effective at increasing the linter's accuracy.
 
 ## Evals
 
-- [`bin/generate-evals.ts`](/bin/generate-evals.ts) is used to generate N synthetic positive and negative example code snippets for each rule under [`fixtures/evals`](/fixtures/evals)
-- [`bin/run-evals.ts`](/bin/run-evals.ts) is used to evaluate rules for false negatives / false positives across their generated test fixtures
+- [`bin/generate-evals.ts`](https://github.com/gptlint/gptlint/tree/main/bin/generate-evals.ts) is used to generate N synthetic positive and negative example code snippets for each rule under [`fixtures/evals`](https://github.com/gptlint/gptlint/tree/main/fixtures/evals)
+- [`bin/run-evals.ts`](https://github.com/gptlint/gptlint/tree/main/bin/run-evals.ts) is used to evaluate rules for false negatives / false positives across their generated test fixtures
 
 You can think of these evals as integration tests for ensuring that the entire linting pipeline works as intended for all of the built-in rules.
 
@@ -152,9 +151,3 @@ We've made the explicit decision not to do this for a few main reasons:
 ## More Info
 
 For more info on how to get the most out of GPTLint, including expertise creating custom rules or fine-tunes that will work well with your codebase, feel free to [reach out to our consulting partners](mailto:gptlint@teamduality.dev).
-
-## License
-
-MIT © [Travis Fischer](https://twitter.com/transitive_bs)
-
-To stay up to date or learn more, follow [@transitive_bs](https://twitter.com/transitive_bs) on Twitter.
