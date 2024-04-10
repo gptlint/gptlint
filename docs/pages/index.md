@@ -43,7 +43,7 @@ Here's a demo of `gptlint` running on its own codebase:
 ## How it works
 
 <p align="center">
-  <img alt="Single-Pass Linting" src="/how-gptlint-works.png">
+  <a href="./guide/how-it-works.md"><img alt="How it works" src="/how-gptlint-works.png"></a>
 </p>
 
 See our [docs on how it works](./guide/how-it-works.md) for more details.
