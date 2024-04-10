@@ -3,6 +3,5 @@ export default {
   usage: 'Usage',
   cli: 'CLI',
   config: 'Config',
-  'llm-providers': 'LLM Providers',
-  'how-it-works': 'How It Works'
+  'llm-providers': 'LLM Providers'
 }
