@@ -34,7 +34,7 @@ const rule: Readonly<RuleDefinition<RuleMetadata>> = {
     //   return cachedResult
     // }
 
-    console.log(eslintConfig)
+    // console.log(eslintConfig)
     const { rules } = eslintConfig
 
     if (!rules || !Object.keys(rules).length) {
