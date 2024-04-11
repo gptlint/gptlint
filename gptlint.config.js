@@ -7,7 +7,7 @@ export default [
   {
     // TODO: needd a way to disable built-in rules
     // ruleFiles: ['.gptlint/**/*.md'],
-    ruleFiles: [],
+    // ruleFiles: [],
     ruleDefinitions: Object.values(ruleDefinitions),
     llmOptions: {
       model: 'gpt-4-turbo-preview',

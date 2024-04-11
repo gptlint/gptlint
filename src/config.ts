@@ -208,8 +208,8 @@ export const defaultLLMOptions: Readonly<LLMOptions> = {
 export const defaultLinterConfig: Readonly<
   SetRequired<LinterConfig, 'linterOptions' | 'llmOptions'>
 > = {
-  // ruleFiles: ['.gptlint/**/*.md'],
-  ruleFiles: [],
+  ruleFiles: ['.gptlint/**/*.md'],
+  // ruleFiles: [],
   linterOptions: defaultLinterOptions,
   llmOptions: defaultLLMOptions
 }
@@ -237,7 +237,8 @@ export function mergeLinterConfigs<
     ...pruneUndefined(configA),
     ...pruneUndefined(configB),
     rules: { ...configA.rules, ...configB.rules },
-    // TODO: fix this
+    // TODO: ruleFiles should be overridable with an empty array, but this
+    // is also a bit awkward to use in practice.
     ruleFiles: configB.ruleFiles?.length
       ? configB.ruleFiles
       : configA.ruleFiles,

@@ -21,6 +21,8 @@
 - rules
   - **add new rules**
   - rewrite `liberal-accept-strict-produce` to be less verbose and have better examples
+  - finish `effective-eslint-config`
+  - finish `effective-tsconfig`
 - config
   - refactor config resolution - needs a major cleanup
     - reconsider rule `scope`
@@ -38,7 +40,7 @@
   - decide on an OSS license
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - fix docs site dark mode logos
-  - add social image to docs website
+  - social image for docs and launch
   - demo video
   - publish to NPM
   - public launch! 🚀
