@@ -18,6 +18,14 @@ export default withNextra({
       {
         source: '/guide',
         destination: '/guide/quick-start'
+      },
+      {
+        source: '/extend',
+        destination: '/extend/rule-guidelines'
+      },
+      {
+        source: '/project',
+        destination: '/project/how-it-works'
       }
     ]
   }
