@@ -6,7 +6,7 @@ import type { SetOptional, SetRequired, Simplify } from 'type-fest'
 import type { LinterCache } from './cache.js'
 import type { ResolvedLinterConfig } from './config.js'
 import type { FailedAttemptError } from './errors.js'
-import type { Rule } from './rule.js'
+import type { Rule, RuleMetadata } from './rule.js'
 
 export type {
   LinterConfig,
@@ -24,22 +24,27 @@ export type LintRuleScope = 'file' | 'project' | 'repo'
 
 export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 
-export type PreProcessFileFnParams = Readonly<{
+export type RulePreProcessFileFnParams<
+  Metadata extends RuleMetadata = RuleMetadata
+> = Readonly<{
   file: SourceFile
-  rule: Rule
+  rule: Rule<Metadata>
   chatModel: ChatModel
   cache: LinterCache
   config: ResolvedLinterConfig
   retryOptions?: RetryOptions
   cwd: string
 }>
-export type PreProcessFileFn = (
-  opts: PreProcessFileFnParams
-) => MaybePromise<PartialLintResult | undefined>
+export type RulePreProcessFileFn<Metadata extends RuleMetadata = RuleMetadata> =
+  (
+    opts: RulePreProcessFileFnParams<Metadata>
+  ) => MaybePromise<PartialLintResult | void | undefined>
 
-export type ProcessFileFnParams = Readonly<{
+export type RuleProcessFileFnParams<
+  Metadata extends RuleMetadata = RuleMetadata
+> = Readonly<{
   file: SourceFile
-  rule: Rule
+  rule: Rule<Metadata>
   lintResult?: LintResult
   chatModel: ChatModel
   cache: LinterCache
@@ -47,32 +52,37 @@ export type ProcessFileFnParams = Readonly<{
   retryOptions?: RetryOptions
   cwd: string
 }>
-export type ProcessFileFn = (
-  opts: ProcessFileFnParams
+export type RuleProcessFileFn<Metadata extends RuleMetadata = RuleMetadata> = (
+  opts: RuleProcessFileFnParams<Metadata>
 ) => MaybePromise<LintResult>
 
-export type PostProcessFileFnParams = SetRequired<
-  ProcessFileFnParams,
-  'lintResult'
->
-export type PostProcessFileFn = (
-  opts: ProcessFileFnParams
-) => MaybePromise<LintResult>
+export type RulePostProcessFileFnParams<
+  Metadata extends RuleMetadata = RuleMetadata
+> = SetRequired<RuleProcessFileFnParams<Metadata>, 'lintResult'>
+export type RulePostProcessFileFn<
+  Metadata extends RuleMetadata = RuleMetadata
+> = (opts: RuleProcessFileFnParams<Metadata>) => MaybePromise<LintResult>
 
-export type PreProcessProjectFnParams = Readonly<{
-  rule: Rule
+export type RulePreProcessProjectFnParams<
+  Metadata extends RuleMetadata = RuleMetadata
+> = Readonly<{
+  rule: Rule<Metadata>
   chatModel: ChatModel
   cache: LinterCache
   config: ResolvedLinterConfig
   retryOptions?: RetryOptions
   cwd: string
 }>
-export type PreProcessProjectFn = (
-  opts: PreProcessProjectFnParams
-) => MaybePromise<PartialLintResult | undefined>
+export type RulePreProcessProjectFn<
+  Metadata extends RuleMetadata = RuleMetadata
+> = (
+  opts: RulePreProcessProjectFnParams<Metadata>
+) => MaybePromise<PartialLintResult | void | undefined>
 
-export type ProcessProjectFnParams = Readonly<{
-  rule: Rule
+export type RuleProcessProjectFnParams<
+  Metadata extends RuleMetadata = RuleMetadata
+> = Readonly<{
+  rule: Rule<Metadata>
   lintResult?: LintResult
   chatModel: ChatModel
   cache: LinterCache
@@ -80,17 +90,28 @@ export type ProcessProjectFnParams = Readonly<{
   retryOptions?: RetryOptions
   cwd: string
 }>
-export type ProcessProjectFn = (
-  opts: ProcessProjectFnParams
-) => MaybePromise<LintResult>
+export type RuleProcessProjectFn<Metadata extends RuleMetadata = RuleMetadata> =
+  (opts: RuleProcessProjectFnParams<Metadata>) => MaybePromise<LintResult>
 
-export type PostProcessProjectFnParams = SetRequired<
-  ProcessProjectFnParams,
-  'lintResult'
->
-export type PostProcessProjectFn = (
-  opts: ProcessProjectFnParams
-) => MaybePromise<LintResult>
+export type RulePostProcessProjectFnParams<
+  Metadata extends RuleMetadata = RuleMetadata
+> = SetRequired<RuleProcessProjectFnParams<Metadata>, 'lintResult'>
+export type RulePostProcessProjectFn<
+  Metadata extends RuleMetadata = RuleMetadata
+> = (opts: RuleProcessProjectFnParams<Metadata>) => MaybePromise<LintResult>
+
+export type RuleInitFnParams<Metadata extends RuleMetadata = RuleMetadata> =
+  Readonly<{
+    rule: Rule<Metadata>
+    chatModel: ChatModel
+    cache: LinterCache
+    config: ResolvedLinterConfig
+    retryOptions?: RetryOptions
+    cwd: string
+  }>
+export type RuleInitFn<Metadata extends RuleMetadata = RuleMetadata> = (
+  opts: RuleInitFnParams<Metadata>
+) => MaybePromise<void>
 
 export type RuleExample = {
   code: string
@@ -226,4 +247,4 @@ export type RetryOptions = {
   readonly onFailedAttempt?: (error: FailedAttemptError) => MaybePromise<void>
 }
 
-export { type Rule } from './rule.js'
+export { type Rule, type RuleDefinition } from './rule.js'

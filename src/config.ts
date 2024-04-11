@@ -208,7 +208,8 @@ export const defaultLLMOptions: Readonly<LLMOptions> = {
 export const defaultLinterConfig: Readonly<
   SetRequired<LinterConfig, 'linterOptions' | 'llmOptions'>
 > = {
-  ruleFiles: ['.gptlint/**/*.md'],
+  // ruleFiles: ['.gptlint/**/*.md'],
+  ruleFiles: [],
   linterOptions: defaultLinterOptions,
   llmOptions: defaultLLMOptions
 }

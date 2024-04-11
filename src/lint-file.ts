@@ -39,7 +39,7 @@ export async function lintFile({
   retryOptions = {
     retries: 2
   }
-}: types.ProcessFileFnParams): Promise<types.LintResult> {
+}: types.RuleProcessFileFnParams): Promise<types.LintResult> {
   const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
   const model =
     rule.model ?? isTwoPassLintingEnabled
@@ -331,7 +331,7 @@ export async function validateRuleViolations({
   retryOptions = {
     retries: 2
   }
-}: types.PostProcessFileFnParams): Promise<types.LintResult> {
+}: types.RulePostProcessFileFnParams): Promise<types.LintResult> {
   const model = rule.model ?? config.llmOptions.model
   lintResult = createLintResult(lintResult)
 

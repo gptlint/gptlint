@@ -2,7 +2,9 @@ import { z } from 'zod'
 
 import type * as types from './types.js'
 
-export type Rule = {
+export type RuleMetadata<K extends string = string, V = any> = Record<K, V>
+
+export type RuleDefinition<Metadata extends RuleMetadata = RuleMetadata> = {
   // core rule definition
   name: string
   message: string
@@ -12,6 +14,7 @@ export type Rule = {
 
   // optional, user-defined metadata
   fixable?: boolean
+  cacheable?: boolean
   languages?: string[]
   tags?: string[]
   eslint?: string[]
@@ -23,18 +26,24 @@ export type Rule = {
   scope: types.LintRuleScope
 
   // optional custom functionality for rules scoped to the file-level
-  preProcessFile?: types.PreProcessFileFn
-  processFile?: types.ProcessFileFn
-  postProcessFile?: types.PostProcessFileFn
+  preProcessFile?: types.RulePreProcessFileFn<Metadata>
+  processFile?: types.RuleProcessFileFn<Metadata>
+  postProcessFile?: types.RulePostProcessFileFn<Metadata>
 
   // optional custom functionality for rules scoped to the project-level
-  preProcessProject?: types.PreProcessProjectFn
-  processProject?: types.ProcessProjectFn
-  postProcessProject?: types.PostProcessProjectFn
+  preProcessProject?: types.RulePreProcessProjectFn<Metadata>
+  processProject?: types.RuleProcessProjectFn<Metadata>
+  postProcessProject?: types.RulePostProcessProjectFn<Metadata>
 
-  // internal metadata
-  source?: string
+  init?: types.RuleInitFn<Metadata>
 }
+
+export type Rule<Metadata extends RuleMetadata = RuleMetadata> =
+  RuleDefinition<Metadata> & {
+    // internal metadata
+    source: string
+    metadata: Metadata
+  }
 
 export const RuleDefinitionExampleSchema = z
   .object({
@@ -80,6 +89,11 @@ export const RuleDefinitionSchema = z
       .boolean()
       .optional()
       .describe('Whether or not this rule is auto-fixable.'),
+
+    cacheable: z
+      .boolean()
+      .optional()
+      .describe('Whether or not this rule should be cached.'),
 
     level: z
       .enum(['off', 'warn', 'error'])
@@ -186,4 +200,4 @@ export const RuleDefinitionSchema = z
 
     source: z.string().optional()
   })
-  .strict()
+  .passthrough()

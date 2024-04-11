@@ -83,9 +83,11 @@ export function parseRuleNode({
     name: defaultRuleName,
     positiveExamples: [],
     negativeExamples: [],
-    source: filePath,
+    cacheable: true,
     level: 'error',
-    scope: 'file'
+    scope: 'file',
+    source: filePath,
+    metadata: {}
   }
   assert(rule.name, `Rule name must not be empty: ${message}`)
 
@@ -239,6 +241,7 @@ export function parseRuleTableNode({
     'level',
     'scope',
     'fixable',
+    'cacheable',
     'tags',
     'languages',
     'eslint',
@@ -292,6 +295,13 @@ export function parseRuleTableNode({
       )
 
       rule.fixable = value === 'true'
+    } else if (key === 'cacheable') {
+      assert(
+        value === 'true' || value === 'false',
+        `Rule contains invalid metadata ("cacheable" must be one of "true" | "false"): ${rule.message} (${filePath})`
+      )
+
+      rule.cacheable = value === 'true'
     } else if (key === 'tags') {
       rule.tags = value.split(',').map((v) => v.trim())
     } else if (key === 'languages') {

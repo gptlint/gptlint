@@ -1,10 +1,10 @@
-import { parseRuleFilePath, type Rule } from '../../src/index.js'
+import { parseRuleFilePath, type RuleDefinition } from '../../src/index.js'
 
 const ruleFile = await parseRuleFilePath('./prefer-fetch-over-axios.md', {
   cwd: import.meta.dirname
 })
 
-const rule: Readonly<Rule> = {
+const rule: Readonly<RuleDefinition> = {
   ...ruleFile,
 
   preProcessFile: async (ctx) => {

@@ -3,12 +3,12 @@ import { getTsconfig } from 'get-tsconfig'
 import {
   createCacheKey,
   type PartialLintError,
-  type Rule
+  type RuleDefinition
 } from '../../src/index.js'
 
 const tsConfigCache = new Map<string, any>()
 
-const rule: Readonly<Rule> = {
+const rule: Readonly<RuleDefinition> = {
   name: 'effective-tsconfig',
   message: 'Follow tsconfig best practices.',
   level: 'error',

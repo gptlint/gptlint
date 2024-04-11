@@ -16,7 +16,7 @@ export async function resolveRules({
   config: types.ResolvedLinterConfig
   cwd?: string
 }): Promise<types.Rule[]> {
-  const ruleFilePaths = await globby(config.ruleFiles, {
+  const ruleFilePaths = await globby(config.ruleFiles ?? [], {
     gitignore: true,
     cwd
   })
@@ -63,7 +63,12 @@ export async function resolveRules({
       const parsedRule = RuleDefinitionSchema.safeParse(ruleDefinition)
 
       if (parsedRule.success) {
-        const rule: types.Rule = parsedRule.data
+        const rule: types.Rule = {
+          ...parsedRule.data,
+          source: 'custom',
+          cacheable: true,
+          metadata: {}
+        }
 
         assert(
           isValidRuleName(rule.name),
@@ -102,6 +107,7 @@ export async function resolveRules({
 
   if (config.rules) {
     // Remove rules which have been disabled in the config
+    // TODO: should this happen here or in `lintFiles`?
     rules = rules.filter((rule) => config.rules[rule.name] !== 'off')
   }
 

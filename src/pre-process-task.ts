@@ -30,34 +30,36 @@ export async function preProcessTask(
       }
     }
 
-    const cachedResult = await cache.get(lintTask.cacheKey)
-    if (cachedResult) {
-      lintResult.lintErrors = cachedResult.lintErrors
-      lintResult.message = cachedResult.message
-      lintResult.numModelCallsCached++
-      lintResult.skipped = true
-      lintResult.skipReason = 'cached'
+    if (rule.cacheable || rule.cacheable === undefined) {
+      const cachedResult = await cache.get(lintTask.cacheKey)
+      if (cachedResult) {
+        lintResult.lintErrors = cachedResult.lintErrors
+        lintResult.message = cachedResult.message
+        lintResult.numModelCallsCached++
+        lintResult.skipped = true
+        lintResult.skipReason = 'cached'
 
-      // if (config.linterOptions.debug) {
-      //   const { lintErrors } = lintResult
+        // if (config.linterOptions.debug) {
+        //   const { lintErrors } = lintResult
 
-      //   if (lintErrors.length) {
-      //     console.log(
-      //       `\nFAIL CACHE HIT Rule "${rule.name}" file "${
-      //         file.fileRelativePath
-      //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
-      //       lintErrors
-      //     )
-      //   } else {
-      //     console.log(
-      //       `\nPASS CACHE HIT Rule "${rule.name}" file "${
-      //         file.fileRelativePath
-      //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
-      //     )
-      //   }
-      // }
+        //   if (lintErrors.length) {
+        //     console.log(
+        //       `\nFAIL CACHE HIT Rule "${rule.name}" file "${
+        //         file.fileRelativePath
+        //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found:`,
+        //       lintErrors
+        //     )
+        //   } else {
+        //     console.log(
+        //       `\nPASS CACHE HIT Rule "${rule.name}" file "${
+        //         file.fileRelativePath
+        //       }": ${lintErrors.length} ${plur('error', lintErrors.length)} found`
+        //     )
+        //   }
+        // }
 
-      return { ...lintTask, lintResult }
+        return { ...lintTask, lintResult }
+      }
     }
 
     // TODO: This should probably be moved to run a single time per file instead
@@ -68,6 +70,7 @@ export async function preProcessTask(
       if (configFileOverride) {
         if (configFileOverride.linterOptions?.disabled) {
           // Inline config disabled linting for this file
+          // TODO: this result should probably be cached in `lintFile` instead of here
           await cache.set(lintTask.cacheKey, lintResult)
           return {
             ...lintTask,

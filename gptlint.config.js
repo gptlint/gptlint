@@ -5,7 +5,9 @@ import * as ruleDefinitions from './dist/.gptlint/custom/index.js'
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
   {
+    // TODO: needd a way to disable built-in rules
     // ruleFiles: ['.gptlint/**/*.md'],
+    ruleFiles: [],
     ruleDefinitions: Object.values(ruleDefinitions),
     llmOptions: {
       model: 'gpt-4-turbo-preview',

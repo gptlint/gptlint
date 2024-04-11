@@ -47,18 +47,41 @@ export async function lintFiles({
   onProgress?: types.ProgressHandlerFn
   onProgressInit?: types.ProgressHandlerInitFn
 }): Promise<types.LintResult> {
-  const initialLintTasks: types.LintTask[] = rules
+  await pMap(rules, async (rule) =>
+    // TODO: add error handling to this so one rule doesn't prevent others from
+    // running properly
+    rule.init?.({
+      rule,
+      cache,
+      config,
+      chatModel,
+      cwd,
+      retryOptions
+    })
+  )
+
+  const projectLintTasks: types.LintTask[] = rules
+    .map((rule) => {
+      if (rule.scope === 'project' || rule.scope === 'repo') {
+        return createLintTask({ rule, config })
+      } else {
+        return undefined
+      }
+    })
+    .filter(Boolean)
+
+  const fileLintTasks: types.LintTask[] = rules
     .flatMap((rule) => {
       if (rule.scope === 'file') {
         // TODO: Experiment with different types of file <> rule mappings.
         return files.map((file) => createLintTask({ file, rule, config }))
-      } else if (rule.scope === 'project' || rule.scope === 'repo') {
-        return [createLintTask({ rule, config })]
       } else {
         return []
       }
     })
     .filter(Boolean)
+
+  const initialLintTasks = projectLintTasks.concat(fileLintTasks)
 
   let lintResult = createLintResult()
   let earlyExitTripped = false
@@ -75,6 +98,60 @@ export async function lintFiles({
         }
 
         try {
+          const { rule, scope } = lintTask
+          const model =
+            rule.model ?? config.llmOptions.weakModel ?? config.llmOptions.model
+
+          if (rule.preProcessProject) {
+            const partialProjectLintResults = await Promise.resolve(
+              rule.preProcessProject({
+                ...lintTask,
+                chatModel,
+                cache,
+                retryOptions,
+                cwd
+              })
+            )
+
+            if (partialProjectLintResults) {
+              if (
+                partialProjectLintResults.lintErrors ||
+                partialProjectLintResults.skipped
+              ) {
+                // Convert partial lint result to full lint result.
+                lintTask.lintResult = createLintResult({
+                  ...partialProjectLintResults,
+                  skipped: true,
+                  skipReason: 'pre-process-project',
+                  lintErrors: partialProjectLintResults.lintErrors?.map(
+                    (partialLintError) => ({
+                      model,
+                      level: rule.level,
+                      filePath: cwd,
+                      ...partialLintError,
+                      ruleName: rule.name
+                    })
+                  )
+                })
+
+                lintResult = mergeLintResults(lintResult, lintTask.lintResult)
+              } else {
+                // Preprocessing added some metadata to the lint result, but didn't
+                // preempt the rest of the linting process.
+                lintTask.lintResult = createLintResult(
+                  omit(partialProjectLintResults, 'lintErrors')
+                )
+                lintResult = mergeLintResults(lintResult, lintTask.lintResult)
+              }
+            }
+          }
+
+          if (lintTask.lintResult) {
+            lintResult = mergeLintResults(lintResult, lintTask.lintResult)
+
+            return lintTask
+          }
+
           // Always run the built-in pre-processing logic for caching and validation
           // purposes. Then run any custom, rule-specific pre-processing logic if
           // it exists.
@@ -85,10 +162,6 @@ export async function lintFiles({
 
             return lintTask
           }
-
-          const { rule, scope } = lintTask
-          const model =
-            rule.model ?? config.llmOptions.weakModel ?? config.llmOptions.model
 
           if (scope === 'file') {
             const file = lintTask.file
@@ -139,57 +212,6 @@ export async function lintFiles({
                 }
               }
             }
-          } else if (scope === 'project' || scope === 'repo') {
-            if (rule.preProcessProject) {
-              const partialProjectLintResults = await Promise.resolve(
-                rule.preProcessProject({
-                  ...lintTask,
-                  chatModel,
-                  cache,
-                  retryOptions,
-                  cwd
-                })
-              )
-
-              if (partialProjectLintResults) {
-                if (
-                  partialProjectLintResults.lintErrors ||
-                  partialProjectLintResults.skipped
-                ) {
-                  // Convert partial lint result to full lint result.
-                  lintTask.lintResult = createLintResult({
-                    ...partialProjectLintResults,
-                    skipped: true,
-                    skipReason: 'pre-process-project',
-                    lintErrors: partialProjectLintResults.lintErrors?.map(
-                      (partialLintError) => ({
-                        model,
-                        level: rule.level,
-                        filePath: cwd,
-                        ...partialLintError,
-                        ruleName: rule.name
-                      })
-                    )
-                  })
-
-                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-                } else {
-                  // Preprocessing added some metadata to the lint result, but didn't
-                  // preempt the rest of the linting process.
-                  lintTask.lintResult = createLintResult(
-                    omit(partialProjectLintResults, 'lintErrors')
-                  )
-                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-                }
-              }
-            }
-          }
-
-          if (
-            config.linterOptions.earlyExit &&
-            lintResult.lintErrors.length > 0
-          ) {
-            earlyExitTripped = true
           }
 
           return lintTask
@@ -200,6 +222,13 @@ export async function lintFiles({
           )
           console.warn(error.message)
           warnings.push(error)
+        } finally {
+          if (
+            config.linterOptions.earlyExit &&
+            lintResult.lintErrors.length > 0
+          ) {
+            earlyExitTripped = true
+          }
         }
       },
       {
@@ -354,10 +383,10 @@ export async function lintFiles({
             if (scope === 'file') {
               // Allow rules to override the default linting process with their
               // own, custom linting logic.
-              const processFileFn: types.ProcessFileFn =
+              const processFileFn: types.RuleProcessFileFn =
                 rule.processFile ?? lintFile
 
-              const processFileFnParams: types.ProcessFileFnParams = {
+              const processFileFnParams: types.RuleProcessFileFnParams = {
                 file,
                 rule,
                 lintResult: preProcessedTaskLintResult,
@@ -389,7 +418,7 @@ export async function lintFiles({
                 )
               }
             } else {
-              const processProjectFnParams: types.ProcessProjectFnParams = {
+              const processProjectFnParams: types.RuleProcessProjectFnParams = {
                 rule,
                 lintResult: preProcessedTaskLintResult,
                 chatModel,
