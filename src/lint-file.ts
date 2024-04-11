@@ -75,7 +75,7 @@ List out the portions of the SOURCE code ${
       file.fileName
     } which are related to the RULE and explain whether they VIOLATE or conform to the RULE's intent. Your answer should contain two markdown sections, EXPLANATION and VIOLATIONS.
 
-Accuracy is important, so be sure to think step-by-step and explain your reasoning briefly in the EXPLANATION section. Do not list out all variable names or identifiers in the EXPLANATION section.
+Accuracy is important, so be sure to think step-by-step and explain your reasoning briefly in the EXPLANATION section. Do not list out all variable names or identifiers in the EXPLANATION section, but rather focus on listing out the most relevant portions of the SOURCE that the given RULE may apply to.
 
 If you find any code snippets which VIOLATE the RULE, then output them as RULE_VIOLATION objects in the VIOLATIONS section. The VIOLATIONS section should be a JSON array of RULE_VIOLATION objects. This array may be empty if there are no RULE VIOLATIONS. Ignore code snippets which correctly conform to the RULE.
 
@@ -92,7 +92,7 @@ Example markdown output format:
 
 # EXPLANATION
 
-Plain text explanation of the SOURCE and reasoning for any potential VIOLATIONS.
+Plain text explanation of any areas of the SOURCE code which may be affected by the RULE and brief reasoning for any potential VIOLATIONS.
 
 # VIOLATIONS
 
@@ -116,7 +116,8 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       //     ruleName: rule.name,
       //     codeSnippet: 'const TODO = 1',
       //     confidence: 'high',
-      //     reasoning: 'EXAMPLE'
+      //     reasoning: 'EXAMPLE',
+      //     level: 'error'
       //   })
       //   return lintResult
       // }
