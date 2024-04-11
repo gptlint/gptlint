@@ -45,7 +45,7 @@ export async function isValidSourceFile(
       return false
     }
 
-    if (stats.size <= minFileSizeBytes || stats.size > maxFileSizeBytes) {
+    if (stats.size <= minFileSizeBytes) {
       // Ignore empty files
       return false
     }
