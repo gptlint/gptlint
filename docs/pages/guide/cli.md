@@ -36,7 +36,9 @@ Flags:
                                             gpt-3.5-turbo.
 ```
 
-The most important flags to call out are:
+## Important Flags
+
+The most important CLI flags to call out are:
 
 - `--dry-run` lets you estimate how much running `gptlint` on your codebase will cost with the current config settings applied. All external API calls are mocked out, so running `gptlint --dry-run` will always be free.
 - `-C` or `--no-cache` forces the linter to override any previously cached results.

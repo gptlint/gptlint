@@ -1,15 +1,15 @@
 # Config
 
-All GPTLint config is inspired by [ESLint's new flat config format](https://eslint.org/docs/latest/use/configure/configuration-files), so if you've used `eslint`, configuring `gptlint` will be a breeze.
+GPTLint config is inspired by [ESLint's new flat config format](https://eslint.org/docs/latest/use/configure/configuration-files), so if you've ever used `eslint`, then `gptlint` should feel very familiar.
 
-Just like ESLint, GPTLint supports a variety of ways to customize and extend it's behavior and linting rules. Configs can come from the following places places, with more specific configs overriding more general config settings:
+Just like ESLint, GPTLint supports a variety of ways to customize and extend it's behavior and default linting rules. Configs can come from the following places, with more specific configs overriding more general settings:
 
 - default settings
 - project-specific config file (`gptlint.config.{js,mjs,cjs}`)
-- CLI flags (all of the main config settings have CLI flags which override any config file settings)
-- inline config overrides (`/* gptlint-disable */`)
+- CLI flags (all of the main config settings have corresponding CLI flags)
+- inline config overrides in source files (`/* gptlint-disable */`)
 
-In the near future, we'll be moving the current set of default JS/TS rules into an NPM package `@gptlint/typescript-config`, and in general this is the expected way to provide reusable third-party rules and bundles of customized, pre-configured rules. In general, we're trying to follow ESLint's config design as closely as possible.
+In the near future, we'll be moving the current set of default JS/TS rules into an NPM package `@gptlint/typescript-config`, and in general this is the expected way to provide reusable sets of pre-configured rules going fowards. As a general principle, we're trying to follow ESLint's config design as closely as possible.
 
 ## Print Config
 
