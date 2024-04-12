@@ -577,7 +577,7 @@ exports[`parseRuleFile - .gptlint/prefer-array-at-negative-indexing.md 1`] = `
   "eslint": [
     "@unicorn/prefer-negative-index",
   ],
-  "fixable": true,
+  "fixable": false,
   "languages": [
     "javascript",
     "typescript",
@@ -673,6 +673,9 @@ Ignore \`if\` statements with multiple \`else\` branches.
 ",
   "eslint": [
     "prefer-early-return",
+  ],
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
   "languages": [
@@ -1163,12 +1166,12 @@ exports[`parseRuleFile - fixtures/rules/force-list-pagination.md 1`] = `
   "cacheable": true,
   "desc": "Force the use of pagination for all lists in GraphQL.
 ",
-  "fixable": false,
+  "fixable": true,
   "languages": [
     "javascript",
     "typescript",
   ],
-  "level": "error",
+  "level": "warn",
   "message": "Force List Pagination",
   "metadata": {},
   "name": "force-list-pagination",
@@ -1224,7 +1227,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
   "level": "error",
   "message": "Example",
   "metadata": {},
-  "name": "example-name",
+  "name": "metadata-0",
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
@@ -1238,49 +1241,28 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
 exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
 {
   "cacheable": true,
-  "desc": "This example should parse correctly because we stringify the values.
+  "desc": "This example should parse correctly.
 ",
   "eslint": [
     "example-eslint-rule-1",
-    "@foo/example-eslint-rule-2",
+    "example-eslint-rule-2",
   ],
-  "fixable": false,
+  "fixable": true,
   "languages": [
     "javascript",
     "typescript",
   ],
-  "level": "error",
+  "level": "off",
   "message": "Example",
   "metadata": {},
-  "name": "example-name",
+  "name": "metadata-1",
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
   "source": "fixtures/rules/metadata-1.md",
   "tags": [
     "general",
-    "react",
   ],
-}
-`;
-
-exports[`parseRuleFile - fixtures/rules/metadata-2.md 1`] = `
-{
-  "cacheable": true,
-  "desc": "This example should parse correctly because we stringify the values.
-",
-  "level": "error",
-  "message": "Example",
-  "metadata": {},
-  "name": "example-name",
-  "negativeExamples": [],
-  "positiveExamples": [],
-  "resources": [
-    "foo",
-    "bar",
-  ],
-  "scope": "file",
-  "source": "fixtures/rules/metadata-2.md",
 }
 `;
 
@@ -1292,15 +1274,10 @@ exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
   "eslint": [
     "@ux-l_graphql-eslint/mutation-types",
   ],
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
   "level": "error",
   "message": "Mutation Inputs",
   "metadata": {},
-  "name": "mutation-types",
+  "name": "mutations",
   "negativeExamples": [
     {
       "code": "type Mutation {
@@ -1342,14 +1319,6 @@ exports[`parseRuleFile - fixtures/rules/prefer-edge-node.md 1`] = `
   "cacheable": true,
   "desc": "Prefer usage of Edges and Nodes in GraphQL Lists.
 ",
-  "eslint": [
-    "@ux-l_graphql-eslint/mutation-types",
-  ],
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
   "level": "error",
   "message": "Prefer Edges & Nodes",
   "metadata": {},
@@ -1402,9 +1371,6 @@ type Query {
   ],
   "scope": "file",
   "source": "fixtures/rules/prefer-edge-node.md",
-  "tags": [
-    "graphql",
-  ],
 }
 `;
 
@@ -1413,11 +1379,6 @@ exports[`parseRuleFile - fixtures/rules/prefer-page-queries.md 1`] = `
   "cacheable": true,
   "desc": "Warn on usage of the \`/utils/api.ts\` file in favor of creating a page query in the /\`utils/pageQueries\` folder.
 ",
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
   "level": "error",
   "message": "Prefer page queries",
   "metadata": {},
@@ -1477,9 +1438,6 @@ export default gql\`
   ],
   "scope": "file",
   "source": "fixtures/rules/prefer-page-queries.md",
-  "tags": [
-    "graphql",
-  ],
 }
 `;
 
@@ -1488,15 +1446,10 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
   "cacheable": true,
   "desc": "Avoid accessing \`process.env\` variables in favor of Strapi environment variables.
 ",
-  "fixable": true,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
   "level": "error",
   "message": "Use Strapi Environment Variables",
   "metadata": {},
-  "name": "strapi-env-vars",
+  "name": "prefer-strapi-env-vars",
   "negativeExamples": [
     {
       "code": "export default ({ env }) => ({
@@ -1527,9 +1480,6 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
   ],
   "scope": "file",
   "source": "fixtures/rules/prefer-strapi-env-vars.md",
-  "tags": [
-    "code smells",
-  ],
 }
 `;
 
@@ -1538,10 +1488,6 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
   "cacheable": true,
   "desc": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.
 ",
-  "fixable": true,
-  "languages": [
-    "all",
-  ],
   "level": "error",
   "message": "Format comments like sentences",
   "metadata": {},
@@ -1560,9 +1506,6 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
   ],
   "scope": "file",
   "source": "fixtures/rules/wip/format-comments-like-sentences.md",
-  "tags": [
-    "general",
-  ],
 }
 `;
 
@@ -1573,11 +1516,6 @@ exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = 
 
 TODO
 ",
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
   "level": "error",
   "message": "Prefer derived state in React",
   "metadata": {},
@@ -1586,9 +1524,6 @@ TODO
   "positiveExamples": [],
   "scope": "file",
   "source": "fixtures/rules/wip/react-prefer-derived-state.md",
-  "tags": [
-    "react",
-  ],
 }
 `;
 
@@ -1602,11 +1537,6 @@ ESM (ECMAScript Modules) is a modern standard which uses \`import\` and \`export
   "eslint": [
     "@unicorn/prefer-module",
     "@typescript-eslint/no-require-imports",
-  ],
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
   ],
   "level": "error",
   "message": "Use ESM instead of CommonJS",
@@ -1631,8 +1561,5 @@ export function bar() {}",
   ],
   "scope": "file",
   "source": "fixtures/rules/wip/use-esm.md",
-  "tags": [
-    "general",
-  ],
 }
 `;

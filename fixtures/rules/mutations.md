@@ -1,13 +1,12 @@
-# Mutation Inputs
+---
+name: 'mutation-types'
+tags:
+  - graphql
+eslint:
+  - '@ux-l_graphql-eslint/mutation-types'
+---
 
-| Key       | Value                                 |
-| --------- | ------------------------------------- |
-| Name      | mutation-types                        |
-| Level     | error                                 |
-| Fixable   | false                                 |
-| Tags      | graphql                               |
-| Languages | javascript, typescript                |
-| Eslint    | `@ux-l_graphql-eslint/mutation-types` |
+# Mutation Inputs
 
 Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
 

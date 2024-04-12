@@ -1,11 +1,14 @@
-# Prefer types that always represent valid states
+---
+fixable: false
+tags:
+  - best practices
+languages:
+  - typescript
+resources:
+  - https://effectivetypescript.com
+---
 
-| Key       | Value                           |
-| --------- | ------------------------------- |
-| Fixable   | false                           |
-| Tags      | best practices                  |
-| Languages | typescript                      |
-| Resources | https://effectivetypescript.com |
+# Prefer types that always represent valid states
 
 A key to effective type design is crafting types that can only represent a valid state. This rule walks through a few examples of how this can go wrong and shows you how to fix them.
 

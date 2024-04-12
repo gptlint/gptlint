@@ -1,12 +1,15 @@
-# Force List Pagination
+---
+name: force-list-pagination
+level: warn
+fixable: true
+tags: 
+  - graphql
+languages: 
+  - javascript
+  - typescript
+---
 
-| Key       | Value                  |
-| --------- | ---------------------- |
-| Name      | force-list-pagination  |
-| Level     | error                  |
-| Fixable   | false                  |
-| Tags      | graphql                |
-| Languages | javascript, typescript |
+# Force List Pagination
 
 Force the use of pagination for all lists in GraphQL.
 

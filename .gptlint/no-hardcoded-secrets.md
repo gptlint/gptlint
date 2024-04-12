@@ -1,10 +1,12 @@
-# No hardcoded secrets
+---
+fixable: false
+tags:
+  - security
+languages:
+  - all
+---
 
-| Key       | Value    |
-| --------- | -------- |
-| Fixable   | false    |
-| Tags      | security |
-| Languages | all      |
+# No hardcoded secrets
 
 Sensitive secrets should never be hardcoded in git because they represent a serious security risk.
 

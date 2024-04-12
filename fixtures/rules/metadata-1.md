@@ -1,12 +1,17 @@
+---
+name: '@foo/example-name'
+level: off
+fixable: true
+tags: 
+  - 'general'
+languages: 
+  - javascript
+  - typescript
+eslint:
+  - 'example-eslint-rule-1'
+  - "example-eslint-rule-2"
+---
+
 # Example
 
-| Key       | Value                                                 |
-| --------- | ----------------------------------------------------- |
-| Name      | `example-name`                                        |
-| Level     | **error**                                             |
-| Fixable   | _false_                                               |
-| Tags      | general, _react_                                      |
-| Languages | javascript, typescript                                |
-| Eslint    | `example-eslint-rule-1`, `@foo/example-eslint-rule-2` |
-
-This example should parse correctly because we stringify the values.
+This example should parse correctly.

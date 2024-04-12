@@ -1,11 +1,14 @@
-# Don’t repeat type information in documentation
+---
+fixable: false
+tags:
+  - best practices
+languages:
+  - typescript
+resources:
+  - https://effectivetypescript.com
+---
 
-| Key       | Value                           |
-| --------- | ------------------------------- |
-| Fixable   | false                           |
-| Tags      | best practices                  |
-| Languages | typescript                      |
-| Resources | https://effectivetypescript.com |
+# Don’t repeat type information in documentation
 
 Avoid repeating type information in comments and variable names. In the best case it is duplicative of type declarations, and in the worst it will lead to conflicting information.
 

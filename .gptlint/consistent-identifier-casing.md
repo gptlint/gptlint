@@ -1,11 +1,16 @@
-# Be consistent with identifier casing
+---
+fixable: false
+tags:
+  - best practices
+languages:
+  - javascript
+  - typescript
+eslint:
+  - '@typescript-eslint/naming-convention'
+  - 'camelcase'
+---
 
-| Key       | Value                                               |
-| --------- | --------------------------------------------------- |
-| Fixable   | false                                               |
-| Tags      | best practices                                      |
-| Eslint    | `@typescript-eslint/naming-convention`, `camelcase` |
-| Languages | javascript, typescript                              |
+# Be consistent with identifier casing
 
 Identifiers of the same type should try to use consistent casing.
 

@@ -1,10 +1,13 @@
-# SOC2 Don't leak user data
+---
+fixable: false
+tags:
+  - security
+languages:
+  - javascript
+  - typescript
+---
 
-| Key       | Value                  |
-| --------- | ---------------------- |
-| Fixable   | false                  |
-| Tags      | security               |
-| Languages | javascript, typescript |
+# SOC2 Don't leak user data
 
 Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
 

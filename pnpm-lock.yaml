@@ -80,6 +80,9 @@ importers:
       pretty-ms:
         specifier: ^9.0.0
         version: 9.0.0
+      remark-frontmatter:
+        specifier: ^5.0.0
+        version: 5.0.0
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.0
@@ -104,6 +107,9 @@ importers:
       unist-util-is:
         specifier: ^6.0.0
         version: 6.0.0
+      yaml:
+        specifier: ^2.4.1
+        version: 2.4.1
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -5901,7 +5907,7 @@ packages:
       title: 3.5.3
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
-      yaml: 2.3.4
+      yaml: 2.4.1
       zod: 3.22.4
       zod-validation-error: 1.5.0(zod@3.22.4)
     transitivePeerDependencies:
@@ -6394,7 +6400,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 3.0.0
-      yaml: 2.3.4
+      yaml: 2.4.1
     dev: true
 
   /postcss@8.4.31:
@@ -8205,6 +8211,12 @@ packages:
   /yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
+    dev: true
+
+  /yaml@2.4.1:
+    resolution: {integrity: sha512-pIXzoImaqmfOrL7teGUBt/T7ZDnyeGBWyXQBvOVhLkWLN37GXv8NMLK406UY6dS51JfcQHsmcW5cJ441bHg6Lg==}
+    engines: {node: '>= 14'}
+    hasBin: true
 
   /yargs-parser@20.2.9:
     resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}

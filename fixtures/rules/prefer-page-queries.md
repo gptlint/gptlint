@@ -1,13 +1,5 @@
 # Prefer page queries
 
-| Key       | Value                  |
-| --------- | ---------------------- |
-| Name      | `prefer-page-queries`  |
-| Level     | error                  |
-| Fixable   | false                  |
-| Tags      | graphql                |
-| Languages | javascript, typescript |
-
 Warn on usage of the `/utils/api.ts` file in favor of creating a page query in the /`utils/pageQueries` folder.
 
 ## Usage Examples

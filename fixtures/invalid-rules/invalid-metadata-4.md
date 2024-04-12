@@ -1,7 +1,7 @@
-# Example
+---
+level: unknown
+---
 
-| Key   | Value   |
-| ----- | ------- |
-| Level | unknown |
+# Example
 
 This example should throw an error because metadata is invalid.

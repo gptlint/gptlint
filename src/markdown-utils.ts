@@ -1,25 +1,24 @@
 import path from 'node:path'
 
-import type { Code, Heading, Node, Nodes, Parent, Root, Table } from 'mdast'
+import type { Code, Heading, Node, Nodes, Parent, Root, Yaml } from 'mdast'
 import { gfmToMarkdown } from 'mdast-util-gfm'
 import { toMarkdown } from 'mdast-util-to-markdown'
 import { toString } from 'mdast-util-to-string'
+import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import { unified } from 'unified'
 import { is, type Test } from 'unist-util-is'
 
 import type * as types from './types.js'
-import {
-  assert,
-  isValidRuleName,
-  isValidRuleScope,
-  isValidRuleSetting,
-  slugify
-} from './utils.js'
+import { assert, isValidRuleName, slugify } from './utils.js'
 
 export function parseMarkdownAST(content: string) {
-  return unified().use(remarkParse).use(remarkGfm).parse(content)
+  return unified()
+    .use(remarkParse)
+    .use(remarkFrontmatter)
+    .use(remarkGfm)
+    .parse(content)
 }
 
 export { inspectColor as inspectNode } from 'unist-util-inspect'
@@ -39,18 +38,14 @@ export function convertASTToPlaintext(node?: Node) {
 export function parseRuleNode({
   headingRuleNode,
   bodyRuleNodes,
-  filePath
+  filePath,
+  partialRule
 }: {
   headingRuleNode: Node
   bodyRuleNodes: Node[]
   filePath: string
+  partialRule?: Partial<types.RuleDefinition>
 }): types.Rule {
-  const tableRuleNodes = bodyRuleNodes.filter(
-    (ruleNode) => ruleNode.type === 'table'
-  ) as Table[]
-
-  bodyRuleNodes = bodyRuleNodes.filter((node) => node.type !== 'table')
-
   const firstNonBodyRuleNodeIndex = bodyRuleNodes.findIndex(
     (node) => node.type === 'heading'
   )
@@ -87,19 +82,10 @@ export function parseRuleNode({
     level: 'error',
     scope: 'file',
     source: filePath,
-    metadata: {}
+    metadata: {},
+    ...partialRule
   }
   assert(rule.name, `Rule name must not be empty: ${message}`)
-
-  assert(
-    tableRuleNodes.length <= 1,
-    `Rule must not contain more than 1 markdown table: ${message} (${filePath})`
-  )
-
-  if (tableRuleNodes.length === 1) {
-    const tableNode = tableRuleNodes[0]!
-    parseRuleTableNode({ tableNode, rule, filePath })
-  }
 
   assert(
     isValidRuleName(rule.name),
@@ -201,131 +187,6 @@ export function parseRuleNode({
   return rule
 }
 
-export function parseRuleTableNode({
-  tableNode,
-  rule,
-  filePath
-}: {
-  tableNode: Table
-  rule: types.Rule
-  filePath: string
-}) {
-  const headerRow = tableNode.children[0]
-  const bodyRows = tableNode.children.slice(1)
-
-  assert(
-    headerRow?.type === 'tableRow',
-    `Rule contains invalid table: ${rule.message} (${filePath})`
-  )
-  assert(
-    headerRow.children.length === 2,
-    `Rule contains invalid table (must have 2 columns): ${rule.message} (${filePath})`
-  )
-  assert(
-    convertASTToPlaintext(headerRow.children[0]).toLowerCase().trim() === 'key',
-    `Rule contains invalid table (first column must be "key"): ${rule.message} (${filePath})`
-  )
-  assert(
-    convertASTToPlaintext(headerRow.children[1]).toLowerCase().trim() ===
-      'value',
-    `Rule contains invalid table (first column must be "value"): ${rule.message} (${filePath})`
-  )
-  assert(
-    bodyRows.length > 0,
-    `Rule contains invalid table (empty table body): ${rule.message} (${filePath})`
-  )
-
-  const validRuleTableKeys = new Set<string>([
-    'name',
-    'model',
-    'level',
-    'scope',
-    'fixable',
-    'cacheable',
-    'tags',
-    'languages',
-    'eslint',
-    'include',
-    'exclude',
-    'resources'
-  ])
-
-  for (const bodyRow of bodyRows) {
-    assert(
-      bodyRow.children.length === 2,
-      `Rule contains invalid metadata table (body rows must have 2 columns): ${rule.message} (${filePath})`
-    )
-
-    const key = convertASTToPlaintext(bodyRow.children[0]).toLowerCase().trim()
-    assert(
-      validRuleTableKeys.has(key),
-      `Rule contains invalid metadata table (unsupported key "${key}"): ${rule.message} (${filePath})`
-    )
-
-    const value = convertASTToPlaintext(bodyRow.children[1])
-      .toLowerCase()
-      .trim()
-    if (key === 'name') {
-      assert(
-        value,
-        `Rule contains invalid metadata ("name" must not be empty): ${rule.message} (${filePath})`
-      )
-
-      rule.name = value
-    } else if (key === 'model') {
-      rule.model = value
-    } else if (key === 'level') {
-      assert(
-        isValidRuleSetting(value),
-        `Rule contains invalid metadata ("level" must be one of "warn" | "error" | "off"): ${rule.message} (${filePath})`
-      )
-
-      rule.level = value
-    } else if (key === 'scope') {
-      assert(
-        isValidRuleScope(value),
-        `Rule contains invalid metadata ("scope" must be one of "file" | "project" | "repo"): ${rule.message} (${filePath})`
-      )
-
-      rule.level = value
-    } else if (key === 'fixable') {
-      assert(
-        value === 'true' || value === 'false',
-        `Rule contains invalid metadata ("fixable" must be one of "true" | "false"): ${rule.message} (${filePath})`
-      )
-
-      rule.fixable = value === 'true'
-    } else if (key === 'cacheable') {
-      assert(
-        value === 'true' || value === 'false',
-        `Rule contains invalid metadata ("cacheable" must be one of "true" | "false"): ${rule.message} (${filePath})`
-      )
-
-      rule.cacheable = value === 'true'
-    } else if (key === 'tags') {
-      rule.tags = value.split(',').map((v) => v.trim())
-    } else if (key === 'languages') {
-      rule.languages = value.split(',').map((v) => v.trim())
-    } else if (key === 'eslint') {
-      rule.eslint = value.split(',').map((v) => v.trim())
-    } else if (key === 'include') {
-      // TODO: improve this and support multiple regexes
-      rule.include = [value]
-    } else if (key === 'exclude') {
-      // TODO: improve this and support multiple regexes
-      rule.exclude = [value]
-    } else if (key === 'resources') {
-      // TODO: support markdown links for resources
-      rule.resources = value.split(',').map((v) => v.trim())
-    } else {
-      assert(
-        false,
-        `Rule contains invalid metadata table (unsupported key "${key}"): ${rule.message} (${filePath})`
-      )
-    }
-  }
-}
-
 /**
  * A unist utility to get all children of a parent between two nodes or indices.
  *
@@ -409,4 +270,8 @@ export function findAllHeadingNodes(
     (node) =>
       node.type === 'heading' && (depth === undefined || node.depth === depth)
   ) as Heading[]
+}
+
+export function findAllYAMLNodes(tree: Root) {
+  return tree.children.filter((node) => node.type === 'yaml') as Yaml[]
 }

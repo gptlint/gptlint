@@ -80,22 +80,23 @@ export function resolvePartialLintResult(
 ): types.LintResult {
   return createLintResult({
     ...partialLintResult,
-    lintErrors: partialLintResult?.lintErrors?.map(
-      (partialLintError) =>
-        ({
-          model,
-          level: rule.level,
-          filePath,
-          language,
-          ...partialLintError,
-          ruleName: rule.name,
-          ...(file
-            ? pruneUndefined({
-                filePath: file.fileRelativePath,
-                language: file.language
-              })
-            : {})
-        }) as types.LintError
-    )
+    lintErrors:
+      partialLintResult?.lintErrors?.map(
+        (partialLintError) =>
+          ({
+            model,
+            level: rule.level,
+            filePath,
+            language,
+            ...partialLintError,
+            ruleName: rule.name,
+            ...(file
+              ? pruneUndefined({
+                  filePath: file.fileRelativePath,
+                  language: file.language
+                })
+              : {})
+          }) as types.LintError
+      ) ?? []
   })
 }

@@ -1,12 +1,19 @@
-# Prefer early returns from functions
+---
+fixable: false
+tags:
+  - best practices
+languages:
+  - javascript
+  - typescript
+exclude:
+  - '**/*.test\.{js,ts,jsx,tsx,cjs,mjs}'
+eslint:
+  - prefer-early-return
+resources:
+  - https://gomakethings.com/the-early-return-pattern-in-javascript/
+---
 
-| Key       | Value                                                            |
-| --------- | ---------------------------------------------------------------- |
-| Fixable   | false                                                            |
-| Tags      | best practices                                                   |
-| Languages | javascript, typescript                                           |
-| Eslint    | `prefer-early-return`                                            |
-| Resources | https://gomakethings.com/the-early-return-pattern-in-javascript/ |
+# Prefer early returns from functions
 
 Prefer returning early from functions in order to keep them as flat as possible.
 

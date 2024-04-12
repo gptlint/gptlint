@@ -1,14 +1,5 @@
 # Prefer Edges & Nodes
 
-| Key       | Value                                 |
-| --------- | ------------------------------------- |
-| Name      | `prefer-edge-node`                    |
-| Level     | error                                 |
-| Fixable   | false                                 |
-| Tags      | graphql                               |
-| Languages | javascript, typescript                |
-| Eslint    | `@ux-l_graphql-eslint/mutation-types` |
-
 Prefer usage of Edges and Nodes in GraphQL Lists.
 
 ## Usage Examples

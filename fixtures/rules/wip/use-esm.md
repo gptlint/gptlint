@@ -1,13 +1,10 @@
-# Use ESM instead of CommonJS
+---
+eslint:
+  - '@unicorn/prefer-module'
+  - '@typescript-eslint/no-require-imports'
+---
 
-| Key       | Value                                                             |
-| --------- | ----------------------------------------------------------------- |
-| Name      | `use-esm`                                                         |
-| Level     | error                                                             |
-| Fixable   | false                                                             |
-| Tags      | general                                                           |
-| Languages | javascript, typescript                                            |
-| Eslint    | `@unicorn/prefer-module`, `@typescript-eslint/no-require-imports` |
+# Use ESM instead of CommonJS
 
 CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses `require` and `module.exports` and suffers from poor standardization and interoperability issues.
 

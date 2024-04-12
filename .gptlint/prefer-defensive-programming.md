@@ -1,11 +1,15 @@
-# Prefer defensive programming techniques <!-- omit from toc -->
+---
+fixable: false
+tags:
+  - best practices
+languages:
+  - javascript
+  - typescript
+exclude:
+  - '**/*.test\.{js,ts,jsx,tsx,cjs,mjs}'
+---
 
-| Key       | Value                                |
-| --------- | ------------------------------------ |
-| Fixable   | false                                |
-| Tags      | best practices                       |
-| Languages | javascript, typescript               |
-| Exclude   | `**/*.test\.{js,ts,jsx,tsx,cjs,mjs}` |
+# Prefer defensive programming techniques <!-- omit from toc -->
 
 Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
 

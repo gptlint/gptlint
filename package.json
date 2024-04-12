@@ -73,6 +73,7 @@
     "path-exists": "^5.0.0",
     "plur": "^5.1.0",
     "pretty-ms": "^9.0.0",
+    "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "tasuku": "^2.0.1",
@@ -81,6 +82,7 @@
     "unified": "^11.0.4",
     "unist-util-inspect": "^8.0.0",
     "unist-util-is": "^6.0.0",
+    "yaml": "^2.4.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

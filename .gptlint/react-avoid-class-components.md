@@ -1,11 +1,15 @@
-# Don't use React class components
+---
+fixable: false
+tags:
+  - react
+languages:
+  - javascript
+  - typescript
+eslint:
+  - eslint-plugin-react-prefer-function-component
+---
 
-| Key       | Value                                           |
-| --------- | ----------------------------------------------- |
-| Fixable   | false                                           |
-| Tags      | react                                           |
-| Languages | javascript, typescript                          |
-| Eslint    | `eslint-plugin-react-prefer-function-component` |
+# Don't use React class components
 
 React class components are deprecated. Use React functions and hooks instead.
 

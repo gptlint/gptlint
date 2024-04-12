@@ -1,13 +1,5 @@
 # Use Strapi Environment Variables
 
-| Key       | Value                  |
-| --------- | ---------------------- |
-| Name      | `strapi-env-vars`      |
-| Level     | error                  |
-| Fixable   | true                   |
-| Tags      | code smells            |
-| Languages | javascript, typescript |
-
 Avoid accessing `process.env` variables in favor of Strapi environment variables.
 
 ## Usage Examples

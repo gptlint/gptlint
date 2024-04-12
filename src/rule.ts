@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import type * as types from './types.js'
+import { isValidRuleName } from './utils.js'
 
 export type RuleMetadata<K extends string = string, V = any> = Record<K, V>
 
@@ -60,6 +61,7 @@ export const RuleDefinitionSchema = z
   .object({
     name: z
       .string()
+      .refine((name) => isValidRuleName(name))
       .describe(
         "Primary identifier for the rule. All lowercase. Example: 'consistent-identifier-casing'."
       ),

@@ -1,7 +1,7 @@
-# Example
+---
+unknown: foo
+---
 
-| Key     | Value |
-| ------- | ----- |
-| Unknown | foo   |
+# Example
 
 This example should throw an error because metadata is invalid.
