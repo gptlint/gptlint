@@ -44,9 +44,6 @@ export type Rule = {
   preProcessProject?: PreProcessProjectFn
   processProject?: ProcessProjectFn
   postProcessProject?: PostProcessProjectFn
-
-  // internal metadata
-  source?: string
 }
 
 export type LintRuleScope = 'file' | 'project' | 'repo'
@@ -69,49 +66,60 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
   - The content of this section should contain 1 or more code blocks to use as `positiveExamples`.
 - It is encouraged to specify a language for all code block examples, but it not required.
 
-### Rule Metadata Table
+### Rule Metadata Frontmatter
 
-A GRS file may optionally contain a single metadata table formatted as a [GFM table](https://github.github.com/gfm/#tables-extension-). The table must have exactly two columns, the first one for metadata keys and the second one for corresponding values.
-
-All metadata fields are optional.
+A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/front-matter/) for specifying metadata. All metadata fields are optional.
 
 Here is a breakdown of the supported metadata fields and their expected types.
 
-| Key       | Type                      | Description                                                                                                                                        |
-| --------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Name      | `string`                  | Short name of this rule. Defaults to the rule's filename without the `.md` extension.                                                              |
-| Level     | `warn \| error \| off`    | Default error level of this rule                                                                                                                   |
-| Scope     | `file \| project \| repo` | Granularity at which this rule is applied. Defaults to `file`.                                                                                     |
-| Fixable   | `boolean`                 | Whether or not this rule supports auto-fixing errors                                                                                               |
-| Tags      | `string[]`                | CSV of tags / labels                                                                                                                               |
-| Eslint    | `string[]`                | CSV of lower-level [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule                                            |
-| Languages | `string[]`                | CSV of programming languages this rule should be enabled for. Defaults to `all`.                                                                   |
-| Include   | `string[]`                | CSV of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`. |
-| Exclude   | `string[]`                | CSV of file glob patterns to ignore when enforcing this rule.                                                                                      |
-| Resources | `string[]`                | CSV of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs                                           |
+| Key       | Type                      | Description                                                                                                                                          |
+| --------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name      | `string`                  | Short name of this rule. Defaults to the rule's filename without the `.md` extension.                                                                |
+| level     | `warn \| error \| off`    | Default error level of this rule                                                                                                                     |
+| scope     | `file \| project \| repo` | Granularity at which this rule is applied. Defaults to `file`.                                                                                       |
+| fixable   | `boolean`                 | Whether or not this rule supports auto-fixing errors                                                                                                 |
+| tags      | `string[]`                | Array of tags / labels                                                                                                                               |
+| eslint    | `string[]`                | Array of lower-level [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule                                            |
+| languages | `string[]`                | Array of programming languages this rule should be enabled for.                                                                                      |
+| include   | `string[]`                | Array of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`. |
+| exclude   | `string[]`                | Array of file glob patterns to ignore when enforcing this rule.                                                                                      |
+| resources | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs                                           |
 
-- Arrays like `Tags` and `Languages` are parsed as comma-separated values.
-- Arrays with one elements (no commas) are supported.
-- Empty arrays as values are supported.
-- Table keys are case-insensitive (`Name` is the same as `name`).
-- All table values are stripped of markdown formatting, so values may contain formatting like `inline code blocks`, **bold**, _italics_, etc, and their parsed values will be the same with or without this formatting.
-- We considered using [frontmatter](https://github.com/remarkjs/remark-frontmatter) instead of this table format, but found we preferred the ability to see the metadata in the GitHub-rendered markdown along with the ability to apply formatting to the values.
+All metadata keys are case-sensitive.
 
-#### Example Rule Metadata Table
+## Example Rule
 
-Here is an example metadata table.
+Here is an example frontmatter metadata:
 
-| Key       | Value                                                   |
-| --------- | ------------------------------------------------------- |
-| Name      | `prefer-array-at-negative-indexing`                     |
-| Level     | error                                                   |
-| Fixable   | true                                                    |
-| Tags      | general                                                 |
-| Languages | javascript, typescript                                  |
-| Resources | https://twitter.com/housecor/status/1768622518179369036 |
+```mdx
+---
+fixable: false
+tags:
+  - best practices
+languages:
+  - javascript
+  - typescript
+---
 
-## Example Rules
+# Rule Name
 
-Built-in rules are available in [.gptlint](https://github.com/gptlint/gptlint/tree/main/.gptlint).
+This is a plain-text description of the rule's intent.
+
+### Bad
+
+\`\`\`ts
+// example of the rule being used incorrectly
+\`\`\`
+
+### Good
+
+\`\`\`ts
+// example of the rule being correctly
+\`\`\`
+```
+
+## More Example Rules
+
+All built-in rules are available in [.gptlint](https://github.com/gptlint/gptlint/tree/main/.gptlint).
 
 Parsing-wise, [fixtures/rules](https://github.com/gptlint/gptlint/tree/main/fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules](https://github.com/gptlint/gptlint/tree/main/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
