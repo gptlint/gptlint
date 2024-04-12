@@ -40,7 +40,7 @@ npx gptlint --dry-run
 
 The `--dry-run` flag causes `gptlint` to mock any LLM API calls and instead output an _estimate_ of how much it would cost to run the linter for real. Since [LLM costs can add up quickly](../project/cost.md) for large codebases, it's always a good idea to make sure you understand the projected costs before running `gptlint` on a new project.
 
-If you want to try out `gptlint` without worrying about the cost, you can run `gptlint` on a single source file or subdirectory like this:
+If you want to try out `gptlint` without worrying about the cost, you can run `gptlint` on a single source file like this:
 
 ```sh
 npx gptlint --dry-run src/utils.ts
@@ -48,6 +48,6 @@ npx gptlint --dry-run src/utils.ts
 
 ### Real Run
 
-TODO
+<Callout type='warning'>TODO: This doc is a WIP.</Callout>
 
 </Steps>
