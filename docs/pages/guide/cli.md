@@ -50,7 +50,7 @@ The most important CLI flags to call out are:
 - `--print-config` will log the fully resolved config, rules, and source files that `gptlint` will operate on and then exit without actually performing any linting.
   - This is very useful for validating that your project is configured correctly, especially when you're seeing unexpected results or working with custom rules and models.
 
-Most of the CLI options have equivalent [config options](./config.md). Config files are preferred for general project configuration, whereas CLI options are more useful for customizing `gptlint` runs on-the-fly.
+Most of the CLI options have equivalent [config options](./config.mdx). Config files are preferred for general project configuration, whereas CLI options are more useful for customizing `gptlint` runs on-the-fly.
 
 ## Examples
 

@@ -1,3 +1,5 @@
+import { Callout } from 'nextra/components'
+
 # Config
 
 GPTLint config is inspired by [ESLint's new flat config format](https://eslint.org/docs/latest/use/configure/configuration-files), so if you've ever used `eslint`, then `gptlint` should feel very familiar.
@@ -27,8 +29,7 @@ The GPTLint configuration file may be named any of the following:
 
 It should be placed in the root directory of your project and export an array of [configuration objects](#linterconfig-objects). Here’s an example:
 
-```js
-// gptlint.config.js
+```js filename="gptlint.config.js"
 export default [
   {
     rules: {
@@ -81,8 +82,7 @@ An example of a code-based rule (the equivalent of a plugin in `eslint`) is [eff
 
 Here's an example:
 
-```js
-// my-custom-rule.js
+```js filename="my-custom-rule.js"
 /** @type {import('gptlint').RuleDefinition} */
 export default {
   name: 'my-custom-rule',
@@ -103,8 +103,7 @@ export default {
 }
 ```
 
-```js
-// gptlint.config.js
+```js filename="gptlint.config.js"
 import myCustomRule from './my-custom-rule.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
@@ -119,9 +118,7 @@ export default [
 
 **Using `gpt-4-turbo-preview`** as the strong model:
 
-```js
-// gptlint.config.js
-
+```js filename="gptlint.config.js"
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
   {
@@ -137,9 +134,7 @@ export default [
 
 See [Using Anthropic](./llm-providers.md#anthropic) for more info.
 
-```js
-// gptlint.config.js
-
+```js filename="gptlint.config.js"
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
   {
@@ -167,4 +162,7 @@ Currently, all `gptlint` config objects are merged together into a single, flat,
 
 Our goal is to match `gptlint`'s flat file config behavior 1:1 in the future, with the current solution being a compromise that seems to work well in practice.
 
-If you're ever not sure how your config is being resolved or why you're seeing unexpected behavior, double-check the output of `gptlint --print-config`.
+<Callout>
+  If you're ever not sure how your config is being resolved or why you're seeing
+  unexpected behavior, double-check the output of `gptlint --print-config`.
+</Callout>

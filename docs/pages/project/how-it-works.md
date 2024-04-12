@@ -13,7 +13,7 @@
 ## Overview
 
 <p align="center">
-  <img alt="Single-Pass Linting" src="/how-gptlint-works.png">
+  <img alt="Single-Pass Linting" src="/how-gptlint-works.png" />
 </p>
 
 To lint a codebase, GPTLint takes the following steps:
@@ -31,7 +31,7 @@ The core linting logic lives in [src/lint-file.ts](https://github.com/gptlint/gp
 ## Single-Pass Linting
 
 <p align="center">
-  <img alt="Single-Pass Linting" src="/single-pass-linting.png">
+  <img alt="Single-Pass Linting" src="/single-pass-linting.png" />
 </p>
 
 In single-pass linting, a single LLM inference call is used to both evaluate a lint task (rule x file pair) as well as to act as a classifier in identifying potential rule violations.
@@ -46,7 +46,7 @@ In this approach, every lint task goes through the following steps:
 ## Two-Pass Linting
 
 <p align="center">
-  <img alt="Two-Pass Linting" src="/two-pass-linting.png">
+  <img alt="Two-Pass Linting" src="/two-pass-linting.png" />
 </p>
 
 Everything starts off the same in two-pass linting as single-pass linting.

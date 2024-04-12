@@ -1,7 +1,9 @@
+import { Callout } from 'nextra/components'
+
 # Rule Guidelines
 
-<p align="center">
-  <img alt="GPTLint Rule Guidelines" src="/gptlint-rule-guidelines.png">
+<p align='center'>
+  <img alt='GPTLint Rule Guidelines' src='/gptlint-rule-guidelines.png' />
 </p>
 
 **GPTLint is intended to augment traditional, AST-based, static analysis tools** like `eslint`, `pylint`, `ruff`, etc with _higher-level coding best practices_ that are difficult or impossible to capture with these lower-level, AST-based tools. GPTLint rules are therefore meant to be higher-level in nature than AST-based linting rules.
@@ -41,13 +43,13 @@ If you have a best practice you'd like to capture with GPTLint, first ask yourse
 
 ### Prefer rules that are well-defined
 
-_TODO_
+<Callout type='warning'>TODO: This doc is a WIP.</Callout>
 
 ### Prefer universal rules
 
 Rules which are aimed at best practices for a specific library (next.js, express, mongoose, etc) could be very good fits for either [project-specific rules](#project-specific-rules) or [community-driven, library-specific configs](#library-specific-rule-configs).
 
-_TODO_
+<Callout type='warning'>TODO: This doc is a WIP.</Callout>
 
 ### Prefer direct, substantive rules
 
@@ -90,7 +92,7 @@ If a rule isn't generally applicable enough to be added to the default GPTLint r
 
 Creating project-specific rules is very simple. Just create a markdown file for the rule in your project (or copy one of the default rule definition files from GPTLint). By convention, we recommend placing custom rules under a top-level `.gptlint/` directory. You can enable your custom rule by adding it to the `rules` glob either via a `gptlint.config.js` file or via the CLI `--rules` option.
 
-```js
+```js filename="gptlint.config.js"
 import 'dotenv/config'
 
 export default [
@@ -105,8 +107,8 @@ You can debug the fully resolved rules and config options at any time by running
 
 ## Defense in depth
 
-_TODO_
+<Callout type='warning'>TODO: This doc is a WIP.</Callout>
 
 ## Example Rules
 
-_TODO_
+<Callout type='warning'>TODO: This doc is a WIP.</Callout>

@@ -20,8 +20,7 @@ See [LLM providers](../guide/llm-providers.md).
 
 You can disable a rule for a project by adding a config file at the root:
 
-```js
-// gptlint.config.js
+```js filename="gptlint.config.js"
 export default [
   {
     rules: {
@@ -107,7 +106,7 @@ _We absolutely love `eslint`_ and strongly recommend that you use an AST-based l
 | free                         | [expensive](./cost.md) or [cheap using local LLMs](./guide/llm-providers#local-models) |
 | low-impact                   | **high-impact**                                                                        |
 
-So what does a higher-level linting rule look like, and when should you use an AST-based linting rule versus an LLM-based linting rule? We answer this in-depth in our [rule guidelines](./extend/rule-guidelines.md), but the short answer is that we recommend using deterministic, AST-based linting wherever possible and augmenting this AST-based linting with LLM-based linting and code reviews to provide a _defense-in-depth approach to code quality_.
+So what does a higher-level linting rule look like, and when should you use an AST-based linting rule versus an LLM-based linting rule? We answer this in-depth in our [rule guidelines](../extend/rule-guidelines.mdx), but the short answer is that we recommend using deterministic, AST-based linting wherever possible and augmenting this AST-based linting with LLM-based linting and code reviews to provide a _defense-in-depth approach to code quality_.
 
 ### What about fine-tuning?
 
