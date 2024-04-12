@@ -44,8 +44,8 @@ GRS rules are parsed into the following TypeScript format:
 export type Rule = {
   // core rule definition
   name: string
-  message: string
-  desc?: string
+  title: string
+  description?: string
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
 
@@ -82,12 +82,12 @@ See the [full types](https://github.com/gptlint/gptlint/blob/main/src/rule.ts) f
 
 A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/gfm/) (**GFM**) document. Each GRS rule must have its own markdown file, and GRS markdown files may only contain a single rule.
 
-- GRS rule files must contain a single markdown `h1` header containing the rule's `message` property.
+- GRS rule files must contain a single markdown `h1` header containing the rule's `title` property.
 - Within this `h1` section, GRS rule files may optionally contain a [metadata table](#rule-metadata-table) for customizing the rule's behavior.
-- The content from the `h1` section up until any optional example header sections will comprise the rule's `desc` property which is intended to explain the rule's intent in natural language.
+- The content from the `h1` section up until any optional example header sections will comprise the rule's `description` property which is intended to explain the rule's intent in natural language.
 - The rule's `name` will default to the rule's filename (without the `.md` extension).
   - This can be overridden via the frontmatter metadata's `name` value.
-  - If no valid `name` is found, it will fall back to a slugified version of the rule's `message` value (main `h1`).
+  - If no valid `name` is found, it will fall back to a slugified version of the rule's `title` value (main `h1`).
 - GRS rules may optionally contain a single markdown `h3` header named "Bad" or "Incorrect" or "Fail".
   - The content of this section should contain 1 or more code blocks to use as `negativeExamples`.
 - GRS rules may optionally contain a single markdown `h3` header named "Good" or "Correct" or "Pass".

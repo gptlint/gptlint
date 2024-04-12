@@ -9,7 +9,7 @@ export type RuleMetadata = {
 
 const rule: Readonly<RuleDefinition<RuleMetadata>> = {
   name: 'effective-eslint-config',
-  message: 'Follow eslint best practices.',
+  title: 'Follow eslint best practices.',
   level: 'error',
   scope: 'file',
   resources: ['https://eslint.org'],

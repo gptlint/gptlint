@@ -339,13 +339,15 @@ export function createCacheKey({
       pick(
         rule,
         'name',
-        'message',
-        'desc',
+        'title',
+        'description',
         'positiveExamples',
         'negativeExamples',
-        'model',
+        'level',
         'scope',
+        'model',
         'languages'
+        // TODO: include / exclude? languages?
       )
     ),
 

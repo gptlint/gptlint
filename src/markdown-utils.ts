@@ -62,20 +62,20 @@ export function parseRuleNode({
     children: bodyRuleNodes as any
   }
 
-  const message = convertASTToPlaintext(headingRuleNode)
-  assert(message, 'Rule message must not be empty')
+  const title = convertASTToPlaintext(headingRuleNode)
+  assert(title, 'Rule title must not be empty')
 
   const fileNameRuleName = path.basename(filePath).replace(/\.\w+$/, '')
   const defaultRuleName = isValidRuleName(fileNameRuleName)
     ? fileNameRuleName
-    : slugify(message).trim()
+    : slugify(title).trim()
 
-  const desc = convertASTToMarkdown(bodyRuleNode)
+  const description = convertASTToMarkdown(bodyRuleNode)
 
   const rule: types.Rule = {
-    message,
-    desc,
     name: defaultRuleName,
+    title,
+    description,
     positiveExamples: [],
     negativeExamples: [],
     cacheable: true,
@@ -85,11 +85,11 @@ export function parseRuleNode({
     metadata: {},
     ...partialRule
   }
-  assert(rule.name, `Rule name must not be empty: ${message}`)
+  assert(rule.name, `Rule name must not be empty: ${title}`)
 
   assert(
     isValidRuleName(rule.name),
-    `Rule name is invalid "${rule.name}": ${message}`
+    `Rule name is invalid "${rule.name}": ${title}`
   )
 
   const exampleRuleNode: Root = {
