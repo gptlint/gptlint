@@ -68,12 +68,15 @@ A good litmus test when considering a potential rule is to ask yourself the foll
 
 ## MVP Rule Limitations
 
-These guidelines all apply to ideal GPTLint rules. This project is still early, however, and the current MVP has the following additional, practical limitations:
+The guidelines in this document apply to ideal GPTLint rules. This project is still early, however, and the current MVP has the following additional, practical limitations:
 
 - **Rules in the MVP are single-file only**
 - **Rules in the MVP focus on the JS/TS ecosystem only**
+- **Rules in the MVP are readonly**
 
 Note that we expect to lift these restrictions in future major versions of GPTLint.
+
+See [limitations](../project/limitations.md) for more details.
 
 ## Library-specific rule configs
 
