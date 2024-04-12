@@ -92,7 +92,7 @@ This example has two bugs:
 - if `tasks` is empty, the first iteration of the while loop will throw an error
 - the `while` loop guard is very brittle which is a code smell. if `currentTaskIndex` somehow gets changed in an unexpected way with future code changes, then the `while` loop guard could end up going past the end of the tasks array!
 
-An improved version of this code which fixes these buse looks like:
+An improved version of this code which fixes these bugs would be:
 
 ```js
 function handleTasks() {
