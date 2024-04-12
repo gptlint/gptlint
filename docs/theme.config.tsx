@@ -43,7 +43,10 @@ const config: DocsThemeConfig = {
     link: 'https://github.com/gptlint/gptlint'
   },
   editLink: {
-    content: 'Edit this page on GitHub'
+    content: 'Edit this page on GitHub →'
+  },
+  feedback: {
+    content: 'Question? Give us feedback →'
   },
   chat: {
     link: 'https://twitter.com/transitive_bs',
