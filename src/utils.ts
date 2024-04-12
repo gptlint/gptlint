@@ -340,7 +340,7 @@ export function createCacheKey({
         rule,
         'name',
         'message',
-        'desc',
+        'description',
         'positiveExamples',
         'negativeExamples',
         'model',

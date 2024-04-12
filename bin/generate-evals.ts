@@ -84,7 +84,9 @@ async function main() {
   }
 
   // TODO
-  rules = rules.filter((rule) => rule.scope === 'file' && rule.desc?.trim())
+  rules = rules.filter(
+    (rule) => rule.scope === 'file' && rule.description?.trim()
+  )
 
   if (config.linterOptions.printConfig) {
     logDebugConfig({ rules, config })

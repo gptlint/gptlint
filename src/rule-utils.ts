@@ -5,7 +5,7 @@ export function stringifyRuleForModel(rule: types.Rule): string {
 
 ${rule.message}
 
-${rule.desc ?? ''}
+${rule.description ?? ''}
 
 ${
   rule.negativeExamples?.length

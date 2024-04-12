@@ -45,7 +45,7 @@ export type Rule = {
   // core rule definition
   name: string
   message: string
-  desc?: string
+  description?: string
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
 
@@ -84,7 +84,7 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
 
 - GRS rule files must contain a single markdown `h1` header containing the rule's `message` property.
 - Within this `h1` section, GRS rule files may optionally contain a [metadata table](#rule-metadata-table) for customizing the rule's behavior.
-- The content from the `h1` section up until any optional example header sections will comprise the rule's `desc` property which is intended to explain the rule's intent in natural language.
+- The content from the `h1` section up until any optional example header sections will comprise the rule's `description` property which is intended to explain the rule's intent in natural language.
 - The rule's `name` will default to the rule's filename (without the `.md` extension).
   - This can be overridden via the frontmatter metadata's `name` value.
   - If no valid `name` is found, it will fall back to a slugified version of the rule's `message` value (main `h1`).

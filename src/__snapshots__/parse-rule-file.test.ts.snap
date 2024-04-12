@@ -3,7 +3,7 @@
 exports[`parseRuleFile - .gptlint/always-handle-promises.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Promises (and \`async\` functions which implicitly create Promises) must always be handled at some level of the program, either via:
+  "description": "Promises (and \`async\` functions which implicitly create Promises) must always be handled at some level of the program, either via:
 
 - using \`await\` to wait for the Promise to resolve successfully
 - using \`.then\` or \`.catch\` to handle Promise resolution
@@ -73,7 +73,7 @@ await Promise.all([saveFile(), saveFile()])",
 exports[`parseRuleFile - .gptlint/avoid-type-info-in-docs.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Avoid repeating type information in comments and variable names. In the best case it is duplicative of type declarations, and in the worst it will lead to conflicting information.
+  "description": "Avoid repeating type information in comments and variable names. In the best case it is duplicative of type declarations, and in the worst it will lead to conflicting information.
 
 Consider including units in variable names if they aren’t clear from the type (e.g., timeMs or temperatureC).
 
@@ -244,7 +244,7 @@ export function parseStructuredOutput<T>(
 exports[`parseRuleFile - .gptlint/consistent-identifier-casing.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Identifiers of the same type should try to use consistent casing.
+  "description": "Identifiers of the same type should try to use consistent casing.
 
 Variable names should use camelCase.
 Global const variable names should either use camelCase, PascalCase, or CONSTANT\\_CASE.
@@ -321,7 +321,7 @@ const foo = [1, 2, 3].filter((i) => i >= 0)",
 exports[`parseRuleFile - .gptlint/custom/prefer-fetch-over-axios.md 1`] = `
 {
   "cacheable": true,
-  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
+  "description": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
 
 Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
 
@@ -352,7 +352,7 @@ Code which doesn't use the \`axios\` module should be ignored.
 exports[`parseRuleFile - .gptlint/liberal-accept-strict-produce.md 1`] = `
 {
   "cacheable": true,
-  "desc": "This idea is known as the robustness principle or Postel’s Law.
+  "description": "This idea is known as the robustness principle or Postel’s Law.
 
 As a general best practice, input types should be broader than output types. Optional properties and union types are more common in parameter types than return types.
 
@@ -505,7 +505,7 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
 exports[`parseRuleFile - .gptlint/no-hardcoded-secrets.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Sensitive secrets should never be hardcoded in git because they represent a serious security risk.
+  "description": "Sensitive secrets should never be hardcoded in git because they represent a serious security risk.
 
 Common use cases for secrets include:
 
@@ -572,7 +572,7 @@ const openai = new OpenAI({
 exports[`parseRuleFile - .gptlint/prefer-array-at-negative-indexing.md 1`] = `
 {
   "cacheable": true,
-  "desc": "When accessing items in an array from the end, like the last item, prefer using \`Array.at\` with a negative index because it is less error-prone. Note that using \`Array.at\` with a positive index is equivalent to indexing into the array normally, and if \`Array.at\` references a non-existing index, it will return \`undefined\`.
+  "description": "When accessing items in an array from the end, like the last item, prefer using \`Array.at\` with a negative index because it is less error-prone. Note that using \`Array.at\` with a positive index is equivalent to indexing into the array normally, and if \`Array.at\` references a non-existing index, it will return \`undefined\`.
 ",
   "eslint": [
     "@unicorn/prefer-negative-index",
@@ -629,7 +629,7 @@ const item = items[index]",
 exports[`parseRuleFile - .gptlint/prefer-defensive-programming.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+  "description": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
 
 The following defensive programming techniques should be preferred whenever possible:
 
@@ -665,7 +665,7 @@ The following defensive programming techniques should be preferred whenever poss
 exports[`parseRuleFile - .gptlint/prefer-early-return.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Prefer returning early from functions in order to keep them as flat as possible.
+  "description": "Prefer returning early from functions in order to keep them as flat as possible.
 
 Ignore \`if\` statements with multiple \`else\` branches.
 
@@ -804,7 +804,7 @@ Ignore \`if\` statements with multiple \`else\` branches.
 exports[`parseRuleFile - .gptlint/prefer-types-always-valid-states.md 1`] = `
 {
   "cacheable": true,
-  "desc": "A key to effective type design is crafting types that can only represent a valid state. This rule walks through a few examples of how this can go wrong and shows you how to fix them.
+  "description": "A key to effective type design is crafting types that can only represent a valid state. This rule walks through a few examples of how this can go wrong and shows you how to fix them.
 
 As an example, suppose you’re building a web application that lets you select a page, loads the con‐ tent of that page, and then displays it. You might write the state like this:
 
@@ -973,7 +973,7 @@ class Product {
 exports[`parseRuleFile - .gptlint/react-avoid-class-components.md 1`] = `
 {
   "cacheable": true,
-  "desc": "React class components are deprecated. Use React functions and hooks instead.
+  "description": "React class components are deprecated. Use React functions and hooks instead.
 
 Note that uses \`classes\` is fine for non-react components.
 ",
@@ -1039,7 +1039,7 @@ class Foo extends EventEmitter {
 exports[`parseRuleFile - .gptlint/semantic-variable-names.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
+  "description": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
 ",
   "exclude": [
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
@@ -1122,7 +1122,7 @@ import { z } from 'zod'",
 exports[`parseRuleFile - .gptlint/soc2-no-leak-user-data.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
+  "description": "Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
 
 Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
 ",
@@ -1148,7 +1148,7 @@ Non-identifying user data such as internal IDs or other internal models related 
 exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
 {
   "cacheable": true,
-  "desc": "This rule doesn't contain any examples which is fine because they are optional.
+  "description": "This rule doesn't contain any examples which is fine because they are optional.
 ",
   "level": "error",
   "message": "Example",
@@ -1164,7 +1164,7 @@ exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
 exports[`parseRuleFile - fixtures/rules/force-list-pagination.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Force the use of pagination for all lists in GraphQL.
+  "description": "Force the use of pagination for all lists in GraphQL.
 ",
   "fixable": true,
   "languages": [
@@ -1213,7 +1213,7 @@ type Query {
 exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
 {
   "cacheable": true,
-  "desc": "This example should parse correctly.
+  "description": "This example should parse correctly.
 ",
   "eslint": [
     "example-eslint-rule-1",
@@ -1241,7 +1241,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
 exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
 {
   "cacheable": true,
-  "desc": "This example should parse correctly.
+  "description": "This example should parse correctly.
 ",
   "eslint": [
     "example-eslint-rule-1",
@@ -1269,7 +1269,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
 exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
+  "description": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
 ",
   "eslint": [
     "@ux-l_graphql-eslint/mutation-types",
@@ -1317,7 +1317,7 @@ type Mutation {
 exports[`parseRuleFile - fixtures/rules/prefer-edge-node.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Prefer usage of Edges and Nodes in GraphQL Lists.
+  "description": "Prefer usage of Edges and Nodes in GraphQL Lists.
 ",
   "level": "error",
   "message": "Prefer Edges & Nodes",
@@ -1377,7 +1377,7 @@ type Query {
 exports[`parseRuleFile - fixtures/rules/prefer-page-queries.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Warn on usage of the \`/utils/api.ts\` file in favor of creating a page query in the /\`utils/pageQueries\` folder.
+  "description": "Warn on usage of the \`/utils/api.ts\` file in favor of creating a page query in the /\`utils/pageQueries\` folder.
 ",
   "level": "error",
   "message": "Prefer page queries",
@@ -1444,7 +1444,7 @@ export default gql\`
 exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Avoid accessing \`process.env\` variables in favor of Strapi environment variables.
+  "description": "Avoid accessing \`process.env\` variables in favor of Strapi environment variables.
 ",
   "level": "error",
   "message": "Use Strapi Environment Variables",
@@ -1486,7 +1486,7 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
 exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`] = `
 {
   "cacheable": true,
-  "desc": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.
+  "description": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.
 ",
   "level": "error",
   "message": "Format comments like sentences",
@@ -1512,7 +1512,7 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
 exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = `
 {
   "cacheable": true,
-  "desc": "State which is simple to derive should be re-derived when necessary instead of storing it in state or props.
+  "description": "State which is simple to derive should be re-derived when necessary instead of storing it in state or props.
 
 TODO
 ",
@@ -1530,7 +1530,7 @@ TODO
 exports[`parseRuleFile - fixtures/rules/wip/use-esm.md 1`] = `
 {
   "cacheable": true,
-  "desc": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses \`require\` and \`module.exports\` and suffers from poor standardization and interoperability issues.
+  "description": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses \`require\` and \`module.exports\` and suffers from poor standardization and interoperability issues.
 
 ESM (ECMAScript Modules) is a modern standard which uses \`import\` and \`export\` statements. It is preferred for all JS/TS code going forwards.
 ",

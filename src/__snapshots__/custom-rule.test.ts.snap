@@ -3,7 +3,7 @@
 exports[`custom rule - prefer-fetch-over-axios 1`] = `
 {
   "cacheable": true,
-  "desc": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
+  "description": "The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
 
 Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
 

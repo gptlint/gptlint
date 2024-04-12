@@ -9,7 +9,7 @@ export type RuleDefinition<Metadata extends RuleMetadata = RuleMetadata> = {
   // core rule definition
   name: string
   message: string
-  desc?: string
+  description?: string
   positiveExamples?: types.RuleExample[]
   negativeExamples?: types.RuleExample[]
 
@@ -70,7 +70,7 @@ export const RuleDefinitionSchema = z
       .string()
       .describe('Short message used to describe rule violations.'),
 
-    desc: z
+    description: z
       .string()
       .optional()
       .describe(

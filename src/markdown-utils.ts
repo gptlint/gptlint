@@ -70,11 +70,11 @@ export function parseRuleNode({
     ? fileNameRuleName
     : slugify(message).trim()
 
-  const desc = convertASTToMarkdown(bodyRuleNode)
+  const description = convertASTToMarkdown(bodyRuleNode)
 
   const rule: types.Rule = {
     message,
-    desc,
+    description,
     name: defaultRuleName,
     positiveExamples: [],
     negativeExamples: [],
