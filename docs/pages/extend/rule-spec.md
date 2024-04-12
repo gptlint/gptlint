@@ -12,7 +12,7 @@ The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define 
 
 ## Example Rule
 
-Here is an example rule:
+Here is an example markdown rule with `yaml` frontmatter:
 
 ```md
 ---
@@ -24,17 +24,17 @@ languages:
   - typescript
 ---
 
-# Example Name
+# Example Rule
 
-This is a plain-text description of the rule's intent.
+Plain-text description of the rule's intent.
 
 ### Bad
 
-code block examples of the rule being used incorrectly
+optional example code blocks showing the rule being used incorrectly
 
 ### Good
 
-code block examples of the rule being used correctly
+optional example code blocks showing the rule being used correctly
 ```
 
 This rule would canonically be stored in `.gptlint/example-rule.md` and have the name `example-rule`.
@@ -118,7 +118,7 @@ Here is a breakdown of the supported metadata fields and their expected types.
 
 All metadata keys are case-sensitive.
 
-## More Example Rules
+## Example Rules
 
 All built-in rules are available in [.gptlint](https://github.com/gptlint/gptlint/tree/main/.gptlint).
 
