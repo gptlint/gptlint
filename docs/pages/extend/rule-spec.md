@@ -105,15 +105,15 @@ Here is a breakdown of the supported metadata fields and their expected types.
 | Key       | Type                      | Description                                                                                                                                          |
 | --------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | name      | `string`                  | Short name of this rule. Defaults to the rule's filename without the `.md` extension.                                                                |
-| level     | `warn \| error \| off`    | Default error level of this rule                                                                                                                     |
+| level     | `warn \| error \| off`    | Default error level of this rule. Defaults to `error`.                                                                                               |
 | scope     | `file \| project \| repo` | Granularity at which this rule is applied. Defaults to `file`.                                                                                       |
-| fixable   | `boolean`                 | Whether or not this rule supports auto-fixing errors                                                                                                 |
-| tags      | `string[]`                | Array of tags / labels                                                                                                                               |
-| eslint    | `string[]`                | Array of lower-level [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule                                            |
+| fixable   | `boolean`                 | Whether or not this rule supports auto-fixing errors.                                                                                                |
+| tags      | `string[]`                | Array of tags / labels.                                                                                                                              |
+| eslint    | `string[]`                | Array of [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule.                                                       |
 | languages | `string[]`                | Array of programming languages this rule should be enabled for.                                                                                      |
 | include   | `string[]`                | Array of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`. |
 | exclude   | `string[]`                | Array of file glob patterns to ignore when enforcing this rule.                                                                                      |
-| resources | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs                                           |
+| resources | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs.                                          |
 
 All metadata keys are case-sensitive, and all metadata values must match their expected types if present.
 
