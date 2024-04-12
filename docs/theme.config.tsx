@@ -1,4 +1,7 @@
+import Image from 'next/image'
 import { useRouter } from 'next/router'
+import { useTheme } from 'next-themes'
+import { useMounted } from 'nextra/hooks'
 import { type DocsThemeConfig, useConfig } from 'nextra-theme-docs'
 import React from 'react'
 
@@ -9,42 +12,33 @@ const siteDesc = `Use LLMs to enforce best practices across your codebase.`
 const siteTitle = 'GPTLint'
 
 const config: DocsThemeConfig = {
-  logo: (
-    <>
-      <img
-        src='/logo-horizontal.png'
-        alt='gptlint logo'
-        className='logo'
-        width='838'
-        height='256'
-        style={{
-          height: 48,
-          maxHeight: 48,
-          width: 'auto'
-        }}
-      />
+  logo: function Logo() {
+    const theme = useTheme()
+    const mounted = useMounted()
+    const isDarkMode = theme.resolvedTheme === 'dark'
 
-      {/* eslint-disable-next-line react/no-unknown-property */}
-      <style jsx>{`
-        img {
-          mask-image: linear-gradient(
-            60deg,
-            black 25%,
-            rgba(0, 0, 0, 0.2) 50%,
-            black 75%
-          );
-          mask-size: 400%;
-          mask-position: 0%;
-        }
-        img:hover {
-          mask-position: 100%;
-          transition:
-            mask-position 1s ease,
-            -webkit-mask-position 1s ease;
-        }
-      `}</style>
-    </>
-  ),
+    return (
+      <>
+        {mounted && isDarkMode ? (
+          <Image
+            src='/logo-darkmode-horizontal.png'
+            alt='gptlint logo'
+            width='838'
+            height='256'
+            style={{ height: 48, maxHeight: 48, width: 'auto' }}
+          />
+        ) : (
+          <Image
+            src='/logo-horizontal.png'
+            alt='gptlint logo'
+            width='838'
+            height='256'
+            style={{ height: 48, maxHeight: 48, width: 'auto' }}
+          />
+        )}
+      </>
+    )
+  },
   project: {
     link: 'https://github.com/gptlint/gptlint'
   },
