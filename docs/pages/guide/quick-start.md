@@ -15,7 +15,7 @@ We recommended installing `gptlint` as a dev dependency just like `eslint`.
 
 GPTLint defaults to using the OpenAI API, so you'll need to sign up for an [OpenAI API key](https://platform.openai.com/docs/quickstart?context=node). Add your `OPENAI_API_KEY` as an environment variable or store it in a `.env` file in your project's root.
 
-**GPTLint supports all LLM providers** including **local LLMs**, so if you don't want to use OpenAI, [see here](./llm-providers.md).
+GPTLint supports all LLM providers _including local LLMs_, so if you don't want to use OpenAI, [see here](./llm-providers.md).
 
 ## Dry Run
 
@@ -23,9 +23,7 @@ GPTLint defaults to using the OpenAI API, so you'll need to sign up for an [Open
 npx gptlint --help
 ```
 
-By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files and `.gptlint/**/*.md` to match any project-specific rule definition files you may want to add.
-
-`gptlint` respects `.gitignore` and optionally `.gptlintignore` as well if it exists.
+By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files. `gptlint` respects `.gitignore` and optionally `.gptlintignore` as well if it exists.
 
 Now let's try running `gptlint` with the `--dry-run` flag:
 
@@ -33,13 +31,11 @@ Now let's try running `gptlint` with the `--dry-run` flag:
 npx gptlint --dry-run
 ```
 
-**This command will always be free.**
+_This command will always be free._
 
-The `--dry-run` causes `gptlint` to mock out any LLM API calls and instead output an estimate of how much it would cost to run the linter for real.
+The `--dry-run` flag causes `gptlint` to mock any LLM API calls and instead output an estimate of how much it would cost to run the linter for real. Since [LLM costs can add up quickly](../project/cost.md) for large codebases, it's always a good idea to make sure you understand the projected costs before running `gptlint` on a new project.
 
-Since [LLM costs can add up quickly for large codebases](../project/cost.md), it's always a good idea to understand the projected costs before running `gptlint`.
-
-If you just want to try out `gptlint` without worrying about costs, we recommend running `gptlint` on a single source file or subdirectory. For example:
+If you just want to try out `gptlint` without worrying about costs, you can run `gptlint` on a single source file or subdirectory like this:
 
 ```sh
 npx gptlint --dry-run src/utils.ts
