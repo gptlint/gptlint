@@ -14,7 +14,6 @@
     - experiment with clearer delimiters in prompts vs markdown h1s
   - improve error reporting to include approx line numbers
     - post-mvp
-  - **dry-run to estimate cost**
   - add support for comments explaining why it's okay to break a rule?
 - rule file format
   - relax the examples parsing and lean into more flexible markdown support
