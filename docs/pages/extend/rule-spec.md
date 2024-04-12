@@ -2,13 +2,42 @@
 
 <table>
 <tr><td>Version</td><td>0.1.0</td></tr>
-<tr><td>Last Updated</td><td>April 9, 2024</td></tr>
+<tr><td>Last Updated</td><td>April 11, 2024</td></tr>
 <tr><td>Author</td><td><a href="https://twitter.com/transitive_bs">Travis Fischer</a></td></tr>
 </table>
 
 ## About
 
 The GPTLint Rule Spec (abbreviated **GRS** in this doc) is an attempt to define a standard for how to describe higher-level lint rules that can be enforced across codebases using LLM-based tools compatible with [GPTLint](https://github.com/gptlint/gptlint).
+
+## Example Rule
+
+Here is an example rule:
+
+```md
+---
+fixable: false
+tags:
+  - best practices
+languages:
+  - javascript
+  - typescript
+---
+
+# Example Name
+
+This is a plain-text description of the rule's intent.
+
+### Bad
+
+code block examples of the rule being used incorrectly
+
+### Good
+
+code block examples of the rule being used correctly
+```
+
+This rule would canonically be stored in `.gptlint/example-rule.md` and have the name `example-rule`.
 
 ## Rule Format
 
@@ -52,7 +81,7 @@ export type LintRuleLevel = 'error' | 'warn' | 'off'
 
 See the [full types](https://github.com/gptlint/gptlint/blob/main/src/rule.ts) for more details.
 
-## Rule File Format
+### Rule File Format
 
 A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/gfm/) (**GFM**) document. Each GRS rule must have its own markdown file, and GRS markdown files may only contain a single rule.
 
@@ -68,9 +97,9 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
   - The content of this section should contain 1 or more code blocks to use as `positiveExamples`.
 - It is encouraged to specify a language for all code block examples, but it is not required.
 
-### Rule Metadata Frontmatter
+### Rule Frontmatter Metadata
 
-A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/front-matter/) for specifying metadata. All metadata fields are optional.
+A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/front-matter/) for specifying metadata. All metadata fields are optional, and this is the same frontmatter format used by GitHub, so it will render as a a table in GitHub's preview ([example](https://github.com/gptlint/gptlint/blob/main/.gptlint/always-handle-promises.md)).
 
 Here is a breakdown of the supported metadata fields and their expected types.
 
@@ -88,35 +117,6 @@ Here is a breakdown of the supported metadata fields and their expected types.
 | resources | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs                                           |
 
 All metadata keys are case-sensitive.
-
-## Example Rule
-
-Here is an example rule:
-
-```md
----
-fixable: false
-tags:
-  - best practices
-languages:
-  - javascript
-  - typescript
----
-
-# Example Name
-
-This is a plain-text description of the rule's intent.
-
-### Bad
-
-code block examples of the rule being used incorrectly
-
-### Good
-
-code block examples of the rule being used correctly
-```
-
-This rule would canonically be stored in `.gptlint/example-rule.md` and have the name `example-rule`.
 
 ## More Example Rules
 
