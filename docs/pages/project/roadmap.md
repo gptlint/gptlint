@@ -4,17 +4,9 @@
 
 - linter engine
   - **improve evals**
-    - [add unit tests to evals for edge cases](https://hamel.dev/blog/posts/evals/#step-2-create-test-cases)
-      - will test the internal model outputs in addition to the top-level linting outputs
-    - track eval results across multiple llm configs during CI
-  - gracefully respect [rate limits](https://platform.openai.com/account/limits)
-  - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
-  - handle context overflow properly depending on selected model
+    - add unit tests to evals for edge cases
+  - experiment with clearer delimiters in prompts vs markdown h1s
   - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
-    - experiment with clearer delimiters in prompts vs markdown h1s
-  - improve error reporting to include approx line numbers
-    - post-mvp
-  - add support for comments explaining why it's okay to break a rule?
 - rule file format
   - relax the examples parsing and lean into more flexible markdown support
   - add support for `bad ⇒ good` examples for autofixing
@@ -33,7 +25,6 @@
   - add built-in rules to docs
   - decide on an OSS license
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
-  - fix docs site dark mode logos
   - social image for docs and launch
   - demo video
   - publish to NPM
@@ -55,7 +46,14 @@
 - explore generating rule definitions from an existing repo (PRs, unique code patterns, etc)
 - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
   - experiment with using bin packing to optimize context usage, but that's still same `O(tokens)`
-- add support for git diffs
 - basic eval graphs and blog post
-- add `--dry-run` support for non-openai llm providers
-- move built-in configs into a separate package
+- linter engine
+  - add support for git diffs
+  - track eval results across multiple llm configs during CI
+  - add `--dry-run` support for non-openai llm providers
+  - move built-in configs into a separate package
+  - improve error reporting to include approx line numbers
+  - gracefully respect [rate limits](https://platform.openai.com/account/limits)
+  - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
+  - handle context overflow properly depending on selected model
+  - add support for comments explaining why it's okay to break a rule
