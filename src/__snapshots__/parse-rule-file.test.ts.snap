@@ -17,7 +17,6 @@ Creating a Promise or calling an \`async\` function and NOT awaiting or propagat
     "typescript",
   ],
   "level": "error",
-  "message": "Always handle Promises",
   "metadata": {},
   "name": "always-handle-promises",
   "negativeExamples": [
@@ -67,6 +66,7 @@ await Promise.all([saveFile(), saveFile()])",
   "tags": [
     "best practices",
   ],
+  "title": "Always handle Promises",
 }
 `;
 
@@ -134,7 +134,6 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
     "typescript",
   ],
   "level": "error",
-  "message": "Don’t repeat type information in documentation",
   "metadata": {},
   "name": "avoid-type-info-in-docs",
   "negativeExamples": [
@@ -238,6 +237,7 @@ export function parseStructuredOutput<T>(
   "tags": [
     "best practices",
   ],
+  "title": "Don’t repeat type information in documentation",
 }
 `;
 
@@ -264,7 +264,6 @@ Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBas
     "typescript",
   ],
   "level": "error",
-  "message": "Be consistent with identifier casing",
   "metadata": {},
   "name": "consistent-identifier-casing",
   "negativeExamples": [
@@ -315,6 +314,7 @@ const foo = [1, 2, 3].filter((i) => i >= 0)",
   "tags": [
     "best practices",
   ],
+  "title": "Be consistent with identifier casing",
 }
 `;
 
@@ -336,7 +336,6 @@ Code which doesn't use the \`axios\` module should be ignored.
     "typescript",
   ],
   "level": "error",
-  "message": "Prefer fetch over axios",
   "metadata": {},
   "name": "prefer-fetch-over-axios",
   "negativeExamples": [],
@@ -346,6 +345,7 @@ Code which doesn't use the \`axios\` module should be ignored.
   "tags": [
     "best practices",
   ],
+  "title": "Prefer fetch over axios",
 }
 `;
 
@@ -486,7 +486,6 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
     "typescript",
   ],
   "level": "error",
-  "message": "Be liberal in what you accept and strict in what you produce",
   "metadata": {},
   "name": "liberal-accept-strict-produce",
   "negativeExamples": [],
@@ -499,6 +498,7 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
   "tags": [
     "best practices",
   ],
+  "title": "Be liberal in what you accept and strict in what you produce",
 }
 `;
 
@@ -522,7 +522,6 @@ The most common solution is to only access secrets from environment variables so
     "all",
   ],
   "level": "error",
-  "message": "No hardcoded secrets",
   "metadata": {},
   "name": "no-hardcoded-secrets",
   "negativeExamples": [
@@ -566,6 +565,7 @@ const openai = new OpenAI({
   "tags": [
     "security",
   ],
+  "title": "No hardcoded secrets",
 }
 `;
 
@@ -583,7 +583,6 @@ exports[`parseRuleFile - .gptlint/prefer-array-at-negative-indexing.md 1`] = `
     "typescript",
   ],
   "level": "error",
-  "message": "Prefer using Array.at when indexing from the end of an array",
   "metadata": {},
   "name": "prefer-array-at-negative-indexing",
   "negativeExamples": [
@@ -623,6 +622,7 @@ const item = items[index]",
   "tags": [
     "best practices",
   ],
+  "title": "Prefer using Array.at when indexing from the end of an array",
 }
 `;
 
@@ -649,7 +649,6 @@ The following defensive programming techniques should be preferred whenever poss
     "typescript",
   ],
   "level": "error",
-  "message": "Prefer defensive programming techniques <!-- omit from toc -->",
   "metadata": {},
   "name": "prefer-defensive-programming",
   "negativeExamples": [],
@@ -659,6 +658,7 @@ The following defensive programming techniques should be preferred whenever poss
   "tags": [
     "best practices",
   ],
+  "title": "Prefer defensive programming techniques <!-- omit from toc -->",
 }
 `;
 
@@ -683,7 +683,6 @@ Ignore \`if\` statements with multiple \`else\` branches.
     "typescript",
   ],
   "level": "error",
-  "message": "Prefer early returns from functions",
   "metadata": {},
   "name": "prefer-early-return",
   "negativeExamples": [
@@ -798,6 +797,7 @@ Ignore \`if\` statements with multiple \`else\` branches.
   "tags": [
     "best practices",
   ],
+  "title": "Prefer early returns from functions",
 }
 `;
 
@@ -954,7 +954,6 @@ class Product {
     "typescript",
   ],
   "level": "error",
-  "message": "Prefer types that always represent valid states",
   "metadata": {},
   "name": "prefer-types-always-valid-states",
   "negativeExamples": [],
@@ -967,6 +966,7 @@ class Product {
   "tags": [
     "best practices",
   ],
+  "title": "Prefer types that always represent valid states",
 }
 `;
 
@@ -986,7 +986,6 @@ Note that uses \`classes\` is fine for non-react components.
     "typescript",
   ],
   "level": "error",
-  "message": "Don't use React class components",
   "metadata": {},
   "name": "react-avoid-class-components",
   "negativeExamples": [
@@ -1033,6 +1032,7 @@ class Foo extends EventEmitter {
   "tags": [
     "react",
   ],
+  "title": "Don't use React class components",
 }
 `;
 
@@ -1050,7 +1050,6 @@ exports[`parseRuleFile - .gptlint/semantic-variable-names.md 1`] = `
     "typescript",
   ],
   "level": "error",
-  "message": "Use semantic variable names",
   "metadata": {},
   "name": "semantic-variable-names",
   "negativeExamples": [
@@ -1116,6 +1115,7 @@ import { z } from 'zod'",
   "tags": [
     "best practices",
   ],
+  "title": "Use semantic variable names",
 }
 `;
 
@@ -1132,7 +1132,6 @@ Non-identifying user data such as internal IDs or other internal models related 
     "typescript",
   ],
   "level": "error",
-  "message": "SOC2 Don't leak user data",
   "metadata": {},
   "name": "soc2-no-leak-user-data",
   "negativeExamples": [],
@@ -1142,6 +1141,7 @@ Non-identifying user data such as internal IDs or other internal models related 
   "tags": [
     "security",
   ],
+  "title": "SOC2 Don't leak user data",
 }
 `;
 
@@ -1151,13 +1151,13 @@ exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
   "description": "This rule doesn't contain any examples which is fine because they are optional.
 ",
   "level": "error",
-  "message": "Example",
   "metadata": {},
   "name": "empty-examples",
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
   "source": "fixtures/rules/empty-examples.md",
+  "title": "Example",
 }
 `;
 
@@ -1172,7 +1172,6 @@ exports[`parseRuleFile - fixtures/rules/force-list-pagination.md 1`] = `
     "typescript",
   ],
   "level": "warn",
-  "message": "Force List Pagination",
   "metadata": {},
   "name": "force-list-pagination",
   "negativeExamples": [
@@ -1207,6 +1206,7 @@ type Query {
   "tags": [
     "graphql",
   ],
+  "title": "Force List Pagination",
 }
 `;
 
@@ -1225,7 +1225,6 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
     "typescript",
   ],
   "level": "error",
-  "message": "Example",
   "metadata": {},
   "name": "metadata-0",
   "negativeExamples": [],
@@ -1235,6 +1234,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
   "tags": [
     "general",
   ],
+  "title": "Example",
 }
 `;
 
@@ -1253,7 +1253,6 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
     "typescript",
   ],
   "level": "off",
-  "message": "Example",
   "metadata": {},
   "name": "metadata-1",
   "negativeExamples": [],
@@ -1263,6 +1262,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
   "tags": [
     "general",
   ],
+  "title": "Example",
 }
 `;
 
@@ -1275,7 +1275,6 @@ exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
     "@ux-l_graphql-eslint/mutation-types",
   ],
   "level": "error",
-  "message": "Mutation Inputs",
   "metadata": {},
   "name": "mutations",
   "negativeExamples": [
@@ -1311,6 +1310,7 @@ type Mutation {
   "tags": [
     "graphql",
   ],
+  "title": "Mutation Inputs",
 }
 `;
 
@@ -1320,7 +1320,6 @@ exports[`parseRuleFile - fixtures/rules/prefer-edge-node.md 1`] = `
   "description": "Prefer usage of Edges and Nodes in GraphQL Lists.
 ",
   "level": "error",
-  "message": "Prefer Edges & Nodes",
   "metadata": {},
   "name": "prefer-edge-node",
   "negativeExamples": [
@@ -1371,6 +1370,7 @@ type Query {
   ],
   "scope": "file",
   "source": "fixtures/rules/prefer-edge-node.md",
+  "title": "Prefer Edges & Nodes",
 }
 `;
 
@@ -1380,7 +1380,6 @@ exports[`parseRuleFile - fixtures/rules/prefer-page-queries.md 1`] = `
   "description": "Warn on usage of the \`/utils/api.ts\` file in favor of creating a page query in the /\`utils/pageQueries\` folder.
 ",
   "level": "error",
-  "message": "Prefer page queries",
   "metadata": {},
   "name": "prefer-page-queries",
   "negativeExamples": [
@@ -1438,6 +1437,7 @@ export default gql\`
   ],
   "scope": "file",
   "source": "fixtures/rules/prefer-page-queries.md",
+  "title": "Prefer page queries",
 }
 `;
 
@@ -1447,7 +1447,6 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
   "description": "Avoid accessing \`process.env\` variables in favor of Strapi environment variables.
 ",
   "level": "error",
-  "message": "Use Strapi Environment Variables",
   "metadata": {},
   "name": "prefer-strapi-env-vars",
   "negativeExamples": [
@@ -1480,6 +1479,7 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
   ],
   "scope": "file",
   "source": "fixtures/rules/prefer-strapi-env-vars.md",
+  "title": "Use Strapi Environment Variables",
 }
 `;
 
@@ -1489,7 +1489,6 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
   "description": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.
 ",
   "level": "error",
-  "message": "Format comments like sentences",
   "metadata": {},
   "name": "format-comments-like-sentences",
   "negativeExamples": [
@@ -1506,6 +1505,7 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
   ],
   "scope": "file",
   "source": "fixtures/rules/wip/format-comments-like-sentences.md",
+  "title": "Format comments like sentences",
 }
 `;
 
@@ -1517,13 +1517,13 @@ exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = 
 TODO
 ",
   "level": "error",
-  "message": "Prefer derived state in React",
   "metadata": {},
   "name": "react-prefer-derived-state",
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
   "source": "fixtures/rules/wip/react-prefer-derived-state.md",
+  "title": "Prefer derived state in React",
 }
 `;
 
@@ -1539,7 +1539,6 @@ ESM (ECMAScript Modules) is a modern standard which uses \`import\` and \`export
     "@typescript-eslint/no-require-imports",
   ],
   "level": "error",
-  "message": "Use ESM instead of CommonJS",
   "metadata": {},
   "name": "use-esm",
   "negativeExamples": [
@@ -1561,5 +1560,6 @@ export function bar() {}",
   ],
   "scope": "file",
   "source": "fixtures/rules/wip/use-esm.md",
+  "title": "Use ESM instead of CommonJS",
 }
 `;

@@ -86,8 +86,8 @@ export function parseRuleFrontmatter(
     const yamlData: Record<string, unknown> = parseYAMLDocument(yaml).toJSON()
 
     const parsedRule = RuleDefinitionSchema.strict().safeParse({
-      name: 'temp-dummy-name',
-      message: 'temp message',
+      name: 'dummy-rule-title',
+      title: 'dummy rule title',
       ...yamlData
     })
 
@@ -98,7 +98,7 @@ export function parseRuleFrontmatter(
     }
 
     const rule = parsedRule.data
-    return omit(rule, 'name', 'message')
+    return omit(rule, 'name', 'title')
   } catch (err: any) {
     throw new Error(`Error parsing rule frontmatter: ${err.message}`, {
       cause: err

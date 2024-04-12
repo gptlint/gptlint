@@ -10,7 +10,7 @@ const tsConfigCache = new Map<string, any>()
 
 const rule: Readonly<RuleDefinition> = {
   name: 'effective-tsconfig',
-  message: 'Follow tsconfig best practices.',
+  title: 'Follow tsconfig best practices.',
   level: 'error',
   scope: 'project',
   resources: [

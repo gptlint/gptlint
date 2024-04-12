@@ -8,12 +8,14 @@ export type RuleMetadata<K extends string = string, V = any> = Record<K, V>
 export type RuleDefinition<Metadata extends RuleMetadata = RuleMetadata> = {
   // core rule definition
   name: string
-  message: string
+  title: string
   description?: string
   positiveExamples?: types.RuleExample[]
   negativeExamples?: types.RuleExample[]
+  level: types.LintRuleLevel
+  scope: types.LintRuleScope
 
-  // optional, user-defined metadata
+  // optional metadata
   fixable?: boolean
   cacheable?: boolean
   languages?: string[]
@@ -23,8 +25,6 @@ export type RuleDefinition<Metadata extends RuleMetadata = RuleMetadata> = {
   exclude?: string[]
   resources?: string[]
   model?: string
-  level: types.LintRuleLevel // TODO: rename this to `severity`?
-  scope: types.LintRuleScope
 
   // optional custom functionality for rules scoped to the file-level
   preProcessFile?: types.RulePreProcessFileFn<Metadata>
@@ -63,12 +63,14 @@ export const RuleDefinitionSchema = z
       .string()
       .refine((name) => isValidRuleName(name))
       .describe(
-        "Primary identifier for the rule. All lowercase. Example: 'consistent-identifier-casing'."
+        "Primary identifier for the rule. Uses lowercase kebab-case. Examples: 'consistent-identifier-casing' and '@foo/bar'."
       ),
 
-    message: z
+    title: z
       .string()
-      .describe('Short message used to describe rule violations.'),
+      .describe(
+        'A short, human-readable title for the rule. Defaults to the name if not set.'
+      ),
 
     description: z
       .string()

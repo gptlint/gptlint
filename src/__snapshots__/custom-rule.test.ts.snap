@@ -18,7 +18,6 @@ Code which doesn't use the \`axios\` module should be ignored.
     "typescript",
   ],
   "level": "error",
-  "message": "Prefer fetch over axios",
   "metadata": {},
   "name": "prefer-fetch-over-axios",
   "negativeExamples": [],
@@ -29,5 +28,6 @@ Code which doesn't use the \`axios\` module should be ignored.
   "tags": [
     "best practices",
   ],
+  "title": "Prefer fetch over axios",
 }
 `;

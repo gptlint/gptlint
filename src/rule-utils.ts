@@ -3,7 +3,7 @@ import type * as types from './types.js'
 export function stringifyRuleForModel(rule: types.Rule): string {
   return `# RULE ${rule.name}
 
-${rule.message}
+${rule.title}
 
 ${rule.description ?? ''}
 
