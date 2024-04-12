@@ -273,7 +273,7 @@ export function logLintResultStats({
     : undefined
 
   console.log(
-    `${prefix ?? ''}Linter stats; total cost $${(
+    `${prefix ?? ''}Linter stats; ${config.linterOptions.dryRun ? 'dry run estimated cost' : 'total cost'} $${(
       lintResult.totalCost / 100
     ).toFixed(2)}`,
     pruneUndefined({

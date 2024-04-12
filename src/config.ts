@@ -114,6 +114,13 @@ export const LinterOptionsSchema = z
     noCache: z.boolean().optional().describe('Disables the built-in cache.'),
     disabled: z.boolean().optional().describe('Disables linting entirely.'),
 
+    dryRun: z
+      .boolean()
+      .optional()
+      .describe(
+        'Disables all external LLM calls and outputs an estimate of what it would cost to run the linter on the given config.'
+      ),
+
     cacheDir: z
       .string()
       .optional()
@@ -189,6 +196,7 @@ export const defaultLinterOptions: Readonly<LinterOptions> = {
   debugStats: true,
   disabled: false,
   noCache: false,
+  dryRun: false,
   cacheDir: defaultCacheDir
 }
 

@@ -78,6 +78,11 @@ export async function resolveLinterCLIConfig(
           description: 'Enables debug logging',
           alias: 'd'
         },
+        dryRun: {
+          type: Boolean,
+          description:
+            'Disables all external LLM calls and outputs an estimate of what it would cost to run the linter on the given config'
+        },
         printConfig: {
           type: Boolean,
           description:
@@ -185,6 +190,7 @@ export async function resolveLinterCLIConfig(
           ? undefined
           : !args.flags.noDebugStats,
       noCache: args.flags.noCache,
+      dryRun: args.flags.dryRun,
       cacheDir: args.flags.cacheDir
     },
     llmOptions: {

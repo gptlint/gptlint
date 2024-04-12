@@ -54,14 +54,16 @@ export type RuleProcessFileFnParams<
 }>
 export type RuleProcessFileFn<Metadata extends RuleMetadata = RuleMetadata> = (
   opts: RuleProcessFileFnParams<Metadata>
-) => MaybePromise<LintResult>
+) => MaybePromise<PartialLintResult | undefined>
 
 export type RulePostProcessFileFnParams<
   Metadata extends RuleMetadata = RuleMetadata
 > = SetRequired<RuleProcessFileFnParams<Metadata>, 'lintResult'>
 export type RulePostProcessFileFn<
   Metadata extends RuleMetadata = RuleMetadata
-> = (opts: RuleProcessFileFnParams<Metadata>) => MaybePromise<LintResult>
+> = (
+  opts: RuleProcessFileFnParams<Metadata>
+) => MaybePromise<PartialLintResult | undefined>
 
 export type RulePreProcessProjectFnParams<
   Metadata extends RuleMetadata = RuleMetadata
@@ -91,14 +93,18 @@ export type RuleProcessProjectFnParams<
   cwd: string
 }>
 export type RuleProcessProjectFn<Metadata extends RuleMetadata = RuleMetadata> =
-  (opts: RuleProcessProjectFnParams<Metadata>) => MaybePromise<LintResult>
+  (
+    opts: RuleProcessProjectFnParams<Metadata>
+  ) => MaybePromise<PartialLintResult | undefined>
 
 export type RulePostProcessProjectFnParams<
   Metadata extends RuleMetadata = RuleMetadata
 > = SetRequired<RuleProcessProjectFnParams<Metadata>, 'lintResult'>
 export type RulePostProcessProjectFn<
   Metadata extends RuleMetadata = RuleMetadata
-> = (opts: RuleProcessProjectFnParams<Metadata>) => MaybePromise<LintResult>
+> = (
+  opts: RuleProcessProjectFnParams<Metadata>
+) => MaybePromise<PartialLintResult | undefined>
 
 export type RuleInitFnParams<Metadata extends RuleMetadata = RuleMetadata> =
   Readonly<{
@@ -140,9 +146,11 @@ export type LintError = {
   reasoning?: string
 }
 
-export type PartialLintError = SetOptional<
-  Omit<LintError, 'ruleName' | 'language' | 'model'>,
-  'filePath' | 'level'
+export type PartialLintError = Simplify<
+  SetOptional<
+    Omit<LintError, 'ruleName' | 'language'>,
+    'filePath' | 'level' | 'model'
+  >
 >
 
 export type LintResult = {

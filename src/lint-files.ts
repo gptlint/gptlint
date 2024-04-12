@@ -6,15 +6,14 @@ import task from 'tasuku'
 import type { LinterCache } from './cache.js'
 import type * as types from './types.js'
 import { lintFile } from './lint-file.js'
-import { createLintResult, mergeLintResults } from './lint-result.js'
+import {
+  createLintResult,
+  mergeLintResults,
+  resolvePartialLintResult
+} from './lint-result.js'
 import { createLintTask, stringifyLintTask } from './lint-task.js'
 import { preProcessTask } from './pre-process-task.js'
-import {
-  assert,
-  createPromiseWithResolvers,
-  omit,
-  pruneUndefined
-} from './utils.js'
+import { assert, createPromiseWithResolvers, pruneUndefined } from './utils.js'
 
 // TODO: refactor `file` scope vs `project` scope to be less verbose
 
@@ -103,7 +102,7 @@ export async function lintFiles({
             rule.model ?? config.llmOptions.weakModel ?? config.llmOptions.model
 
           if (rule.preProcessProject) {
-            const partialProjectLintResults = await Promise.resolve(
+            const partialProjectLintResult = await Promise.resolve(
               rule.preProcessProject({
                 ...lintTask,
                 chatModel,
@@ -113,42 +112,27 @@ export async function lintFiles({
               })
             )
 
-            if (partialProjectLintResults) {
-              if (
-                partialProjectLintResults.lintErrors ||
-                partialProjectLintResults.skipped
-              ) {
-                // Convert partial lint result to full lint result.
-                lintTask.lintResult = createLintResult({
-                  ...partialProjectLintResults,
-                  skipped: true,
-                  skipReason: 'pre-process-project',
-                  lintErrors: partialProjectLintResults.lintErrors?.map(
-                    (partialLintError) => ({
-                      model,
-                      level: rule.level,
-                      filePath: cwd,
-                      ...partialLintError,
-                      ruleName: rule.name
-                    })
-                  )
-                })
+            if (partialProjectLintResult) {
+              const { lintErrors, skipped } = partialProjectLintResult
 
-                lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-              } else {
-                // Preprocessing added some metadata to the lint result, but didn't
-                // preempt the rest of the linting process.
-                lintTask.lintResult = createLintResult(
-                  omit(partialProjectLintResults, 'lintErrors')
-                )
-                lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-              }
+              lintTask.lintResult = resolvePartialLintResult(
+                lintErrors || skipped
+                  ? {
+                      ...partialProjectLintResult,
+                      skipped: true,
+                      skipReason: 'pre-process-project'
+                    }
+                  : partialProjectLintResult,
+                {
+                  model,
+                  rule,
+                  filePath: cwd
+                }
+              )
             }
           }
 
           if (lintTask.lintResult) {
-            lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-
             return lintTask
           }
 
@@ -158,8 +142,6 @@ export async function lintFiles({
           lintTask = await preProcessTask(lintTask, { cache })
 
           if (lintTask.lintResult) {
-            lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-
             return lintTask
           }
 
@@ -168,7 +150,7 @@ export async function lintFiles({
             assert(file)
 
             if (rule.preProcessFile) {
-              const partialFileLintResults = await Promise.resolve(
+              const partialFileLintResult = await Promise.resolve(
                 rule.preProcessFile({
                   ...lintTask,
                   file,
@@ -179,37 +161,23 @@ export async function lintFiles({
                 })
               )
 
-              if (partialFileLintResults) {
-                if (
-                  partialFileLintResults.lintErrors ||
-                  partialFileLintResults.skipped
-                ) {
-                  // Convert partial lint result to full lint result.
-                  lintTask.lintResult = createLintResult({
-                    ...partialFileLintResults,
-                    skipped: true,
-                    skipReason: 'pre-process-file',
-                    lintErrors: partialFileLintResults.lintErrors?.map(
-                      (partialLintError) => ({
-                        model,
-                        level: rule.level,
-                        ...partialLintError,
-                        ruleName: rule.name,
-                        filePath: file.fileRelativePath,
-                        language: file.language
-                      })
-                    )
-                  })
+              if (partialFileLintResult) {
+                const { lintErrors, skipped } = partialFileLintResult
 
-                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-                } else {
-                  // Preprocessing added some metadata to the lint result, but didn't
-                  // preempt the rest of the linting process.
-                  lintTask.lintResult = createLintResult(
-                    omit(partialFileLintResults, 'lintErrors')
-                  )
-                  lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-                }
+                lintTask.lintResult = resolvePartialLintResult(
+                  lintErrors || skipped
+                    ? {
+                        ...partialFileLintResult,
+                        skipped: true,
+                        skipReason: 'pre-process-file'
+                      }
+                    : partialFileLintResult,
+                  {
+                    model,
+                    rule,
+                    file
+                  }
+                )
               }
             }
           }
@@ -223,6 +191,10 @@ export async function lintFiles({
           console.warn(error.message)
           warnings.push(error)
         } finally {
+          if (lintTask.lintResult) {
+            lintResult = mergeLintResults(lintResult, lintTask.lintResult)
+          }
+
           if (
             config.linterOptions.earlyExit &&
             lintResult.lintErrors.length > 0
@@ -298,6 +270,10 @@ export async function lintFiles({
     const { group } = lintTask
 
     if (!lintTaskGroups[group]) {
+      const lintTaskGroupName = config.linterOptions.dryRun
+        ? `Dry run ${group}`
+        : `Linting ${group}`
+
       const lintTaskP = createPromiseWithResolvers()
 
       lintTaskGroups[group] = {
@@ -312,7 +288,7 @@ export async function lintFiles({
         async init() {
           if (!this.taskP) {
             await new Promise<void>((resolve) => {
-              this.taskP = task(`Linting ${group}`, async (innerTask) => {
+              this.taskP = task(lintTaskGroupName, async (innerTask) => {
                 this.innerTask = innerTask
                 resolve()
                 return lintTaskP
@@ -380,6 +356,22 @@ export async function lintFiles({
         rule.name,
         async (task) => {
           try {
+            const processProjectFnParams: types.RuleProcessProjectFnParams = {
+              rule,
+              lintResult: preProcessedTaskLintResult,
+              chatModel,
+              cache,
+              config,
+              cwd,
+              retryOptions: {
+                ...retryOptions,
+                onFailedAttempt: (err) => {
+                  task.setOutput(`Retrying: ${err.message}`)
+                  return retryOptions.onFailedAttempt?.(err)
+                }
+              }
+            }
+
             if (scope === 'file') {
               // Allow rules to override the default linting process with their
               // own, custom linting logic.
@@ -387,70 +379,68 @@ export async function lintFiles({
                 rule.processFile ?? lintFile
 
               const processFileFnParams: types.RuleProcessFileFnParams = {
-                file,
-                rule,
-                lintResult: preProcessedTaskLintResult,
-                chatModel,
-                cache,
-                config,
-                cwd,
-                retryOptions: {
-                  ...retryOptions,
-                  onFailedAttempt: (err) => {
-                    task.setOutput(`Retrying: ${err.message}`)
-                    return retryOptions.onFailedAttempt?.(err)
-                  }
-                }
+                ...processProjectFnParams,
+                file
               }
 
-              taskLintResult = await processFileFn(processFileFnParams)
-              assert(
-                taskLintResult,
-                `rule "${rule.name}" processFile returned undefined`
-              )
+              const partialTaskLintResult =
+                await processFileFn(processFileFnParams)
+
+              taskLintResult = resolvePartialLintResult(partialTaskLintResult, {
+                rule,
+                file
+              })
 
               if (rule.postProcessFile) {
-                taskLintResult = await Promise.resolve(
+                const partialPostTaskLintResult = await Promise.resolve(
                   rule.postProcessFile({
                     ...processFileFnParams,
                     lintResult: taskLintResult
                   })
                 )
-              }
-            } else {
-              const processProjectFnParams: types.RuleProcessProjectFnParams = {
-                rule,
-                lintResult: preProcessedTaskLintResult,
-                chatModel,
-                cache,
-                config,
-                cwd,
-                retryOptions: {
-                  ...retryOptions,
-                  onFailedAttempt: (err) => {
-                    task.setOutput(`Retrying: ${err.message}`)
-                    return retryOptions.onFailedAttempt?.(err)
-                  }
+
+                if (partialPostTaskLintResult) {
+                  taskLintResult = resolvePartialLintResult(
+                    partialPostTaskLintResult,
+                    {
+                      rule,
+                      file
+                    }
+                  )
                 }
               }
-
+            } else {
               if (rule.processProject) {
-                taskLintResult = await rule.processProject(
+                const partialTaskLintResult = await rule.processProject(
                   processProjectFnParams
                 )
-                assert(
-                  taskLintResult,
-                  `rule "${rule.name}" processProject returned undefined`
+
+                taskLintResult = resolvePartialLintResult(
+                  partialTaskLintResult,
+                  {
+                    rule,
+                    file
+                  }
                 )
               }
 
               if (rule.postProcessProject) {
-                taskLintResult = await Promise.resolve(
+                const partialPostTaskLintResult = await Promise.resolve(
                   rule.postProcessProject({
                     ...processProjectFnParams,
                     lintResult: taskLintResult
                   })
                 )
+
+                if (partialPostTaskLintResult) {
+                  taskLintResult = resolvePartialLintResult(
+                    partialPostTaskLintResult,
+                    {
+                      rule,
+                      file
+                    }
+                  )
+                }
               }
             }
 

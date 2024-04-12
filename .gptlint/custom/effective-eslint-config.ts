@@ -22,7 +22,7 @@ const rule: Readonly<RuleDefinition<RuleMetadata>> = {
     rule.metadata.eslint = eslint
   },
 
-  preProcessFile: async ({ file, rule }) => {
+  processFile: async ({ file, rule }) => {
     if (!rule.metadata.eslint) return
 
     const eslintConfig: Linter.Config =

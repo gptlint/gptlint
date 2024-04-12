@@ -1,4 +1,5 @@
 import type * as types from './types.js'
+import { pruneUndefined } from './utils.js'
 
 export function createLintResult(
   partialLintResult?: Readonly<Partial<types.LintResult>>
@@ -48,4 +49,53 @@ export function getLintDurationMs(
 ): number | undefined {
   if (lintResult.endedAtMs === undefined) return undefined
   return Math.max(0, lintResult.endedAtMs - lintResult.startedAtMs)
+}
+
+export function resolvePartialLintResult(
+  partialLintResult: Readonly<types.PartialLintResult> | undefined,
+  {
+    rule,
+    file,
+    filePath,
+    language,
+    model
+  }: Readonly<
+    {
+      rule: types.Rule
+      file?: types.SourceFile
+      filePath?: string
+      language?: string
+      model?: string
+    } & (
+      | {
+          file: types.SourceFile
+          filePath?: never
+        }
+      | {
+          file?: never
+          filePath: string
+        }
+    )
+  >
+): types.LintResult {
+  return createLintResult({
+    ...partialLintResult,
+    lintErrors: partialLintResult?.lintErrors?.map(
+      (partialLintError) =>
+        ({
+          model,
+          level: rule.level,
+          filePath,
+          language,
+          ...partialLintError,
+          ruleName: rule.name,
+          ...(file
+            ? pruneUndefined({
+                filePath: file.fileRelativePath,
+                language: file.language
+              })
+            : {})
+        }) as types.LintError
+    )
+  })
 }

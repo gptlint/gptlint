@@ -62,6 +62,10 @@ async function main() {
     logLintResultStats({ lintResult, config })
   }
 
+  if (config.linterOptions.dryRun) {
+    return gracefulExit(0)
+  }
+
   if (lintResult.lintErrors.length > 0) {
     console.log(
       `\nlint errors:`,
