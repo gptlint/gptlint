@@ -99,7 +99,9 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
 
 ### Rule Frontmatter Metadata
 
-A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/front-matter/) for specifying metadata. All metadata fields are optional, and this is the same frontmatter format used by GitHub, so it will render as a a table in GitHub's preview ([example](https://github.com/gptlint/gptlint/blob/main/.gptlint/always-handle-promises.md)).
+A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/front-matter/) for specifying metadata. Note that this is the same frontmatter format used by GitHub, so the metadata renders as an inline table on GitHub ([example](https://github.com/gptlint/gptlint/blob/main/.gptlint/always-handle-promises.md)).
+
+**All metadata fields are optional.**
 
 Here is a breakdown of the supported metadata fields and their expected types.
 
@@ -116,7 +118,7 @@ Here is a breakdown of the supported metadata fields and their expected types.
 | exclude   | `string[]`                | Array of file glob patterns to ignore when enforcing this rule.                                                                                      |
 | resources | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs                                           |
 
-All metadata keys are case-sensitive.
+All metadata keys are case-sensitive, and all metadata values must match their expected types if present.
 
 ## Example Rules
 

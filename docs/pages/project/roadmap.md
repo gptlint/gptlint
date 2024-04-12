@@ -17,6 +17,7 @@
   - add support for comments explaining why it's okay to break a rule?
 - rule file format
   - relax the examples parsing and lean into more flexible markdown support
+  - add support for `bad ⇒ good` examples for autofixing
 - rules
   - **add new rules**
   - rewrite `liberal-accept-strict-produce` to be less verbose and have better examples
@@ -26,14 +27,8 @@
   - refactor config resolution - needs a major cleanup
     - reconsider rule `scope`
   - support rule overrides for specific file globs like eslint
-  - add ability to customize rule behavior with configs like eslint
-  - move default rules to `.gptlint`
-  - add built-in configs
-    - need better rules
-    - convert this repo to a monorepo?
-    - post-mvp
-- cli
-  - cache precheck tasks
+  - support rule-specific settings like eslint
+  - ensure precheck tasks are properly reported as cached
 - project
   - add built-in rules to docs
   - decide on an OSS license
@@ -49,6 +44,7 @@
 - cross-file linting (likely using [tree-sitter](https://tree-sitter.github.io/tree-sitter/); see my [initial exploration](https://twitter.com/transitive_bs/status/1776353458813112353))
   - add embedding support for files and functions
   - add DRY rule for detecting near duplicates
+- explore using `gritql` to optimize context for built-in rules
 - add support for different programming languages
 - add support for applying autofixes to linter errors
 - track the positive instances where we see rule conformance as well?
@@ -62,3 +58,4 @@
 - add support for git diffs
 - basic eval graphs and blog post
 - add `--dry-run` support for non-openai llm providers
+- move built-in configs into a separate package

@@ -51,7 +51,7 @@ export type LinterConfig = {
   ignores?: [] // array of glob to ignore for source files
 
   ruleFiles?: [] // array of globs to find project-specific rule md files
-  ruleDefinitions?: Rule[] // custom rules (extensible to non-md formats)
+  ruleDefinitions?: RuleDefinition[] // custom rules (extensible to non-md formats)
 
   // enable / disable rules
   rules?: Record<string, 'error' | 'warn' | 'off'>
@@ -75,7 +75,7 @@ You can override this with the `ruleFiles` config setting or with the `--rules` 
 
 ### Code-Based Custom Rules
 
-You can also specify code-based custom [Rule](https://github.com/gptlint/gptlint/tree/main/src/rule.ts) definitions which are normal JS/TS objects with hooks for fully customizing linting behavior.
+You can also specify code-based custom [RuleDefinition](https://github.com/gptlint/gptlint/tree/main/src/rule.ts) objects which are normal JS/TS objects with hooks for fully customizing linting behavior.
 
 An example of a code-based rule (the equivalent of a plugin in `eslint`) is [effective-tsconfig](https://github.com/gptlint/gptlint/tree/main/.gptlint/custom/effective-tsconfig.ts), which has a `project` `scope` and uses the `preProcessProject` hook to resolve a project's `tsconfig.json` file and check for best practices.
 
@@ -83,7 +83,7 @@ Here's an example:
 
 ```js
 // my-custom-rule.js
-/** @type {import('gptlint').Rule} */
+/** @type {import('gptlint').RuleDefinition} */
 export default {
   name: 'my-custom-rule',
   message: 'Example rule message.',
@@ -95,8 +95,7 @@ export default {
       lintErrors: [
         {
           message: 'This is an example custom lint error',
-          level: 'error',
-          file: file.fileRelativePath
+          level: 'error'
         }
       ]
     }
