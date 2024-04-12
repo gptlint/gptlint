@@ -12,7 +12,7 @@
 
 ## Overview
 
-![Linting overview](/how-gptlint-works.png)
+![Overview of how gptlint works](/how-gptlint-works.png)
 
 To lint a codebase, GPTLint takes the following steps:
 

@@ -1,39 +1,54 @@
 import { Callout } from 'nextra/components'
+import Image from 'next/image'
 
 <p align='center' style={{ padding: '1rem' }}>
-  <img alt='How it works' src='/gptlint-logo.png' width='256' />
+  <Image
+    src='/gptlint-logo.png'
+    alt='logo'
+    width={512}
+    height={512}
+    style={{ width: 256 }}
+  />
 </p>
 
 <p align='center' style={{ padding: '1rem' }}>
   <em>Use LLMs to enforce best practices across your codebase.</em>
 </p>
 
-<p align='center'>
+<p align='center' style={{ marginBottom: '2rem' }}>
   <a href='https://www.npmjs.com/package/gptlint'>
-    <img alt='NPM' src='https://img.shields.io/npm/v/gptlint.svg' />
+    <img
+      alt='NPM'
+      src='https://img.shields.io/npm/v/gptlint.svg'
+      style={{ display: 'inline-block' }}
+    />
   </a>{' '}
   <a href='https://github.com/gptlint/gptlint/actions/workflows/test.yml'>
     <img
       alt='Build Status'
       src='https://github.com/gptlint/gptlint/actions/workflows/main.yml/badge.svg'
+      style={{ display: 'inline-block' }}
     />
   </a>{' '}
   <a href='https://github.com/gptlint/gptlint/blob/main/license'>
     <img
       alt='MIT License'
       src='https://img.shields.io/badge/license-MIT-blue'
+      style={{ display: 'inline-block' }}
     />
   </a>{' '}
   <a href='https://prettier.io'>
     <img
       alt='Prettier Code Formatting'
       src='https://img.shields.io/badge/code_style-prettier-brightgreen.svg'
+      style={{ display: 'inline-block' }}
     />
   </a>{' '}
   <a href='https://twitter.com/transitive_bs'>
     <img
       alt='Discuss on Twitter'
       src='https://img.shields.io/badge/twitter-discussion-blue'
+      style={{ display: 'inline-block' }}
     />
   </a>
 </p>
@@ -46,8 +61,8 @@ import { Callout } from 'nextra/components'
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
 - ✅️ simple markdown format for rules ([example](https://github.com/gptlint/gptlint/tree/main/rules/prefer-array-at-negative-indexing), [spec](./extend/rule-spec.md))
-- ✅️ easy to [disable](./project/faq.md#how-can-i-disable-a-rule) or [customize](#how-can-i-customize-a-built-in-rule-) rules
-- ✅️ add custom, [project-specific rules](./extend/rule-guidelines.md#project-specific-rules)
+- ✅️ easy to [disable](./project/faq.md#how-can-i-disable-a-rule) or [customize](#how-can-i-customize-a-built-in-rule) rules
+- ✅️ add custom, [project-specific rules](./extend/rule-guidelines#project-specific-rules)
 - ✅️ same cli and config format as `eslint`
 - ✅️ supports `gptlint.config.js` and inline overrides `/* gptlint-disable */`
 - ✅️ content-based caching
@@ -55,7 +70,7 @@ import { Callout } from 'nextra/components'
 - ✅️ built-in rules are extensively tested w/ [evals](./project/how-it-works.md#evals)
 - ✅️ supports all major [LLM providers](./guide/llm-providers.md) and [local models](./guide/llm-providers.md#local-models)
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
-- ✅️ includes [guidelines](./extend/rule-guidelines.md) for creating your own rules
+- ✅️ includes [guidelines](./extend/rule-guidelines) for creating your own rules
 - ❌ MVP rules are [JS/TS only](./project/limitations.md#rules-in-the-mvp-are-jsts-only) _for now_
 - ❌ MVP rules are [single-file context only](./project/limitations.md#rules-in-the-mvp-are-single-file-only) _for now_
 - ❌ MVP does not support [autofixing](./project/limitations.md#the-mvp-does-not-support-autofixing-lint-errors) _for now_
@@ -70,11 +85,7 @@ Here's a demo of `gptlint` running on its own codebase:
 
 ## How it works
 
-<p align='center'>
-  <a href='/project/how-it-works'>
-    <img alt='How it works' src='/how-gptlint-works.png' />
-  </a>
-</p>
+[![Overview of how gptlint works](/how-gptlint-works.png)](./project/how-it-works.md)
 
 See our [docs on how it works](./project/how-it-works.md) for more details.
 
