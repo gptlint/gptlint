@@ -17,11 +17,8 @@ Here is an example markdown rule with `yaml` frontmatter:
 ```md
 ---
 fixable: false
-tags:
-  - best practices
-languages:
-  - javascript
-  - typescript
+tags: [best practices]
+languages: [javascript, typescript]
 ---
 
 # Example Rule
