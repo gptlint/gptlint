@@ -91,7 +91,7 @@ All metadata keys are case-sensitive.
 
 Here is an example frontmatter metadata:
 
-```mdx
+```md
 ---
 fixable: false
 tags:
@@ -107,15 +107,11 @@ This is a plain-text description of the rule's intent.
 
 ### Bad
 
-\`\`\`ts
-// example of the rule being used incorrectly
-\`\`\`
+code block examples of the rule being used incorrectly
 
 ### Good
 
-\`\`\`ts
-// example of the rule being correctly
-\`\`\`
+code block examples of the rule being used correctly
 ```
 
 ## More Example Rules
