@@ -59,12 +59,14 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
 - GRS rule files must contain a single markdown `h1` header containing the rule's `message` property.
 - Within this `h1` section, GRS rule files may optionally contain a [metadata table](#rule-metadata-table) for customizing the rule's behavior.
 - The content from the `h1` section up until any optional example header sections will comprise the rule's `desc` property which is intended to explain the rule's intent in natural language.
-- The rule's `name` will be inferred from either the metadata table's `Name` row (preferred) or will fall back to a slugified version of the rule's `message` (main `h1`).
+- The rule's `name` will default to the rule's filename (without the `.md` extension).
+  - This can be overridden via the frontmatter metadata's `name` value.
+  - If no valid `name` is found, it will fall back to a slugified version of the rule's `message` value (main `h1`).
 - GRS rules may optionally contain a single markdown `h3` header named "Bad" or "Incorrect" or "Fail".
   - The content of this section should contain 1 or more code blocks to use as `negativeExamples`.
 - GRS rules may optionally contain a single markdown `h3` header named "Good" or "Correct" or "Pass".
   - The content of this section should contain 1 or more code blocks to use as `positiveExamples`.
-- It is encouraged to specify a language for all code block examples, but it not required.
+- It is encouraged to specify a language for all code block examples, but it is not required.
 
 ### Rule Metadata Frontmatter
 
@@ -89,7 +91,7 @@ All metadata keys are case-sensitive.
 
 ## Example Rule
 
-Here is an example frontmatter metadata:
+Here is an example rule:
 
 ```md
 ---
@@ -101,7 +103,7 @@ languages:
   - typescript
 ---
 
-# Rule Name
+# Example Name
 
 This is a plain-text description of the rule's intent.
 
@@ -113,6 +115,8 @@ code block examples of the rule being used incorrectly
 
 code block examples of the rule being used correctly
 ```
+
+This rule would canonically be stored in `.gptlint/example-rule.md` and have the name `example-rule`.
 
 ## More Example Rules
 
