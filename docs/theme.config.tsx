@@ -134,12 +134,12 @@ ul ul.nx-mt-6, ul ul._mt-6 {
 
 ul.contains-task-list {
   margin-top: 1rem;
-  margin-left: 0.75rem;
+  margin-left: 1rem;
 }
 
 ul li._my-2, ul li.task-list-item {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0.65rem;
+  margin-bottom: 0.65rem;
 }
 
 img {
