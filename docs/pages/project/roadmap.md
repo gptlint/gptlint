@@ -61,3 +61,4 @@
   - experiment with using bin packing to optimize context usage, but that's still same `O(tokens)`
 - add support for git diffs
 - basic eval graphs and blog post
+- add `--dry-run` support for non-openai llm providers
