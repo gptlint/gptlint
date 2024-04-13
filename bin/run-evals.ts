@@ -4,7 +4,6 @@ import 'dotenv/config'
 import path from 'node:path'
 
 import { gracefulExit } from 'exit-hook'
-import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from '../src/types.js'
@@ -20,7 +19,8 @@ import {
   logDebugConfig,
   logEvalStats,
   logLintResultStats,
-  mergeEvalStats
+  mergeEvalStats,
+  resolveGlobFilePatterns
 } from '../src/utils.js'
 
 /**
@@ -104,7 +104,7 @@ async function main() {
       if (!onlyNegative) {
         // Positive examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'correct', '*')
-        const exampleFiles = await globby(fileExamplesGlob, {
+        const exampleFiles = await resolveGlobFilePatterns(fileExamplesGlob, {
           gitignore: true,
           cwd
         })
@@ -157,7 +157,7 @@ async function main() {
       if (!onlyPositive) {
         // Negative examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'incorrect', '*')
-        const exampleFiles = await globby(fileExamplesGlob, {
+        const exampleFiles = await resolveGlobFilePatterns(fileExamplesGlob, {
           gitignore: true,
           cwd
         })

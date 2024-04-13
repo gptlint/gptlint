@@ -1,3 +1,6 @@
+import path from 'node:path'
+
+import { globby, type Options as GlobbyOptions } from 'globby'
 import hashObject from 'hash-object'
 import prettyMilliseconds from 'pretty-ms'
 
@@ -379,4 +382,35 @@ export function createPromiseWithResolvers<
   })
 
   return { promise, resolve: resolve!, reject: reject! }
+}
+
+/**
+ * Wraps [globby](https://github.com/sindresorhus/globby) to correctly handle
+ * absolute file patterns that exist outside of the `cwd`.
+ */
+export async function resolveGlobFilePatterns(
+  patternOrPatterns: string | readonly string[],
+  options?: GlobbyOptions
+): Promise<string[]> {
+  const patterns = Array.isArray(patternOrPatterns)
+    ? (patternOrPatterns as readonly string[])
+    : [patternOrPatterns as string]
+
+  const absolutePatterns = patterns
+    .filter((pattern) => path.isAbsolute(pattern))
+    .map((pattern) =>
+      path.relative((options?.cwd as string) ?? process.cwd(), pattern)
+    )
+  const relativePatterns = patterns.filter(
+    (pattern) => !path.isAbsolute(pattern)
+  )
+
+  try {
+    const resolvedFilePatterns = await globby(relativePatterns, options)
+
+    return absolutePatterns.concat(resolvedFilePatterns)
+  } catch (err: any) {
+    console.error('error resolving glob patterns', err.message)
+    throw err
+  }
 }

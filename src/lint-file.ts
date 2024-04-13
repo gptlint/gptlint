@@ -354,7 +354,8 @@ export async function validateRuleViolations({
   // the implementation harder to debug, evaluate, and maintain.
   const modelSupportsJsonResponseFormat =
     config.llmOptions.modelSupportsJsonResponseFormat ??
-    (config.llmOptions.apiBaseUrl === defaultLinterConfig.llmOptions.apiBaseUrl!
+    (config.llmOptions.apiBaseUrl ===
+      defaultLinterConfig.llmOptions.apiBaseUrl! && model !== 'gpt-4'
       ? true
       : false)
 

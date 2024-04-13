@@ -207,7 +207,7 @@ export const defaultLLMOptions: Readonly<LLMOptions> = {
   // default because some developers don't have access to it, and we're not
   // using `gpt-3.5-turbo` as the default because it doesn't perform as well in
   // our tests.
-  model: 'gpt-4',
+  model: 'gpt-4-turbo',
   // model: 'gpt-4-turbo-preview',
   weakModel: 'gpt-3.5-turbo',
   temperature: 0

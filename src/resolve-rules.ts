@@ -1,13 +1,12 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from './types.js'
 import { parseRuleFile } from './parse-rule-file.js'
 import { RuleDefinitionSchema } from './rule.js'
-import { assert, isValidRuleName } from './utils.js'
+import { assert, isValidRuleName, resolveGlobFilePatterns } from './utils.js'
 
 export async function resolveRules({
   config,
@@ -16,7 +15,7 @@ export async function resolveRules({
   config: types.ResolvedLinterConfig
   cwd?: string
 }): Promise<types.Rule[]> {
-  const ruleFilePaths = await globby(config.ruleFiles ?? [], {
+  const ruleFilePaths = await resolveGlobFilePatterns(config.ruleFiles ?? [], {
     gitignore: true,
     cwd
   })

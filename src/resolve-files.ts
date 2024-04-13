@@ -1,13 +1,13 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { globby } from 'globby'
 import pMap from 'p-map'
 import plur from 'plur'
 
 import type * as types from './types.js'
 import { maxSourceFileLineLength, maxSourceFileNumLines } from './constants.js'
 import { isValidSourceFile } from './is-valid-source-file.js'
+import { resolveGlobFilePatterns } from './utils.js'
 
 export async function resolveFiles({
   config,
@@ -16,7 +16,7 @@ export async function resolveFiles({
   config: types.ResolvedLinterConfig
   cwd?: string
 }) {
-  const sourceFiles = await globby(config.files, {
+  const sourceFiles = await resolveGlobFilePatterns(config.files, {
     gitignore: true,
     ignore: config.ignores,
     cwd
