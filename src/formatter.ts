@@ -16,7 +16,7 @@ const fileTypeToParserMap: Record<string, BuiltInParserName> = {
 /**
  * Attempts to format the given source code using Prettier.
  *
- * @TODO In the future, add support for formatting other languages like python.
+ * @TODO In the future, add support for formatting other languages like Python.
  */
 export async function formatSource(
   source: string,
@@ -38,7 +38,7 @@ export async function formatSource(
   }
 
   if (!parser) {
-    // If the source is an an unrecognized or unknown format, don't try to format
+    // If the source is an unrecognized or unknown format, don't try to format
     // it and instead just return the original, unformatted source.
     return source
   }

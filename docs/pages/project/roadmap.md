@@ -5,7 +5,6 @@
 - linter engine
   - **improve evals**
     - add unit tests to evals for edge cases
-  - experiment with clearer delimiters in prompts vs markdown h1s
   - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
 - rule file format
   - relax the examples parsing and lean into more flexible markdown support

@@ -1,12 +1,8 @@
 ---
 fixable: false
-tags:
-  - best practices
-languages:
-  - javascript
-  - typescript
-eslint:
-  - '@unicorn/prefer-negative-index'
+tags: [best practices]
+languages: [javascript, typescript]
+eslint: ['@unicorn/prefer-negative-index']
 resources:
   - https://twitter.com/housecor/status/1768622518179369036
 ---

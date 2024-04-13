@@ -48,8 +48,10 @@ export type Rule = {
   description?: string
   positiveExamples?: RuleExample[]
   negativeExamples?: RuleExample[]
+  scope: LintRuleScope // defaults to 'file'
+  level: LintRuleLevel // defaults to 'error'
 
-  // optional, user-defined metadata
+  // optional metadata
   fixable?: boolean
   languages?: string[]
   tags?: string[]
@@ -58,8 +60,6 @@ export type Rule = {
   exclude?: string[]
   resources?: string[]
   model?: string
-  scope: LintRuleScope // defaults to 'file'
-  level: LintRuleLevel // defaults to 'error'
 
   // optional custom functionality for rules scoped to the file-level
   preProcessFile?: PreProcessFileFn

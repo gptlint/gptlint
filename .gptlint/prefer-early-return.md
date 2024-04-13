@@ -1,10 +1,7 @@
 ---
 fixable: false
-tags:
-  - best practices
-languages:
-  - javascript
-  - typescript
+tags: [best practices]
+languages: [javascript, typescript]
 exclude:
   - '**/*.test\.{js,ts,jsx,tsx,cjs,mjs}'
 eslint:
@@ -22,15 +19,6 @@ Ignore `if` statements with multiple `else` branches.
 `if` statements containing only a single statement in their body are okay and should be ignored by this rule.
 
 ### Bad
-
-```js
-function foo() {
-  if (a) {
-    b()
-    c()
-  }
-}
-```
 
 ```js
 function handleClick(event) {

@@ -13,7 +13,12 @@ import {
 } from './lint-result.js'
 import { createLintTask, stringifyLintTask } from './lint-task.js'
 import { preProcessTask } from './pre-process-task.js'
-import { assert, createPromiseWithResolvers, pruneUndefined } from './utils.js'
+import {
+  assert,
+  createPromiseWithResolvers,
+  pruneUndefined,
+  trimMessage
+} from './utils.js'
 
 // TODO: refactor `file` scope vs `project` scope to be less verbose
 
@@ -453,11 +458,9 @@ export async function lintFiles({
             }
 
             lintResult = mergeLintResults(lintResult, taskLintResult)
+            const { lintErrors } = taskLintResult
 
-            if (
-              config.linterOptions.earlyExit &&
-              lintResult.lintErrors.length > 0
-            ) {
+            if (config.linterOptions.earlyExit && lintErrors.length > 0) {
               earlyExitTripped = true
             }
 
@@ -471,13 +474,23 @@ export async function lintFiles({
               )
             }
 
-            if (taskLintResult.lintErrors.length > 0) {
-              task.setError(
-                `found ${taskLintResult.lintErrors.length} lint ${plur(
-                  'error',
-                  taskLintResult.lintErrors.length
-                )}`
-              )
+            if (lintErrors.length > 0) {
+              const lintErrorPrefixDesc = `found ${lintErrors.length} lint ${plur(
+                'error',
+                lintErrors.length
+              )}`
+              const lintErrorShortDesc =
+                lintErrors.length === 1
+                  ? trimMessage(
+                      lintErrors[0]?.codeSnippet ?? lintErrors[0]?.message,
+                      { maxLength: 60 }
+                    )
+                  : ''
+              const lintErrorDesc = [lintErrorPrefixDesc, lintErrorShortDesc]
+                .filter(Boolean)
+                .join(' ')
+
+              task.setError(lintErrorDesc)
             }
           } catch (err: any) {
             const error = new Error(

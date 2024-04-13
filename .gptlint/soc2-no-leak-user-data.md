@@ -1,10 +1,7 @@
 ---
 fixable: false
-tags:
-  - security
-languages:
-  - javascript
-  - typescript
+tags: [security]
+languages: [javascript, typescript]
 ---
 
 # SOC2 Don't leak user data

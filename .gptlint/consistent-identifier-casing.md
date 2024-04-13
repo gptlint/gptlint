@@ -1,10 +1,7 @@
 ---
 fixable: false
-tags:
-  - best practices
-languages:
-  - javascript
-  - typescript
+tags: [best practices]
+languages: [javascript, typescript]
 eslint:
   - '@typescript-eslint/naming-convention'
   - 'camelcase'
