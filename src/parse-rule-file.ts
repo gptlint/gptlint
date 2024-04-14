@@ -46,7 +46,7 @@ export async function parseRuleFile({
       : undefined
 
   const headingRuleNode = h1RuleNodes[0]!
-  const bodyRuleNodes = findAllBetween(ast, headingRuleNode)
+  let bodyRuleNodes = findAllBetween(ast, headingRuleNode)
   const gritCodeBlockNodes = findAllCodeBlockNodes(ast).filter(
     (codeNode) => codeNode.lang === 'grit' || codeNode.lang === 'gritql'
   )
@@ -54,9 +54,13 @@ export async function parseRuleFile({
     gritCodeBlockNodes.length <= 1,
     `Rule must not contain more than 1 "grit" code blocks: ${filePath}`
   )
-  const gritql = gritCodeBlockNodes[0]
-    ? convertASTToPlaintext(gritCodeBlockNodes[0])?.trim()
-    : undefined
+
+  const codeBlockNode = gritCodeBlockNodes[0]
+  let gritql: string | undefined
+  if (codeBlockNode) {
+    gritql = convertASTToPlaintext(codeBlockNode)?.trim()
+    bodyRuleNodes = bodyRuleNodes.filter((node) => node !== codeBlockNode)
+  }
 
   const rule = parseRuleNode({
     headingRuleNode,
