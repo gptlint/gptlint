@@ -6,7 +6,8 @@ import pMap from 'p-map'
 import type * as types from './types.js'
 import { parseRuleFile } from './parse-rule-file.js'
 import { RuleDefinitionSchema } from './rule.js'
-import { assert, isValidRuleName, resolveGlobFilePatterns } from './utils.js'
+import { isValidRuleName, validateRule } from './rule-utils.js'
+import { assert, resolveGlobFilePatterns } from './utils.js'
 
 export async function resolveRules({
   config,
@@ -90,7 +91,7 @@ export async function resolveRules({
   const processedRules = new Set<string>()
 
   rules = rules.filter((rule) => {
-    assert(isValidRuleName(rule.name), `Invalid rule name "${rule.name}"`)
+    rule = validateRule(rule)
 
     if (processedRules.has(rule.name)) {
       return false

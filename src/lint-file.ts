@@ -8,6 +8,7 @@ import {
   type FailedAttemptError,
   RetryableError
 } from './errors.js'
+import { preProcessFileWithGrit } from './gritql.js'
 import { createLintResult } from './lint-result.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
@@ -38,14 +39,29 @@ export async function lintFile({
   cwd,
   retryOptions = {
     retries: 2
-  }
-}: types.RuleProcessFileFnParams): Promise<types.LintResult> {
+  },
+  enableGrit = false
+}: types.RuleProcessFileFnParams & {
+  enableGrit?: boolean
+}): Promise<types.LintResult> {
   const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
   const model =
     rule.model ?? isTwoPassLintingEnabled
       ? config.llmOptions.weakModel!
       : config.llmOptions.model
   lintResult = createLintResult(lintResult)
+
+  if (enableGrit && rule.gritql) {
+    const maybeLintResult = await preProcessFileWithGrit({
+      file,
+      rule,
+      config
+    })
+
+    if (maybeLintResult) {
+      return maybeLintResult
+    }
+  }
 
   if (config.linterOptions.debug) {
     console.log(
@@ -70,7 +86,7 @@ ${stringifyRuleForModel(rule)}
 
 <SOURCE ${file.fileName}>
 
-${file.content}
+${file.partialContent || file.content}
 
 </SOURCE ${file.fileName}> 
 `),
@@ -384,7 +400,7 @@ ${stringifyRuleForModel(rule)}
 
 <SOURCE ${file.fileName}>
 
-${file.content}
+${file.partialContent || file.content}
 
 </SOURCE ${file.fileName}> 
 `),

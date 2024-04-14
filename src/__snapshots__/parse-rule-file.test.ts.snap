@@ -576,11 +576,16 @@ exports[`parseRuleFile - .gptlint/prefer-array-at-negative-indexing.md 1`] = `
 {
   "cacheable": true,
   "description": "When accessing items in an array from the end, like the last item, prefer using \`Array.at\` with a negative index because it is less error-prone. Note that using \`Array.at\` with a positive index is equivalent to indexing into the array normally, and if \`Array.at\` references a non-existing index, it will return \`undefined\`.
+
+\`\`\`grit
+subscript_expression
+\`\`\`
 ",
   "eslint": [
     "@unicorn/prefer-negative-index",
   ],
   "fixable": false,
+  "gritql": "subscript_expression",
   "languages": [
     "javascript",
     "typescript",
@@ -1175,7 +1180,7 @@ This rule does apply to code comments, JSDoc comments, and markdown documentatio
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/empty-examples.md 1`] = `
 {
   "cacheable": true,
   "description": "This rule doesn't contain any examples which is fine because they are optional.
@@ -1186,12 +1191,12 @@ exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/empty-examples.md",
+  "source": "fixtures/valid-rules/empty-examples.md",
   "title": "Example",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/force-list-pagination.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/force-list-pagination.md 1`] = `
 {
   "cacheable": true,
   "description": "Force the use of pagination for all lists in GraphQL.
@@ -1232,7 +1237,7 @@ type Query {
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/force-list-pagination.md",
+  "source": "fixtures/valid-rules/force-list-pagination.md",
   "tags": [
     "graphql",
   ],
@@ -1240,7 +1245,7 @@ type Query {
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/metadata-0.md 1`] = `
 {
   "cacheable": true,
   "description": "This example should parse correctly.
@@ -1260,7 +1265,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/metadata-0.md",
+  "source": "fixtures/valid-rules/metadata-0.md",
   "tags": [
     "general",
   ],
@@ -1268,7 +1273,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/metadata-1.md 1`] = `
 {
   "cacheable": true,
   "description": "This example should parse correctly.
@@ -1288,7 +1293,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/metadata-1.md",
+  "source": "fixtures/valid-rules/metadata-1.md",
   "tags": [
     "general",
   ],
@@ -1296,7 +1301,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/mutations.md 1`] = `
 {
   "cacheable": true,
   "description": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
@@ -1336,7 +1341,7 @@ type Mutation {
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/mutations.md",
+  "source": "fixtures/valid-rules/mutations.md",
   "tags": [
     "graphql",
   ],
@@ -1344,7 +1349,7 @@ type Mutation {
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/prefer-edge-node.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/prefer-edge-node.md 1`] = `
 {
   "cacheable": true,
   "description": "Prefer usage of Edges and Nodes in GraphQL Lists.
@@ -1399,12 +1404,12 @@ type Query {
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/prefer-edge-node.md",
+  "source": "fixtures/valid-rules/prefer-edge-node.md",
   "title": "Prefer Edges & Nodes",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/prefer-page-queries.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/prefer-page-queries.md 1`] = `
 {
   "cacheable": true,
   "description": "Warn on usage of the \`/utils/api.ts\` file in favor of creating a page query in the /\`utils/pageQueries\` folder.
@@ -1466,12 +1471,12 @@ export default gql\`
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/prefer-page-queries.md",
+  "source": "fixtures/valid-rules/prefer-page-queries.md",
   "title": "Prefer page queries",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/prefer-strapi-env-vars.md 1`] = `
 {
   "cacheable": true,
   "description": "Avoid accessing \`process.env\` variables in favor of Strapi environment variables.
@@ -1508,12 +1513,12 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/prefer-strapi-env-vars.md",
+  "source": "fixtures/valid-rules/prefer-strapi-env-vars.md",
   "title": "Use Strapi Environment Variables",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/wip/format-comments-like-sentences.md 1`] = `
 {
   "cacheable": true,
   "description": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.
@@ -1534,12 +1539,12 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/wip/format-comments-like-sentences.md",
+  "source": "fixtures/valid-rules/wip/format-comments-like-sentences.md",
   "title": "Format comments like sentences",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/wip/react-prefer-derived-state.md 1`] = `
 {
   "cacheable": true,
   "description": "State which is simple to derive should be re-derived when necessary instead of storing it in state or props.
@@ -1552,12 +1557,12 @@ TODO
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/wip/react-prefer-derived-state.md",
+  "source": "fixtures/valid-rules/wip/react-prefer-derived-state.md",
   "title": "Prefer derived state in React",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/wip/use-esm.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/wip/use-esm.md 1`] = `
 {
   "cacheable": true,
   "description": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses \`require\` and \`module.exports\` and suffers from poor standardization and interoperability issues.
@@ -1589,7 +1594,7 @@ export function bar() {}",
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/wip/use-esm.md",
+  "source": "fixtures/valid-rules/wip/use-esm.md",
   "title": "Use ESM instead of CommonJS",
 }
 `;

@@ -61,37 +61,6 @@ export function pruneUndefined<T extends Record<string, any>>(
   ) as NonNullable<T>
 }
 
-export function isValidRuleName(name: string): name is NonNullable<string> {
-  if (!name) return false
-  if (name.toLowerCase() !== name) return false
-
-  const parts = name.split('/')
-  if (parts.length === 2) {
-    if (!/^@[a-z][\w-]*$/i.test(parts[0]!)) return false
-    if (!/^[a-z][\w-]*$/i.test(parts[1]!)) return false
-  } else if (!/^[a-z][\w-]*$/i.test(name)) return false
-
-  return true
-}
-
-export function isValidRuleSetting(
-  value: string
-): value is types.LinterConfigRuleSetting {
-  if (!value) return false
-  if (value.toLowerCase() !== value) return false
-
-  return value === 'off' || value === 'warn' || value === 'error'
-}
-
-export function isValidRuleScope(
-  value: string
-): value is types.LinterConfigRuleSetting {
-  if (!value) return false
-  if (value.toLowerCase() !== value) return false
-
-  return value === 'file' || value === 'project' || value === 'repo'
-}
-
 export function trimMessage(
   message: string | undefined,
   { maxLength = 80 }: { maxLength?: number } = {}

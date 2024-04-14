@@ -5,6 +5,7 @@ import task from 'tasuku'
 
 import type { LinterCache } from './cache.js'
 import type * as types from './types.js'
+import { preProcessFileWithGrit } from './gritql.js'
 import { lintFile } from './lint-file.js'
 import {
   createLintResult,
@@ -64,6 +65,8 @@ export async function lintFiles({
     })
   )
 
+  const fileScopeRules = rules.filter((rule) => rule.scope === 'file')
+
   const projectLintTasks: types.LintTask[] = rules
     .map((rule) => {
       if (rule.scope === 'project' || rule.scope === 'repo') {
@@ -74,22 +77,20 @@ export async function lintFiles({
     })
     .filter(Boolean)
 
-  const fileLintTasks: types.LintTask[] = rules
-    .flatMap((rule) => {
-      if (rule.scope === 'file') {
-        // TODO: Experiment with different types of file <> rule mappings.
-        return files.map((file) => createLintTask({ file, rule, config }))
-      } else {
-        return []
-      }
-    })
-    .filter(Boolean)
+  const fileLintTasks: types.LintTask[] = fileScopeRules.flatMap((rule) =>
+    files.map((file) => createLintTask({ file, rule, config })).filter(Boolean)
+  )
 
   const initialLintTasks = projectLintTasks.concat(fileLintTasks)
 
   let lintResult = createLintResult()
   let earlyExitTripped = false
   const warnings: Error[] = []
+
+  const ruleNameToPartialSourceFileMap = new Map<
+    string,
+    Promise<Map<string, types.PartialSourceFile>>
+  >()
 
   // Preprocess the file / rule tasks so we have a clear indication of how many
   // non-cached, non-disabled tasks need to be processed.
@@ -153,6 +154,21 @@ export async function lintFiles({
           if (scope === 'file') {
             const file = lintTask.file
             assert(file)
+
+            if (rule.gritql) {
+              const maybeFileLintResult = await preProcessFileWithGrit({
+                file,
+                files,
+                rule,
+                config,
+                ruleNameToPartialSourceFileMap
+              })
+
+              if (maybeFileLintResult) {
+                lintTask.lintResult = maybeFileLintResult
+                return lintTask
+              }
+            }
 
             if (rule.preProcessFile) {
               const partialFileLintResult = await Promise.resolve(
@@ -226,10 +242,13 @@ export async function lintFiles({
   const numTasksEmpty = skippedLintTasks.filter(
     (r) => r.lintResult.skipReason === 'empty'
   ).length
-  const numTasksPrecheck = skippedLintTasks.filter(
+  const numTasksFilteredPrecheck = skippedLintTasks.filter(
     (r) =>
       r.lintResult.skipReason === 'pre-process-file' ||
       r.lintResult.skipReason === 'pre-process-project'
+  ).length
+  const numTasksFilteredGrit = skippedLintTasks.filter(
+    (r) => r.lintResult.skipReason === 'grit-pattern'
   ).length
   const numTasksDisabled = skippedLintTasks.filter(
     (r) =>
@@ -242,7 +261,8 @@ export async function lintFiles({
     pruneUndefined({
       numTasks: outstandingLintTasks.length,
       numTasksCached: numTasksCached || undefined,
-      numTasksPrecheck: numTasksPrecheck || undefined,
+      numTasksFilteredPrecheck: numTasksFilteredPrecheck || undefined,
+      numTasksFilteredGrit: numTasksFilteredGrit || undefined,
       numTasksEmpty: numTasksEmpty || undefined,
       numTasksDisabled: numTasksDisabled || undefined
     })

@@ -104,6 +104,7 @@ export const LinterOptionsSchema = z
         'When enabled, logs the resolved config and parsed rules and then exits.'
       ),
     debugModel: z.boolean().optional().describe('Enables verbose LLM logging.'),
+    debugGrit: z.boolean().optional().describe('Enables verbose Grit logging.'),
     debugStats: z
       .boolean()
       .optional()

@@ -27,7 +27,7 @@ export type LintRuleErrorConfidence = 'low' | 'medium' | 'high'
 export type RulePreProcessFileFnParams<
   Metadata extends RuleMetadata = RuleMetadata
 > = Readonly<{
-  file: SourceFile
+  file: SourceFile | PartialSourceFile
   rule: Rule<Metadata>
   chatModel: ChatModel
   cache: LinterCache
@@ -43,7 +43,7 @@ export type RulePreProcessFileFn<Metadata extends RuleMetadata = RuleMetadata> =
 export type RuleProcessFileFnParams<
   Metadata extends RuleMetadata = RuleMetadata
 > = Readonly<{
-  file: SourceFile
+  file: SourceFile | PartialSourceFile
   rule: Rule<Metadata>
   lintResult?: LintResult
   chatModel: ChatModel
@@ -130,12 +130,16 @@ export type SourceFile = {
   fileRelativePath: string
   content: string
   language: string
+
+  // partial source files only
+  ranges?: FileRange[]
+  partialContent?: string
 }
 
-export type PartialSourceFile = SourceFile & {
-  ranges: FileRange[]
-  partialContent: string
-}
+export type PartialSourceFile = SetRequired<
+  SourceFile,
+  'partialContent' | 'ranges'
+>
 
 export interface FileRange {
   start: {
@@ -202,6 +206,7 @@ export type LintSkipReason =
   | 'empty'
   | 'pre-process-file'
   | 'pre-process-project'
+  | 'grit-pattern'
   | 'rule-disabled'
   | 'inline-linter-disabled'
 
@@ -209,7 +214,7 @@ export type LintTask = Simplify<
   {
     scope: LintRuleScope
     rule: Rule
-    file?: SourceFile
+    file?: SourceFile | PartialSourceFile
     config: ResolvedLinterConfig
     cacheKey: string
     group: string
@@ -218,7 +223,7 @@ export type LintTask = Simplify<
     (
       | {
           scope: 'file'
-          file: SourceFile
+          file: SourceFile | PartialSourceFile
         }
       | {
           scope: 'project' | 'repo'
@@ -247,13 +252,6 @@ export type ProgressHandlerFn = (opts: {
 export type ProgressHandlerInitFn = (opts: {
   numTasks: number
 }) => MaybePromise<void>
-
-export type FileCheckFn = (opts: { file: SourceFile }) => MaybePromise<boolean>
-
-export type FileCheck = {
-  desc: string
-  fileCheckFn: FileCheckFn
-}
 
 export type EvalStats = {
   numFiles: number

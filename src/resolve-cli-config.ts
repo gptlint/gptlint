@@ -93,6 +93,11 @@ export async function resolveLinterCLIConfig(
           description: 'Enables verbose LLM logging',
           alias: 'D'
         },
+        debugGrit: {
+          type: Boolean,
+          description: 'Enables verbose Grit logging',
+          alias: 'G'
+        },
         noDebugStats: {
           type: Boolean,
           description:
@@ -185,6 +190,7 @@ export async function resolveLinterCLIConfig(
       debug: args.flags.debug,
       printConfig: args.flags.printConfig,
       debugModel: args.flags.debugModel,
+      debugGrit: args.flags.debugGrit,
       debugStats:
         args.flags.noDebugStats === undefined
           ? undefined

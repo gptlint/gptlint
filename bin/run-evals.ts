@@ -120,7 +120,8 @@ async function main() {
                 chatModel,
                 cache,
                 config,
-                cwd
+                cwd,
+                enableGrit: true
               })
 
               ++ruleEvalStats.numFiles
@@ -173,7 +174,8 @@ async function main() {
                 chatModel,
                 cache,
                 config,
-                cwd
+                cwd,
+                enableGrit: true
               })
 
               ++ruleEvalStats.numFiles

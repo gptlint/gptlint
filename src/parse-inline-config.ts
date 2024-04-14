@@ -1,5 +1,6 @@
 import type * as types from './types.js'
-import { assert, isValidRuleName, isValidRuleSetting } from './utils.js'
+import { isValidRuleName, isValidRuleSetting } from './rule-utils.js'
+import { assert } from './utils.js'
 
 /**
  * Parse inline config directives.

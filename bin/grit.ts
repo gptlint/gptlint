@@ -55,8 +55,8 @@ async function main() {
 
   const gritMatches = await applyGritQLPattern(pattern, { files })
   // const match = gritMatches.map(({ debug: _debug, ...match }) => match).at(-1)
-  const partialFiles = resolveGritQLMatches(gritMatches, { files })
-  const partialFilesC = partialFiles.filter(
+  const partialFilesMap = resolveGritQLMatches(gritMatches, { files })
+  const partialFilesC = [...partialFilesMap.values()].filter(
     (file) => file.ranges.length > 0 && file.partialContent.length > 0
   )
   console.log(

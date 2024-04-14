@@ -1,9 +1,15 @@
 import { execa } from 'execa'
+import plur from 'plur'
 import which from 'which'
 
 import type * as types from './types.js'
+import * as constants from './constants.js'
+import { createLintResult } from './lint-result.js'
 import { assert } from './utils.js'
 
+/**
+ * @see https://github.com/getgrit/gritql
+ */
 export namespace grit {
   export interface Match {
     __typename: Typename
@@ -60,6 +66,35 @@ export namespace grit {
   export type ScopedName = string
 }
 
+/**
+ * Resolves a GritQL pattern against the given source files and then resolves
+ * the matches to construct partial source files containing only the matched
+ * portions.
+ */
+export async function resolveGritQLPattern(
+  pattern: string,
+  {
+    files,
+    numLinesContext = constants.gritNumLinesContext
+  }: {
+    files: types.SourceFile[]
+    // Number of lines of context to include around each matching range
+    numLinesContext?: number
+  }
+): Promise<Map<string, types.PartialSourceFile>> {
+  if (!(await hasGrit())) {
+    return new Map()
+  }
+
+  const matches = await applyGritQLPattern(pattern, { files })
+  return resolveGritQLMatches(matches, { files, numLinesContext })
+}
+
+/**
+ * Runs `grit apply --dry-run --jsonl` on the given `pattern` and `files`.
+ *
+ * Returns an array of matches.
+ */
 export async function applyGritQLPattern(
   pattern: string,
   {
@@ -96,7 +131,8 @@ export async function applyGritQLPattern(
           return undefined
         }
 
-        return potentialMatch
+        const { debug: _, ...match } = potentialMatch
+        return match
       } catch {
         return undefined
       }
@@ -116,17 +152,25 @@ export async function whichGritBinary(): Promise<string | null> {
   return which('grit', { nothrow: true })
 }
 
+/**
+ * Takes an array of GritQL `matches` and the `files` they're matched against,
+ * and returns an array of partial source files containing only the matched
+ * portions of the given files.
+ */
 export function resolveGritQLMatches(
   matches: grit.Match[],
   {
     files,
-    numLinesContext = 0
+    numLinesContext = constants.gritNumLinesContext
   }: {
     files: types.SourceFile[]
+    // Number of lines of context to include around each matching range
     numLinesContext?: number
   }
-): types.PartialSourceFile[] {
+): Map<string, types.PartialSourceFile> {
   const matchesByFilePath = new Map<string, grit.Match[]>()
+
+  // Group matches by absolute file path
   for (const match of matches) {
     // TODO: verify if this is using absolute or relative paths
     if (!matchesByFilePath.has(match.sourceFile)) {
@@ -135,10 +179,12 @@ export function resolveGritQLMatches(
     matchesByFilePath.get(match.sourceFile)!.push(match)
   }
 
-  const filesByFilePath = new Map(files.map((file) => [file.filePath, file]))
   const partialFilesByFilePath = new Map<string, types.PartialSourceFile>()
 
-  for (const [filePath, file] of filesByFilePath.entries()) {
+  // Group partial files by absolute file path
+  for (const file of files) {
+    const { filePath } = file
+
     if (!partialFilesByFilePath.has(filePath)) {
       partialFilesByFilePath.set(filePath, {
         ...file,
@@ -148,10 +194,8 @@ export function resolveGritQLMatches(
     }
   }
 
+  // Concat all the ranges for each file
   for (const [filePath, matches] of matchesByFilePath.entries()) {
-    const file = filesByFilePath.get(filePath)
-    assert(file, `Could not find file for path: ${filePath}`)
-
     const partialFile = partialFilesByFilePath.get(filePath)!
     assert(partialFile)
 
@@ -164,7 +208,8 @@ export function resolveGritQLMatches(
       .sort((a, b) => a.start.line - b.start.line)
   }
 
-  for (const [_, partialFile] of partialFilesByFilePath.entries()) {
+  // Aggregate the partial content for each file based on the matched ranges
+  for (const partialFile of partialFilesByFilePath.values()) {
     const lines = partialFile.content.split('\n')
     const { ranges } = partialFile
 
@@ -173,11 +218,10 @@ export function resolveGritQLMatches(
 
     for (const range of ranges) {
       const startLine = Math.max(
-        maxLine - 1,
+        Math.max(0, maxLine - 1),
         range.start.line - 1 - numLinesContext
       )
       const endLine = range.end.line + numLinesContext
-      console.log(range.start.line, range.end.line, startLine, endLine)
       if (startLine >= endLine) continue
 
       maxLine = Math.max(endLine, maxLine)
@@ -185,10 +229,71 @@ export function resolveGritQLMatches(
       partialContentLines = partialContentLines.concat(partialLines)
     }
 
-    partialFile.partialContent = partialContentLines.join('\n')
+    partialFile.partialContent = partialContentLines
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join('\n')
   }
 
-  // TODO: ensure partial files are sorted the same as input files
+  return partialFilesByFilePath
+}
 
-  return [...partialFilesByFilePath.values()]
+export async function preProcessFileWithGrit({
+  file,
+  files,
+  rule,
+  config,
+  ruleNameToPartialSourceFileMap = new Map()
+}: {
+  file: types.SourceFile | types.PartialSourceFile
+  rule: types.Rule
+  config: types.ResolvedLinterConfig
+  files?: (types.SourceFile | types.PartialSourceFile)[]
+  ruleNameToPartialSourceFileMap?: Map<
+    string,
+    Promise<Map<string, types.PartialSourceFile>>
+  >
+}): Promise<types.LintResult | undefined> {
+  if (!rule.gritql) {
+    return
+  }
+
+  if (!ruleNameToPartialSourceFileMap.has(rule.name)) {
+    const partialSourceFileMapP = resolveGritQLPattern(rule.gritql, {
+      files: files ?? [file]
+    })
+    ruleNameToPartialSourceFileMap.set(rule.name, partialSourceFileMapP)
+
+    const partialSourceFileMap = await partialSourceFileMapP
+    if (config.linterOptions.debugGrit) {
+      console.log(
+        `gritql pattern "${rule.gritql}" matches:\n\n${[
+          ...partialSourceFileMap.values()
+        ]
+          .map(
+            (f) =>
+              `  ${f.fileRelativePath} found ${f.ranges?.length || 0} ${plur('match', f.ranges?.length || 0)}`
+          )
+          .join('\n\n')}\n\n`
+      )
+    }
+  }
+
+  const partialSourceFileMap = await ruleNameToPartialSourceFileMap.get(
+    rule.name
+  )!
+
+  const partialSourceFile = partialSourceFileMap.get(file.filePath)!
+  assert(partialSourceFile)
+
+  file.ranges = partialSourceFile.ranges
+  file.partialContent = partialSourceFile.partialContent.trim()
+
+  if (!file.ranges.length || !file.partialContent) {
+    return createLintResult({
+      skipped: true,
+      skipReason: 'grit-pattern',
+      skipDetail: 'no gritql matches'
+    })
+  }
 }
