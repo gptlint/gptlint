@@ -231,7 +231,7 @@ export function logDebugConfig({
   config
 }: {
   files?: types.SourceFile[]
-  rules: types.Rule[]
+  rules?: types.Rule[]
   config: types.ResolvedLinterConfig
 }) {
   console.log(
@@ -247,7 +247,10 @@ export function logDebugConfig({
   })
 
   console.log('\nconfig', JSON.stringify(sanitizedConfig, undefined, 2))
-  console.log('\nrules', JSON.stringify(rules, undefined, 2))
+
+  if (rules) {
+    console.log('\nrules', JSON.stringify(rules, undefined, 2))
+  }
 
   if (files) {
     console.log(

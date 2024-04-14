@@ -132,6 +132,23 @@ export type SourceFile = {
   language: string
 }
 
+export type PartialSourceFile = SourceFile & {
+  ranges: FileRange[]
+  partialContent: string
+}
+
+export interface FileRange {
+  start: {
+    line: number
+    column?: number // inclusive if present
+  }
+
+  end: {
+    line: number
+    column?: number // exclusive if present
+  }
+}
+
 export type LintError = {
   ruleName: string
   filePath: string
