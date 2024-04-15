@@ -1,5 +1,5 @@
 /**
- * This function checks user is admin or not.
+ * This function chcks user admin or not.
  */
 function isAdmin(user: User): boolean {
   return user.role === 'admin'

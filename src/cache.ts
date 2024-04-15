@@ -53,25 +53,27 @@ export class LinterCache<
     //   noCache: this.noCache
     // })
 
-    if (this.cacheDir) {
-      const cacheFile = this.cacheFile!
+    if (!this.cacheDir) {
+      return this
+    }
 
-      try {
-        await fs.mkdir(this.cacheDir, { recursive: true })
+    const cacheFile = this.cacheFile!
 
-        if (await pathExists(cacheFile)) {
-          const encodedCache = fsSync.readFileSync(cacheFile, {
-            encoding: 'utf8'
-          })
+    try {
+      await fs.mkdir(this.cacheDir, { recursive: true })
 
-          this.cache = JSON.parse(encodedCache) as Record<string, string>
-        }
-      } catch (err: any) {
-        console.warn(
-          `Failed to initialize cache "${cacheFile}". Continuing with empty cache.`,
-          err.message
-        )
+      if (await pathExists(cacheFile)) {
+        const encodedCache = fsSync.readFileSync(cacheFile, {
+          encoding: 'utf8'
+        })
+
+        this.cache = JSON.parse(encodedCache) as Record<string, string>
       }
+    } catch (err: any) {
+      console.warn(
+        `Failed to initialize cache "${cacheFile}". Continuing with empty cache.`,
+        err.message
+      )
     }
 
     return this

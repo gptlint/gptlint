@@ -27,7 +27,7 @@ import {
  * Takes in a list of source files and rules, transforms these into a set
  * of LintTasks, pre-processes each lint task (e.g. caching, validation),
  * processes the non-cached tasks with the LLM-based linting engine, post-
- * processes the results, and then retursn an aggregated LintResult.
+ * processes the results, and then returns an aggregated LintResult.
  */
 export async function lintFiles({
   files,

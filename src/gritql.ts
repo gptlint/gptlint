@@ -268,7 +268,7 @@ export async function preProcessFileWithGrit({
     const partialSourceFileMap = await partialSourceFileMapP
     if (config.linterOptions.debugGrit) {
       console.log(
-        `gritql pattern "${rule.gritql}" matches:\n\n${[
+        `rule ${rule.name} gritql matches:\n\n${[
           ...partialSourceFileMap.values()
         ]
           .map(

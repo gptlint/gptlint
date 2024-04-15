@@ -19,7 +19,7 @@ Common use cases for secrets include:
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
 
 ```grit
-string()
+or { string(), template_string() }
 ```
 
 ## Suggestions

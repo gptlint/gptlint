@@ -176,12 +176,12 @@ const BOOLEAN_OUTPUTS: Record<string, boolean> = {
  */
 export function parseArrayOutput(output: string): Array<any> {
   try {
-    const arr = extractJSONFromString(output, 'array')
-    if (arr.length === 0) {
+    const arrayOutput = extractJSONFromString(output, 'array')
+    if (arrayOutput.length === 0) {
       throw new ParseError(`Invalid JSON array: ${output}`)
     }
 
-    const parsedOutput = arr[0]
+    const parsedOutput = arrayOutput[0]
     if (!Array.isArray(parsedOutput)) {
       throw new ParseError(
         `Invalid JSON array: ${JSON.stringify(parsedOutput)}`
@@ -208,12 +208,12 @@ export function parseArrayOutput(output: string): Array<any> {
  */
 export function parseObjectOutput(output: string) {
   try {
-    const arr = extractJSONFromString(output, 'object')
-    if (arr.length === 0) {
+    const arrayOutput = extractJSONFromString(output, 'object')
+    if (arrayOutput.length === 0) {
       throw new ParseError(`Invalid JSON object: ${output}`)
     }
 
-    let parsedOutput = arr[0]
+    let parsedOutput = arrayOutput[0]
     if (Array.isArray(parsedOutput)) {
       // TODO
       parsedOutput = parsedOutput[0]

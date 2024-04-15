@@ -2,6 +2,16 @@
  * Calculate area of rectange.
  */
 function rectangleArea(width: number, height: number): number {
+  console.log(width, height)
+
+  if (Number.isNaN(width)) {
+    throw new Error('invalid width')
+  }
+
+  if (Number.isNaN(height)) {
+    throw new Error('invalid height')
+  }
+
   return width * height
 }
 

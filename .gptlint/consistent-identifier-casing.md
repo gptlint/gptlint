@@ -38,7 +38,7 @@ Ignore string literals and module names for this rule.
 Class member variables and functions may include `_` prefixes.
 
 ```grit
-identifier
+or { identifier(), property_identifier(), type_identifier() }
 ```
 
 ### Bad
