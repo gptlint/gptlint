@@ -60,6 +60,8 @@ export type Rule = {
   exclude?: string[]
   resources?: string[]
   model?: string
+  gritql?: string
+  gritqlNumLinesContext?: number
 
   // optional custom functionality for rules scoped to the file-level
   preProcessFile?: PreProcessFileFn
@@ -93,6 +95,9 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
 - GRS rules may optionally contain a single markdown `h3` header named "Good" or "Correct" or "Pass".
   - The content of this section should contain 1 or more code blocks to use as `positiveExamples`.
 - It is encouraged to specify a language for all code block examples, but it is not required.
+- Rules with `file` scope may optionally contain a single `grit` or `gritql` code block. If provided, it must contain a valid [gritql](https://github.com/getgrit/gritql) pattern which will be used to filter source files to only include matching portions before being processed by the linting engine.
+  - Non-`file`-scoped rules must not contain a `gritql` pattern.
+  - The `gritql` pattern will be assumed to be JS/TS for now.
 
 ### Rule Frontmatter Metadata
 
@@ -102,18 +107,19 @@ A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/f
 
 Here is a breakdown of the supported metadata fields and their expected types.
 
-| Key       | Type                      | Description                                                                                                                                          |
-| --------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| name      | `string`                  | Short name of this rule. Defaults to the rule's filename without the `.md` extension.                                                                |
-| level     | `warn \| error \| off`    | Default error level of this rule. Defaults to `error`.                                                                                               |
-| scope     | `file \| project \| repo` | Granularity at which this rule is applied. Defaults to `file`.                                                                                       |
-| fixable   | `boolean`                 | Whether or not this rule supports auto-fixing errors.                                                                                                |
-| tags      | `string[]`                | Array of tags / labels.                                                                                                                              |
-| eslint    | `string[]`                | Array of [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule.                                                       |
-| languages | `string[]`                | Array of programming languages this rule should be enabled for.                                                                                      |
-| include   | `string[]`                | Array of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`. |
-| exclude   | `string[]`                | Array of file glob patterns to ignore when enforcing this rule.                                                                                      |
-| resources | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs.                                          |
+| Key                   | Type                      | Description                                                                                                                                          |
+| --------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| name                  | `string`                  | Short name of this rule. Defaults to the rule's filename without the `.md` extension.                                                                |
+| level                 | `warn \| error \| off`    | Default error level of this rule. Defaults to `error`.                                                                                               |
+| scope                 | `file \| project \| repo` | Granularity at which this rule is applied. Defaults to `file`.                                                                                       |
+| fixable               | `boolean`                 | Whether or not this rule supports auto-fixing errors.                                                                                                |
+| tags                  | `string[]`                | Array of tags / labels.                                                                                                                              |
+| eslint                | `string[]`                | Array of [eslint rules](https://eslint.org/docs/latest/rules/) which are related to this rule.                                                       |
+| languages             | `string[]`                | Array of programming languages this rule should be enabled for.                                                                                      |
+| include               | `string[]`                | Array of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`. |
+| exclude               | `string[]`                | Array of file glob patterns to ignore when enforcing this rule.                                                                                      |
+| resources             | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs.                                          |
+| gritqlNumLinesContext | `number`                  | Number of lines before & after GritQL matches to include in the context sent to the LLM. Defaults to 3.                                              |
 
 All metadata keys are case-sensitive, and all metadata values must match their expected types if present.
 
