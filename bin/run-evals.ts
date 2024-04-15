@@ -70,13 +70,14 @@ async function main() {
   let rules: types.Rule[]
 
   try {
+    const hasFileDirGlob = args._.fileDirGlob.slice(2).length
     let files: types.SourceFile[]
     ;[files, rules] = await Promise.all([
-      resolveEvalFiles({ cwd, config }),
+      hasFileDirGlob ? resolveEvalFiles({ cwd, config }) : Promise.resolve([]),
       resolveRules({ cwd, config })
     ])
 
-    if (args._.fileDirGlob.slice(2).length) {
+    if (hasFileDirGlob) {
       filesMap = new Map()
       for (const file of files) {
         filesMap.set(file.fileRelativePath, file)
