@@ -1118,7 +1118,7 @@ Non-identifying user data such as internal IDs or other internal models related 
 exports[`parseRuleFile - .gptlint/use-correct-english.md 1`] = `
 {
   "cacheable": true,
-  "description": "All comments and documentation should use correct English spelling and grammar.
+  "description": "All comments and documentation should use correct English spelling and grammar. Obvious spelling errors should be repoted as violations.
 
 This rule applies to code comments, JSDoc comments, and markdown documentation.
 ",
