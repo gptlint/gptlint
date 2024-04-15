@@ -9,7 +9,7 @@ comment
 
 # Docs should use correct English spelling and grammar
 
-All comments and documentation should use correct English spelling and grammar.
+All comments and documentation should use correct English spelling and grammar. Obvious spelling errors should be repoted as violations.
 
 This rule applies to code comments, JSDoc comments, and markdown documentation.
 
