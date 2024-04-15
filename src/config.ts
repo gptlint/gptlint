@@ -113,6 +113,7 @@ export const LinterOptionsSchema = z
       ),
 
     noCache: z.boolean().optional().describe('Disables the built-in cache.'),
+    noGrit: z.boolean().optional().describe('Disables grit.'),
     disabled: z.boolean().optional().describe('Disables linting entirely.'),
 
     dryRun: z
@@ -194,9 +195,11 @@ export const defaultLinterOptions: Readonly<LinterOptions> = {
   debug: false,
   printConfig: false,
   debugModel: false,
+  debugGrit: false,
   debugStats: true,
   disabled: false,
   noCache: false,
+  noGrit: false,
   dryRun: false,
   cacheDir: defaultCacheDir
 }

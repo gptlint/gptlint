@@ -37,6 +37,10 @@ Ignore string literals and module names for this rule.
 
 Class member variables and functions may include `_` prefixes.
 
+```grit
+identifier
+```
+
 ### Bad
 
 ```ts

@@ -10,6 +10,15 @@ Don't log potentially sensitive customer data or we'll lose our SOC2 certificati
 
 Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
 
+```grit
+or {
+  `console.$method($args)`,
+  `logger.$method($args)`,
+  `log.$method($args)`,
+  `throw new $Error($msg)`
+}
+```
+
 ## Bad
 
 ```js

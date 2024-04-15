@@ -8,6 +8,13 @@ resources:
   - https://effectivetypescript.com
 ---
 
+```grit
+or {
+  type_alias_declaration(),
+  interface_declaration()
+}
+```
+
 # Prefer types that always represent valid states
 
 A key to effective type design is crafting types that can only represent a valid state. This rule walks through a few examples of how this can go wrong and shows you how to fix them.

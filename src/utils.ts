@@ -335,7 +335,9 @@ export function createCacheKey({
         'temperature',
         'apiBaseUrl'
       )
-    )
+    ),
+
+    linterOptions: pruneUndefined(pick(config.linterOptions ?? {}, 'noGrit'))
   })
 
   return hashObject(cacheKeySource)

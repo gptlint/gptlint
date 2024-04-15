@@ -26,7 +26,7 @@ export type RuleDefinition<Metadata extends RuleMetadata = RuleMetadata> = {
   resources?: string[]
   model?: string
   gritql?: string
-  gritNumLinesContext?: number
+  gritqlNumLinesContext?: number
 
   // optional custom functionality for rules scoped to the file-level
   preProcessFile?: types.RulePreProcessFileFn<Metadata>
@@ -169,7 +169,7 @@ export const RuleDefinitionSchema = z
         'An optional GritQL pattern to filter source code by for this rule.'
       ),
 
-    gritNumLinesContext: z
+    gritqlNumLinesContext: z
       .number()
       .optional()
       .describe(

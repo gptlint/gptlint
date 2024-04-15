@@ -1,12 +1,10 @@
 ---
 fixable: false
-tags:
-  - react
-languages:
-  - javascript
-  - typescript
+tags: [react]
+languages: [javascript, typescript]
 eslint:
   - eslint-plugin-react-prefer-function-component
+include: ['**/*.{jsx,tsx}']
 ---
 
 # Don't use React class components

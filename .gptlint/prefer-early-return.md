@@ -18,6 +18,10 @@ Ignore `if` statements with multiple `else` branches.
 
 `if` statements containing only a single statement in their body are okay and should be ignored by this rule.
 
+```grit
+function_declaration
+```
+
 ### Bad
 
 ```js

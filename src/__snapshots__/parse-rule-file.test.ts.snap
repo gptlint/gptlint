@@ -133,6 +133,8 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "comment",
+  "gritqlNumLinesContext": 10,
   "languages": [
     "typescript",
   ],
@@ -262,6 +264,7 @@ Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBas
     "camelcase",
   ],
   "fixable": false,
+  "gritql": "identifier",
   "languages": [
     "javascript",
     "typescript",
@@ -485,6 +488,7 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "function_declaration",
   "languages": [
     "typescript",
   ],
@@ -521,6 +525,7 @@ Common use cases for secrets include:
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
 ",
   "fixable": false,
+  "gritql": "string()",
   "languages": [
     "all",
   ],
@@ -682,6 +687,7 @@ Ignore \`if\` statements with multiple \`else\` branches.
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "function_declaration",
   "languages": [
     "javascript",
     "typescript",
@@ -948,6 +954,10 @@ class Product {
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "or {
+  type_alias_declaration(),
+  interface_declaration()
+}",
   "languages": [
     "typescript",
   ],
@@ -979,6 +989,9 @@ Note that uses \`classes\` is fine for non-react components.
     "eslint-plugin-react-prefer-function-component",
   ],
   "fixable": false,
+  "include": [
+    "**/*.{jsx,tsx}",
+  ],
   "languages": [
     "javascript",
     "typescript",
@@ -1043,6 +1056,7 @@ exports[`parseRuleFile - .gptlint/semantic-variable-names.md 1`] = `
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "identifier",
   "languages": [
     "javascript",
     "typescript",
@@ -1125,6 +1139,12 @@ exports[`parseRuleFile - .gptlint/soc2-no-leak-user-data.md 1`] = `
 Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
 ",
   "fixable": false,
+  "gritql": "or {
+  \`console.$method($args)\`,
+  \`logger.$method($args)\`,
+  \`log.$method($args)\`,
+  \`throw new $Error($msg)\`
+}",
   "languages": [
     "javascript",
     "typescript",
@@ -1153,6 +1173,7 @@ This rule does *not* apply to code identifiers (variable names, function names, 
 This rule does apply to code comments, JSDoc comments, and markdown documentation.
 ",
   "fixable": false,
+  "gritql": "comment",
   "level": "error",
   "metadata": {},
   "name": "use-correct-english",

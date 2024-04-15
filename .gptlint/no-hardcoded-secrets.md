@@ -1,9 +1,7 @@
 ---
 fixable: false
-tags:
-  - security
-languages:
-  - all
+tags: [security]
+languages: [all]
 ---
 
 # No hardcoded secrets
@@ -19,6 +17,10 @@ Common use cases for secrets include:
 - cryptographic secrets for signing requests
 
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
+
+```grit
+string()
+```
 
 ## Suggestions
 

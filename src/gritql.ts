@@ -254,13 +254,14 @@ export async function preProcessFileWithGrit({
     Promise<Map<string, types.PartialSourceFile>>
   >
 }): Promise<types.LintResult | undefined> {
-  if (!rule.gritql) {
+  if (!rule.gritql || config.linterOptions.noGrit) {
     return
   }
 
   if (!ruleNameToPartialSourceFileMap.has(rule.name)) {
     const partialSourceFileMapP = resolveGritQLPattern(rule.gritql, {
-      files: files ?? [file]
+      files: files ?? [file],
+      numLinesContext: rule.gritqlNumLinesContext
     })
     ruleNameToPartialSourceFileMap.set(rule.name, partialSourceFileMapP)
 

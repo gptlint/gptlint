@@ -3,6 +3,10 @@ fixable: false
 tags: [best practices]
 ---
 
+```grit
+comment
+```
+
 # Docs should use correct English spelling and grammar
 
 All comments and documentation should use correct English spelling and grammar.
