@@ -77,6 +77,9 @@ importers:
       path-exists:
         specifier: ^5.0.0
         version: 5.0.0
+      pkg-dir:
+        specifier: ^8.0.0
+        version: 8.0.0
       plur:
         specifier: ^5.1.0
         version: 5.1.0
@@ -3727,6 +3730,11 @@ packages:
       pkg-dir: 7.0.0
     dev: false
 
+  /find-up-simple@1.0.0:
+    resolution: {integrity: sha512-q7Us7kcjj2VMePAa02hDAF6d+MzsdsAWEwYyOpwUtlerRBkOEPBCRZrAV4XfcSN8fHAgaD0hP7miwoay6DCprw==}
+    engines: {node: '>=18'}
+    dev: false
+
   /find-up@4.1.0:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
@@ -6460,6 +6468,13 @@ packages:
     engines: {node: '>=14.16'}
     dependencies:
       find-up: 6.3.0
+    dev: false
+
+  /pkg-dir@8.0.0:
+    resolution: {integrity: sha512-4peoBq4Wks0riS0z8741NVv+/8IiTvqnZAr8QGgtdifrtpdXbNw/FxRS1l6NFqm4EMzuS0EDqNNx4XGaz8cuyQ==}
+    engines: {node: '>=18'}
+    dependencies:
+      find-up-simple: 1.0.0
     dev: false
 
   /pkg-types@1.0.3:

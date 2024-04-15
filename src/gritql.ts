@@ -1,11 +1,15 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
+
 import { execa } from 'execa'
+import { packageDirectory } from 'pkg-dir'
 import plur from 'plur'
 import which from 'which'
 
 import type * as types from './types.js'
 import * as constants from './constants.js'
 import { createLintResult } from './lint-result.js'
-import { assert } from './utils.js'
+import { assert, dirname } from './utils.js'
 
 /**
  * @see https://github.com/getgrit/gritql
@@ -148,8 +152,28 @@ export async function hasGrit(): Promise<boolean> {
 }
 
 export async function whichGritBinary(): Promise<string | null> {
-  // TODO: make sure this matches `node_modules/.bin/grit`
-  return which('grit', { nothrow: true })
+  const gritBinary = await which('grit', { nothrow: true })
+  if (gritBinary) return gritBinary
+
+  // Resolve optional local install of `node_modules/.bin/grit`
+  const pkgDir = await packageDirectory({
+    cwd: dirname()
+  })
+  if (!pkgDir) return null
+
+  const maybeLocalGritBinary = path.resolve(
+    pkgDir,
+    'node_modules',
+    '.bin',
+    'grit'
+  )
+
+  try {
+    await fs.access(maybeLocalGritBinary, fs.constants.R_OK | fs.constants.X_OK)
+    return maybeLocalGritBinary
+  } catch {
+    return null
+  }
 }
 
 /**

@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { globby, type Options as GlobbyOptions } from 'globby'
 import hashObject from 'hash-object'
@@ -387,4 +388,8 @@ export async function resolveGlobFilePatterns(
     console.error('error resolving glob patterns', err.message)
     throw err
   }
+}
+
+export function dirname() {
+  return import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url))
 }
