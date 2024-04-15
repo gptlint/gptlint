@@ -264,7 +264,7 @@ Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBas
     "camelcase",
   ],
   "fixable": false,
-  "gritql": "identifier",
+  "gritql": "or { identifier(), property_identifier(), type_identifier() }",
   "languages": [
     "javascript",
     "typescript",
@@ -525,7 +525,7 @@ Common use cases for secrets include:
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
 ",
   "fixable": false,
-  "gritql": "string()",
+  "gritql": "or { string(), template_string() }",
   "languages": [
     "all",
   ],
@@ -635,170 +635,122 @@ const item = items[index]",
 }
 `;
 
-exports[`parseRuleFile - .gptlint/prefer-defensive-programming.md 1`] = `
+exports[`parseRuleFile - .gptlint/prefer-loose-array-bounds-checks-in-loops.md 1`] = `
 {
   "cacheable": true,
-  "description": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+  "description": "Array bounds checks within loops should verify if a variable is \`>=\` or \`<=\` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays in loops is brittle and a common cause of subtle bugs.
 
-The following defensive programming techniques should be preferred whenever possible:
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
 
-- [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
-- [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
-- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
-- [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
-- [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
-- [Use defensive error handling](#use-defensive-error-handling)
-",
-  "exclude": [
-    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
-  ],
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
-  "level": "error",
-  "metadata": {},
-  "name": "prefer-defensive-programming",
-  "negativeExamples": [],
-  "positiveExamples": [],
-  "scope": "file",
-  "source": ".gptlint/prefer-defensive-programming.md",
-  "tags": [
-    "best practices",
-  ],
-  "title": "Prefer defensive programming techniques <!-- omit from toc -->",
+  do {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  } while (currentTaskIndex !== tasks.length)
 }
-`;
+\`\`\`
 
-exports[`parseRuleFile - .gptlint/prefer-early-return.md 1`] = `
-{
-  "cacheable": true,
-  "description": "Prefer returning early from functions in order to keep them as flat as possible.
+This example has two bugs:
 
-Ignore \`if\` statements with multiple \`else\` branches.
+- if \`tasks\` is empty, the first iteration of the while loop will throw an error
+- the \`while\` loop guard is very brittle which is a code smell. if \`currentTaskIndex\` somehow gets changed in an unexpected way with future code changes, then the \`while\` loop guard could end up going past the end of the tasks array!
 
-\`if\` statements containing only a single statement in their body are okay and should be ignored by this rule.
+An improved version of this code which fixes these buse looks like:
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  while (currentTaskIndex < tasks.length) {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  }
+}
+\`\`\`
 ",
-  "eslint": [
-    "prefer-early-return",
-  ],
   "exclude": [
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
-  "gritql": "function_declaration",
+  "gritql": "or {
+  do_statement(),
+  while_statement(),
+  for_statement()
+}",
   "languages": [
     "javascript",
     "typescript",
   ],
   "level": "error",
   "metadata": {},
-  "name": "prefer-early-return",
+  "name": "prefer-loose-array-bounds-checks-in-loops",
   "negativeExamples": [
     {
-      "code": "function handleClick(event) {
-  if (event.target.matches('.save-data')) {
-    let id = event.target.getAttribute('data-id')
-
-    if (id) {
-      let token = localStorage.getItem('token')
-
-      if (token) {
-        localStorage.setItem(\`\${token}_\${id}\`, true)
-      }
-    }
-  }
+      "code": "for (let i = 0; i !== arr.length; i++) {
+  // this is bad because it should use \`i < arr.length\` to be safer
 }",
       "language": "js",
+    },
+    {
+      "code": "for (let i = arr.length; i !== -1; i--) {
+  // this is bad because it should use \`i >= 0\` or \`i > -1\` to be safer
+}",
+      "language": "ts",
+    },
+    {
+      "code": "while (i !== tasks.length) {
+  // this is bad because it should use \`i < tasks.length\` to be safer
+  ++i
+}",
+      "language": "js",
+    },
+    {
+      "code": "const length = arr.length
+let i = 0
+while (i !== length) {
+  // this is bad because the while loop should use \`i < length\` to be safer
+  ++i
+}",
+      "language": "ts",
     },
   ],
   "positiveExamples": [
     {
-      "code": "function example() {
-  const res = await fetch()
-  if (!res) {
-    return
-  }
-
-  // process res
-}",
+      "code": "for (let i = 0; i < arr.length; i++) {}",
+      "language": "js",
+    },
+    {
+      "code": "for (let i = arr.length; i >= 0; i--) {}",
       "language": "ts",
     },
     {
-      "code": "function example() {
-  const res = await fetch()
-  if (!res) return
-
-  // process res
-}",
-      "language": "ts",
-    },
-    {
-      "code": "function foo() {
-  if (!a) {
-    return
-  }
-
-  b()
-  c()
+      "code": "while (i < tasks.length) {
+  ++i
 }",
       "language": "js",
     },
-    {
-      "code": "function bar() {
-  if (a) {
-    b()
-    c()
-  }
-
-  d()
-}",
-      "language": "js",
-    },
-    {
-      "code": "function baz() {
-  if (a) {
-    b()
-    c()
-  } else {
-    d()
-  }
-}",
-      "language": "js",
-    },
-    {
-      "code": "function foo() {
-  if (a) {
-    b()
-  }
-}",
-      "language": "js",
-    },
-    {
-      "code": "function handleClick(event) {
-  if (!event.target.matches('.save-data')) return
-
-  let id = event.target.getAttribute('data-id')
-  if (!id) return
-
-  let token = localStorage.getItem('token')
-  if (!token) return
-
-  localStorage.setItem(\`\${token}_\${id}\`, true)
-}",
-      "language": "js",
-    },
-  ],
-  "resources": [
-    "https://gomakethings.com/the-early-return-pattern-in-javascript/",
   ],
   "scope": "file",
-  "source": ".gptlint/prefer-early-return.md",
+  "source": ".gptlint/prefer-loose-array-bounds-checks-in-loops.md",
   "tags": [
     "best practices",
   ],
-  "title": "Prefer early returns from functions",
+  "title": "Prefer loose array bounds checks in loops",
 }
 `;
 
@@ -1168,9 +1120,7 @@ exports[`parseRuleFile - .gptlint/use-correct-english.md 1`] = `
   "cacheable": true,
   "description": "All comments and documentation should use correct English spelling and grammar.
 
-This rule does *not* apply to code identifiers (variable names, function names, type names, etc) which often use shorthand.
-
-This rule does apply to code comments, JSDoc comments, and markdown documentation.
+This rule applies to code comments, JSDoc comments, and markdown documentation.
 ",
   "fixable": false,
   "gritql": "comment",
@@ -1426,6 +1376,81 @@ type Query {
 }
 `;
 
+exports[`parseRuleFile - fixtures/valid-rules/prefer-loose-array-bounds-checks-in-loops.md 1`] = `
+{
+  "cacheable": true,
+  "description": "Array bounds checks within loops should verify if a variable is \`>=\` or \`<=\` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays in loops is brittle and a common cause of subtle bugs.
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  do {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  } while (currentTaskIndex !== tasks.length)
+}
+\`\`\`
+
+This example has two bugs:
+
+- if \`tasks\` is empty, the first iteration of the while loop will throw an error
+- the \`while\` loop guard is very brittle which is a code smell. if \`currentTaskIndex\` somehow gets changed in an unexpected way with future code changes, then the \`while\` loop guard could end up going past the end of the tasks array!
+
+An improved version of this code which fixes these buse looks like:
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  while (currentTaskIndex < tasks.length) {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  }
+}
+\`\`\`
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "gritql": "or {
+  do_statement(),
+  while_statement(),
+  for_statement()
+}",
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "metadata": {},
+  "name": "prefer-loose-array-bounds-checks-in-loops",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": "fixtures/valid-rules/prefer-loose-array-bounds-checks-in-loops.md",
+  "tags": [
+    "best practices",
+  ],
+  "title": "Prefer loose array bounds checks in loops",
+}
+`;
+
 exports[`parseRuleFile - fixtures/valid-rules/prefer-page-queries.md 1`] = `
 {
   "cacheable": true,
@@ -1558,6 +1583,142 @@ exports[`parseRuleFile - fixtures/valid-rules/wip/format-comments-like-sentences
   "scope": "file",
   "source": "fixtures/valid-rules/wip/format-comments-like-sentences.md",
   "title": "Format comments like sentences",
+}
+`;
+
+exports[`parseRuleFile - fixtures/valid-rules/wip/prefer-defensive-programming.md 1`] = `
+{
+  "cacheable": true,
+  "description": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+
+The following defensive programming techniques should be preferred whenever possible:
+
+- [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
+- [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
+- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
+- [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
+- [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
+- [Use defensive error handling](#use-defensive-error-handling)
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "metadata": {},
+  "name": "prefer-defensive-programming",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": "fixtures/valid-rules/wip/prefer-defensive-programming.md",
+  "tags": [
+    "best practices",
+  ],
+  "title": "Prefer defensive programming techniques <!-- omit from toc -->",
+}
+`;
+
+exports[`parseRuleFile - fixtures/valid-rules/wip/prefer-early-return.md 1`] = `
+{
+  "cacheable": true,
+  "description": "Prefer returning early from functions in order to keep them as flat as possible.
+
+Ignore \`if\` statements with multiple \`else\` branches.
+
+Ignore \`if\` statements which include a \`return\` or \`throw\` in their body.
+
+\`if\` statements containing only a single statement in their body are okay and should be ignored by this rule.
+",
+  "eslint": [
+    "prefer-early-return",
+  ],
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "gritql": "function_declaration",
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "metadata": {},
+  "name": "prefer-early-return",
+  "negativeExamples": [
+    {
+      "code": "function handleClick(event) {
+  if (event.target.matches('.save-data')) {
+    let id = event.target.getAttribute('data-id')
+
+    if (id) {
+      let token = localStorage.getItem('token')
+
+      if (token) {
+        localStorage.setItem(\`\${token}_\${id}\`, true)
+      }
+    }
+  }
+}",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "function handleClick(event) {
+  if (!event.target.matches('.save-data')) return
+
+  let id = event.target.getAttribute('data-id')
+  if (!id) return
+
+  let token = localStorage.getItem('token')
+  if (!token) return
+
+  localStorage.setItem(\`\${token}_\${id}\`, true)
+}",
+      "language": "js",
+    },
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) {
+    return
+  }
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) return
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function foo() {
+  if (a) {
+    b()
+  }
+}",
+      "language": "js",
+    },
+  ],
+  "resources": [
+    "https://gomakethings.com/the-early-return-pattern-in-javascript/",
+  ],
+  "scope": "file",
+  "source": "fixtures/valid-rules/wip/prefer-early-return.md",
+  "tags": [
+    "best practices",
+  ],
+  "title": "Prefer early returns from functions",
 }
 `;
 

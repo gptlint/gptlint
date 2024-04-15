@@ -14,6 +14,7 @@ import {
   parseRuleNode
 } from './markdown-utils.js'
 import { RuleDefinitionSchema } from './rule.js'
+import { validateRule } from './rule-utils.js'
 import { assert, omit } from './utils.js'
 
 /**
@@ -72,7 +73,7 @@ export async function parseRuleFile({
     }
   })
 
-  return rule
+  return validateRule(rule)
 }
 
 export async function parseRuleFilePath(
