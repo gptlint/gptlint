@@ -501,10 +501,10 @@ export async function lintFiles({
               )}`
               const lintErrorShortDesc =
                 lintErrors.length === 1
-                  ? trimMessage(
+                  ? `\`${trimMessage(
                       lintErrors[0]?.codeSnippet ?? lintErrors[0]?.message,
                       { maxLength: 60 }
-                    )
+                    )}\``
                   : ''
               const lintErrorDesc = [lintErrorPrefixDesc, lintErrorShortDesc]
                 .filter(Boolean)

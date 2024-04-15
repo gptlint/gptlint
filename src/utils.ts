@@ -67,7 +67,7 @@ export function trimMessage(
 ): string {
   if (!message) return ''
 
-  message = message.trim()
+  message = message.trim().split('\n')[0]!.trim()
   if (message.length < maxLength) return message
   message = `${message.slice(0, maxLength - 3)}...`
 
