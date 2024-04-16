@@ -2,10 +2,6 @@
 
 ## MVP Public Release
 
-- linter engine
-  - **improve evals**
-    - add unit tests to evals for edge cases
-  - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
 - rule file format
   - relax the examples parsing and lean into more flexible markdown support
   - add support for `bad ⇒ good` examples for autofixing
@@ -23,7 +19,6 @@
   - ensure precheck tasks are properly reported as cached
 - project
   - stress test w/ real-world repos
-  - decide on an OSS license
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - social image for docs and launch
   - demo video
@@ -57,3 +52,6 @@
   - add support for [openai seed](https://platform.openai.com/docs/api-reference/chat/create#chat-create-seed) and `system_fingerprint` to help make the system more deterministic
   - handle context overflow properly depending on selected model
   - add support for comments explaining why it's okay to break a rule
+  - **improve evals**
+  - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
+  - add additional unit tests to evals for edge cases
