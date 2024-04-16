@@ -379,8 +379,9 @@ export async function validateRuleViolations({
     lintResult.lintErrors.map((error) => ({
       ruleName: rule.name,
       codeSnippet: error.codeSnippet,
-      codeSnippetSource: 'unknown',
-      reasoning: error.reasoning
+      codeSnippetSource: 'unknown'
+      // We intentionally omit the weak model's `reasoning` here because it may
+      // be misleading, and that's why we're relying on the strong model for.
     }))
 
   const messages: Prompt.Msg[] = [

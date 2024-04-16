@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url'
 
 import { globby, type Options as GlobbyOptions } from 'globby'
 import hashObject from 'hash-object'
-import prettyMilliseconds from 'pretty-ms'
 
 import type * as types from './types.js'
 import { getLintDurationMs } from './lint-result.js'
@@ -245,7 +244,7 @@ export function logLintResultStats({
 }) {
   const lintDurationMs = getLintDurationMs(lintResult)
   const lintDuration = lintDurationMs
-    ? prettyMilliseconds(lintDurationMs)
+    ? `${Math.ceil(lintDurationMs / 1000)}s`
     : undefined
 
   console.log(

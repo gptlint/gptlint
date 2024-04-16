@@ -14,6 +14,8 @@ Promises (and `async` functions which implicitly create Promises) must always be
 
 Creating a Promise or calling an `async` function and NOT awaiting or propagating the resulting Promise using one of these approaches is a code smell and violates this rule.
 
+**Important**: This rule should only apply to function calls which you are 100% sure return a `Promise`. If you do not know for sure that a function returns a `Promise`, then disregard it.
+
 ### Bad
 
 ```js
