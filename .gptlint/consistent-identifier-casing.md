@@ -8,7 +8,57 @@ eslint:
 ---
 
 ```grit
-or { identifier(), property_identifier(), type_identifier() }
+or {
+  type_identifier() as $id where {
+    and {
+      $id <: within or {
+        type_alias_declaration($name),
+        interface_declaration($name),
+        class_declaration($name)
+      },
+      $id <: $name
+    }
+  },
+
+  identifier() as $id where {
+    or {
+      and {
+        $id <: within or {
+          variable_declarator($name),
+          function_declaration($name),
+          class_declaration($name),
+          method_signature($name),
+          method_definition($name),
+          required_parameter($name),
+          optional_parameter($name)
+        },
+        $id <: $name
+      },
+
+      or {
+        and {
+          $id <: within `function $func($props): $ret {$body}`,
+          $id <: not or { within $body, within $func }
+        },
+        and {
+          $id <: within `function $func($props) {$body}`,
+          $id <: not or { within $body, within $func }
+        },
+        and {
+          $id <: within `($props) => $body`,
+          $id <: not or { within $body }
+        }
+      }
+    }
+  },
+
+  property_identifier() as $id where {
+    and {
+      $id <: within or { method_signature($name), method_definition($name) },
+      $id <: $name
+    }
+  }
+}
 ```
 
 # Be consistent with identifier casing
@@ -80,6 +130,6 @@ const cwd = process.cwd
 ```
 
 ```ts
-// This is fine because `i` is a parameter of an inline function.
-const foo = [1, 2, 3].filter((i) => i >= 0)
+// This is fine because `i` is a parameter of an inline function and `res` is a common exception.
+const res = [1, 2, 3].filter((i) => i >= 0)
 ```

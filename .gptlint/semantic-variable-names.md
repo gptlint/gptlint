@@ -7,7 +7,33 @@ exclude:
 ---
 
 ```grit
-identifier
+identifier() as $id where {
+  or {
+    and {
+      $id <: within or {
+        variable_declarator($name),
+        required_parameter($name),
+        optional_parameter($name)
+      },
+      $id <: $name
+    },
+
+    or {
+      and {
+        $id <: within `function $func($props): $ret {$body}`,
+        $id <: not or { within $body, within $func }
+      },
+      and {
+        $id <: within `function $func($props) {$body}`,
+        $id <: not or { within $body, within $func }
+      },
+      and {
+        $id <: within `($props) => $body`,
+        $id <: not within $body
+      }
+    }
+  }
+}
 ```
 
 # Use semantic variable names
