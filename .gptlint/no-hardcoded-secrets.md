@@ -1,5 +1,6 @@
 ---
 fixable: false
+gritqlNumLinesContext: 3
 tags: [security]
 languages: [all]
 ---
