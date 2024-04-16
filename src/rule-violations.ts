@@ -271,5 +271,6 @@ export function stringifyRuleViolationForModel(
   return `\`\`\`json
 {
   ruleViolations: ${JSON.stringify(ruleViolations, null, 2)}
-}`
+}
+\`\`\``
 }
