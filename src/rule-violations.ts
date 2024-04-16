@@ -38,7 +38,7 @@ export const ruleViolationSchema = z.object({
     .enum(['examples', 'source', 'unknown'])
     .optional()
     .describe(
-      'Where the `codeSnippet` comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source". If you are not sure, then use "unknown".'
+      'Where this rule violation\'s `codeSnippet` comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source".'
     ),
 
   reasoning: z
@@ -214,8 +214,8 @@ interface RULE_VIOLATION {
   // The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should include an ellipsis "..." if they would be more than 10 lines of code.
   codeSnippet: string
 
-  // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" EXAMPLES, then use "examples". If it comes from the SOURCE "${file.fileRelativePath}", then use "source". If you are not sure, then use "unknown".
-  codeSnippetSource: "examples" | "source" | "unknown"
+  // Where this rule violation's \`codeSnippet\` comes from. If it comes from the RULE ${rule.name} examples, then use "examples". If it comes from the SOURCE code "${file.fileRelativePath}", then use "source".
+  codeSnippetSource: "examples" | "source"
 
   // An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.
   reasoning: string
@@ -238,7 +238,7 @@ export function stringifyExampleRuleViolationsObjectOutputForModel(
     {
       "ruleName": "${rule.name}",
       "codeSnippet": "...",
-      "codeSnippetSource": "unknown",
+      "codeSnippetSource": "source",
       "reasoning": "..."
       "violation": true,
       "confidence": "high"
@@ -256,7 +256,7 @@ export function stringifyExampleRuleViolationsArrayOutputForModel(
   {
     "ruleName": "${rule.name}",
     "codeSnippet": "...",
-    "codeSnippetSource": "unknown",
+    "codeSnippetSource": "source",
     "reasoning": "..."
     "violation": true,
     "confidence": "high"
