@@ -7,6 +7,10 @@ eslint:
 include: ['**/*.{jsx,tsx}']
 ---
 
+```grit
+react_class_component
+```
+
 # Don't use React class components
 
 React class components are deprecated. Use React functions and hooks instead.

@@ -4,6 +4,10 @@ tags: [security]
 languages: [all]
 ---
 
+```grit
+or { string(), template_string() }
+```
+
 # No hardcoded secrets
 
 Sensitive secrets should never be hardcoded in git because they represent a serious security risk.
@@ -17,10 +21,6 @@ Common use cases for secrets include:
 - cryptographic secrets for signing requests
 
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
-
-```grit
-or { string(), template_string() }
-```
 
 ## Suggestions
 

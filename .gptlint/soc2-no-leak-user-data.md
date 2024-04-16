@@ -4,12 +4,6 @@ tags: [security]
 languages: [javascript, typescript]
 ---
 
-# SOC2 Don't leak user data
-
-Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
-
-Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
-
 ```grit
 or {
   `console.$method($args)`,
@@ -18,6 +12,12 @@ or {
   `throw new $Error($msg)`
 }
 ```
+
+# SOC2 Don't leak user data
+
+Don't log potentially sensitive customer data or we'll lose our SOC2 certification.
+
+Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
 
 ## Bad
 

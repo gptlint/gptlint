@@ -12,6 +12,7 @@
 - rules
   - **add new rules**
   - rewrite `liberal-accept-strict-produce` to be less verbose and have better examples
+  - rewrite `prefer-types-always-valid-states`
   - finish `effective-eslint-config`
   - finish `effective-tsconfig`
 - config
