@@ -23,18 +23,6 @@ Common use cases for secrets include:
 
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
 
-## Suggestions
-
-Other solutions include tools like:
-
-- [Hashicorp Vault](https://www.vaultproject.io)
-- [Infiscal](https://infisical.com)
-- [Doppler](https://www.doppler.com)
-- [sops](https://github.com/getsops/sops)
-- [chamber](https://github.com/segmentio/chamber)
-- [AWS parameter store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)
-- [AWS Vault](https://github.com/99designs/aws-vault)
-
 ### Bad
 
 ```js
