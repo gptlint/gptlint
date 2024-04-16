@@ -3,7 +3,6 @@
 ## MVP Public Release
 
 - rule file format
-  - relax the examples parsing and lean into more flexible markdown support
   - add support for `bad ⇒ good` examples for autofixing
 - rules
   - **add new rules**

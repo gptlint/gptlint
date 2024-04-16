@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`resolveGlobFilePatterns 1`] = `
+[
+  "src/cache.test.ts",
+  "src/custom-rule.test.ts",
+  "src/gritql.test.ts",
+  "src/is-binary-file.test.ts",
+  "src/parse-inline-config.test.ts",
+  "src/parse-rule-file.test.ts",
+  "src/parse-structured-output.test.ts",
+  "src/rule-utils.test.ts",
+  "src/utils.test.ts",
+]
+`;

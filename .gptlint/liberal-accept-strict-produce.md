@@ -4,7 +4,7 @@ gritqlNumLinesContext: 3
 tags: [best practices]
 languages: [typescript]
 exclude:
-  - '**/*.test\.{js,ts,jsx,tsx,cjs,mjs}'
+  - '**/*\.test\.{js,ts,jsx,tsx,cjs,mjs}'
 resources:
   - https://effectivetypescript.com
 ---

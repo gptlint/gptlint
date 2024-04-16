@@ -1,6 +1,13 @@
+import path from 'node:path'
+
 import { expect, test } from 'vitest'
 
-import { inferBestPossibleCodeFileExtension, omit, pick } from './utils.js'
+import {
+  inferBestPossibleCodeFileExtension,
+  omit,
+  pick,
+  resolveGlobFilePatterns
+} from './utils.js'
 
 test('inferBestPossibleCodeFileExtension - valid', () => {
   expect(inferBestPossibleCodeFileExtension('js')).toBe('js')
@@ -43,4 +50,21 @@ test('omit', () => {
   expect(
     omit({ a: { b: 'foo' }, d: -1, foo: null } as any, 'b', 'foo')
   ).toEqual({ a: { b: 'foo' }, d: -1 })
+})
+
+test('resolveGlobFilePatterns', async () => {
+  expect(
+    resolveGlobFilePatterns(['src/**/*.test.ts'])
+  ).resolves.toMatchSnapshot()
+
+  expect(resolveGlobFilePatterns(['src/**/*.test.ts'])).resolves.toEqual(
+    await resolveGlobFilePatterns(['src/**/*\\.test\\.ts'])
+  )
+
+  // Ensure that absolute paths are handled correctly
+  const res = await resolveGlobFilePatterns([
+    path.resolve('src', 'utils.test.ts')
+  ])
+  expect(res.length).toEqual(1)
+  expect(path.basename(res[0]!)).toEqual('utils.test.ts')
 })

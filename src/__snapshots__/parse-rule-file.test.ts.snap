@@ -136,7 +136,7 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
 If a comment is providing useful context or clarifying what a parameter is used for, then it should be ignored. This rule is only aimed at comments which duplicate type info or comments which imply immutability.
 ",
   "exclude": [
-    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+    "**/*\\.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
   "gritql": "comment",
@@ -517,7 +517,7 @@ This time the type of zoom is number, rather than \`number|undefined\`. The \`vi
 Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.
 ",
   "exclude": [
-    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+    "**/*\\.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
   "gritql": "function_declaration",
@@ -955,7 +955,8 @@ Prefer types that only represent valid states. Even if they are longer or harder
 If a field is useful, but adding it to a type could result the type representing invalid states, then consider whether that field can be derived from a minimal set of state that is always valid.
 ",
   "exclude": [
-    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+    "**/*\\.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+    "**/*\\.{js,cjs,mjs,json}",
   ],
   "fixable": false,
   "gritql": "or {
@@ -1081,7 +1082,7 @@ The names of file imports from third-party APIs and modules should be ignored be
 If you are unsure whether or not a variable name is descriptive enough, err on the side of ignoring it or setting \`confidence\` to \`low\`.
 ",
   "exclude": [
-    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+    "**/*\\.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
   "gritql": "identifier() as $id where {

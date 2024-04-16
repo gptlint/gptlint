@@ -4,7 +4,7 @@ gritqlNumLinesContext: 2
 tags: [best practices]
 languages: [javascript, typescript]
 exclude:
-  - '**/*.test\.{js,ts,jsx,tsx,cjs,mjs}'
+  - '**/*\.test\.{js,ts,jsx,tsx,cjs,mjs}'
 ---
 
 ```grit
