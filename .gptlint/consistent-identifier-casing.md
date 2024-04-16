@@ -7,6 +7,10 @@ eslint:
   - 'camelcase'
 ---
 
+```grit
+or { identifier(), property_identifier(), type_identifier() }
+```
+
 # Be consistent with identifier casing
 
 Identifiers of the same type should try to use consistent casing.

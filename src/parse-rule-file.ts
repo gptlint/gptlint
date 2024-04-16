@@ -5,13 +5,16 @@ import { parseDocument as parseYAMLDocument } from 'yaml'
 
 import type * as types from './types.js'
 import {
+  convertASTToPlaintext,
   findAllBetween,
+  findAllCodeBlockNodes,
   findAllHeadingNodes,
   findAllYAMLNodes,
   parseMarkdownAST,
   parseRuleNode
 } from './markdown-utils.js'
 import { RuleDefinitionSchema } from './rule.js'
+import { validateRule } from './rule-utils.js'
 import { assert, omit } from './utils.js'
 
 /**
@@ -44,16 +47,33 @@ export async function parseRuleFile({
       : undefined
 
   const headingRuleNode = h1RuleNodes[0]!
-  const bodyRuleNodes = findAllBetween(ast, headingRuleNode)
+  let bodyRuleNodes = findAllBetween(ast, headingRuleNode)
+  const gritCodeBlockNodes = findAllCodeBlockNodes(ast).filter(
+    (codeNode) => codeNode.lang === 'grit' || codeNode.lang === 'gritql'
+  )
+  assert(
+    gritCodeBlockNodes.length <= 1,
+    `Rule must not contain more than 1 "grit" code blocks: ${filePath}`
+  )
+
+  const codeBlockNode = gritCodeBlockNodes[0]
+  let gritql: string | undefined
+  if (codeBlockNode) {
+    gritql = convertASTToPlaintext(codeBlockNode)?.trim()
+    bodyRuleNodes = bodyRuleNodes.filter((node) => node !== codeBlockNode)
+  }
 
   const rule = parseRuleNode({
     headingRuleNode,
     bodyRuleNodes,
     filePath,
-    partialRule: maybePartialRule
+    partialRule: {
+      ...maybePartialRule,
+      gritql
+    }
   })
 
-  return rule
+  return validateRule(rule)
 }
 
 export async function parseRuleFilePath(

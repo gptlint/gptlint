@@ -11,7 +11,8 @@ import { unified } from 'unified'
 import { is, type Test } from 'unist-util-is'
 
 import type * as types from './types.js'
-import { assert, isValidRuleName, slugify } from './utils.js'
+import { isValidRuleName } from './rule-utils.js'
+import { assert, pruneUndefined, slugify } from './utils.js'
 
 export function parseMarkdownAST(content: string) {
   return unified()
@@ -72,7 +73,7 @@ export function parseRuleNode({
 
   const description = convertASTToMarkdown(bodyRuleNode)
 
-  const rule: types.Rule = {
+  const rule: types.Rule = pruneUndefined({
     name: defaultRuleName,
     title,
     description,
@@ -84,7 +85,7 @@ export function parseRuleNode({
     source: filePath,
     metadata: {},
     ...partialRule
-  }
+  })
   assert(rule.name, `Rule name must not be empty: ${title}`)
 
   assert(

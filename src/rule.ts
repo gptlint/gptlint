@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 import type * as types from './types.js'
-import { isValidRuleName } from './utils.js'
+import { isValidRuleName } from './rule-utils.js'
 
 export type RuleMetadata<K extends string = string, V = any> = Record<K, V>
 
@@ -25,6 +25,8 @@ export type RuleDefinition<Metadata extends RuleMetadata = RuleMetadata> = {
   exclude?: string[]
   resources?: string[]
   model?: string
+  gritql?: string
+  gritqlNumLinesContext?: number
 
   // optional custom functionality for rules scoped to the file-level
   preProcessFile?: types.RulePreProcessFileFn<Metadata>
@@ -158,6 +160,20 @@ export const RuleDefinitionSchema = z
       .optional()
       .describe(
         'An optional array of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`.'
+      ),
+
+    gritql: z
+      .string()
+      .optional()
+      .describe(
+        'An optional GritQL pattern to filter source code by for this rule.'
+      ),
+
+    gritqlNumLinesContext: z
+      .number()
+      .optional()
+      .describe(
+        'Number of lines before & after GritQL matches to include in the context sent to the LLM. Defaults to 3.'
       ),
 
     preProcessFile: z

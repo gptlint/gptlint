@@ -1,10 +1,12 @@
 ---
 fixable: false
-tags:
-  - security
-languages:
-  - all
+tags: [security]
+languages: [all]
 ---
+
+```grit
+or { string(), template_string() }
+```
 
 # No hardcoded secrets
 

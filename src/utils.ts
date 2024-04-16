@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { globby, type Options as GlobbyOptions } from 'globby'
 import hashObject from 'hash-object'
@@ -61,44 +62,13 @@ export function pruneUndefined<T extends Record<string, any>>(
   ) as NonNullable<T>
 }
 
-export function isValidRuleName(name: string): name is NonNullable<string> {
-  if (!name) return false
-  if (name.toLowerCase() !== name) return false
-
-  const parts = name.split('/')
-  if (parts.length === 2) {
-    if (!/^@[a-z][\w-]*$/i.test(parts[0]!)) return false
-    if (!/^[a-z][\w-]*$/i.test(parts[1]!)) return false
-  } else if (!/^[a-z][\w-]*$/i.test(name)) return false
-
-  return true
-}
-
-export function isValidRuleSetting(
-  value: string
-): value is types.LinterConfigRuleSetting {
-  if (!value) return false
-  if (value.toLowerCase() !== value) return false
-
-  return value === 'off' || value === 'warn' || value === 'error'
-}
-
-export function isValidRuleScope(
-  value: string
-): value is types.LinterConfigRuleSetting {
-  if (!value) return false
-  if (value.toLowerCase() !== value) return false
-
-  return value === 'file' || value === 'project' || value === 'repo'
-}
-
 export function trimMessage(
   message: string | undefined,
   { maxLength = 80 }: { maxLength?: number } = {}
 ): string {
   if (!message) return ''
 
-  message = message.trim()
+  message = message.trim().split('\n')[0]!.trim()
   if (message.length < maxLength) return message
   message = `${message.slice(0, maxLength - 3)}...`
 
@@ -231,7 +201,7 @@ export function logDebugConfig({
   config
 }: {
   files?: types.SourceFile[]
-  rules: types.Rule[]
+  rules?: types.Rule[]
   config: types.ResolvedLinterConfig
 }) {
   console.log(
@@ -247,7 +217,10 @@ export function logDebugConfig({
   })
 
   console.log('\nconfig', JSON.stringify(sanitizedConfig, undefined, 2))
-  console.log('\nrules', JSON.stringify(rules, undefined, 2))
+
+  if (rules) {
+    console.log('\nrules', JSON.stringify(rules, undefined, 2))
+  }
 
   if (files) {
     console.log(
@@ -349,7 +322,9 @@ export function createCacheKey({
         'level',
         'scope',
         'model',
-        'languages'
+        'languages',
+        'gritql',
+        'gritqlNumLinesContext'
         // TODO: include / exclude? languages?
       )
     ),
@@ -363,7 +338,9 @@ export function createCacheKey({
         'temperature',
         'apiBaseUrl'
       )
-    )
+    ),
+
+    linterOptions: pruneUndefined(pick(config.linterOptions ?? {}, 'noGrit'))
   })
 
   return hashObject(cacheKeySource)
@@ -413,4 +390,8 @@ export async function resolveGlobFilePatterns(
     console.error('error resolving glob patterns', err.message)
     throw err
   }
+}
+
+export function dirname() {
+  return import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url))
 }

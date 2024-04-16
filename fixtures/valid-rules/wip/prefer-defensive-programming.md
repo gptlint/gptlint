@@ -1,10 +1,8 @@
 ---
+title: Prefer defensive programming techniques
 fixable: false
-tags:
-  - best practices
-languages:
-  - javascript
-  - typescript
+tags: [best practices]
+languages: [javascript, typescript]
 exclude:
   - '**/*.test\.{js,ts,jsx,tsx,cjs,mjs}'
 ---

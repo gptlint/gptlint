@@ -8,6 +8,10 @@ resources:
   - https://effectivetypescript.com
 ---
 
+```grit
+comment
+```
+
 # Don’t repeat type information in documentation
 
 Avoid repeating type information in comments and variable names. In the best case it is duplicative of type declarations, and in the worst it will lead to conflicting information.

@@ -21,8 +21,9 @@ export async function preProcessTask(
 
   if (scope === 'file') {
     assert(file)
+    const content = file.partialContent || file.content
 
-    if (!file.content.trim()) {
+    if (!content.trim()) {
       // Ignore empty files
       return {
         ...lintTask,
@@ -32,6 +33,7 @@ export async function preProcessTask(
 
     if (rule.cacheable || rule.cacheable === undefined) {
       const cachedResult = await cache.get(lintTask.cacheKey)
+
       if (cachedResult) {
         lintResult.lintErrors = cachedResult.lintErrors
         lintResult.message = cachedResult.message

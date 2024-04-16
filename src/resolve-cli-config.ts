@@ -65,6 +65,11 @@ export async function resolveLinterCLIConfig(
           description: 'Disables caching',
           alias: 'C'
         },
+        noGrit: {
+          type: Boolean,
+          description: 'Disables grit',
+          alias: 'G'
+        },
         cacheDir: {
           type: String,
           description: 'Customize the path to the cache directory'
@@ -92,6 +97,11 @@ export async function resolveLinterCLIConfig(
           type: Boolean,
           description: 'Enables verbose LLM logging',
           alias: 'D'
+        },
+        debugGrit: {
+          type: Boolean,
+          description: 'Enables verbose Grit logging',
+          alias: 'g'
         },
         noDebugStats: {
           type: Boolean,
@@ -185,11 +195,13 @@ export async function resolveLinterCLIConfig(
       debug: args.flags.debug,
       printConfig: args.flags.printConfig,
       debugModel: args.flags.debugModel,
+      debugGrit: args.flags.debugGrit,
       debugStats:
         args.flags.noDebugStats === undefined
           ? undefined
           : !args.flags.noDebugStats,
       noCache: args.flags.noCache,
+      noGrit: args.flags.noGrit,
       dryRun: args.flags.dryRun,
       cacheDir: args.flags.cacheDir
     },

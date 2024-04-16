@@ -4,6 +4,15 @@ tags: [security]
 languages: [javascript, typescript]
 ---
 
+```grit
+or {
+  `console.$method($args)`,
+  `logger.$method($args)`,
+  `log.$method($args)`,
+  `throw new $Error($msg)`
+}
+```
+
 # SOC2 Don't leak user data
 
 Don't log potentially sensitive customer data or we'll lose our SOC2 certification.

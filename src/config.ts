@@ -104,6 +104,7 @@ export const LinterOptionsSchema = z
         'When enabled, logs the resolved config and parsed rules and then exits.'
       ),
     debugModel: z.boolean().optional().describe('Enables verbose LLM logging.'),
+    debugGrit: z.boolean().optional().describe('Enables verbose Grit logging.'),
     debugStats: z
       .boolean()
       .optional()
@@ -112,6 +113,7 @@ export const LinterOptionsSchema = z
       ),
 
     noCache: z.boolean().optional().describe('Disables the built-in cache.'),
+    noGrit: z.boolean().optional().describe('Disables grit.'),
     disabled: z.boolean().optional().describe('Disables linting entirely.'),
 
     dryRun: z
@@ -193,9 +195,11 @@ export const defaultLinterOptions: Readonly<LinterOptions> = {
   debug: false,
   printConfig: false,
   debugModel: false,
+  debugGrit: false,
   debugStats: true,
   disabled: false,
   noCache: false,
+  noGrit: false,
   dryRun: false,
   cacheDir: defaultCacheDir
 }

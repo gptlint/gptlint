@@ -15,6 +15,7 @@ Flags:
       --concurrency <number>                Limits the maximum number of concurrent tasks
   -c, --config <string>                     Path to a configuration file
   -d, --debug                               Enables debug logging
+  -g, --debug-grit                          Enables verbose Grit logging
   -D, --debug-model                         Enables verbose LLM logging
       --dry-run                             Disables all external LLM calls and outputs an estimate of what it would
                                             cost to run the linter on the given config
@@ -26,6 +27,7 @@ Flags:
   -C, --no-cache                            Disables caching
   -S, --no-debug-stats                      Disables logging of cumulative LLM stats, including total tokens and cost
                                             (logging LLM stats is enabled by default)
+  -G, --no-grit                             Disables grit
       --no-ignore                           Disables the use of ignore files and patterns
       --no-inline-config                    Disables the use of inline rule config inside of source files
       --print-config                        When enabled, logs the resolved config and parsed rules and then exits

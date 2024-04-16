@@ -12,7 +12,7 @@ import { createChatModel } from '../src/create-chat-model.js'
 import { lintFile } from '../src/lint-file.js'
 import { createLintResult, mergeLintResults } from '../src/lint-result.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
-import { readSourceFiles } from '../src/resolve-files.js'
+import { readSourceFiles, resolveEvalFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
 import {
   createEvalStats,
@@ -45,12 +45,12 @@ async function main() {
       flagsToAdd: {
         onlyPositive: {
           type: Boolean,
-          description: 'Only generate positive examples',
+          description: 'Only process positive examples',
           default: false
         },
         onlyNegative: {
           type: Boolean,
-          description: 'Only generate negative examples',
+          description: 'Only process negative examples',
           default: false
         }
       }
@@ -66,10 +66,23 @@ async function main() {
     return gracefulExit(1)
   }
 
+  let filesMap: Map<string, types.SourceFile> | undefined
   let rules: types.Rule[]
 
   try {
-    rules = await resolveRules({ cwd, config })
+    const hasFileDirGlob = args._.fileDirGlob.slice(2).length
+    let files: types.SourceFile[]
+    ;[files, rules] = await Promise.all([
+      hasFileDirGlob ? resolveEvalFiles({ cwd, config }) : Promise.resolve([]),
+      resolveRules({ cwd, config })
+    ])
+
+    if (hasFileDirGlob) {
+      filesMap = new Map()
+      for (const file of files) {
+        filesMap.set(file.fileRelativePath, file)
+      }
+    }
   } catch (err: any) {
     console.error('Error:', err.message, '\n')
     args.showHelp()
@@ -104,10 +117,12 @@ async function main() {
       if (!onlyNegative) {
         // Positive examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'correct', '*')
-        const exampleFiles = await resolveGlobFilePatterns(fileExamplesGlob, {
-          gitignore: true,
-          cwd
-        })
+        const exampleFiles = (
+          await resolveGlobFilePatterns(fileExamplesGlob, {
+            gitignore: true,
+            cwd
+          })
+        ).filter((filePath) => !filesMap || filesMap.has(filePath))
         const files = await readSourceFiles(exampleFiles, { cwd })
 
         await pMap(
@@ -120,7 +135,8 @@ async function main() {
                 chatModel,
                 cache,
                 config,
-                cwd
+                cwd,
+                enableGrit: true
               })
 
               ++ruleEvalStats.numFiles
@@ -157,10 +173,12 @@ async function main() {
       if (!onlyPositive) {
         // Negative examples
         const fileExamplesGlob = path.join(ruleExamplesDir, 'incorrect', '*')
-        const exampleFiles = await resolveGlobFilePatterns(fileExamplesGlob, {
-          gitignore: true,
-          cwd
-        })
+        const exampleFiles = (
+          await resolveGlobFilePatterns(fileExamplesGlob, {
+            gitignore: true,
+            cwd
+          })
+        ).filter((filePath) => !filesMap || filesMap.has(filePath))
         const files = await readSourceFiles(exampleFiles, { cwd })
 
         await pMap(
@@ -173,7 +191,8 @@ async function main() {
                 chatModel,
                 cache,
                 config,
-                cwd
+                cwd,
+                enableGrit: true
               })
 
               ++ruleEvalStats.numFiles

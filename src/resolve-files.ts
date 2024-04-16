@@ -31,6 +31,30 @@ export async function resolveFiles({
   })
 }
 
+export async function resolveEvalFiles({
+  config,
+  cwd = process.cwd()
+}: {
+  config: types.ResolvedLinterConfig
+  cwd?: string
+}) {
+  const sourceFiles = await resolveGlobFilePatterns(config.files, {
+    gitignore: false,
+    ignore: config.ignores
+      .filter((ignore) => !/fixtures/.test(ignore))
+      .concat(['node_modules', 'dist', 'docs', '.env', '.next']),
+    cwd
+  })
+
+  if (!sourceFiles.length) {
+    throw new Error('No source files found')
+  }
+
+  return readSourceFiles(sourceFiles, {
+    concurrency: config.linterOptions.concurrency
+  })
+}
+
 export async function readSourceFiles(
   filePaths: string[],
   {

@@ -133,6 +133,7 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "comment",
   "languages": [
     "typescript",
   ],
@@ -262,6 +263,7 @@ Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBas
     "camelcase",
   ],
   "fixable": false,
+  "gritql": "or { identifier(), property_identifier(), type_identifier() }",
   "languages": [
     "javascript",
     "typescript",
@@ -485,6 +487,7 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "function_declaration",
   "languages": [
     "typescript",
   ],
@@ -521,6 +524,7 @@ Common use cases for secrets include:
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
 ",
   "fixable": false,
+  "gritql": "or { string(), template_string() }",
   "languages": [
     "all",
   ],
@@ -581,6 +585,7 @@ exports[`parseRuleFile - .gptlint/prefer-array-at-negative-indexing.md 1`] = `
     "@unicorn/prefer-negative-index",
   ],
   "fixable": false,
+  "gritql": "subscript_expression",
   "languages": [
     "javascript",
     "typescript",
@@ -629,169 +634,127 @@ const item = items[index]",
 }
 `;
 
-exports[`parseRuleFile - .gptlint/prefer-defensive-programming.md 1`] = `
+exports[`parseRuleFile - .gptlint/prefer-loose-array-bounds-checks-in-loops.md 1`] = `
 {
   "cacheable": true,
-  "description": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+  "description": "Array bounds checks within loops should verify if a variable is \`>=\` or \`<=\` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays in loops is brittle and a common cause of subtle bugs.
 
-The following defensive programming techniques should be preferred whenever possible:
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
 
-- [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
-- [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
-- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
-- [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
-- [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
-- [Use defensive error handling](#use-defensive-error-handling)
-",
-  "exclude": [
-    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
-  ],
-  "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
-  "level": "error",
-  "metadata": {},
-  "name": "prefer-defensive-programming",
-  "negativeExamples": [],
-  "positiveExamples": [],
-  "scope": "file",
-  "source": ".gptlint/prefer-defensive-programming.md",
-  "tags": [
-    "best practices",
-  ],
-  "title": "Prefer defensive programming techniques <!-- omit from toc -->",
+  do {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  } while (currentTaskIndex !== tasks.length)
 }
-`;
+\`\`\`
 
-exports[`parseRuleFile - .gptlint/prefer-early-return.md 1`] = `
-{
-  "cacheable": true,
-  "description": "Prefer returning early from functions in order to keep them as flat as possible.
+This example has two bugs:
 
-Ignore \`if\` statements with multiple \`else\` branches.
+- if \`tasks\` is empty, the first iteration of the while loop will throw an error
+- the \`while\` loop guard is very brittle which is a code smell. if \`currentTaskIndex\` somehow gets changed in an unexpected way with future code changes, then the \`while\` loop guard could end up going past the end of the tasks array!
 
-\`if\` statements containing only a single statement in their body are okay and should be ignored by this rule.
+An improved version of this code which fixes these buse looks like:
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  while (currentTaskIndex < tasks.length) {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  }
+}
+\`\`\`
 ",
-  "eslint": [
-    "prefer-early-return",
-  ],
   "exclude": [
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
-  "languages": [
-    "javascript",
-    "typescript",
-  ],
-  "level": "error",
-  "metadata": {},
-  "name": "prefer-early-return",
-  "negativeExamples": [
-    {
-      "code": "function handleClick(event) {
-  if (event.target.matches('.save-data')) {
-    let id = event.target.getAttribute('data-id')
-
-    if (id) {
-      let token = localStorage.getItem('token')
-
-      if (token) {
-        localStorage.setItem(\`\${token}_\${id}\`, true)
-      }
-    }
+  "gritql": "or {
+  any_equals(a = \`$foo.length\`, $b),
+  any_not_equals(a = \`$foo.length\`, $b)
+} as $op where {
+  $op <: within or {
+    do_statement(),
+    while_statement(),
+    for_statement()
   }
 }",
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "metadata": {},
+  "name": "prefer-loose-array-bounds-checks-in-loops",
+  "negativeExamples": [
+    {
+      "code": "for (let i = 0; i !== arr.length; i++) {
+  // this is bad because it should use \`i < arr.length\` to be safer
+}",
       "language": "js",
+    },
+    {
+      "code": "for (let i = arr.length; i !== -1; i--) {
+  // this is bad because it should use \`i >= 0\` or \`i > -1\` to be safer
+}",
+      "language": "ts",
+    },
+    {
+      "code": "while (i !== tasks.length) {
+  // this is bad because it should use \`i < tasks.length\` to be safer
+  ++i
+}",
+      "language": "js",
+    },
+    {
+      "code": "const length = arr.length
+let i = 0
+while (i !== length) {
+  // this is bad because the while loop should use \`i < length\` to be safer
+  ++i
+}",
+      "language": "ts",
     },
   ],
   "positiveExamples": [
     {
-      "code": "function example() {
-  const res = await fetch()
-  if (!res) {
-    return
-  }
-
-  // process res
-}",
+      "code": "for (let i = 0; i < arr.length; i++) {}",
+      "language": "js",
+    },
+    {
+      "code": "for (let i = arr.length; i >= 0; i--) {}",
       "language": "ts",
     },
     {
-      "code": "function example() {
-  const res = await fetch()
-  if (!res) return
-
-  // process res
-}",
-      "language": "ts",
-    },
-    {
-      "code": "function foo() {
-  if (!a) {
-    return
-  }
-
-  b()
-  c()
+      "code": "while (i < tasks.length) {
+  ++i
 }",
       "language": "js",
     },
-    {
-      "code": "function bar() {
-  if (a) {
-    b()
-    c()
-  }
-
-  d()
-}",
-      "language": "js",
-    },
-    {
-      "code": "function baz() {
-  if (a) {
-    b()
-    c()
-  } else {
-    d()
-  }
-}",
-      "language": "js",
-    },
-    {
-      "code": "function foo() {
-  if (a) {
-    b()
-  }
-}",
-      "language": "js",
-    },
-    {
-      "code": "function handleClick(event) {
-  if (!event.target.matches('.save-data')) return
-
-  let id = event.target.getAttribute('data-id')
-  if (!id) return
-
-  let token = localStorage.getItem('token')
-  if (!token) return
-
-  localStorage.setItem(\`\${token}_\${id}\`, true)
-}",
-      "language": "js",
-    },
-  ],
-  "resources": [
-    "https://gomakethings.com/the-early-return-pattern-in-javascript/",
   ],
   "scope": "file",
-  "source": ".gptlint/prefer-early-return.md",
+  "source": ".gptlint/prefer-loose-array-bounds-checks-in-loops.md",
   "tags": [
     "best practices",
   ],
-  "title": "Prefer early returns from functions",
+  "title": "Prefer loose array bounds checks in loops",
 }
 `;
 
@@ -947,6 +910,10 @@ class Product {
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "or {
+  type_alias_declaration(),
+  interface_declaration()
+}",
   "languages": [
     "typescript",
   ],
@@ -978,6 +945,10 @@ Note that uses \`classes\` is fine for non-react components.
     "eslint-plugin-react-prefer-function-component",
   ],
   "fixable": false,
+  "gritql": "react_class_component",
+  "include": [
+    "**/*.{jsx,tsx}",
+  ],
   "languages": [
     "javascript",
     "typescript",
@@ -1042,6 +1013,7 @@ exports[`parseRuleFile - .gptlint/semantic-variable-names.md 1`] = `
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
+  "gritql": "identifier",
   "languages": [
     "javascript",
     "typescript",
@@ -1124,6 +1096,12 @@ exports[`parseRuleFile - .gptlint/soc2-no-leak-user-data.md 1`] = `
 Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
 ",
   "fixable": false,
+  "gritql": "or {
+  \`console.$method($args)\`,
+  \`logger.$method($args)\`,
+  \`log.$method($args)\`,
+  \`throw new $Error($msg)\`
+}",
   "languages": [
     "javascript",
     "typescript",
@@ -1145,13 +1123,12 @@ Non-identifying user data such as internal IDs or other internal models related 
 exports[`parseRuleFile - .gptlint/use-correct-english.md 1`] = `
 {
   "cacheable": true,
-  "description": "All comments and documentation should use correct English spelling and grammar.
+  "description": "All comments and documentation should use correct English spelling and grammar. Obvious spelling errors should be repoted as violations.
 
-This rule does *not* apply to code identifiers (variable names, function names, type names, etc) which often use shorthand.
-
-This rule does apply to code comments, JSDoc comments, and markdown documentation.
+This rule applies to code comments, JSDoc comments, and markdown documentation.
 ",
   "fixable": false,
+  "gritql": "comment",
   "level": "error",
   "metadata": {},
   "name": "use-correct-english",
@@ -1175,7 +1152,7 @@ This rule does apply to code comments, JSDoc comments, and markdown documentatio
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/empty-examples.md 1`] = `
 {
   "cacheable": true,
   "description": "This rule doesn't contain any examples which is fine because they are optional.
@@ -1186,12 +1163,12 @@ exports[`parseRuleFile - fixtures/rules/empty-examples.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/empty-examples.md",
+  "source": "fixtures/valid-rules/empty-examples.md",
   "title": "Example",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/force-list-pagination.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/force-list-pagination.md 1`] = `
 {
   "cacheable": true,
   "description": "Force the use of pagination for all lists in GraphQL.
@@ -1232,7 +1209,7 @@ type Query {
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/force-list-pagination.md",
+  "source": "fixtures/valid-rules/force-list-pagination.md",
   "tags": [
     "graphql",
   ],
@@ -1240,7 +1217,7 @@ type Query {
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/metadata-0.md 1`] = `
 {
   "cacheable": true,
   "description": "This example should parse correctly.
@@ -1260,7 +1237,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/metadata-0.md",
+  "source": "fixtures/valid-rules/metadata-0.md",
   "tags": [
     "general",
   ],
@@ -1268,7 +1245,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-0.md 1`] = `
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/metadata-1.md 1`] = `
 {
   "cacheable": true,
   "description": "This example should parse correctly.
@@ -1288,7 +1265,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/metadata-1.md",
+  "source": "fixtures/valid-rules/metadata-1.md",
   "tags": [
     "general",
   ],
@@ -1296,7 +1273,7 @@ exports[`parseRuleFile - fixtures/rules/metadata-1.md 1`] = `
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/mutations.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/mutations.md 1`] = `
 {
   "cacheable": true,
   "description": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
@@ -1336,7 +1313,7 @@ type Mutation {
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/mutations.md",
+  "source": "fixtures/valid-rules/mutations.md",
   "tags": [
     "graphql",
   ],
@@ -1344,7 +1321,7 @@ type Mutation {
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/prefer-edge-node.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/prefer-edge-node.md 1`] = `
 {
   "cacheable": true,
   "description": "Prefer usage of Edges and Nodes in GraphQL Lists.
@@ -1399,12 +1376,87 @@ type Query {
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/prefer-edge-node.md",
+  "source": "fixtures/valid-rules/prefer-edge-node.md",
   "title": "Prefer Edges & Nodes",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/prefer-page-queries.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/prefer-loose-array-bounds-checks-in-loops.md 1`] = `
+{
+  "cacheable": true,
+  "description": "Array bounds checks within loops should verify if a variable is \`>=\` or \`<=\` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays in loops is brittle and a common cause of subtle bugs.
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  do {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  } while (currentTaskIndex !== tasks.length)
+}
+\`\`\`
+
+This example has two bugs:
+
+- if \`tasks\` is empty, the first iteration of the while loop will throw an error
+- the \`while\` loop guard is very brittle which is a code smell. if \`currentTaskIndex\` somehow gets changed in an unexpected way with future code changes, then the \`while\` loop guard could end up going past the end of the tasks array!
+
+An improved version of this code which fixes these buse looks like:
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  while (currentTaskIndex < tasks.length) {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  }
+}
+\`\`\`
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "gritql": "or {
+  do_statement(),
+  while_statement(),
+  for_statement()
+}",
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "metadata": {},
+  "name": "prefer-loose-array-bounds-checks-in-loops",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": "fixtures/valid-rules/prefer-loose-array-bounds-checks-in-loops.md",
+  "tags": [
+    "best practices",
+  ],
+  "title": "Prefer loose array bounds checks in loops",
+}
+`;
+
+exports[`parseRuleFile - fixtures/valid-rules/prefer-page-queries.md 1`] = `
 {
   "cacheable": true,
   "description": "Warn on usage of the \`/utils/api.ts\` file in favor of creating a page query in the /\`utils/pageQueries\` folder.
@@ -1466,12 +1518,12 @@ export default gql\`
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/prefer-page-queries.md",
+  "source": "fixtures/valid-rules/prefer-page-queries.md",
   "title": "Prefer page queries",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/prefer-strapi-env-vars.md 1`] = `
 {
   "cacheable": true,
   "description": "Avoid accessing \`process.env\` variables in favor of Strapi environment variables.
@@ -1508,12 +1560,12 @@ exports[`parseRuleFile - fixtures/rules/prefer-strapi-env-vars.md 1`] = `
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/prefer-strapi-env-vars.md",
+  "source": "fixtures/valid-rules/prefer-strapi-env-vars.md",
   "title": "Use Strapi Environment Variables",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/wip/format-comments-like-sentences.md 1`] = `
 {
   "cacheable": true,
   "description": "Capitalize the first word unless it's a case-sensitive identifier. End it with a period (or "!" or "?", I suppose). This is true for all comments: doc comments, inline stuff, even TODOs. Even if it's a sentence fragment.
@@ -1534,12 +1586,148 @@ exports[`parseRuleFile - fixtures/rules/wip/format-comments-like-sentences.md 1`
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/wip/format-comments-like-sentences.md",
+  "source": "fixtures/valid-rules/wip/format-comments-like-sentences.md",
   "title": "Format comments like sentences",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/wip/react-prefer-derived-state.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/wip/prefer-defensive-programming.md 1`] = `
+{
+  "cacheable": true,
+  "description": "Defensive programming is a mindset and series of techniques aimed at improving software quality and reliability by writing code that expects the unexpected and gracefully handles these unexpected inputs at runtime. Defensive programming is proactive in failing fast, handling errors, validating inputs, and maintaining consistent state under unexpected conditions, ensuring that the program behaves correctly even in unforeseen scenarios.
+
+The following defensive programming techniques should be preferred whenever possible:
+
+- [Validate external data with type guards or schema validation](#validate-external-data-with-type-guards-or-schema-validation)
+- [Use optional chaining and nullish coalescing where appropriate](#use-optional-chaining-and-nullish-coalescing-where-appropriate)
+- [Prefer loose array bounds checks over more brittle exact checks](#prefer-loose-array-bounds-checks-over-more-brittle-exact-checks)
+- [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
+- [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
+- [Use defensive error handling](#use-defensive-error-handling)
+",
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "metadata": {},
+  "name": "prefer-defensive-programming",
+  "negativeExamples": [],
+  "positiveExamples": [],
+  "scope": "file",
+  "source": "fixtures/valid-rules/wip/prefer-defensive-programming.md",
+  "tags": [
+    "best practices",
+  ],
+  "title": "Prefer defensive programming techniques <!-- omit from toc -->",
+}
+`;
+
+exports[`parseRuleFile - fixtures/valid-rules/wip/prefer-early-return.md 1`] = `
+{
+  "cacheable": true,
+  "description": "Prefer returning early from functions in order to keep them as flat as possible.
+
+Ignore \`if\` statements with multiple \`else\` branches.
+
+Ignore \`if\` statements which include a \`return\` or \`throw\` in their body.
+
+\`if\` statements containing only a single statement in their body are okay and should be ignored by this rule.
+",
+  "eslint": [
+    "prefer-early-return",
+  ],
+  "exclude": [
+    "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
+  ],
+  "fixable": false,
+  "gritql": "function_declaration",
+  "languages": [
+    "javascript",
+    "typescript",
+  ],
+  "level": "error",
+  "metadata": {},
+  "name": "prefer-early-return",
+  "negativeExamples": [
+    {
+      "code": "function handleClick(event) {
+  if (event.target.matches('.save-data')) {
+    let id = event.target.getAttribute('data-id')
+
+    if (id) {
+      let token = localStorage.getItem('token')
+
+      if (token) {
+        localStorage.setItem(\`\${token}_\${id}\`, true)
+      }
+    }
+  }
+}",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "function handleClick(event) {
+  if (!event.target.matches('.save-data')) return
+
+  let id = event.target.getAttribute('data-id')
+  if (!id) return
+
+  let token = localStorage.getItem('token')
+  if (!token) return
+
+  localStorage.setItem(\`\${token}_\${id}\`, true)
+}",
+      "language": "js",
+    },
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) {
+    return
+  }
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function example() {
+  const res = await fetch()
+  if (!res) return
+
+  // process res
+}",
+      "language": "ts",
+    },
+    {
+      "code": "function foo() {
+  if (a) {
+    b()
+  }
+}",
+      "language": "js",
+    },
+  ],
+  "resources": [
+    "https://gomakethings.com/the-early-return-pattern-in-javascript/",
+  ],
+  "scope": "file",
+  "source": "fixtures/valid-rules/wip/prefer-early-return.md",
+  "tags": [
+    "best practices",
+  ],
+  "title": "Prefer early returns from functions",
+}
+`;
+
+exports[`parseRuleFile - fixtures/valid-rules/wip/react-prefer-derived-state.md 1`] = `
 {
   "cacheable": true,
   "description": "State which is simple to derive should be re-derived when necessary instead of storing it in state or props.
@@ -1552,12 +1740,12 @@ TODO
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/rules/wip/react-prefer-derived-state.md",
+  "source": "fixtures/valid-rules/wip/react-prefer-derived-state.md",
   "title": "Prefer derived state in React",
 }
 `;
 
-exports[`parseRuleFile - fixtures/rules/wip/use-esm.md 1`] = `
+exports[`parseRuleFile - fixtures/valid-rules/wip/use-esm.md 1`] = `
 {
   "cacheable": true,
   "description": "CommonJS code is deprecated and should be avoided going forwards. CommonJS code uses \`require\` and \`module.exports\` and suffers from poor standardization and interoperability issues.
@@ -1589,7 +1777,7 @@ export function bar() {}",
     },
   ],
   "scope": "file",
-  "source": "fixtures/rules/wip/use-esm.md",
+  "source": "fixtures/valid-rules/wip/use-esm.md",
   "title": "Use ESM instead of CommonJS",
 }
 `;
