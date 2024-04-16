@@ -147,7 +147,7 @@ async function main() {
                 ruleEvalStats.numFalsePositives++
 
                 console.warn(
-                  `${chalk.bold('False positive')}: rule ${chalk.bold(rule.name)}: ${chalk.bold(file.fileRelativePath)}`,
+                  `${chalk.bold('False positive')}: rule ${chalk.bold(rule.name)}: ${file.fileRelativePath}`,
                   fileLintResult.lintErrors
                 )
               } else {
@@ -209,7 +209,7 @@ async function main() {
                 ruleEvalStats.numFalseNegatives++
 
                 console.warn(
-                  `${chalk.bold('False negative')}: rule ${chalk.bold(rule.name)}: ${chalk.bold(file.fileRelativePath)}`,
+                  `${chalk.bold('False negative')}: rule ${chalk.bold(rule.name)}: ${file.fileRelativePath}`,
                   fileLintResult.message
                 )
               }

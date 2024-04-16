@@ -255,7 +255,7 @@ export function resolveGritQLMatches(
 
     partialFile.partialContent = partialContentLines
       // .filter((line) => !!line.trim())
-      .join('\n\n')
+      .join('\n')
       .trim()
   }
 
