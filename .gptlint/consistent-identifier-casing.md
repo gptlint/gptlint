@@ -1,5 +1,6 @@
 ---
 fixable: false
+gritqlNumLinesContext: 0
 tags: [best practices]
 languages: [javascript, typescript]
 eslint:

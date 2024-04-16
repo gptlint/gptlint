@@ -257,7 +257,7 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
           )
         }
 
-        throw new TypeError(
+        throw new Error(
           `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
           { cause: err }
         )

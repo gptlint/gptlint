@@ -23,9 +23,9 @@ Here is an example of incorrect code:
 ```ts
 /**
  * Returns a string with the foreground color.
- * Takes zero or one arguments. With no arguments, returns the
- * standard foreground color. With one argument, returns the foreground color
- * for a particular page.
+ * Takes zero or one arguments. With no arguments, returns the standard
+ * foreground color. With one argument, returns the foreground color for a
+ * particular page.
  */
 function getForegroundColor(page?: string) {
   return page === 'login' ? { r: 127, g: 127, b: 127 } : { r: 0, g: 0, b: 0 }
@@ -60,7 +60,7 @@ function sort(nums: number[]) {
 }
 ```
 
-Instead, declare it `readonly` and let TypeScript enforce the contract:
+Instead, declare the parameter as `readonly` and let TypeScript enforce the contract:
 
 ```ts
 function sort(nums: readonly number[]) {
@@ -68,50 +68,11 @@ function sort(nums: readonly number[]) {
 }
 ```
 
+## Caveats
+
 Note that you do NOT have to include JSDoc comments for a function, and you do NOT have to include `@param` or `@returns` JSDoc properties. These are purely optional, but if they are included, they should not discuss the types of function parameters because TypeScript does a better job of capturing this info in the function definition itself.
 
-### Incorrect
-
-```ts
-/**
- * Upserts a user into the database.
- *
- * Takes either an existing user or data describing a new user.
- * Also takes an optional context.
- *
- * Returns a new user.
- */
-export async function upsertUser(
-  user: User | NewUserData,
-  ctx?: Context
-): Promise<User> {
-  // ...
-}
-
-// This example VIOLATES the rule because the JSDoc comment describes the type
-// of `user` when the TS types do a better job of this. Another issue is that
-// the return type is described, when the TS types do a better job of this.
-// A better version would use JSDoc `@param` and `@returns` to describe the
-// behavior without mentioning the types.
-```
-
-```ts
-/**
- * Upserts a user into the database.
- *
- * @param {User} user - The user to upsert.
- * @param {Context} ctx - Optional context for the database operation.
- */
-export async function upsertUser(
-  user: User | NewUserData,
-  ctx?: Context
-): Promise<User> {
-  // ...
-}
-
-// This example VIOLATES the rule because the JSDoc comment includes duplicate
-// type info for the function parameters.
-```
+If a comment is providing useful context or clarifying what a parameter is used for, then it should be ignored. This rule is only aimed at comments which duplicate type info.
 
 ### Correct
 

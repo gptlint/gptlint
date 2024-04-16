@@ -20,7 +20,7 @@ import {
   stringifyRuleViolationForModel,
   stringifyRuleViolationSchemaForModel
 } from './rule-violations.js'
-import { pruneUndefined } from './utils.js'
+import { pruneUndefined, trimMessage } from './utils.js'
 
 // TODO: Improve the duplication between `lintFile` and `validateRuleViolations`
 // for two-pass linting.
@@ -106,9 +106,6 @@ If you find any code snippets which VIOLATE the RULE, then output them as RULE_V
 ${stringifyRuleViolationSchemaForModel(rule, file)}
 
 </RULE_VIOLATION schema>
-
-DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than 10 lines of code.
-MAKE SURE YOU TRUNCATE LONG CODE SNIPPETS using an ellipsis "..." so they are no longer than 10 lines of code.
 
 ---
 
@@ -269,12 +266,12 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
         if (config.linterOptions.debug) {
           console.error(
             `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}":`,
-            err
+            trimMessage(err.message, { maxLength: 400 })
           )
         }
 
         throw new TypeError(
-          `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
+          `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${trimMessage(err.message)}`,
           { cause: err }
         )
       }
@@ -421,9 +418,6 @@ For any potential RULE_VIOLATION objects which VIOLATE the RULE, include them in
 ${stringifyRuleViolationSchemaForModel(rule, file)}
 
 </RULE_VIOLATION schema>
-
-DO NOT INCLUDE THE WHOLE SOURCE code in \`codeSnippet\`. \`codeSnippet\` should be a short portion of the SOURCE and should never be longer than 10 lines of code.
-MAKE SURE YOU TRUNCATE LONG CODE SNIPPETS using an ellipsis "..." so they are no longer than 10 lines of code.
 
 ---
 
@@ -581,12 +575,12 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
         if (config.linterOptions.debug) {
           console.error(
             `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}":`,
-            err
+            trimMessage(err.message, { maxLength: 400 })
           )
         }
 
         throw new TypeError(
-          `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${err.message}`,
+          `Unexpected error processing rule "${rule.name}" file "${file.fileRelativePath}": ${trimMessage(err.message)}`,
           { cause: err }
         )
       }
