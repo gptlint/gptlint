@@ -19,7 +19,7 @@ Don't log potentially sensitive customer data or we'll lose our SOC2 certificati
 
 Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
 
-## Bad
+### Bad
 
 ```js
 // Don't log potentially sensitive user data
@@ -46,7 +46,7 @@ log.info({ body: req.body })
 throw new Error('error', { body: req.body })
 ```
 
-## Good
+### Good
 
 ```js
 // Logging non-identifying user data such as internal IDs is fine

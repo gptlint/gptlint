@@ -259,6 +259,24 @@ Class names should use PascalCase.
 Function names should use camelCase.
 
 Examples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and \\_getKey.
+
+## Caveats
+
+Third-party APIs may use inconsistent casing, which is an exception to this rule.
+
+Keys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.
+
+Ignore identifiers which mix PascalCase with camelCase.
+
+Ignore the casing of common acronyms like API, IP, HTTP, and LLM.
+
+Ignore the casing of identifiers which start with acronyms like \`LLMOptionsSchema\`.
+
+Ignore parameter names used in inline functions.
+
+Ignore string literals and module names for this rule.
+
+Class member variables and functions may include \`_\` prefixes.
 ",
   "eslint": [
     "@typescript-eslint/naming-convention",
@@ -524,6 +542,18 @@ Common use cases for secrets include:
 - cryptographic secrets for signing requests
 
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
+
+## Suggestions
+
+Other solutions include tools like:
+
+- [Hashicorp Vault](https://www.vaultproject.io)
+- [Infiscal](https://infisical.com)
+- [Doppler](https://www.doppler.com)
+- [sops](https://github.com/getsops/sops)
+- [chamber](https://github.com/segmentio/chamber)
+- [AWS parameter store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html)
+- [AWS Vault](https://github.com/99designs/aws-vault)
 ",
   "fixable": false,
   "gritql": "or { string(), template_string() }",
@@ -907,6 +937,18 @@ class Product {
   }
 }
 \`\`\`
+
+## Caveats
+
+When working with external APIs and data sources, it's not always possible to work with types which only represent valid state. So this rule should ignore any data coming from external dependencies and focus instead on types used internally within this project.
+
+## Key Takeaways
+
+Types that represent both valid and invalid states are likely to lead to confusing and error-prone code.
+
+Prefer types that only represent valid states. Even if they are longer or harder to express, they will save you time and pain in the end.
+
+If a field is useful, but adding it to a type could result the type representing invalid states, then consider whether that field can be derived from a minimal set of state that is always valid.
 ",
   "exclude": [
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
@@ -1010,6 +1052,28 @@ exports[`parseRuleFile - .gptlint/semantic-variable-names.md 1`] = `
 {
   "cacheable": true,
   "description": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.
+
+## Caveats
+
+An exception to this rule is that it is acceptable to use simple variable names like \`i\` in \`for\` loops.
+
+An exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.
+
+Common acronyms like \`api\`, \`ast\`, and \`llm\` are fine even though they aren't as descriptive.
+
+\`res\`, \`result\`, and \`data\` are common exceptions that are okay to ignore.
+
+Variables names which mirror the corresponding type name are okay to ignore.
+
+Keys in objects and JS/TS strings are not variable names, so they should be ignored.
+
+If a value isn't a variable name, then it should be ignored.
+
+This rule should be ignored in test files.
+
+The names of file imports from third-party APIs and modules should be ignored because we have no control over them.
+
+If you are unsure whether or not a variable name is descriptive enough, err on the side of ignoring it or setting \`confidence\` to \`low\`.
 ",
   "exclude": [
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
@@ -1111,8 +1175,55 @@ Non-identifying user data such as internal IDs or other internal models related 
   "level": "error",
   "metadata": {},
   "name": "soc2-no-leak-user-data",
-  "negativeExamples": [],
-  "positiveExamples": [],
+  "negativeExamples": [
+    {
+      "code": "// Don't log potentially sensitive user data
+console.log(user)",
+      "language": "js",
+    },
+    {
+      "code": "// Don't log potentially sensitive user data
+log.info(user)",
+      "language": "js",
+    },
+    {
+      "code": "// Don't log sensitive user information like \`email\`
+console.error('Invalid user', user.email)",
+      "language": "js",
+    },
+    {
+      "code": "// Don't log request bodies which may contain sensitive user data
+log.info({ body: req.body })",
+      "language": "js",
+    },
+    {
+      "code": "// Don't expose request bodies which may contain sensitive user data
+throw new Error('error', { body: req.body })",
+      "language": "js",
+    },
+  ],
+  "positiveExamples": [
+    {
+      "code": "// Logging non-identifying user data such as internal IDs is fine
+console.log(user.id)",
+      "language": "js",
+    },
+    {
+      "code": "// Logging non-identifying user data such as internal IDs is fine
+logger.warn(\`Invalid user: \${user.id}\`)",
+      "language": "js",
+    },
+    {
+      "code": "// Exposing non-identifying user data such as internal IDs is fine
+throw new Error(\`User error \${user.id}\`)",
+      "language": "ts",
+    },
+    {
+      "code": "// Logging internal resources related to a user is okay
+console.log(user.posts)",
+      "language": "js",
+    },
+  ],
   "scope": "file",
   "source": ".gptlint/soc2-no-leak-user-data.md",
   "tags": [
@@ -1128,6 +1239,12 @@ exports[`parseRuleFile - .gptlint/use-correct-english.md 1`] = `
   "description": "All comments and documentation should use correct English spelling and grammar. Obvious spelling errors should be repoted as violations.
 
 This rule applies to code comments, JSDoc comments, and markdown documentation.
+
+## Caveats
+
+This rule does *not* apply to code identifiers (variable names, function names, type names, etc) which often use shorthand.
+
+This rule also does not apply to \`TODO\` comments.
 ",
   "fixable": false,
   "gritql": "comment",
@@ -1174,6 +1291,8 @@ exports[`parseRuleFile - fixtures/valid-rules/force-list-pagination.md 1`] = `
 {
   "cacheable": true,
   "description": "Force the use of pagination for all lists in GraphQL.
+
+## Usage Examples
 ",
   "fixable": true,
   "languages": [
@@ -1279,6 +1398,18 @@ exports[`parseRuleFile - fixtures/valid-rules/mutations.md 1`] = `
 {
   "cacheable": true,
   "description": "Disallow empty arguments for mutation Enforcing naming conventions for mutation input names and mutation return types.
+
+## Usage Examples
+
+\`.eslintrc\`
+
+\`\`\`json
+{
+  "rules": {
+    "@ux-l_graphql-eslint/mutation-types": "error"
+  }
+}
+\`\`\`
 ",
   "eslint": [
     "@ux-l_graphql-eslint/mutation-types",
@@ -1327,6 +1458,8 @@ exports[`parseRuleFile - fixtures/valid-rules/prefer-edge-node.md 1`] = `
 {
   "cacheable": true,
   "description": "Prefer usage of Edges and Nodes in GraphQL Lists.
+
+## Usage Examples
 ",
   "level": "error",
   "metadata": {},
@@ -1462,6 +1595,8 @@ exports[`parseRuleFile - fixtures/valid-rules/prefer-page-queries.md 1`] = `
 {
   "cacheable": true,
   "description": "Warn on usage of the \`/utils/api.ts\` file in favor of creating a page query in the /\`utils/pageQueries\` folder.
+
+## Usage Examples
 ",
   "level": "error",
   "metadata": {},
@@ -1529,6 +1664,8 @@ exports[`parseRuleFile - fixtures/valid-rules/prefer-strapi-env-vars.md 1`] = `
 {
   "cacheable": true,
   "description": "Avoid accessing \`process.env\` variables in favor of Strapi environment variables.
+
+## Usage Examples
 ",
   "level": "error",
   "metadata": {},
@@ -1606,6 +1743,141 @@ The following defensive programming techniques should be preferred whenever poss
 - [Prefer readonly and Partial utility types](#prefer-readonly-and-partial-utility-types)
 - [Ensure exhaustiveness in switch statements](#ensure-exhaustiveness-in-switch-statements)
 - [Use defensive error handling](#use-defensive-error-handling)
+
+## Validate external data with type guards or schema validation
+
+When dealing with data from external sources (like public APIs), don't just trust that the payload matches your internal types. If you're dealing with external data which you can't trust, then prefer using a validation library like \`zod\` with type guards to validate the shape and type of the external data at runtime.
+
+\`\`\`ts
+import { z } from 'zod'
+
+const UserProfileSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  email: z.string().optional()
+})
+
+// Example of an external data source (e.g., API response)
+const externalData = {
+  id: 1,
+  name: 'Jane Doe',
+  email: 'jane.doe@example.com'
+}
+
+try {
+  // Validate the external data against the schema
+  const userProfile = UserProfileSchema.parse(externalData)
+  console.log('Validated User Profile:', userProfile)
+} catch (error) {
+  console.error('Validation Failed:', error.errors)
+}
+\`\`\`
+
+NOTE: **You do not always need to validate function arguments**. This suggestion is only meant for when you are sure you're dealing with **external data that your program does not trust**. For normal function arguments, you can safely ignore this rule.
+
+## Use optional chaining and nullish coalescing where appropriate
+
+Code written with a defensive mindset will often contain a lot of optional chaining (\`?.\`) and nullish coalescing (\`??\`).
+
+\`\`\`ts
+function getFirstName(user?: User, defaultName = 'john'): string {
+  return user?.name?.split(' ')[0] ?? defaultName
+}
+\`\`\`
+
+You can accomplish the same logic without these newer ECMAScript features, but the code will be a lot more verbose and error-prone.
+
+## Prefer loose array bounds checks over more brittle exact checks
+
+Array bounds checks within loops should verify if a variable is \`>=\` or \`<=\` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays in loops is brittle and a common cause of subtle bugs.
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  do {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  } while (currentTaskIndex !== tasks.length)
+}
+\`\`\`
+
+This example has two bugs:
+
+- if \`tasks\` is empty, the first iteration of the while loop will throw an error
+- the \`while\` loop guard is very brittle which is a code smell. if \`currentTaskIndex\` somehow gets changed in an unexpected way with future code changes, then the \`while\` loop guard could end up going past the end of the tasks array!
+
+An improved version of this code which fixes these buse looks like:
+
+\`\`\`js
+function handleTasks() {
+  const tasks = [
+    // ...
+  ]
+  let currentTaskIndex = 0
+
+  while (currentTaskIndex < tasks.length) {
+    const currentTask = tasks[currentTaskIndex]
+
+    // process task
+    // ...
+
+    currentTaskIndex++
+  }
+}
+\`\`\`
+
+## Prefer readonly and Partial utility types
+
+\`Readonly\` and \`Partial\` are great defensive types that should be used where possible to prevent unintended mutations, but we don't require their use in this codebase.
+
+\`\`\`ts
+function createUser(user: Readonly<Partial<User>>) {
+  // Now 'user' is a readonly object, preventing accidental mutations
+  return {
+    ...user,
+    id: '...'
+  }
+}
+
+createUser({ name: 'Alex' })
+\`\`\`
+
+## Ensure exhaustiveness in switch statements
+
+\`\`\`ts
+type Action = 'create' | 'update' | 'delete'
+
+function performAction(action: Action) {
+  switch (action) {
+    case 'create':
+      // Handle create
+      break
+
+    case 'update':
+      // Handle update
+      break
+
+    case 'delete':
+      // Handle delete
+      break
+
+    default:
+      throw new Error(\`Unexpected action "\${action}"\`)
+  }
+}
+\`\`\`
+
+## Use defensive error handling
+
+Prefer wrapping potentially error-prone operations (e.g., network requests, file I/O) in \`try-catch\` blocks to handle and gracefully recover from unexpected runtime errors.
 ",
   "exclude": [
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",

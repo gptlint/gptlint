@@ -22,6 +22,8 @@ An exception to this rule is that math-heavy code may use simple variable names 
 
 Common acronyms like `api`, `ast`, and `llm` are fine even though they aren't as descriptive.
 
+`res`, `result`, and `data` are common exceptions that are okay to ignore.
+
 Variables names which mirror the corresponding type name are okay to ignore.
 
 Keys in objects and JS/TS strings are not variable names, so they should be ignored.

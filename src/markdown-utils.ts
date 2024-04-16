@@ -48,7 +48,7 @@ export function parseRuleNode({
   partialRule?: Partial<types.RuleDefinition>
 }): types.Rule {
   const firstNonBodyRuleNodeIndex = bodyRuleNodes.findIndex(
-    (node) => node.type === 'heading'
+    (node) => node.type === 'heading' && (node as Heading).depth >= 3
   )
 
   let exampleRuleNodes: Node[] = []
