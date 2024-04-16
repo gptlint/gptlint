@@ -342,10 +342,6 @@ export function createCacheKey({
     linterOptions: pruneUndefined(pick(config.linterOptions ?? {}, 'noGrit'))
   })
 
-  if (rule.name === 'semantic-variable-names') {
-    console.log(hashObject(cacheKeySource), cacheKeySource)
-  }
-
   return hashObject(cacheKeySource)
 }
 
