@@ -15,8 +15,6 @@ import { stringifyExamples } from '../src/rule-utils.js'
 
 /**
  * Internal script for copying built-in rules to docs.
- *
- * TODO: sort rules and metadata using stable sort.
  */
 async function main() {
   const destDir = path.join('docs', 'pages', 'rules')
@@ -65,7 +63,7 @@ async function main() {
         ruleMetadata.push(['gritql', true])
       }
 
-      const ruleMetadataTable = `| Key | Value |\n| --- | --- |\n${ruleMetadata.map(([k, v]) => `| ${k} | \`${JSON.stringify(v).replace(/^"/, '').replace(/"$/, '')}\` |`).join('\n')}`
+      const ruleMetadataTable = `| Key | Value |\n| --- | --- |\n${ruleMetadata.map(([k, v]) => `| ${k} | ${stringify(v)} |`).join('\n')}`
 
       const ruleSource = [
         `# ${rule.title}`,
@@ -90,7 +88,7 @@ async function main() {
       await fs.writeFile(destPath, formattedRuleSource)
     },
     {
-      concurrency: 32
+      concurrency: 1
     }
   )
 
@@ -113,6 +111,14 @@ ${rules.map((rule) => `| [${rule.name}](/rules/${rule.name}) | ${rule.title} | $
   )
 
   await fs.writeFile(path.join(destDir, 'index.md'), overviewSource)
+}
+
+function stringify(v: unknown): string {
+  return Array.isArray(v)
+    ? `[ ${v.map((s) => stringify(s)).join(', ')} ]`
+    : typeof v === 'string'
+      ? `\`${v}\``
+      : `${v}`
 }
 
 try {

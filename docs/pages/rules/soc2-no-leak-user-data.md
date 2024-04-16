@@ -62,8 +62,8 @@ console.log(user.posts)
 | name                  | `soc2-no-leak-user-data` |
 | level                 | `error`                  |
 | scope                 | `file`                   |
-| fixable               | `false`                  |
-| cacheable             | `true`                   |
-| tags                  | `["security"]`           |
-| gritqlNumLinesContext | `2`                      |
-| gritql                | `true`                   |
+| fixable               | false                    |
+| cacheable             | true                     |
+| tags                  | [ `security` ]           |
+| gritqlNumLinesContext | 2                        |
+| gritql                | true                     |

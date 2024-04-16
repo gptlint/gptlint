@@ -52,9 +52,9 @@ class Foo extends EventEmitter {
 | name      | `react-avoid-class-components`                      |
 | level     | `error`                                             |
 | scope     | `file`                                              |
-| fixable   | `false`                                             |
-| cacheable | `true`                                              |
-| tags      | `["react"]`                                         |
-| eslint    | `["eslint-plugin-react-prefer-function-component"]` |
-| include   | `["**/*.{jsx,tsx}"]`                                |
-| gritql    | `true`                                              |
+| fixable   | false                                               |
+| cacheable | true                                                |
+| tags      | [ `react` ]                                         |
+| eslint    | [ `eslint-plugin-react-prefer-function-component` ] |
+| include   | [ `**/*.{jsx,tsx}` ]                                |
+| gritql    | true                                                |

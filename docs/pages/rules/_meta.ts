@@ -4,6 +4,10 @@ export default {
     title: 'always-handle-promises',
     display: 'hidden'
   },
+  'avoid-type-info-in-docs': {
+    title: 'avoid-type-info-in-docs',
+    display: 'hidden'
+  },
   'consistent-identifier-casing': {
     title: 'consistent-identifier-casing',
     display: 'hidden'
@@ -12,28 +16,20 @@ export default {
     title: 'liberal-accept-strict-produce',
     display: 'hidden'
   },
-  'avoid-type-info-in-docs': {
-    title: 'avoid-type-info-in-docs',
+  'no-hardcoded-secrets': {
+    title: 'no-hardcoded-secrets',
     display: 'hidden'
   },
   'prefer-array-at-negative-indexing': {
     title: 'prefer-array-at-negative-indexing',
     display: 'hidden'
   },
-  'prefer-types-always-valid-states': {
-    title: 'prefer-types-always-valid-states',
-    display: 'hidden'
-  },
-  'no-hardcoded-secrets': {
-    title: 'no-hardcoded-secrets',
-    display: 'hidden'
-  },
   'prefer-loose-array-bounds-checks-in-loops': {
     title: 'prefer-loose-array-bounds-checks-in-loops',
     display: 'hidden'
   },
-  'soc2-no-leak-user-data': {
-    title: 'soc2-no-leak-user-data',
+  'prefer-types-always-valid-states': {
+    title: 'prefer-types-always-valid-states',
     display: 'hidden'
   },
   'react-avoid-class-components': {
@@ -42,6 +38,10 @@ export default {
   },
   'semantic-variable-names': {
     title: 'semantic-variable-names',
+    display: 'hidden'
+  },
+  'soc2-no-leak-user-data': {
+    title: 'soc2-no-leak-user-data',
     display: 'hidden'
   },
   'use-correct-english': {

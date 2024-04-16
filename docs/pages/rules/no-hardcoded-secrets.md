@@ -57,8 +57,8 @@ const openai = new OpenAI({
 | name                  | `no-hardcoded-secrets` |
 | level                 | `error`                |
 | scope                 | `file`                 |
-| fixable               | `false`                |
-| cacheable             | `true`                 |
-| tags                  | `["security"]`         |
-| gritqlNumLinesContext | `3`                    |
-| gritql                | `true`                 |
+| fixable               | false                  |
+| cacheable             | true                   |
+| tags                  | [ `security` ]         |
+| gritqlNumLinesContext | 3                      |
+| gritql                | true                   |

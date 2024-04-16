@@ -159,15 +159,15 @@ If a field is useful, but adding it to a type could result the type representing
 
 ## Metadata
 
-| Key                   | Value                                     |
-| --------------------- | ----------------------------------------- |
-| name                  | `prefer-types-always-valid-states`        |
-| level                 | `error`                                   |
-| scope                 | `file`                                    |
-| fixable               | `false`                                   |
-| cacheable             | `true`                                    |
-| tags                  | `["best practices"]`                      |
-| exclude               | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]` |
-| resources             | `["https://effectivetypescript.com"]`     |
-| gritqlNumLinesContext | `3`                                       |
-| gritql                | `true`                                    |
+| Key                   | Value                                    |
+| --------------------- | ---------------------------------------- |
+| name                  | `prefer-types-always-valid-states`       |
+| level                 | `error`                                  |
+| scope                 | `file`                                   |
+| fixable               | false                                    |
+| cacheable             | true                                     |
+| tags                  | [ `best practices` ]                     |
+| exclude               | [ `**/*.test\.{js,ts,jsx,tsx,cjs,mjs}` ] |
+| resources             | [ `https://effectivetypescript.com` ]    |
+| gritqlNumLinesContext | 3                                        |
+| gritql                | true                                     |

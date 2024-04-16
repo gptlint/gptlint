@@ -40,10 +40,10 @@ const item = items[index]
 | name                  | `prefer-array-at-negative-indexing`                           |
 | level                 | `error`                                                       |
 | scope                 | `file`                                                        |
-| fixable               | `false`                                                       |
-| cacheable             | `true`                                                        |
-| tags                  | `["best practices"]`                                          |
-| eslint                | `["@unicorn/prefer-negative-index"]`                          |
-| resources             | `["https://twitter.com/housecor/status/1768622518179369036"]` |
-| gritqlNumLinesContext | `3`                                                           |
-| gritql                | `true`                                                        |
+| fixable               | false                                                         |
+| cacheable             | true                                                          |
+| tags                  | [ `best practices` ]                                          |
+| eslint                | [ `@unicorn/prefer-negative-index` ]                          |
+| resources             | [ `https://twitter.com/housecor/status/1768622518179369036` ] |
+| gritqlNumLinesContext | 3                                                             |
+| gritql                | true                                                          |

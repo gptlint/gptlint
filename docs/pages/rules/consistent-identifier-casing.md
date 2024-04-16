@@ -75,13 +75,13 @@ const res = [1, 2, 3].filter((i) => i >= 0)
 
 ## Metadata
 
-| Key       | Value                                                  |
-| --------- | ------------------------------------------------------ |
-| name      | `consistent-identifier-casing`                         |
-| level     | `error`                                                |
-| scope     | `file`                                                 |
-| fixable   | `false`                                                |
-| cacheable | `true`                                                 |
-| tags      | `["best practices"]`                                   |
-| eslint    | `["@typescript-eslint/naming-convention","camelcase"]` |
-| gritql    | `true`                                                 |
+| Key       | Value                                                   |
+| --------- | ------------------------------------------------------- |
+| name      | `consistent-identifier-casing`                          |
+| level     | `error`                                                 |
+| scope     | `file`                                                  |
+| fixable   | false                                                   |
+| cacheable | true                                                    |
+| tags      | [ `best practices` ]                                    |
+| eslint    | [ `@typescript-eslint/naming-convention`, `camelcase` ] |
+| gritql    | true                                                    |

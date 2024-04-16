@@ -29,7 +29,7 @@ This example uses broken english grammar because bad.
 | name      | `use-correct-english` |
 | level     | `error`               |
 | scope     | `file`                |
-| fixable   | `false`               |
-| cacheable | `true`                |
-| tags      | `["best practices"]`  |
-| gritql    | `true`                |
+| fixable   | false                 |
+| cacheable | true                  |
+| tags      | [ `best practices` ]  |
+| gritql    | true                  |

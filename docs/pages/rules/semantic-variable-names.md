@@ -91,14 +91,14 @@ import { z } from 'zod'
 
 ## Metadata
 
-| Key                   | Value                                     |
-| --------------------- | ----------------------------------------- |
-| name                  | `semantic-variable-names`                 |
-| level                 | `error`                                   |
-| scope                 | `file`                                    |
-| fixable               | `false`                                   |
-| cacheable             | `true`                                    |
-| tags                  | `["best practices"]`                      |
-| exclude               | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]` |
-| gritqlNumLinesContext | `2`                                       |
-| gritql                | `true`                                    |
+| Key                   | Value                                    |
+| --------------------- | ---------------------------------------- |
+| name                  | `semantic-variable-names`                |
+| level                 | `error`                                  |
+| scope                 | `file`                                   |
+| fixable               | false                                    |
+| cacheable             | true                                     |
+| tags                  | [ `best practices` ]                     |
+| exclude               | [ `**/*.test\.{js,ts,jsx,tsx,cjs,mjs}` ] |
+| gritqlNumLinesContext | 2                                        |
+| gritql                | true                                     |

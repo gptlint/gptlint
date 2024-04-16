@@ -61,6 +61,6 @@ await Promise.all([saveFile(), saveFile()])
 | name      | `always-handle-promises` |
 | level     | `error`                  |
 | scope     | `file`                   |
-| fixable   | `false`                  |
-| cacheable | `true`                   |
-| tags      | `["best practices"]`     |
+| fixable   | false                    |
+| cacheable | true                     |
+| tags      | [ `best practices` ]     |
