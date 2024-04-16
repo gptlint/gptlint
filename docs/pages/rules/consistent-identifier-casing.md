@@ -28,19 +28,6 @@ Ignore string literals and module names for this rule.
 
 Class member variables and functions may include `_` prefixes.
 
-## Metadata
-
-| Key       | Value                                                  |
-| --------- | ------------------------------------------------------ |
-| name      | `consistent-identifier-casing`                         |
-| level     | `error`                                                |
-| scope     | `file`                                                 |
-| fixable   | `false`                                                |
-| cacheable | `true`                                                 |
-| tags      | `["best practices"]`                                   |
-| eslint    | `["@typescript-eslint/naming-convention","camelcase"]` |
-| gritql    | `true`                                                 |
-
 ## Examples
 
 ### Incorrect Examples
@@ -85,3 +72,16 @@ const cwd = process.cwd
 // This is fine because `i` is a parameter of an inline function and `res` is a common exception.
 const res = [1, 2, 3].filter((i) => i >= 0)
 ```
+
+## Metadata
+
+| Key       | Value                                                  |
+| --------- | ------------------------------------------------------ |
+| name      | `consistent-identifier-casing`                         |
+| level     | `error`                                                |
+| scope     | `file`                                                 |
+| fixable   | `false`                                                |
+| cacheable | `true`                                                 |
+| tags      | `["best practices"]`                                   |
+| eslint    | `["@typescript-eslint/naming-convention","camelcase"]` |
+| gritql    | `true`                                                 |

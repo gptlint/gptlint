@@ -4,20 +4,6 @@ React class components are deprecated. Use React functions and hooks instead.
 
 Note that uses `classes` is fine for non-react components.
 
-## Metadata
-
-| Key       | Value                                               |
-| --------- | --------------------------------------------------- |
-| name      | `react-avoid-class-components`                      |
-| level     | `error`                                             |
-| scope     | `file`                                              |
-| fixable   | `false`                                             |
-| cacheable | `true`                                              |
-| tags      | `["react"]`                                         |
-| eslint    | `["eslint-plugin-react-prefer-function-component"]` |
-| include   | `["**/*.{jsx,tsx}"]`                                |
-| gritql    | `true`                                              |
-
 ## Examples
 
 ### Incorrect Examples
@@ -58,3 +44,17 @@ class Foo extends EventEmitter {
   constructor() {}
 }
 ```
+
+## Metadata
+
+| Key       | Value                                               |
+| --------- | --------------------------------------------------- |
+| name      | `react-avoid-class-components`                      |
+| level     | `error`                                             |
+| scope     | `file`                                              |
+| fixable   | `false`                                             |
+| cacheable | `true`                                              |
+| tags      | `["react"]`                                         |
+| eslint    | `["eslint-plugin-react-prefer-function-component"]` |
+| include   | `["**/*.{jsx,tsx}"]`                                |
+| gritql    | `true`                                              |

@@ -45,19 +45,6 @@ function handleTasks() {
 }
 ```
 
-## Metadata
-
-| Key       | Value                                       |
-| --------- | ------------------------------------------- |
-| name      | `prefer-loose-array-bounds-checks-in-loops` |
-| level     | `error`                                     |
-| scope     | `file`                                      |
-| fixable   | `false`                                     |
-| cacheable | `true`                                      |
-| tags      | `["best practices"]`                        |
-| exclude   | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]`   |
-| gritql    | `true`                                      |
-
 ## Examples
 
 ### Incorrect Examples
@@ -105,3 +92,16 @@ while (i < tasks.length) {
   ++i
 }
 ```
+
+## Metadata
+
+| Key       | Value                                       |
+| --------- | ------------------------------------------- |
+| name      | `prefer-loose-array-bounds-checks-in-loops` |
+| level     | `error`                                     |
+| scope     | `file`                                      |
+| fixable   | `false`                                     |
+| cacheable | `true`                                      |
+| tags      | `["best practices"]`                        |
+| exclude   | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]`   |
+| gritql    | `true`                                      |

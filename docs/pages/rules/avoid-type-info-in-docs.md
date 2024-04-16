@@ -60,21 +60,6 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
 
 If a comment is providing useful context or clarifying what a parameter is used for, then it should be ignored. This rule is only aimed at comments which duplicate type info or comments which imply immutability.
 
-## Metadata
-
-| Key                   | Value                                     |
-| --------------------- | ----------------------------------------- |
-| name                  | `avoid-type-info-in-docs`                 |
-| level                 | `error`                                   |
-| scope                 | `file`                                    |
-| fixable               | `false`                                   |
-| cacheable             | `true`                                    |
-| tags                  | `["best practices"]`                      |
-| exclude               | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]` |
-| resources             | `["https://effectivetypescript.com"]`     |
-| gritqlNumLinesContext | `3`                                       |
-| gritql                | `true`                                    |
-
 ## Examples
 
 ### Correct Examples
@@ -126,3 +111,18 @@ export function parseStructuredOutput<T>(
 
 // This example is fine because the type info in the JSDoc `@param` comments is relevant and simple.
 ```
+
+## Metadata
+
+| Key                   | Value                                     |
+| --------------------- | ----------------------------------------- |
+| name                  | `avoid-type-info-in-docs`                 |
+| level                 | `error`                                   |
+| scope                 | `file`                                    |
+| fixable               | `false`                                   |
+| cacheable             | `true`                                    |
+| tags                  | `["best practices"]`                      |
+| exclude               | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]` |
+| resources             | `["https://effectivetypescript.com"]`     |
+| gritqlNumLinesContext | `3`                                       |
+| gritql                | `true`                                    |

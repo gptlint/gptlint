@@ -15,6 +15,8 @@ import { stringifyExamples } from '../src/rule-utils.js'
 
 /**
  * Internal script for copying built-in rules to docs.
+ *
+ * TODO: sort rules and metadata using stable sort.
  */
 async function main() {
   const destDir = path.join('docs', 'pages', 'rules')
@@ -68,15 +70,15 @@ async function main() {
       const ruleSource = [
         `# ${rule.title}`,
         rule.description,
-        '## Metadata',
-        ruleMetadataTable,
         rule.negativeExamples?.length || rule.positiveExamples?.length
           ? '## Examples'
           : '',
         rule.negativeExamples?.length &&
           `### Incorrect Examples\n\n${stringifyExamples(rule.negativeExamples)}`,
         rule.positiveExamples?.length &&
-          `### Correct Examples\n\n${stringifyExamples(rule.positiveExamples)}`
+          `### Correct Examples\n\n${stringifyExamples(rule.positiveExamples)}`,
+        '## Metadata',
+        ruleMetadataTable
       ]
         .filter(Boolean)
         .join('\n\n')

@@ -10,17 +10,6 @@ Creating a Promise or calling an `async` function and NOT awaiting or propagatin
 
 **Important**: This rule should only apply to function calls which you are 100% sure return a `Promise`. If you do not know for sure that a function returns a `Promise`, then disregard it.
 
-## Metadata
-
-| Key       | Value                    |
-| --------- | ------------------------ |
-| name      | `always-handle-promises` |
-| level     | `error`                  |
-| scope     | `file`                   |
-| fixable   | `false`                  |
-| cacheable | `true`                   |
-| tags      | `["best practices"]`     |
-
 ## Examples
 
 ### Incorrect Examples
@@ -64,3 +53,14 @@ async function saveFile() {
 // This is fine because we explicitly `await` the promise results
 await Promise.all([saveFile(), saveFile()])
 ```
+
+## Metadata
+
+| Key       | Value                    |
+| --------- | ------------------------ |
+| name      | `always-handle-promises` |
+| level     | `error`                  |
+| scope     | `file`                   |
+| fixable   | `false`                  |
+| cacheable | `true`                   |
+| tags      | `["best practices"]`     |

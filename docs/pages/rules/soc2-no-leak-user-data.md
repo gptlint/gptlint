@@ -4,19 +4,6 @@ Don't log potentially sensitive customer data or we'll lose our SOC2 certificati
 
 Non-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.
 
-## Metadata
-
-| Key                   | Value                    |
-| --------------------- | ------------------------ |
-| name                  | `soc2-no-leak-user-data` |
-| level                 | `error`                  |
-| scope                 | `file`                   |
-| fixable               | `false`                  |
-| cacheable             | `true`                   |
-| tags                  | `["security"]`           |
-| gritqlNumLinesContext | `2`                      |
-| gritql                | `true`                   |
-
 ## Examples
 
 ### Incorrect Examples
@@ -67,3 +54,16 @@ throw new Error(`User error ${user.id}`)
 // Logging internal resources related to a user is okay
 console.log(user.posts)
 ```
+
+## Metadata
+
+| Key                   | Value                    |
+| --------------------- | ------------------------ |
+| name                  | `soc2-no-leak-user-data` |
+| level                 | `error`                  |
+| scope                 | `file`                   |
+| fixable               | `false`                  |
+| cacheable             | `true`                   |
+| tags                  | `["security"]`           |
+| gritqlNumLinesContext | `2`                      |
+| gritql                | `true`                   |

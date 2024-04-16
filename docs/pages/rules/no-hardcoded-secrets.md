@@ -12,19 +12,6 @@ Common use cases for secrets include:
 
 The most common solution is to only access secrets from environment variables so they aren't committed as code.
 
-## Metadata
-
-| Key                   | Value                  |
-| --------------------- | ---------------------- |
-| name                  | `no-hardcoded-secrets` |
-| level                 | `error`                |
-| scope                 | `file`                 |
-| fixable               | `false`                |
-| cacheable             | `true`                 |
-| tags                  | `["security"]`         |
-| gritqlNumLinesContext | `3`                    |
-| gritql                | `true`                 |
-
 ## Examples
 
 ### Incorrect Examples
@@ -62,3 +49,16 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 })
 ```
+
+## Metadata
+
+| Key                   | Value                  |
+| --------------------- | ---------------------- |
+| name                  | `no-hardcoded-secrets` |
+| level                 | `error`                |
+| scope                 | `file`                 |
+| fixable               | `false`                |
+| cacheable             | `true`                 |
+| tags                  | `["security"]`         |
+| gritqlNumLinesContext | `3`                    |
+| gritql                | `true`                 |

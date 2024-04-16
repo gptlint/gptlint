@@ -24,20 +24,6 @@ The names of file imports from third-party APIs and modules should be ignored be
 
 If you are unsure whether or not a variable name is descriptive enough, err on the side of ignoring it or setting `confidence` to `low`.
 
-## Metadata
-
-| Key                   | Value                                     |
-| --------------------- | ----------------------------------------- |
-| name                  | `semantic-variable-names`                 |
-| level                 | `error`                                   |
-| scope                 | `file`                                    |
-| fixable               | `false`                                   |
-| cacheable             | `true`                                    |
-| tags                  | `["best practices"]`                      |
-| exclude               | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]` |
-| gritqlNumLinesContext | `2`                                       |
-| gritql                | `true`                                    |
-
 ## Examples
 
 ### Incorrect Examples
@@ -102,3 +88,17 @@ const data: Data = {}
 // This is fine because `z` is an external dependency that we have no control over.
 import { z } from 'zod'
 ```
+
+## Metadata
+
+| Key                   | Value                                     |
+| --------------------- | ----------------------------------------- |
+| name                  | `semantic-variable-names`                 |
+| level                 | `error`                                   |
+| scope                 | `file`                                    |
+| fixable               | `false`                                   |
+| cacheable             | `true`                                    |
+| tags                  | `["best practices"]`                      |
+| exclude               | `["**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"]` |
+| gritqlNumLinesContext | `2`                                       |
+| gritql                | `true`                                    |
