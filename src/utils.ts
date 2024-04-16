@@ -392,6 +392,6 @@ export async function resolveGlobFilePatterns(
   }
 }
 
-export function dirname() {
-  return import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url))
+export function dirname(meta = import.meta) {
+  return meta.dirname ?? path.dirname(fileURLToPath(meta.url))
 }

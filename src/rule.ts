@@ -220,4 +220,7 @@ export const RuleDefinitionSchema = z
 
     source: z.string().optional()
   })
+  // It is important for this to be a `passthrough` because we use additional
+  // properties on the rule object which are not defined in the rule definition
+  // schema.
   .passthrough()
