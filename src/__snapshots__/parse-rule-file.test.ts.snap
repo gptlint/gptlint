@@ -140,6 +140,7 @@ If a comment is providing useful context or clarifying what a parameter is used 
   ],
   "fixable": false,
   "gritql": "comment",
+  "gritqlNumLinesContext": 3,
   "languages": [
     "typescript",
   ],
@@ -296,7 +297,6 @@ Class member variables and functions may include \`_\` prefixes.
     }
   }
 }",
-  "gritqlNumLinesContext": 0,
   "languages": [
     "javascript",
     "typescript",
@@ -521,6 +521,7 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
   ],
   "fixable": false,
   "gritql": "function_declaration",
+  "gritqlNumLinesContext": 3,
   "languages": [
     "typescript",
   ],
@@ -570,6 +571,7 @@ Other solutions include tools like:
 ",
   "fixable": false,
   "gritql": "or { string(), template_string() }",
+  "gritqlNumLinesContext": 3,
   "languages": [
     "all",
   ],
@@ -631,6 +633,7 @@ exports[`parseRuleFile - .gptlint/prefer-array-at-negative-indexing.md 1`] = `
   ],
   "fixable": false,
   "gritql": "subscript_expression",
+  "gritqlNumLinesContext": 3,
   "languages": [
     "javascript",
     "typescript",
@@ -971,6 +974,7 @@ If a field is useful, but adding it to a type could result the type representing
   type_alias_declaration(),
   interface_declaration()
 }",
+  "gritqlNumLinesContext": 3,
   "languages": [
     "typescript",
   ],
@@ -1119,7 +1123,7 @@ If you are unsure whether or not a variable name is descriptive enough, err on t
     }
   }
 }",
-  "gritqlNumLinesContext": 0,
+  "gritqlNumLinesContext": 2,
   "languages": [
     "javascript",
     "typescript",
@@ -1213,6 +1217,7 @@ Non-identifying user data such as internal IDs or other internal models related 
   \`log.$method($args)\`,
   \`throw new $Error($msg)\`
 }",
+  "gritqlNumLinesContext": 2,
   "languages": [
     "javascript",
     "typescript",

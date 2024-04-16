@@ -61,6 +61,7 @@ export function pruneUndefined<T extends Record<string, any>>(
   ) as NonNullable<T>
 }
 
+// TODO: consider using `cli-truncate` instead
 export function trimMessage(
   message: string | undefined,
   { maxLength = 80 }: { maxLength?: number } = {}
