@@ -322,7 +322,9 @@ export function createCacheKey({
         'level',
         'scope',
         'model',
-        'languages'
+        'languages',
+        'gritql',
+        'gritqlNumLinesContext'
         // TODO: include / exclude? languages?
       )
     ),

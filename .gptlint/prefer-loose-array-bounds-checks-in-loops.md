@@ -8,9 +8,14 @@ exclude:
 
 ```grit
 or {
-  do_statement(),
-  while_statement(),
-  for_statement()
+  any_equals(a = `$foo.length`, $b),
+  any_not_equals(a = `$foo.length`, $b)
+} as $op where {
+  $op <: within or {
+    do_statement(),
+    while_statement(),
+    for_statement()
+  }
 }
 ```
 
