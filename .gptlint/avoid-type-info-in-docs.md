@@ -72,7 +72,7 @@ function sort(nums: readonly number[]) {
 
 Note that you do NOT have to include JSDoc comments for a function, and you do NOT have to include `@param` or `@returns` JSDoc properties. These are purely optional, but if they are included, they should not discuss the types of function parameters because TypeScript does a better job of capturing this info in the function definition itself.
 
-If a comment is providing useful context or clarifying what a parameter is used for, then it should be ignored. This rule is only aimed at comments which duplicate type info.
+If a comment is providing useful context or clarifying what a parameter is used for, then it should be ignored. This rule is only aimed at comments which duplicate type info or comments which imply immutability.
 
 ### Correct
 

@@ -84,9 +84,9 @@ Here is an example of incorrect code:
 \`\`\`ts
 /**
  * Returns a string with the foreground color.
- * Takes zero or one arguments. With no arguments, returns the
- * standard foreground color. With one argument, returns the foreground color
- * for a particular page.
+ * Takes zero or one arguments. With no arguments, returns the standard
+ * foreground color. With one argument, returns the foreground color for a
+ * particular page.
  */
 function getForegroundColor(page?: string) {
   return page === 'login' ? { r: 127, g: 127, b: 127 } : { r: 0, g: 0, b: 0 }
@@ -121,7 +121,7 @@ function sort(nums: number[]) {
 }
 \`\`\`
 
-Instead, declare it \`readonly\` and let TypeScript enforce the contract:
+Instead, declare the parameter as \`readonly\` and let TypeScript enforce the contract:
 
 \`\`\`ts
 function sort(nums: readonly number[]) {
@@ -129,7 +129,11 @@ function sort(nums: readonly number[]) {
 }
 \`\`\`
 
+## Caveats
+
 Note that you do NOT have to include JSDoc comments for a function, and you do NOT have to include \`@param\` or \`@returns\` JSDoc properties. These are purely optional, but if they are included, they should not discuss the types of function parameters because TypeScript does a better job of capturing this info in the function definition itself.
+
+If a comment is providing useful context or clarifying what a parameter is used for, then it should be ignored. This rule is only aimed at comments which duplicate type info or comments which imply immutability.
 ",
   "exclude": [
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
@@ -142,49 +146,7 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
   "level": "error",
   "metadata": {},
   "name": "avoid-type-info-in-docs",
-  "negativeExamples": [
-    {
-      "code": "/**
- * Upserts a user into the database.
- *
- * Takes either an existing user or data describing a new user.
- * Also takes an optional context.
- *
- * Returns a new user.
- */
-export async function upsertUser(
-  user: User | NewUserData,
-  ctx?: Context
-): Promise<User> {
-  // ...
-}
-
-// This example VIOLATES the rule because the JSDoc comment describes the type
-// of \`user\` when the TS types do a better job of this. Another issue is that
-// the return type is described, when the TS types do a better job of this.
-// A better version would use JSDoc \`@param\` and \`@returns\` to describe the
-// behavior without mentioning the types.",
-      "language": "ts",
-    },
-    {
-      "code": "/**
- * Upserts a user into the database.
- *
- * @param {User} user - The user to upsert.
- * @param {Context} ctx - Optional context for the database operation.
- */
-export async function upsertUser(
-  user: User | NewUserData,
-  ctx?: Context
-): Promise<User> {
-  // ...
-}
-
-// This example VIOLATES the rule because the JSDoc comment includes duplicate
-// type info for the function parameters.",
-      "language": "ts",
-    },
-  ],
+  "negativeExamples": [],
   "positiveExamples": [
     {
       "code": "/**
@@ -283,7 +245,58 @@ Class member variables and functions may include \`_\` prefixes.
     "camelcase",
   ],
   "fixable": false,
-  "gritql": "or { identifier(), property_identifier(), type_identifier() }",
+  "gritql": "or {
+  type_identifier() as $id where {
+    and {
+      $id <: within or {
+        type_alias_declaration($name),
+        interface_declaration($name),
+        class_declaration($name)
+      },
+      $id <: $name
+    }
+  },
+
+  identifier() as $id where {
+    or {
+      and {
+        $id <: within or {
+          variable_declarator($name),
+          function_declaration($name),
+          class_declaration($name),
+          method_signature($name),
+          method_definition($name),
+          required_parameter($name),
+          optional_parameter($name)
+        },
+        $id <: $name
+      },
+
+      or {
+        and {
+          $id <: within \`function $func($props): $ret {$body}\`,
+          $id <: not or { within $body, within $func }
+        },
+        and {
+          $id <: within \`function $func($props) {$body}\`,
+          $id <: not or { within $body, within $func }
+        },
+        and {
+          $id <: within \`($props) => $body\`,
+          $id <: not or { within $body }
+        }
+      }
+    }
+  },
+
+  property_identifier() as $id where {
+    and {
+      $id <: within or { method_signature($name), method_definition($name) },
+      $id <: $name
+    }
+  }
+}",
+  "gritqlNumLinesContext": 0,
   "languages": [
     "javascript",
     "typescript",
@@ -329,8 +342,8 @@ const cwd = process.cwd",
       "language": "ts",
     },
     {
-      "code": "// This is fine because \`i\` is a parameter of an inline function.
-const foo = [1, 2, 3].filter((i) => i >= 0)",
+      "code": "// This is fine because \`i\` is a parameter of an inline function and \`res\` is a common exception.
+const res = [1, 2, 3].filter((i) => i >= 0)",
       "language": "ts",
     },
   ],
@@ -1079,7 +1092,34 @@ If you are unsure whether or not a variable name is descriptive enough, err on t
     "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}",
   ],
   "fixable": false,
-  "gritql": "identifier",
+  "gritql": "identifier() as $id where {
+  or {
+    and {
+      $id <: within or {
+        variable_declarator($name),
+        required_parameter($name),
+        optional_parameter($name)
+      },
+      $id <: $name
+    },
+
+    or {
+      and {
+        $id <: within \`function $func($props): $ret {$body}\`,
+        $id <: not or { within $body, within $func }
+      },
+      and {
+        $id <: within \`function $func($props) {$body}\`,
+        $id <: not or { within $body, within $func }
+      },
+      and {
+        $id <: within \`($props) => $body\`,
+        $id <: not within $body
+      }
+    }
+  }
+}",
+  "gritqlNumLinesContext": 0,
   "languages": [
     "javascript",
     "typescript",
@@ -1095,6 +1135,11 @@ const a = 5
 // Bad because "b" is not a descriptive variable name
 const b = false",
       "language": "ts",
+    },
+    {
+      "code": "// Bad because "obj" is not a descriptive variable name
+const obj = { id: 5, name: 'Bob' }",
+      "language": "js",
     },
   ],
   "positiveExamples": [

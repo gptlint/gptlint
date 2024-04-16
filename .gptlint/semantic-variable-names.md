@@ -73,6 +73,11 @@ const a = 5
 const b = false
 ```
 
+```js
+// Bad because "obj" is not a descriptive variable name
+const obj = { id: 5, name: 'Bob' }
+```
+
 ### Good
 
 ```ts
