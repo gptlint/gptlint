@@ -3,17 +3,20 @@ export default {
   guide: 'Guide',
   extend: 'Extending GPTLint',
   project: 'Project',
+  rules: 'Rules',
   '-- Links': {
     type: 'separator',
     title: 'Links'
   },
-  'github-sidebar': {
+  github: {
     title: 'GitHub',
-    href: 'https://github.com/gptlint/gptlint'
+    href: 'https://github.com/gptlint/gptlint',
+    type: 'page'
   },
-  'contact-sidebar': {
+  contact: {
     title: 'Contact ↗',
     href: 'mailto:gptlint@teamduality.dev',
+    type: 'page',
     newWindow: true
   }
 }

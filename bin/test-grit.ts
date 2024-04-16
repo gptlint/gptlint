@@ -18,7 +18,7 @@ async function main() {
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
     {
-      name: 'grit',
+      name: 'test-grit',
       cwd,
       flagsToAdd: {
         pattern: {
@@ -56,12 +56,12 @@ async function main() {
   const gritMatches = await applyGritQLPattern(pattern, { files })
   // const match = gritMatches.map(({ debug: _debug, ...match }) => match).at(-1)
   const partialFilesMap = resolveGritQLMatches(gritMatches, { files })
-  const partialFilesC = [...partialFilesMap.values()].filter(
+  const partialFiles = [...partialFilesMap.values()].filter(
     (file) => file.ranges.length > 0 && file.partialContent.length > 0
   )
   console.log(
     JSON.stringify(
-      partialFilesC.map((f) => omit(f, 'content', 'ranges')),
+      partialFiles.map((f) => omit(f, 'content', 'ranges')),
       null,
       2
     )

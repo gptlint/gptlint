@@ -26,6 +26,10 @@ export default withNextra({
       {
         source: '/project',
         destination: '/project/how-it-works'
+      },
+      {
+        source: '/rules',
+        destination: '/rules/index'
       }
     ]
   }

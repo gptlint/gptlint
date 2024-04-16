@@ -14,16 +14,7 @@ ${
     ? '<INCORRECT EXAMPLES>\n\nThese are examples of bad code snippets which would VIOLATE this rule if they appear in the SOURCE:\n\n'
     : ''
 }
-${
-  rule.negativeExamples
-    ? rule.negativeExamples
-        .map(
-          (example) =>
-            `\`\`\`${example.language ?? ''}\n${example.code}\n\`\`\``
-        )
-        .join('\n\n')
-    : ''
-}
+${stringifyExamples(rule.negativeExamples)}
 ${rule.negativeExamples?.length ? '</INCORRECT EXAMPLES>' : ''}
 
 ${
@@ -31,20 +22,22 @@ ${
     ? '<CORRECT EXAMPLES>\n\nThese are examples of good code snippets which conform to this rule and should be ignored in the SOURCE:\n\n'
     : ''
 }
-${
-  rule.positiveExamples
-    ? rule.positiveExamples
+${stringifyExamples(rule.positiveExamples)}
+${rule.positiveExamples?.length ? '</CORRECT EXAMPLES>' : ''}
+
+</RULE ${rule.name}>
+`
+}
+
+export function stringifyExamples(examples?: types.RuleExample[]): string {
+  return examples
+    ? examples
         .map(
           (example) =>
             `\`\`\`${example.language ?? ''}\n${example.code}\n\`\`\``
         )
         .join('\n\n')
     : ''
-}
-${rule.positiveExamples?.length ? '</CORRECT EXAMPLES>' : ''}
-
-</RULE ${rule.name}>
-`
 }
 
 export function validateRule(rule: types.Rule) {
