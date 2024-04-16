@@ -103,7 +103,7 @@ If you find any code snippets which VIOLATE the RULE, then output them as RULE_V
 
 <RULE_VIOLATION schema>
 
-${stringifyRuleViolationSchemaForModel(rule)}
+${stringifyRuleViolationSchemaForModel(rule, file)}
 
 </RULE_VIOLATION schema>
 
@@ -418,7 +418,7 @@ For any potential RULE_VIOLATION objects which VIOLATE the RULE, include them in
 
 <RULE_VIOLATION schema>
 
-${stringifyRuleViolationSchemaForModel(rule)}
+${stringifyRuleViolationSchemaForModel(rule, file)}
 
 </RULE_VIOLATION schema>
 

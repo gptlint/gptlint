@@ -38,7 +38,7 @@ export const ruleViolationSchema = z.object({
     .enum(['examples', 'source', 'unknown'])
     .optional()
     .describe(
-      'Where the `codeSnippet` comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source".'
+      'Where the `codeSnippet` comes from. If it comes from the RULE examples, then use "examples". If it comes from the SOURCE, then use "source". If you are not sure, then use "unknown".'
     ),
 
   reasoning: z
@@ -199,7 +199,10 @@ export function parseRuleViolationsFromMarkdownModelResponse(
   return ruleViolations
 }
 
-export function stringifyRuleViolationSchemaForModel(rule: types.Rule): string {
+export function stringifyRuleViolationSchemaForModel(
+  rule: types.Rule,
+  file: types.SourceFile
+): string {
   // TODO: Ideally, we would generate this from the zod schema to ensure a
   // single source of truth, but this was easier for now and doesn't involve
   // adding any larger dependencies.
@@ -211,8 +214,8 @@ interface RULE_VIOLATION {
   // The offending code snippet which fails to conform to the given RULE. CODE SNIPPETS MUST BE SHORT and should include an ellipsis "..." if they would be more than 10 lines of code.
   codeSnippet: string
 
-  // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" examples, then use "examples". If it comes from the SOURCE, then use "source".
-  codeSnippetSource: 'examples' | 'source' | 'unknown'
+  // Where the \`codeSnippet\` comes from. If it comes from the RULE "${rule.name}" EXAMPLES, then use "examples". If it comes from the SOURCE "${file.fileRelativePath}", then use "source". If you are not sure, then use "unknown".
+  codeSnippetSource: "examples" | "source" | "unknown"
 
   // An explanation of why this code snippet VIOLATES the RULE. Think step-by-step when describing your reasoning.
   reasoning: string
@@ -221,7 +224,7 @@ interface RULE_VIOLATION {
   violation: boolean
 
   // Your confidence that the \`codeSnippet\` VIOLATES the RULE.
-  confidence: 'low' | 'medium' | 'high'
+  confidence: "low" | "medium" | "high"
 }
 \`\`\``
 }
@@ -235,7 +238,7 @@ export function stringifyExampleRuleViolationsObjectOutputForModel(
     {
       "ruleName": "${rule.name}",
       "codeSnippet": "...",
-      "codeSnippetSource": "source",
+      "codeSnippetSource": "unknown",
       "reasoning": "..."
       "violation": true,
       "confidence": "high"
@@ -253,7 +256,7 @@ export function stringifyExampleRuleViolationsArrayOutputForModel(
   {
     "ruleName": "${rule.name}",
     "codeSnippet": "...",
-    "codeSnippetSource": "source",
+    "codeSnippetSource": "unknown",
     "reasoning": "..."
     "violation": true,
     "confidence": "high"

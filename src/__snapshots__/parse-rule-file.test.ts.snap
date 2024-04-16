@@ -10,6 +10,8 @@ exports[`parseRuleFile - .gptlint/always-handle-promises.md 1`] = `
 - returning a Promise to a calling function which itself has to handle the Promise
 
 Creating a Promise or calling an \`async\` function and NOT awaiting or propagating the resulting Promise using one of these approaches is a code smell and violates this rule.
+
+**Important**: This rule should only apply to function calls which you are 100% sure return a \`Promise\`. If you do not know for sure that a function returns a \`Promise\`, then disregard it.
 ",
   "fixable": false,
   "languages": [
