@@ -1,6 +1,6 @@
 import {
-  parseRuleFilePath,
   dirname,
+  parseRuleFilePath,
   type RuleDefinition
 } from '../../src/index.js'
 
