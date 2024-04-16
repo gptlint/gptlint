@@ -173,7 +173,7 @@ export const RuleDefinitionSchema = z
       .number()
       .optional()
       .describe(
-        'Number of lines before & after GritQL matches to include in the context sent to the LLM. Defaults to 3.'
+        'Number of lines before & after GritQL matches to include in the context sent to the LLM. Defaults to 0.'
       ),
 
     preProcessFile: z

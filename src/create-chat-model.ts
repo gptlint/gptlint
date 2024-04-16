@@ -38,7 +38,6 @@ type ChatOptions = NonNullable<
 >
 type ChatResponse = Awaited<ReturnType<OpenAIClient['createChatCompletion']>>
 
-// createChatCompletion(params: ChatParams, opts?: RequestOpts): Promise<ChatResponse>;
 async function createChatCompletionDryRun(
   params: ChatParams,
   _opts?: ChatOptions

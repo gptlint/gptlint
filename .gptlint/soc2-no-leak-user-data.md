@@ -1,5 +1,6 @@
 ---
 fixable: false
+gritqlNumLinesContext: 2
 tags: [security]
 languages: [javascript, typescript]
 ---

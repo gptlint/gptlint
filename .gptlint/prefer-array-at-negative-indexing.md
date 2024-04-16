@@ -1,5 +1,6 @@
 ---
 fixable: false
+gritqlNumLinesContext: 3
 tags: [best practices]
 languages: [javascript, typescript]
 eslint: ['@unicorn/prefer-negative-index']

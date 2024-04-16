@@ -3,6 +3,7 @@ import 'dotenv/config'
 
 import path from 'node:path'
 
+import chalk from 'chalk'
 import { gracefulExit } from 'exit-hook'
 import pMap from 'p-map'
 
@@ -61,7 +62,9 @@ async function main() {
   const onlyNegative = !!(args.flags as any).onlyNegative
 
   if (onlyPositive && onlyNegative) {
-    console.error('Cannot specify both --only-positive and --only-negative')
+    console.error(
+      chalk.bold('Cannot specify both --only-positive and --only-negative')
+    )
     args.showHelp()
     return gracefulExit(1)
   }
@@ -84,7 +87,7 @@ async function main() {
       }
     }
   } catch (err: any) {
-    console.error('Error:', err.message, '\n')
+    console.error(chalk.bold('Error:'), err.message, '\n')
     args.showHelp()
     return gracefulExit(1)
   }
@@ -144,7 +147,7 @@ async function main() {
                 ruleEvalStats.numFalsePositives++
 
                 console.warn(
-                  `False positive: rule ${rule.name}: ${file.fileRelativePath}`,
+                  `${chalk.bold('False positive')}: rule ${chalk.bold(rule.name)}: ${chalk.bold(file.fileRelativePath)}`,
                   fileLintResult.lintErrors
                 )
               } else {
@@ -159,7 +162,7 @@ async function main() {
             } catch (err: any) {
               ruleEvalStats.numUnexpectedErrors++
               console.warn(
-                `Unexpected error: rule ${rule.name}: ${file.fileRelativePath}`,
+                `${chalk.bold('Unexpected error')}: rule ${rule.name}: ${file.fileRelativePath}`,
                 err
               )
             }
@@ -206,7 +209,7 @@ async function main() {
                 ruleEvalStats.numFalseNegatives++
 
                 console.warn(
-                  `False negative: rule ${rule.name}: ${file.fileRelativePath}`,
+                  `${chalk.bold('False negative')}: rule ${chalk.bold(rule.name)}: ${chalk.bold(file.fileRelativePath)}`,
                   fileLintResult.message
                 )
               }
@@ -215,7 +218,7 @@ async function main() {
             } catch (err: any) {
               ruleEvalStats.numUnexpectedErrors++
               console.warn(
-                `Unexpected error: rule ${rule.name}: ${file.fileRelativePath}`,
+                `${chalk.bold('Unexpected error')}: rule ${rule.name}: ${file.fileRelativePath}`,
                 err
               )
             }

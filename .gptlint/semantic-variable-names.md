@@ -1,6 +1,6 @@
 ---
 fixable: false
-gritqlNumLinesContext: 0
+gritqlNumLinesContext: 2
 tags: [best practices]
 languages: [javascript, typescript]
 exclude:
