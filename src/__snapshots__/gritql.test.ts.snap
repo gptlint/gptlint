@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[` 1`] = `
+"export const minSourceFileSizeBytes = 0
+export const maxSourceFileSizeBytes = 200 * 1024 // 200kb
+
+export const maxSourceFileNumLines = 10_000
+export const maxSourceFileLineLength = 1024
+
+export const gritNumLinesContext = 3"
+`;

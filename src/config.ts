@@ -207,12 +207,7 @@ export const defaultLinterOptions: Readonly<LinterOptions> = {
 export const defaultLLMOptions: Readonly<LLMOptions> = {
   apiKey: getEnv('OPENAI_API_KEY'),
   apiBaseUrl: 'https://api.openai.com/v1',
-  // The default model is `gpt-4`. We're not using `gpt-4-turbo-preview` as the
-  // default because some developers don't have access to it, and we're not
-  // using `gpt-3.5-turbo` as the default because it doesn't perform as well in
-  // our tests.
   model: 'gpt-4-turbo',
-  // model: 'gpt-4-turbo-preview',
   weakModel: 'gpt-3.5-turbo',
   temperature: 0
 }

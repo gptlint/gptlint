@@ -9,7 +9,7 @@ import {
   RetryableError
 } from './errors.js'
 import { preProcessFileWithGrit } from './gritql.js'
-import { createLintResult } from './lint-result.js'
+import { createLintResult, dedupeLintErrors } from './lint-result.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
   parseRuleViolationsFromJSONModelResponse,
@@ -280,6 +280,8 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
       }
     }
   } while (true)
+
+  lintResult.lintErrors = dedupeLintErrors(lintResult.lintErrors)
 
   if (lintResult.lintErrors.length > 0 && isTwoPassLintingEnabled) {
     const { lintErrors: originalLintErrors } = lintResult
@@ -591,5 +593,6 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
     }
   } while (true)
 
+  lintResult.lintErrors = dedupeLintErrors(lintResult.lintErrors)
   return lintResult
 }

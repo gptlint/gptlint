@@ -242,7 +242,7 @@ export function resolveGritQLMatches(
 
     for (const range of ranges) {
       const startLine = Math.max(
-        Math.max(0, maxLine - 1),
+        Math.max(0, maxLine),
         range.start.line - 1 - numLinesContext
       )
       const endLine = range.end.line + numLinesContext
@@ -254,9 +254,9 @@ export function resolveGritQLMatches(
     }
 
     partialFile.partialContent = partialContentLines
-      .map((line) => line.trim())
-      .filter(Boolean)
+      // .filter((line) => !!line.trim())
       .join('\n')
+      .trim()
   }
 
   return partialFilesByFilePath

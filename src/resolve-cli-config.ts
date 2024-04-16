@@ -177,7 +177,8 @@ export async function resolveLinterCLIConfig(
       // so this is a workaround to ensure it doesn't view the file content as
       // a valid filesystem path
       const ignoreFile = `\n${ignoreFileContent}\n`
-      // `parseGitIgnore` types are incorrect
+
+      // `parseGitIgnore` types are incorrect, so this is a workaround
       const { patterns: ignoreFilePatterns } = parseGitIgnore(ignoreFile) as any
       ignores = ignores.concat(ignoreFilePatterns)
     }

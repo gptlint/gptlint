@@ -100,3 +100,27 @@ export function resolvePartialLintResult(
       ) ?? []
   })
 }
+
+export function dedupeLintErrors(
+  lintErrors: types.LintError[]
+): types.LintError[] {
+  const lintErrorsMap = new Map<string, types.LintError>()
+
+  return lintErrors.filter((lintError) => {
+    const key = JSON.stringify(
+      pruneUndefined({
+        ruleName: lintError.ruleName,
+        filePath: lintError.filePath,
+        codeSnippet: lintError.codeSnippet,
+        message: lintError.message
+      })
+    )
+
+    if (lintErrorsMap.has(key)) {
+      return false
+    }
+
+    lintErrorsMap.set(key, lintError)
+    return true
+  })
+}
