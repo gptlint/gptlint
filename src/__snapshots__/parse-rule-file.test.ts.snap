@@ -134,7 +134,6 @@ Note that you do NOT have to include JSDoc comments for a function, and you do N
   ],
   "fixable": false,
   "gritql": "comment",
-  "gritqlNumLinesContext": 10,
   "languages": [
     "typescript",
   ],
@@ -688,9 +687,14 @@ function handleTasks() {
   ],
   "fixable": false,
   "gritql": "or {
-  do_statement(),
-  while_statement(),
-  for_statement()
+  any_equals(a = \`$foo.length\`, $b),
+  any_not_equals(a = \`$foo.length\`, $b)
+} as $op where {
+  $op <: within or {
+    do_statement(),
+    while_statement(),
+    for_statement()
+  }
 }",
   "languages": [
     "javascript",
@@ -941,6 +945,7 @@ Note that uses \`classes\` is fine for non-react components.
     "eslint-plugin-react-prefer-function-component",
   ],
   "fixable": false,
+  "gritql": "react_class_component",
   "include": [
     "**/*.{jsx,tsx}",
   ],

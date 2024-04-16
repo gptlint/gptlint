@@ -2,7 +2,6 @@
 fixable: false
 tags: [best practices]
 languages: [typescript]
-gritqlNumLinesContext: 10
 exclude:
   - '**/*.test\.{js,ts,jsx,tsx,cjs,mjs}'
 resources:
