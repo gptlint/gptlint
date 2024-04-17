@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "postbuild": "cp -f .gptlint/custom/*.md dist/.gptlint/custom",
+    "postbuild": "cp -f rules/custom/*.md dist/rules/custom",
     "build:docs": "tsx bin/cp-rules-to-docs.ts",
     "dev": "tsup --watch",
     "clean": "del dist",
@@ -44,8 +44,8 @@
     "prepare": "husky",
     "precommit": "lint-staged",
     "test": "run-s test:*",
-    "test:format": "prettier --check \"**/*.{js,ts,tsx}\" \".gptlint/**/*.ts\"",
-    "test:lint": "eslint . \".gptlint/**/*.ts\"",
+    "test:format": "prettier --check \"**/*.{js,ts,tsx}\" \"rules/**/*.ts\"",
+    "test:lint": "eslint . \"rules/**/*.ts\"",
     "test:typecheck": "tsc --noEmit",
     "test:unit": "vitest run"
   },

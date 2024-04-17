@@ -4,7 +4,7 @@ import 'dotenv/config'
 export default [
   {
     // TODO: need a way to disable built-in rules
-    // ruleFiles: ['.gptlint/**/*.md'],
+    // ruleFiles: ['rules/**/*.md'],
     // ruleFiles: [],
     llmOptions: {
       model: 'gpt-4-turbo-preview',

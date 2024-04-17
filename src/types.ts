@@ -9,6 +9,7 @@ import type { FailedAttemptError } from './errors.js'
 import type { Rule, RuleMetadata } from './rule.js'
 
 export type {
+  GPTLintConfig,
   LinterConfig,
   LinterConfigRuleSetting,
   LinterConfigRuleSettings,

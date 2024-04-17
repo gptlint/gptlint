@@ -101,7 +101,7 @@ A GRS rule is defined in a [GitHub Flavored Markdown](https://github.github.com/
 
 ### Rule Frontmatter Metadata
 
-A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/front-matter/) for specifying metadata. Note that this is the same frontmatter format used by GitHub, so the metadata renders as an inline table on GitHub ([example](https://github.com/gptlint/gptlint/blob/main/.gptlint/always-handle-promises.md)).
+A GRS file may optionally contain [YAML frontmatter](https://jekyllrb.com/docs/front-matter/) for specifying metadata. Note that this is the same frontmatter format used by GitHub, so the metadata renders as an inline table on GitHub ([example](https://github.com/gptlint/gptlint/blob/main/rules/always-handle-promises.md)).
 
 **All metadata fields are optional.**
 
@@ -125,6 +125,6 @@ All metadata keys are case-sensitive, and all metadata values must match their e
 
 ## Example Rules
 
-All built-in rules are available in [.gptlint](https://github.com/gptlint/gptlint/tree/main/.gptlint).
+Documentation for all built-in rules is available [here](../rules/index) and their source is available [here](https://github.com/gptlint/gptlint/tree/main/rules).
 
 Parsing-wise, [fixtures/rules](https://github.com/gptlint/gptlint/tree/main/fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules](https://github.com/gptlint/gptlint/tree/main/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.

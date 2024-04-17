@@ -18,7 +18,7 @@ import { stringifyExamples } from '../src/rule-utils.js'
  */
 async function main() {
   const destDir = path.join('docs', 'pages', 'rules')
-  const files = await globby('.gptlint/*.md')
+  const files = await globby('rules/*.md')
   const metadata: Record<string, any> = {
     index: 'Overview'
   }
