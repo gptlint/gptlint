@@ -18,6 +18,7 @@
   - ensure precheck tasks are properly reported as cached
 - project
   - stress test w/ real-world repos
+  - add a why doc
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - social image for docs and launch
   - demo video
