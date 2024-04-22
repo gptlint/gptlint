@@ -69,8 +69,15 @@ test('resolveGlobFilePatterns', async () => {
   expect(res.length).toEqual(1)
   expect(path.basename(res[0]!)).toEqual('utils.test.ts')
 
-  const r = await resolveGlobFilePatterns(['../gptlint/src/**/*.test.ts'], {
-    cwd: path.resolve(dirname(), '..')
-  })
-  expect(r).toBeTruthy()
+  expect(
+    resolveGlobFilePatterns(['../gptlint/src/**/*.test.ts'], {
+      cwd: path.resolve(dirname(), '..')
+    })
+  ).rejects.toThrowError()
+
+  expect(
+    resolveGlobFilePatterns(['../gptlint/src/parse-rule-file.test.ts'], {
+      cwd: path.resolve(dirname(), '..')
+    })
+  ).resolves.toMatchSnapshot()
 })

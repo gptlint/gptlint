@@ -383,6 +383,14 @@ export async function resolveGlobFilePatterns(
     )
     .map((pattern) => path.relative(cwd, pattern))
 
+  for (const pattern of absolutePatterns) {
+    if (/\*/.test(pattern)) {
+      throw new Error(
+        `File globs must be local to cwd or not use "*" glob syntax: ${pattern}`
+      )
+    }
+  }
+
   try {
     // console.log('resolveGlobFilePatterns', {
     //   relativePatterns,

@@ -13,3 +13,9 @@ exports[`resolveGlobFilePatterns 1`] = `
   "src/utils.test.ts",
 ]
 `;
+
+exports[`resolveGlobFilePatterns 2`] = `
+[
+  "src/parse-rule-file.test.ts",
+]
+`;
