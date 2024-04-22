@@ -6,7 +6,27 @@ languages: [all]
 ---
 
 ```grit
-or { string(), template_string() }
+// TODO: filter out short strings
+and {
+  or { string(), template_string() },
+  not within import_statement(),
+  not or {
+    `'.'`,
+    `'..'`,
+    `' '`,
+    `'  '`,
+    `'+'`,
+    `'-'`,
+    `'*'`,
+    `'\n'`,
+    `'\n\n'`,
+    `'path'`,
+    `'name'`,
+    `'id'`,
+    `'_id'`,
+    `'file'`,
+  }
+}
 ```
 
 # No hardcoded secrets

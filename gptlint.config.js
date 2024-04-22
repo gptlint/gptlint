@@ -1,17 +1,17 @@
 import 'dotenv/config'
 
 /** @type {import('gptlint').GPTLintConfig} */
-// export default [
-//   {
-//     // TODO: need a way to disable built-in rules
-//     // ruleFiles: ['rules/**/*.md'],
-//     // ruleFiles: [],
-//     llmOptions: {
-//       model: 'gpt-4-turbo-preview',
-//       weakModel: 'gpt-3.5-turbo'
-//     }
-//   }
-// ]
+export default [
+  {
+    // TODO: need a way to disable built-in rules
+    // ruleFiles: ['rules/**/*.md'],
+    // ruleFiles: [],
+    llmOptions: {
+      model: 'gpt-4-turbo-preview',
+      weakModel: 'gpt-3.5-turbo'
+    }
+  }
+]
 
 // This example uses Anthropic Claude.
 /** @type {import('gptlint').GPTLintConfig} */

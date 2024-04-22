@@ -383,6 +383,8 @@ export async function resolveGlobFilePatterns(
     )
     .map((pattern) => path.relative(cwd, pattern))
 
+  // TODO: workaround this `globby` restriction
+  // TODO: this will involve returning absolute file paths from this function
   for (const pattern of absolutePatterns) {
     if (/\*/.test(pattern)) {
       throw new Error(
