@@ -373,21 +373,27 @@ export async function resolveGlobFilePatterns(
     ? (patternOrPatterns as readonly string[])
     : [patternOrPatterns as string]
 
+  const cwd = (options?.cwd as string) ?? process.cwd()
   const absolutePatterns = patterns
-    .filter((pattern) => path.isAbsolute(pattern))
-    .map((pattern) =>
-      path.relative((options?.cwd as string) ?? process.cwd(), pattern)
+    .filter((pattern) => path.isAbsolute(pattern) || pattern.startsWith('..'))
+    .map((pattern) => path.relative(cwd, pattern))
+  const relativePatterns = patterns
+    .filter(
+      (pattern) => !(path.isAbsolute(pattern) || pattern.startsWith('..'))
     )
-  const relativePatterns = patterns.filter(
-    (pattern) => !path.isAbsolute(pattern)
-  )
+    .map((pattern) => path.relative(cwd, pattern))
 
   try {
+    // console.log('resolveGlobFilePatterns', {
+    //   relativePatterns,
+    //   absolutePatterns,
+    //   cwd
+    // })
     const resolvedFilePatterns = await globby(relativePatterns, options)
 
     return absolutePatterns.concat(resolvedFilePatterns)
   } catch (err: any) {
-    console.error('error resolving glob patterns', err.message)
+    console.error('error resolving glob patterns:', err.message)
     throw err
   }
 }
