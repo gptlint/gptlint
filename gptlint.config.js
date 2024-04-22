@@ -1,17 +1,17 @@
 import 'dotenv/config'
 
 /** @type {import('gptlint').GPTLintConfig} */
-export default [
-  {
-    // TODO: need a way to disable built-in rules
-    // ruleFiles: ['rules/**/*.md'],
-    // ruleFiles: [],
-    llmOptions: {
-      model: 'gpt-4-turbo-preview',
-      weakModel: 'gpt-3.5-turbo'
-    }
-  }
-]
+// export default [
+//   {
+//     // TODO: need a way to disable built-in rules
+//     // ruleFiles: ['rules/**/*.md'],
+//     // ruleFiles: [],
+//     llmOptions: {
+//       model: 'gpt-4-turbo-preview',
+//       weakModel: 'gpt-3.5-turbo'
+//     }
+//   }
+// ]
 
 // This example uses Anthropic Claude.
 /** @type {import('gptlint').GPTLintConfig} */
@@ -32,6 +32,20 @@ export default [
 //           'X-Title': 'gptlint'
 //         }
 //       }
+//     }
+//   }
+// ]
+
+// This example uses LLama3 via Groq.
+/** @type {import('gptlint').GPTLintConfig} */
+// export default [
+//   {
+//     llmOptions: {
+//       apiBaseUrl: 'https://api.groq.com/openai/v1',
+//       // eslint-disable-next-line no-process-env
+//       apiKey: process.env.GROQ_API_KEY,
+//       model: 'llama3-70b-8192',
+//       weakModel: 'llama3-8b-8192'
 //     }
 //   }
 // ]

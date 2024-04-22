@@ -369,10 +369,10 @@ export async function validateRuleViolations({
   // the implementation harder to debug, evaluate, and maintain.
   const modelSupportsJsonResponseFormat =
     config.llmOptions.modelSupportsJsonResponseFormat ??
-    (config.llmOptions.apiBaseUrl ===
-      defaultLinterConfig.llmOptions.apiBaseUrl! && model !== 'gpt-4'
-      ? true
-      : false)
+    ((config.llmOptions.apiBaseUrl ===
+      defaultLinterConfig.llmOptions.apiBaseUrl! &&
+      model !== 'gpt-4') ||
+      config.llmOptions.apiBaseUrl === 'https://api.groq.com/openai/v1')
 
   const potentialRuleViolations: Partial<RuleViolation>[] =
     lintResult.lintErrors.map((error) => ({
@@ -380,7 +380,7 @@ export async function validateRuleViolations({
       codeSnippet: error.codeSnippet,
       codeSnippetSource: 'unknown'
       // We intentionally omit the weak model's `reasoning` here because it may
-      // be misleading, and that's why we're relying on the strong model for.
+      // be misleading, and that's what we're relying on the strong model for.
     }))
 
   const messages: Prompt.Msg[] = [
