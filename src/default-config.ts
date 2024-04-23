@@ -1,38 +1,9 @@
-import path from 'node:path'
-
 import type * as types from './types.js'
 import * as customRuleDefinitions from '../rules/custom/index.js'
-import { parseRuleFilePath } from './parse-rule-file.js'
-import { dirname } from './utils.js'
+import builtInRules from './built-in-rules.json'
 
-// TODO: optimize this so we're not parsing the built-in rules on every
-// program run
-const builtInRuleDir = path.resolve(dirname(import.meta), '..', 'rules')
-const builtInRuleNames = [
-  'always-handle-promises',
-  'avoid-type-info-in-docs',
-  'consistent-identifier-casing',
-  'liberal-accept-strict-produce',
-  'no-hardcoded-secrets',
-  'prefer-array-at-negative-indexing',
-  'prefer-loose-array-bounds-checks-in-loops',
-  'prefer-types-always-valid-states',
-  'react-avoid-class-components',
-  'semantic-variable-names',
-  'soc2-no-leak-user-data',
-  'use-correct-english'
-]
-
-const builtInRules = await Promise.all(
-  builtInRuleNames.map((ruleName) =>
-    parseRuleFilePath(`./${ruleName}.md`, {
-      cwd: builtInRuleDir
-    })
-  )
-)
-
-const ruleDefinitions = [
-  ...builtInRules,
+const ruleDefinitions: types.RuleDefinition[] = [
+  ...(builtInRules as types.RuleDefinition[]),
   ...Object.values(customRuleDefinitions)
 ]
 
@@ -48,4 +19,4 @@ export const recommendedConfig: types.GPTLintConfig = [
   }
 ]
 
-// console.log(JSON.stringify(recommendedConfig, null, 2))
+// console.log(JSON.stringify(recommendedConfig.map(sanitizeConfig), null, 2))

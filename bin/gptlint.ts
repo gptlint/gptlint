@@ -19,6 +19,7 @@ import { logLintResultStats, validateLinterInputs } from '../src/utils.js'
 async function main() {
   const cwd = process.cwd()
 
+  const startMs = performance.now()
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
     {
@@ -45,6 +46,9 @@ async function main() {
   if (!validateLinterInputs({ files, rules, config })) {
     return
   }
+
+  const endMs = performance.now()
+  console.log('startup', endMs - startMs)
 
   const chatModel = createChatModel(config)
   const cache = await createLinterCache(config)

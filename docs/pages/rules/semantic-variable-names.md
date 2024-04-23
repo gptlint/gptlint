@@ -22,7 +22,7 @@ This rule should be ignored in test files.
 
 The names of file imports from third-party APIs and modules should be ignored because we have no control over them.
 
-If you are unsure whether or not a variable name is descriptive enough, err on the side of ignoring it or setting `confidence` to `low`.
+If you are unsure whether or not a variable name is descriptive enough, err on the side of caution by setting `confidence` to `low`.
 
 ## Examples
 
@@ -91,14 +91,14 @@ import { z } from 'zod'
 
 ## Metadata
 
-| Key                   | Value                                    |
-| --------------------- | ---------------------------------------- |
-| name                  | `semantic-variable-names`                |
-| level                 | `error`                                  |
-| scope                 | `file`                                   |
-| fixable               | false                                    |
-| cacheable             | true                                     |
-| tags                  | [ `best practices` ]                     |
-| exclude               | [ `**/*.test\.{js,ts,jsx,tsx,cjs,mjs}` ] |
-| gritqlNumLinesContext | 2                                        |
-| gritql                | true                                     |
+| Key                   | Value                                     |
+| --------------------- | ----------------------------------------- |
+| name                  | `semantic-variable-names`                 |
+| level                 | `error`                                   |
+| scope                 | `file`                                    |
+| fixable               | false                                     |
+| cacheable             | true                                      |
+| tags                  | [ `best practices` ]                      |
+| exclude               | [ `**/*\.test\.{js,ts,jsx,tsx,cjs,mjs}` ] |
+| gritqlNumLinesContext | 2                                         |
+| gritql                | true                                      |

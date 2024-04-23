@@ -128,15 +128,15 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
 
 ## Metadata
 
-| Key                   | Value                                    |
-| --------------------- | ---------------------------------------- |
-| name                  | `liberal-accept-strict-produce`          |
-| level                 | `error`                                  |
-| scope                 | `file`                                   |
-| fixable               | false                                    |
-| cacheable             | true                                     |
-| tags                  | [ `best practices` ]                     |
-| exclude               | [ `**/*.test\.{js,ts,jsx,tsx,cjs,mjs}` ] |
-| resources             | [ `https://effectivetypescript.com` ]    |
-| gritqlNumLinesContext | 3                                        |
-| gritql                | true                                     |
+| Key                   | Value                                     |
+| --------------------- | ----------------------------------------- |
+| name                  | `liberal-accept-strict-produce`           |
+| level                 | `error`                                   |
+| scope                 | `file`                                    |
+| fixable               | false                                     |
+| cacheable             | true                                      |
+| tags                  | [ `best practices` ]                      |
+| exclude               | [ `**/*\.test\.{js,ts,jsx,tsx,cjs,mjs}` ] |
+| resources             | [ `https://effectivetypescript.com` ]     |
+| gritqlNumLinesContext | 3                                         |
+| gritql                | true                                      |

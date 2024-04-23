@@ -23,6 +23,7 @@ export const effectiveESLintConfig: Readonly<RuleDefinition<RuleMetadata>> = {
       rule.metadata.eslint = eslint
     } catch (err: any) {
       console.error('Failed to load eslint library', err.message)
+      console.error(err)
     }
   },
 

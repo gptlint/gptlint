@@ -220,7 +220,17 @@ export function logDebugConfig({
     if (rules.length) {
       console.log(
         `\n${chalk.bold('rules')}`,
-        JSON.stringify(rules, undefined, 2)
+        JSON.stringify(
+          rules.map((rule) => ({
+            ...rule,
+            description: rule.description
+              ? trimMessage(rule.description)
+              : undefined,
+            gritql: rule.gritql ? trimMessage(rule.gritql) : undefined
+          })),
+          undefined,
+          2
+        )
       )
     } else {
       console.warn(`\n${chalk.bold('warning: no rules found')}`)

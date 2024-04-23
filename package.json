@@ -34,8 +34,9 @@
     "media"
   ],
   "scripts": {
-    "build": "tsup",
-    "postbuild": "cp -f rules/*.md dist/rules",
+    "build": "run-s build:*",
+    "build:built-in-rules": "tsx bin/build-built-in-rules.ts",
+    "build:main": "tsup",
     "build:docs": "tsx bin/cp-rules-to-docs.ts",
     "dev": "tsup --watch",
     "clean": "del dist",

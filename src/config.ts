@@ -375,11 +375,11 @@ export function mergeLinterConfigsOverride<
     ruleFiles:
       configB.ruleFiles || configB.ruleDefinitions
         ? configB.ruleFiles ?? []
-        : undefined,
+        : configA.ruleFiles,
     ruleDefinitions:
       configB.ruleFiles || configB.ruleDefinitions
         ? configB.ruleDefinitions ?? []
-        : undefined,
+        : configA.ruleDefinitions,
     linterOptions:
       configA.linterOptions || configB.linterOptions
         ? {
@@ -537,12 +537,17 @@ export class ResolvedLinterConfig
   }
 }
 
-export function sanitizeConfig(config: LinterConfig): LinterConfig {
+export function sanitizeConfig(
+  config: LinterConfig
+): Omit<LinterConfig, 'ruleDefinitions'> & { ruleDefinitions?: string[] } {
   return pruneUndefined({
     ...config,
+    ruleDefinitions: config.ruleDefinitions?.map(
+      (ruleDefinition) => `${ruleDefinition.name} { ... }`
+    ),
     llmOptions: pruneUndefined({
       ...config.llmOptions,
-      apiKey: '<redacted>'
+      apiKey: config.llmOptions?.apiKey ? '<redacted>' : undefined
     })
   })
 }
