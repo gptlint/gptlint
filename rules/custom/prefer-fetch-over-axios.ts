@@ -2,15 +2,14 @@ import type { RuleDefinition } from '../../src/index.js'
 
 export const preferFetchOverAxios: Readonly<RuleDefinition> = {
   name: 'prefer-fetch-over-axios',
+  title: 'Prefer fetch over axios',
   level: 'error',
   scope: 'file',
-  title: 'Prefer fetch over axios',
   description: `The NPM package \`axios\` should be avoided in favor of native \`fetch\`. Now that native \`fetch\` has widespread support, \`axios\` is effectively deprecated and is generally a code smell when encountered.
 
   Convenience wrappers around \`fetch\` such as \`ky\` and \`ofetch\` are encouraged.
   
-  Code which doesn't use the \`axios\` module should be ignored.
- `,
+  Code which doesn't use the \`axios\` module should be ignored.`,
 
   tags: ['best practices'],
   eslint: ['no-restricted-imports'],
