@@ -159,7 +159,9 @@ Remember to make the code snippets **diverse** both in terms of different ways o
           ).slice(0, 8)
           const fileName = `${fileHash}.${fileType}`
           const filePath = path.join(positiveRuleExamplesDir, fileName)
-          await fs.writeFile(filePath, content, { encoding: 'utf8' })
+          if (!config.linterOptions.dryRun) {
+            await fs.writeFile(filePath, content, { encoding: 'utf8' })
+          }
         }
 
         if (res.cost) {
@@ -223,7 +225,9 @@ Remember to make the code snippets **diverse** both in terms of different ways o
           ).slice(0, 8)
           const fileName = [fileHash, fileType].filter(Boolean).join('.')
           const filePath = path.join(negativeRuleExamplesDir, fileName)
-          await fs.writeFile(filePath, content, { encoding: 'utf8' })
+          if (!config.linterOptions.dryRun) {
+            await fs.writeFile(filePath, content, { encoding: 'utf8' })
+          }
         }
 
         if (res.cost) {
