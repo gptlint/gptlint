@@ -5,3 +5,5 @@ export const maxSourceFileNumLines = 10_000
 export const maxSourceFileLineLength = 1024
 
 export const gritNumLinesContext = 0
+
+export const defaultFiles = ['**/*.{js,ts,jsx,tsx,cjs,mjs}']

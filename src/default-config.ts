@@ -1,6 +1,7 @@
 import type * as types from './types.js'
 import * as customRuleDefinitions from '../rules/custom/index.js'
 import builtInRules from './built-in-rules.json'
+import { defaultFiles } from './constants.js'
 
 const ruleDefinitions: types.RuleDefinition[] = [
   ...(builtInRules as types.RuleDefinition[]),
@@ -13,7 +14,7 @@ const ruleSettings: types.LinterConfigRuleSettings = Object.fromEntries(
 
 export const recommendedConfig: types.GPTLintConfig = [
   {
-    files: ['**/*.{js,ts,jsx,tsx,cjs,mjs}'],
+    files: defaultFiles,
     ruleDefinitions,
     rules: ruleSettings
   }

@@ -223,10 +223,23 @@ export function logDebugConfig({
         JSON.stringify(
           rules.map((rule) => ({
             ...rule,
+            title: rule.title ? trimMessage(rule.title) : undefined,
             description: rule.description
               ? trimMessage(rule.description)
               : undefined,
-            gritql: rule.gritql ? trimMessage(rule.gritql) : undefined
+            gritql: rule.gritql ? trimMessage(rule.gritql) : undefined,
+            negativeExamples: rule.negativeExamples
+              ? rule.negativeExamples.map((e) => ({
+                  ...e,
+                  code: trimMessage(e.code)
+                }))
+              : undefined,
+            positiveExamples: rule.positiveExamples
+              ? rule.positiveExamples.map((e) => ({
+                  ...e,
+                  code: trimMessage(e.code)
+                }))
+              : undefined
           })),
           undefined,
           2
@@ -344,6 +357,11 @@ export async function resolveGlobFilePatterns(
     )
   }
 
+  options = {
+    followSymbolicLinks: false,
+    ...options
+  }
+
   const cwd = (options?.cwd as string) ?? process.cwd()
   const absolutePatterns = patterns
     .filter((pattern) => path.isAbsolute(pattern) || pattern.startsWith('..'))
@@ -369,7 +387,7 @@ export async function resolveGlobFilePatterns(
     // console.log('resolveGlobFilePatterns', {
     //   relativePatterns,
     //   absolutePatterns,
-    //   cwd
+    //   options
     // })
     const resolvedFilePatterns = await globby(relativePatterns, options)
 

@@ -20,6 +20,7 @@ export async function resolveRules({
     gitignore: true,
     cwd
   })
+  // console.log({ ruleFilePaths })
 
   const processedRuleFilePaths = new Set<string>()
 

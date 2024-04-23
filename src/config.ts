@@ -4,6 +4,7 @@ import findCacheDirectory from 'find-cache-dir'
 import { z } from 'zod'
 
 import type * as types from './types.js'
+import { defaultFiles } from './constants.js'
 import { RuleDefinitionSchema } from './rule.js'
 import {
   dedupe,
@@ -467,7 +468,7 @@ export class ResolvedLinterConfig
     this.config = resolveLinterConfig(linterConfig)
 
     if (this.config.files.length === 0 && !cliConfigOverride.files) {
-      this.config.files = ['**/*.{js,ts,jsx,tsx,cjs,mjs}']
+      this.config.files = defaultFiles
     }
 
     // console.log(

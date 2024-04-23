@@ -16,11 +16,15 @@ export async function resolveFiles({
   config: types.ResolvedLinterConfig
   cwd?: string
 }) {
+  // console.log('resolveFiles', config.files, config.ignores, { cwd })
+
   const sourceFiles = await resolveGlobFilePatterns(config.files, {
     gitignore: true,
     ignore: config.ignores,
     cwd
   })
+
+  // console.log({ sourceFiles })
 
   return readSourceFiles(sourceFiles, {
     concurrency: config.linterOptions.concurrency
