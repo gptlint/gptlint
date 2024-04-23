@@ -1,9 +1,15 @@
 import { Callout } from 'nextra/components'
+import Image from 'next/image'
 
 # Rule Guidelines
 
-<p align='center'>
-  <img alt='GPTLint Rule Guidelines' src='/gptlint-rule-guidelines.png' />
+<p align='center' style={{ padding: '1rem' }}>
+  <Image
+    src='/gptlint-rule-guidelines.png'
+    alt='GPTLint Rule Guidelines'
+    width={2546}
+    height={871}
+  />
 </p>
 
 **GPTLint is intended to augment traditional, AST-based, static analysis tools** like `eslint`, `pylint`, `ruff`, etc with _higher-level coding best practices_ that are difficult or impossible to capture with these lower-level, AST-based tools. GPTLint rules are therefore meant to be higher-level in nature than AST-based linting rules.

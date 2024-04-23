@@ -9,11 +9,14 @@
   - rewrite `liberal-accept-strict-produce` to be less verbose and have better examples ([WIP](https://github.com/gptlint/gptlint/pull/14))
   - rewrite `prefer-types-always-valid-states`
   - finish `effective-tsconfig`
-- project
-  - stress test w/ real-world repos
+- docs
+  - update demo svg
+  - update config examples w/ updated format
   - add a why doc
   - add a contributing doc
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
+- project
+  - stress test w/ real-world repos
   - social image for docs and launch
     - twitter thread
   - publish to NPM
