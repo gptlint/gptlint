@@ -1,5 +1,4 @@
 import type { ESLint, Linter } from 'eslint'
-import * as eslintLib from 'eslint'
 
 import type { RuleDefinition } from '../../src/index.js'
 
@@ -17,9 +16,14 @@ const rule: Readonly<RuleDefinition<RuleMetadata>> = {
   init: async ({ rule, cwd }) => {
     // Types are missing `loadESLint` so this is a workaround
     // TODO: make this robust if no eslint config is found
-    const DefaultESLint = await (eslintLib as any).loadESLint({ cwd })
-    const eslint: ESLint = new DefaultESLint()
-    rule.metadata.eslint = eslint
+    try {
+      const eslintLib = await import('eslint')
+      const DefaultESLint = await (eslintLib as any).loadESLint({ cwd })
+      const eslint: ESLint = new DefaultESLint()
+      rule.metadata.eslint = eslint
+    } catch (err: any) {
+      console.error('Failed to load eslint library', err.message)
+    }
   },
 
   processFile: async ({ file, rule }) => {

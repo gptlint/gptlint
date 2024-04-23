@@ -258,8 +258,6 @@ export const defaultLLMOptions: Readonly<LLMOptions> = {
 export const defaultLinterConfig: Readonly<
   SetRequired<LinterConfig, 'linterOptions' | 'llmOptions'>
 > = {
-  files: [],
-  ignores: [],
   ruleFiles: ['.gptlint/**/*.md'],
   linterOptions: defaultLinterOptions,
   llmOptions: defaultLLMOptions
@@ -458,18 +456,22 @@ export class ResolvedLinterConfig
     linterConfig = mergeLinterConfigsOverride(linterConfig, cliConfigOverride)
     this.config = resolveLinterConfig(linterConfig)
 
-    console.log(
-      'config',
-      JSON.stringify(
-        {
-          configs: configs.map((c) => sanitizeConfig(c)),
-          cliConfigOverride: sanitizeConfig(cliConfigOverride),
-          resolvedConfig: sanitizeConfig(this.config)
-        },
-        null,
-        2
-      )
-    )
+    if (this.config.files.length === 0 && !cliConfigOverride.files) {
+      this.config.files = ['**/*.{js,ts,jsx,tsx,cjs,mjs}']
+    }
+
+    // console.log(
+    //   'config',
+    //   JSON.stringify(
+    //     {
+    //       configs: configs.map((c) => sanitizeConfig(c)),
+    //       cliConfigOverride: sanitizeConfig(cliConfigOverride),
+    //       resolvedConfig: sanitizeConfig(this.config)
+    //     },
+    //     null,
+    //     2
+    //   )
+    // )
   }
 
   get files(): string[] {

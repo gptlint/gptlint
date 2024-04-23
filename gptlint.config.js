@@ -1,11 +1,11 @@
 import 'dotenv/config'
-import { recommendedConfig } from './dist/src/index.js'
+// import { recommendedConfig } from './dist/src/index.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
   // ...recommendedConfig,
   {
-    ruleFiles: ['rules/prefer-*.md'],
+    // ruleFiles: ['rules/prefer-*.md'],
     llmOptions: {
       model: 'gpt-4-turbo-preview',
       weakModel: 'gpt-3.5-turbo'

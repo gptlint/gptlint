@@ -11,7 +11,7 @@ import { lintFiles } from '../src/lint-files.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { resolveFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
-import { logDebugConfig, logLintResultStats } from '../src/utils.js'
+import { logLintResultStats, validateLinterInputs } from '../src/utils.js'
 
 /**
  * Main CLI entrypoint.
@@ -42,19 +42,8 @@ async function main() {
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.printConfig) {
-    logDebugConfig({ files, rules, config })
-    return gracefulExit(0)
-  }
-
-  if (!files.length) {
-    console.error('No source files found; run with --print-config to debug\n')
-    return gracefulExit(1)
-  }
-
-  if (!rules.length) {
-    console.error('No rules enabled; run with --print-config to debug\n')
-    return gracefulExit(1)
+  if (!validateLinterInputs({ files, rules, config })) {
+    return
   }
 
   const chatModel = createChatModel(config)

@@ -1,6 +1,8 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import chalk from 'chalk'
+import { gracefulExit } from 'exit-hook'
 import { globby, type Options as GlobbyOptions } from 'globby'
 import multimatch from 'multimatch'
 
@@ -205,25 +207,39 @@ export function logDebugConfig({
   config: types.ResolvedLinterConfig
 }) {
   console.log(
-    '\nlogging resolved config and then exiting because `printConfig` is enabled'
+    `\n${chalk.italic('logging resolved config and then exiting because `printConfig` is enabled')}`
   )
 
   const sanitizedConfig = config.getSanitizedDebugConfig()
-  console.log('\nconfig', JSON.stringify(sanitizedConfig, undefined, 2))
+  console.log(
+    `\n${chalk.bold('config')}`,
+    JSON.stringify(sanitizedConfig, undefined, 2)
+  )
 
   if (rules) {
-    console.log('\nrules', JSON.stringify(rules, undefined, 2))
+    if (rules.length) {
+      console.log(
+        `\n${chalk.bold('rules')}`,
+        JSON.stringify(rules, undefined, 2)
+      )
+    } else {
+      console.warn(`\n${chalk.bold('warning: no rules found')}`)
+    }
   }
 
   if (files) {
-    console.log(
-      '\ninput files',
-      JSON.stringify(
-        files.map((file) => file.fileRelativePath),
-        undefined,
-        2
+    if (files.length) {
+      console.log(
+        `\n${chalk.bold('input files')}`,
+        JSON.stringify(
+          files.map((file) => file.fileRelativePath),
+          undefined,
+          2
+        )
       )
-    )
+    } else {
+      console.warn(`\n${chalk.bold('warning: no input source files found')}`)
+    }
   }
 }
 
@@ -380,6 +396,40 @@ export function fileMatchesIncludeExclude(
     if (matches.length) {
       return false
     }
+  }
+
+  return true
+}
+
+export function validateLinterInputs({
+  files,
+  rules,
+  config
+}: {
+  files?: types.SourceFile[]
+  rules: types.Rule[]
+  config: types.ResolvedLinterConfig
+}): boolean {
+  if (config.linterOptions.printConfig) {
+    logDebugConfig({ files, rules, config })
+    gracefulExit(0)
+    return false
+  }
+
+  if (files && !files.length) {
+    console.error(
+      `\n${chalk.bold('Error: no source files found')} (${chalk.italic('run with --print-config to debug')})\n`
+    )
+    gracefulExit(1)
+    return false
+  }
+
+  if (!rules.length) {
+    console.error(
+      `\n${chalk.bold('Error: no rules enabled')} (${chalk.italic('run with --print-config to debug')})\n`
+    )
+    gracefulExit(1)
+    return false
   }
 
   return true
