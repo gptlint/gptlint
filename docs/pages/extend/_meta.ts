@@ -1,4 +1,5 @@
 export default {
   'rule-guidelines': 'Rule Guidelines',
-  'rule-spec': 'Rule Spec'
+  'rule-spec': 'Rule Spec',
+  contributing: 'Contributing'
 }
