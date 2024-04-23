@@ -40,6 +40,17 @@ pnpm test:unit
 
 Note that this test suite does not run any of the evals.
 
+## Docs
+
+The docs folder is a normal [Next.js](https://nextjs.org) pages app built using [Nextra](https://nextra.site) and deployed to [Vercel](https://vercel.com).
+
+You can run the docs dev server to preview your changes:
+
+```sh
+cd docs
+pnpm dev
+```
+
 ## Evals
 
 You can run evals for the built-in rules via:
@@ -92,14 +103,3 @@ These will generally happen because of the following reasons:
   - **Solution**: [Reach out to us for support](/project/support).
 
 **NOTE**: If you're trying to get a rule working consistently, double check that it fits the [rule guidelines](./rule-guidelines) before spending too much time iterating on it.
-
-## Docs
-
-The docs folder is a normal [Next.js](https://nextjs.org) pages app built using [Nextra](https://nextra.site) and deployed to [Vercel](https://vercel.com).
-
-You can run the docs dev server to preview your changes:
-
-```sh
-cd docs
-pnpm dev
-```
