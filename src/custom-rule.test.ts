@@ -1,15 +1,16 @@
 /* gptlint prefer-fetch-over-axios: off */
+
 import { assert, expect, test } from 'vitest'
 
 import type * as types from './types.js'
-import customRule from '../rules/custom/prefer-fetch-over-axios.js'
+import { preferFetchOverAxios } from '../rules/custom/prefer-fetch-over-axios.js'
 import { parseLinterConfig } from './config.js'
 
 test('custom rule - prefer-fetch-over-axios', async () => {
-  assert(customRule.preProcessFile)
+  assert(preferFetchOverAxios.preProcessFile)
 
   const rawLinterConfig: Partial<types.LinterConfig> = {
-    ruleDefinitions: [customRule]
+    ruleDefinitions: [preferFetchOverAxios]
   }
 
   const linterConfig = parseLinterConfig(rawLinterConfig)

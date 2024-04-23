@@ -6,7 +6,7 @@ export type RuleMetadata = {
   eslint?: ESLint
 }
 
-const rule: Readonly<RuleDefinition<RuleMetadata>> = {
+export const effectiveESLintConfig: Readonly<RuleDefinition<RuleMetadata>> = {
   name: 'effective-eslint-config',
   title: 'Follow eslint best practices.',
   level: 'error',
@@ -66,5 +66,3 @@ const rule: Readonly<RuleDefinition<RuleMetadata>> = {
     }
   }
 }
-
-export default rule

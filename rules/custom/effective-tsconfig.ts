@@ -8,7 +8,7 @@ import {
 
 const tsConfigCache = new Map<string, any>()
 
-const rule: Readonly<RuleDefinition> = {
+export const effectiveTSConfig: Readonly<RuleDefinition> = {
   name: 'effective-tsconfig',
   title: 'Follow tsconfig best practices.',
   level: 'error',
@@ -74,5 +74,3 @@ const rule: Readonly<RuleDefinition> = {
     return { lintErrors }
   }
 }
-
-export default rule

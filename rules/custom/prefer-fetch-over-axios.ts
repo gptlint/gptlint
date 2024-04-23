@@ -1,6 +1,6 @@
 import type { RuleDefinition } from '../../src/index.js'
 
-const rule: Readonly<RuleDefinition> = {
+export const preferFetchOverAxios: Readonly<RuleDefinition> = {
   name: 'prefer-fetch-over-axios',
   level: 'error',
   scope: 'file',
@@ -26,5 +26,3 @@ const rule: Readonly<RuleDefinition> = {
     }
   }
 }
-
-export default rule
