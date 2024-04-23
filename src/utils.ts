@@ -412,13 +412,13 @@ export function fileMatchesIncludeExclude(
 }
 
 export function validateLinterInputs({
+  config,
   files,
-  rules,
-  config
+  rules
 }: {
-  files?: types.SourceFile[]
-  rules: types.Rule[]
   config: types.ResolvedLinterConfig
+  files?: types.SourceFile[]
+  rules?: types.Rule[]
 }): boolean {
   if (config.linterOptions.printConfig) {
     logDebugConfig({ files, rules, config })
@@ -434,7 +434,7 @@ export function validateLinterInputs({
     return false
   }
 
-  if (!rules.length) {
+  if (rules && !rules.length) {
     console.error(
       `\n${chalk.bold('Error: no rules enabled')} (${chalk.italic('run with --print-config to debug')})\n`
     )

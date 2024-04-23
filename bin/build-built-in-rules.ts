@@ -16,10 +16,10 @@ import { parseRuleFilePath } from '../src/parse-rule-file.js'
  */
 async function main() {
   const destDir = path.join('src')
-  const files = await globby('rules/*.md')
+  const ruleFiles = await globby(['rules/*.md', '!rules/readme.md'])
 
   const rules = await pMap(
-    files,
+    ruleFiles,
     async (file) => {
       const srcPath = path.resolve(file)
 

@@ -18,14 +18,14 @@ import { stringifyExamples } from '../src/rule-utils.js'
  */
 async function main() {
   const destDir = path.join('docs', 'pages', 'rules')
-  const files = await globby('rules/*.md')
+  const ruleFiles = await globby(['rules/*.md', '!rules/readme.md'])
   const metadata: Record<string, any> = {
     index: 'Overview'
   }
   const rules: types.Rule[] = []
 
   await pMap(
-    files,
+    ruleFiles,
     async (file) => {
       const srcPath = path.resolve(file)
       const fileName = file.split('/').pop()!

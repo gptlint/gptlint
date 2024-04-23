@@ -7,7 +7,7 @@ import type * as types from '../src/types.js'
 import { applyGritQLPattern, resolveGritQLMatches } from '../src/gritql.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { resolveFiles } from '../src/resolve-files.js'
-import { logDebugConfig, omit } from '../src/utils.js'
+import { omit, validateLinterInputs } from '../src/utils.js'
 
 /**
  * Internal CLI for testing GritQL.
@@ -48,9 +48,8 @@ async function main() {
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.printConfig) {
-    logDebugConfig({ files, config })
-    return gracefulExit(0)
+  if (!validateLinterInputs({ files, config })) {
+    return
   }
 
   const gritMatches = await applyGritQLPattern(pattern, { files })
