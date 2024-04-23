@@ -35,7 +35,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "postbuild": "cp -f rules/custom/*.md dist/src && cp -f rules/*.md dist/rules",
+    "postbuild": "cp -f rules/*.md dist/rules",
     "build:docs": "tsx bin/cp-rules-to-docs.ts",
     "dev": "tsup --watch",
     "clean": "del dist",
