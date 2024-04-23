@@ -5,7 +5,6 @@ import { recommendedConfig } from './dist/src/index.js'
 export default [
   ...recommendedConfig,
   {
-    // ruleFiles: ['rules/prefer-*.md'],
     llmOptions: {
       model: 'gpt-4-turbo-preview',
       weakModel: 'gpt-3.5-turbo'

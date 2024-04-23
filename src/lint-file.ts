@@ -45,12 +45,31 @@ export async function lintFile({
 }: types.RuleProcessFileFnParams & {
   enableGrit?: boolean
 }): Promise<types.LintResult> {
+  lintResult = createLintResult(lintResult)
+
+  // Used to create a demo video with a mocked linting process to have precise
+  // control over the timing and reproducibility of the output.
+  // eslint-disable-next-line no-process-env
+  // if (!process.env.NO_DEMO) {
+  //   const timeout = Math.trunc(250 + Math.random() * 1500)
+  //   return new Promise<types.LintResult>((resolve) =>
+  //     setTimeout(() => {
+  //       const p = Math.trunc(800 + Math.random() * 1000)
+  //       const r = Math.trunc(200 + Math.random() * 300)
+  //       lintResult!.numPromptTokens += p
+  //       lintResult!.numCompletionTokens += r
+  //       lintResult!.numTotalTokens += p + r
+  //       lintResult!.totalCost += 0.0001 * (p + r)
+  //       resolve(lintResult!)
+  //     }, timeout)
+  //   )
+  // }
+
   const isTwoPassLintingEnabled = isValidModel(config.llmOptions.weakModel)
   const model =
     rule.model ?? isTwoPassLintingEnabled
       ? config.llmOptions.weakModel!
       : config.llmOptions.model
-  lintResult = createLintResult(lintResult)
 
   if (enableGrit && rule.gritql) {
     const maybeLintResult = await preProcessFileWithGrit({
