@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parseRuleViolationsFromJSONModelResponse - valid 1`] = `[]`;
+
+exports[`parseRuleViolationsFromJSONModelResponse - valid 2`] = `
+[
+  {
+    "codeSnippet": "const foo = 'bar'",
+    "codeSnippetSource": "source",
+    "confidence": "high",
+    "reasoning": "lorem ipsum",
+    "ruleName": "test",
+    "violation": true,
+  },
+]
+`;

@@ -281,8 +281,11 @@ export function isRuleViolationLikelyFalsePositive({
   file
 }: {
   ruleViolation: RuleViolation
-  rule: types.Rule
-  file: types.SourceFile
+  rule: Pick<types.Rule, 'name' | 'negativeExamples'>
+  file: Pick<
+    types.SourceFile,
+    'fileRelativePath' | 'content' | 'partialContent'
+  >
 }): boolean {
   const { violation, confidence } = ruleViolation
   if (!violation) {
@@ -317,8 +320,11 @@ export function isRuleViolationLikelyFalsePositiveFromExamples({
   file
 }: {
   ruleViolation: RuleViolation
-  rule: types.Rule
-  file: types.SourceFile
+  rule: Pick<types.Rule, 'name' | 'negativeExamples'>
+  file: Pick<
+    types.SourceFile,
+    'fileRelativePath' | 'content' | 'partialContent'
+  >
 }): boolean {
   if (ruleViolation.codeSnippetSource !== 'source') {
     return true
