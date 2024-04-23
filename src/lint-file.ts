@@ -12,6 +12,7 @@ import { preProcessFileWithGrit } from './gritql.js'
 import { createLintResult, dedupeLintErrors } from './lint-result.js'
 import { stringifyRuleForModel } from './rule-utils.js'
 import {
+  isRuleViolationLikelyFalsePositive,
   parseRuleViolationsFromJSONModelResponse,
   parseRuleViolationsFromMarkdownModelResponse,
   type RuleViolation,
@@ -181,33 +182,12 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}
         parseRuleViolationsFromMarkdownModelResponse(response)
 
       for (const ruleViolation of ruleViolations) {
-        const {
-          violation,
-          confidence,
-          codeSnippet,
-          codeSnippetSource,
-          reasoning
-        } = ruleViolation
-
-        if (
-          !violation ||
-          (confidence !== 'high' && confidence !== 'medium') ||
-          codeSnippetSource !== 'source'
-        ) {
+        if (isRuleViolationLikelyFalsePositive({ ruleViolation, rule, file })) {
           // Ignore any false positives
           continue
         }
 
-        const ruleName = ruleViolation.ruleName?.toLowerCase().trim()
-        if (ruleName && rule.name !== ruleName) {
-          console.warn(
-            `warning: rule "${rule.name}" LLM recorded error with unrecognized rule name "${ruleName}" on file "${file.fileRelativePath}"`
-          )
-
-          continue
-        }
-
-        // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
+        const { confidence, codeSnippet, reasoning } = ruleViolation
 
         lintResult.lintErrors.push({
           message: rule.title,
@@ -494,31 +474,12 @@ ${stringifyExampleRuleViolationsArrayOutputForModel(rule)}`
       lintResult.lintErrors = []
 
       for (const ruleViolation of ruleViolations) {
-        const {
-          violation,
-          confidence,
-          codeSnippet,
-          codeSnippetSource,
-          reasoning
-        } = ruleViolation
-
-        if (
-          !violation ||
-          (confidence !== 'high' && confidence !== 'medium') ||
-          codeSnippetSource !== 'source'
-        ) {
+        if (isRuleViolationLikelyFalsePositive({ ruleViolation, rule, file })) {
           // Ignore any false positives
           continue
         }
 
-        const ruleName = ruleViolation.ruleName?.toLowerCase().trim()
-        if (ruleName && rule.name !== ruleName) {
-          console.warn(
-            `warning: rule "${rule.name}" LLM recorded error with unrecognized rule name "${ruleName}" on file "${file.fileRelativePath}"`
-          )
-
-          continue
-        }
+        const { confidence, codeSnippet, reasoning } = ruleViolation
 
         lintResult.lintErrors.push({
           message: rule.title,

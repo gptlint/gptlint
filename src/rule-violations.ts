@@ -274,3 +274,92 @@ export function stringifyRuleViolationForModel(
 }
 \`\`\``
 }
+
+export function isRuleViolationLikelyFalsePositive({
+  ruleViolation,
+  rule,
+  file
+}: {
+  ruleViolation: RuleViolation
+  rule: types.Rule
+  file: types.SourceFile
+}): boolean {
+  const { violation, confidence } = ruleViolation
+  if (!violation) {
+    return true
+  }
+
+  if (confidence !== 'high' && confidence !== 'medium') {
+    return true
+  }
+
+  const ruleName = ruleViolation.ruleName?.toLowerCase().trim()
+  if (ruleName && rule.name !== ruleName) {
+    return true
+  }
+
+  if (
+    isRuleViolationLikelyFalsePositiveFromExamples({
+      ruleViolation,
+      rule,
+      file
+    })
+  ) {
+    return true
+  }
+
+  return false
+}
+
+export function isRuleViolationLikelyFalsePositiveFromExamples({
+  ruleViolation,
+  rule,
+  file
+}: {
+  ruleViolation: RuleViolation
+  rule: types.Rule
+  file: types.SourceFile
+}): boolean {
+  if (ruleViolation.codeSnippetSource !== 'source') {
+    return true
+  }
+
+  if (!rule.negativeExamples) {
+    return false
+  }
+
+  const codeSnippetExample = rule.negativeExamples.find((example) =>
+    fuzzyStringEquality(example.code, ruleViolation.codeSnippet)
+  )
+
+  // If the code snippet also verbatim in the source examples, then it's likely
+  // a false positive
+  // TODO: need a better way to determine if the violation is from the RULE's negative examples or the SOURCE
+  if (!codeSnippetExample) {
+    return false
+  }
+
+  // console.log('false positive', { ruleViolation, codeSnippetExample })
+
+  // If the code snippet also appears in the file, then it's likely a true
+  // positive
+  const fileContent = file.partialContent || file.content
+  if (fuzzyStringEquality(fileContent, ruleViolation.codeSnippet)) {
+    return false
+  }
+
+  return true
+}
+
+function fuzzyStringEquality(a: string, b: string): boolean {
+  a = a.toLowerCase().trim()
+  b = b.toLowerCase().trim()
+
+  if (a.length > b.length) {
+    return a.includes(b)
+  } else if (a.length < b.length) {
+    return b.includes(a)
+  } else {
+    return a === b
+  }
+}

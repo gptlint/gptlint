@@ -348,30 +348,11 @@ export function mergeLinterConfigs<
         : undefined,
     overrides:
       configA.overrides || configB.overrides
-        ? {
-            ...pruneUndefined(configA.overrides ?? {}),
-            ...pruneUndefined(configB.overrides ?? {})
-          }
+        ? [...(configA.overrides ?? []), ...(configB.overrides ?? [])].filter(
+            Boolean
+          )
         : undefined
   }) as any
-}
-
-export function resolveLinterConfig(
-  config: Partial<LinterConfig>
-): FullyResolvedLinterConfig {
-  return mergeLinterConfigs(
-    {
-      files: [],
-      ignores: [],
-      ruleFiles: [],
-      ruleDefinitions: [],
-      rules: {},
-      linterOptions: defaultLinterOptions,
-      llmOptions: defaultLLMOptions,
-      overrides: {} as LinterConfigOverrides
-    },
-    config
-  ) as FullyResolvedLinterConfig
 }
 
 /**
@@ -391,6 +372,14 @@ export function mergeLinterConfigsOverride<
   return pruneUndefined({
     ...pruneUndefined(configA),
     ...pruneUndefined(configB),
+    ruleFiles:
+      configB.ruleFiles || configB.ruleDefinitions
+        ? configB.ruleFiles ?? []
+        : undefined,
+    ruleDefinitions:
+      configB.ruleFiles || configB.ruleDefinitions
+        ? configB.ruleDefinitions ?? []
+        : undefined,
     linterOptions:
       configA.linterOptions || configB.linterOptions
         ? {
@@ -407,10 +396,9 @@ export function mergeLinterConfigsOverride<
         : undefined,
     overrides:
       configA.overrides || configB.overrides
-        ? {
-            ...pruneUndefined(configA.overrides ?? {}),
-            ...pruneUndefined(configB.overrides ?? {})
-          }
+        ? [...(configA.overrides ?? []), ...(configB.overrides ?? [])].filter(
+            Boolean
+          )
         : undefined
   }) as any
 }
@@ -423,6 +411,24 @@ export function mergeLinterConfigRuleSettings(
     ...pruneUndefined(rulesA ?? {}),
     ...pruneUndefined(rulesB ?? {})
   }
+}
+
+export function resolveLinterConfig(
+  config: Partial<LinterConfig>
+): FullyResolvedLinterConfig {
+  return mergeLinterConfigs(
+    {
+      files: [],
+      ignores: [],
+      ruleFiles: [],
+      ruleDefinitions: [],
+      rules: {},
+      linterOptions: defaultLinterOptions,
+      llmOptions: defaultLLMOptions,
+      overrides: []
+    },
+    config
+  ) as FullyResolvedLinterConfig
 }
 
 export class ResolvedLinterConfig
@@ -439,6 +445,10 @@ export class ResolvedLinterConfig
     >
 {
   readonly config: FullyResolvedLinterConfig
+  readonly ruleSettingsFileCache = new Map<
+    string,
+    types.LinterConfigRuleSettings
+  >()
 
   constructor({
     configs,
@@ -505,6 +515,10 @@ export class ResolvedLinterConfig
   getRuleSettingsForFile(
     file: types.SourceFile
   ): types.LinterConfigRuleSettings {
+    if (this.ruleSettingsFileCache.has(file.fileRelativePath)) {
+      return this.ruleSettingsFileCache.get(file.fileRelativePath)!
+    }
+
     const settings =
       this.config.overrides ??
       [].filter((override) => fileMatchesIncludeExclude(file, override))
@@ -514,6 +528,7 @@ export class ResolvedLinterConfig
       rules = mergeLinterConfigRuleSettings(rules, setting.rules)
     }
 
+    this.ruleSettingsFileCache.set(file.fileRelativePath, rules)
     return rules
   }
 

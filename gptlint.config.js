@@ -1,9 +1,9 @@
 import 'dotenv/config'
-// import { recommendedConfig } from './dist/src/index.js'
+import { recommendedConfig } from './dist/src/index.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
-  // ...recommendedConfig,
+  ...recommendedConfig,
   {
     // ruleFiles: ['rules/prefer-*.md'],
     llmOptions: {
