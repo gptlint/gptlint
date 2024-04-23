@@ -53,11 +53,19 @@ export async function lintFile({
       ? config.llmOptions.weakModel!
       : config.llmOptions.model
 
+  // This path is only used for running evals with grit enabled, since the evals
+  // don't call `lintFiles` but rather `lintFile` directly.
   if (enableGrit && rule.gritql) {
+    const ruleNameToPartialSourceFileMap = new Map<
+      string,
+      Promise<Map<string, types.PartialSourceFile>>
+    >()
+
     const maybeLintResult = await preProcessFileWithGrit({
       file,
       rule,
-      config
+      config,
+      ruleNameToPartialSourceFileMap
     })
 
     if (maybeLintResult) {

@@ -267,13 +267,13 @@ export async function preProcessFileWithGrit({
   files,
   rule,
   config,
-  ruleNameToPartialSourceFileMap = new Map()
+  ruleNameToPartialSourceFileMap
 }: {
   file: types.SourceFile | types.PartialSourceFile
   rule: types.Rule
   config: types.ResolvedLinterConfig
   files?: (types.SourceFile | types.PartialSourceFile)[]
-  ruleNameToPartialSourceFileMap?: Map<
+  ruleNameToPartialSourceFileMap: Map<
     string,
     Promise<Map<string, types.PartialSourceFile>>
   >
@@ -283,6 +283,7 @@ export async function preProcessFileWithGrit({
   }
 
   if (!ruleNameToPartialSourceFileMap.has(rule.name)) {
+    // NOTE: We're purposefully not awaiting the result of this promise here.
     const partialSourceFileMapP = resolveGritQLPattern(rule.gritql, {
       files: files ?? [file],
       numLinesContext: rule.gritqlNumLinesContext
@@ -308,8 +309,10 @@ export async function preProcessFileWithGrit({
     rule.name
   )!
 
-  const partialSourceFile = partialSourceFileMap.get(file.filePath)!
-  assert(partialSourceFile)
+  const partialSourceFile = partialSourceFileMap.get(file.filePath)
+  if (!partialSourceFile) {
+    return
+  }
 
   file.ranges = partialSourceFile.ranges
   file.partialContent = partialSourceFile.partialContent.trim()
