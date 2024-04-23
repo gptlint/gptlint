@@ -3,8 +3,14 @@ import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
 import findCacheDirectory from 'find-cache-dir'
 import { z } from 'zod'
 
+import type * as types from './types.js'
 import { RuleDefinitionSchema } from './rule.js'
-import { dedupe, getEnv, pruneUndefined } from './utils.js'
+import {
+  dedupe,
+  fileMatchesIncludeExclude,
+  getEnv,
+  pruneUndefined
+} from './utils.js'
 
 export const LinterConfigRuleSettingSchema = z.enum(['off', 'warn', 'error'])
 export type LinterConfigRuleSetting = z.infer<
@@ -138,19 +144,47 @@ export const LinterOptionsSchema = z
   .strict()
 export type LinterOptions = z.infer<typeof LinterOptionsSchema>
 
+export const LinterConfigOverrideSchema = z
+  .object({
+    include: z
+      .array(z.string())
+      .optional()
+      .describe(
+        'An optional array of glob patterns for the files to process. If not specified, the configuration object applies to all files matched by any other configuration object.'
+      ),
+
+    exclude: z
+      .array(z.string())
+      .optional()
+      .describe(
+        'An optional array of glob patterns for source files that should be ignored.'
+      ),
+
+    rules: LinterConfigRuleSettingsSchema.optional().describe(
+      'An object customizing the configured rules.'
+    )
+  })
+  .strict()
+export type LinterConfigOverride = z.infer<typeof LinterConfigOverrideSchema>
+
+export const LinterConfigOverridesSchema = z.array(LinterConfigOverrideSchema)
+export type LinterConfigOverrides = z.infer<typeof LinterConfigOverridesSchema>
+
 export const LinterConfigSchema = z
   .object({
     files: z
       .array(z.string())
       .optional()
       .describe(
-        'An array of glob patterns for the files to process. If not specified, the configuration object applies to all files matched by any other configuration object.'
+        'An optional array of glob patterns for the files to process. If not specified, the configuration object applies to all files matched by any other configuration object.'
       ),
 
     ignores: z
       .array(z.string())
       .optional()
-      .describe('An array of glob patterns for files that should be ignored.'),
+      .describe(
+        'An optional array of glob patterns for source files that should be ignored.'
+      ),
 
     ruleFiles: z
       .array(z.string())
@@ -172,19 +206,28 @@ export const LinterConfigSchema = z
       'An object containing settings related to the linting process.'
     ),
 
-    llmOptions: LLMOptionsSchema.optional().describe('')
+    llmOptions: LLMOptionsSchema.optional().describe(''),
+
+    overrides: LinterConfigOverridesSchema.optional().describe(
+      'Rule config overrides for specific file patterns.'
+    )
   })
   .strict()
 export type LinterConfig = z.infer<typeof LinterConfigSchema>
 export type GPTLintConfig = LinterConfig[]
 
-export type ResolvedLinterConfig = Simplify<
+export type ResolvedLinterOptions = Simplify<
+  SetRequired<LinterOptions, keyof LinterOptions>
+>
+export type ResolvedLLMOptions = Simplify<SetRequired<LLMOptions, 'model'>>
+
+export type FullyResolvedLinterConfig = Simplify<
   Omit<
     SetRequired<LinterConfig, keyof LinterConfig>,
     'linterOptions' | 'llmOptions'
   > & {
-    linterOptions: SetRequired<LinterOptions, keyof LinterOptions>
-    llmOptions: SetRequired<LLMOptions, 'model'>
+    linterOptions: ResolvedLinterOptions
+    llmOptions: ResolvedLLMOptions
   }
 >
 
@@ -221,9 +264,7 @@ export const defaultLinterConfig: Readonly<
   llmOptions: defaultLLMOptions
 }
 
-export function parseLinterConfig(
-  config: Partial<LinterConfig> | unknown
-): LinterConfig {
+export function parseLinterConfig(config: Partial<LinterConfig>): LinterConfig {
   return LinterConfigSchema.parse(config)
 }
 
@@ -233,6 +274,19 @@ export function isValidModel(
   return !!model && model !== 'none'
 }
 
+function dedupeRuleDefinitions(ruleDefinitions: types.RuleDefinition[]) {
+  const seen = new Set<string>()
+  return ruleDefinitions.filter((ruleDefinition) => {
+    if (!seen.has(ruleDefinition.name)) {
+      seen.add(ruleDefinition.name)
+      return true
+    }
+
+    return false
+  })
+}
+
+/** Union two configs together, with the second one taking precedence */
 export function mergeLinterConfigs<
   ConfigTypeA extends LinterConfig = LinterConfig,
   ConfigTypeB extends LinterConfig = LinterConfig
@@ -240,26 +294,34 @@ export function mergeLinterConfigs<
   configA: ConfigTypeA,
   configB: ConfigTypeB
 ): SimplifyDeep<MergeDeep<ConfigTypeA, ConfigTypeB>> {
-  return {
+  return pruneUndefined({
     ...pruneUndefined(configA),
     ...pruneUndefined(configB),
-    rules: { ...configA.rules, ...configB.rules },
-    // TODO: ruleFiles should be overridable with an empty array, but this
-    // is also a bit awkward to use in practice.
-    ruleFiles: configB.ruleFiles?.length
-      ? configB.ruleFiles
-      : configA.ruleFiles,
-    // ruleFiles: dedupe([
-    //   ...(configA.ruleFiles ?? []),
-    //   ...(configB.ruleFiles ?? [])
-    // ]),
-    ruleDefinitions: [
-      ...(configA.ruleDefinitions ?? []),
-      ...(configB.ruleDefinitions ?? [])
-    ],
+    files:
+      configA.files || configB.files
+        ? dedupe([...(configA.files ?? []), ...(configB.files ?? [])])
+        : undefined,
     ignores:
       configA.ignores || configB.ignores
         ? dedupe([...(configA.ignores ?? []), ...(configB.ignores ?? [])])
+        : undefined,
+    ruleFiles:
+      configA.ruleFiles || configB.ruleFiles
+        ? dedupe([...(configA.ruleFiles ?? []), ...(configB.ruleFiles ?? [])])
+        : undefined,
+    ruleDefinitions:
+      configA.ruleDefinitions || configB.ruleDefinitions
+        ? dedupeRuleDefinitions([
+            ...(configA.ruleDefinitions ?? []),
+            ...(configB.ruleDefinitions ?? [])
+          ])
+        : undefined,
+    rules:
+      configA.rules || configB.rules
+        ? {
+            ...pruneUndefined(configA.rules ?? {}),
+            ...pruneUndefined(configB.rules ?? {})
+          }
         : undefined,
     linterOptions:
       configA.linterOptions || configB.linterOptions
@@ -274,6 +336,157 @@ export function mergeLinterConfigs<
             ...pruneUndefined(configA.llmOptions ?? {}),
             ...pruneUndefined(configB.llmOptions ?? {})
           }
+        : undefined,
+    overrides:
+      configA.overrides || configB.overrides
+        ? {
+            ...pruneUndefined(configA.overrides ?? {}),
+            ...pruneUndefined(configB.overrides ?? {})
+          }
         : undefined
-  } as any
+  }) as any
+}
+
+/**
+ * Union two configs together, with the second one taking precedence, but
+ * allow certain fields of the second config to override the first instead of
+ * joining them together.
+ *
+ * This is used to allow CLI config values to completely override other configs.
+ */
+export function mergeLinterConfigsOverride<
+  ConfigTypeA extends LinterConfig = LinterConfig,
+  ConfigTypeB extends LinterConfig = LinterConfig
+>(
+  configA: ConfigTypeA,
+  configB: ConfigTypeB
+): SimplifyDeep<MergeDeep<ConfigTypeA, ConfigTypeB>> {
+  return pruneUndefined({
+    ...pruneUndefined(configA),
+    ...pruneUndefined(configB),
+    linterOptions:
+      configA.linterOptions || configB.linterOptions
+        ? {
+            ...pruneUndefined(configA.linterOptions ?? {}),
+            ...pruneUndefined(configB.linterOptions ?? {})
+          }
+        : undefined,
+    llmOptions:
+      configA.llmOptions || configB.llmOptions
+        ? {
+            ...pruneUndefined(configA.llmOptions ?? {}),
+            ...pruneUndefined(configB.llmOptions ?? {})
+          }
+        : undefined,
+    overrides:
+      configA.overrides || configB.overrides
+        ? {
+            ...pruneUndefined(configA.overrides ?? {}),
+            ...pruneUndefined(configB.overrides ?? {})
+          }
+        : undefined
+  }) as any
+}
+
+export function mergeLinterConfigRuleSettings(
+  rulesA?: LinterConfigRuleSettings,
+  rulesB?: LinterConfigRuleSettings
+): LinterConfigRuleSettings {
+  return {
+    ...pruneUndefined(rulesA ?? {}),
+    ...pruneUndefined(rulesB ?? {})
+  }
+}
+
+export class ResolvedLinterConfig
+  implements
+    Pick<
+      FullyResolvedLinterConfig,
+      | 'files'
+      | 'ignores'
+      | 'ruleFiles'
+      | 'ruleDefinitions'
+      | 'rules'
+      | 'linterOptions'
+      | 'llmOptions'
+    >
+{
+  readonly config: FullyResolvedLinterConfig
+  readonly cliConfigOverride: FullyResolvedLinterConfig
+
+  constructor({
+    configs,
+    cliConfigOverride
+  }: {
+    configs: LinterConfig[]
+    cliConfigOverride: FullyResolvedLinterConfig
+  }) {
+    let linterConfig: types.LinterConfig = defaultLinterConfig
+
+    for (const config of configs) {
+      linterConfig = mergeLinterConfigs(config, linterConfig)
+    }
+
+    linterConfig = mergeLinterConfigsOverride(linterConfig, cliConfigOverride)
+    this.config = linterConfig as types.FullyResolvedLinterConfig
+
+    this.cliConfigOverride = cliConfigOverride
+  }
+
+  get files(): string[] {
+    return this.config.files
+  }
+
+  get ignores(): string[] {
+    return this.config.ignores
+  }
+
+  get ruleFiles(): string[] {
+    return this.config.ruleFiles
+  }
+
+  get rules(): LinterConfigRuleSettings {
+    return this.config.rules
+  }
+
+  get ruleDefinitions(): types.RuleDefinition[] {
+    return this.config.ruleDefinitions
+  }
+
+  get linterOptions(): ResolvedLinterOptions {
+    return this.config.linterOptions
+  }
+
+  get llmOptions(): ResolvedLLMOptions {
+    return this.config.llmOptions
+  }
+
+  getRuleSettingsForFile(
+    file: types.SourceFile
+  ): types.LinterConfigRuleSettings {
+    const settings =
+      this.config.overrides ??
+      [].filter((override) => fileMatchesIncludeExclude(file, override))
+
+    let rules: LinterConfigRuleSettings = {}
+    for (const setting of settings) {
+      rules = mergeLinterConfigRuleSettings(rules, setting.rules)
+    }
+
+    return rules
+  }
+
+  getSanitizedDebugConfig() {
+    return sanitizeConfig(this.config)
+  }
+}
+
+export function sanitizeConfig(config: LinterConfig): LinterConfig {
+  return pruneUndefined({
+    ...config,
+    llmOptions: pruneUndefined({
+      ...config.llmOptions,
+      apiKey: '<redacted>'
+    })
+  })
 }

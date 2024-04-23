@@ -1,3 +1,4 @@
+export { createCacheKey } from './cache.js'
 export * from './config.js'
 export * from './lint-file.js'
 export * from './lint-files.js'

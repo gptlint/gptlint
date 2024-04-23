@@ -2,7 +2,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { globby, type Options as GlobbyOptions } from 'globby'
-import hashObject from 'hash-object'
+import multimatch from 'multimatch'
 
 import type * as types from './types.js'
 import { getLintDurationMs } from './lint-result.js'
@@ -208,14 +208,7 @@ export function logDebugConfig({
     '\nlogging resolved config and then exiting because `printConfig` is enabled'
   )
 
-  const sanitizedConfig = pruneUndefined({
-    ...config,
-    llmOptions: pruneUndefined({
-      ...config.llmOptions,
-      apiKey: '<redacted>'
-    })
-  })
-
+  const sanitizedConfig = config.getSanitizedDebugConfig()
   console.log('\nconfig', JSON.stringify(sanitizedConfig, undefined, 2))
 
   if (rules) {
@@ -291,61 +284,6 @@ export function logEvalStats({
   return extendedStats
 }
 
-export function createCacheKey({
-  rule,
-  file,
-  config,
-  ...extra
-}: {
-  rule: types.Rule
-  file?: types.SourceFile
-  config: types.LinterConfig
-} & Record<string, unknown>): string {
-  // TODO: add linter major version to the cache key
-  const cacheKeySource = pruneUndefined({
-    ...extra,
-
-    file: file
-      ? // Only keep the relative file path, content, and detected language
-        pruneUndefined(pick(file, 'fileRelativePath', 'content', 'language'))
-      : undefined,
-
-    // Only keep the rule fields which affect the linting logic
-    rule: pruneUndefined(
-      pick(
-        rule,
-        'name',
-        'title',
-        'description',
-        'positiveExamples',
-        'negativeExamples',
-        'level',
-        'scope',
-        'model',
-        'languages',
-        'gritql',
-        'gritqlNumLinesContext'
-        // TODO: include / exclude? languages?
-      )
-    ),
-
-    // Ensure the cache key depends on how the LLM is parameterized
-    llmOptions: pruneUndefined(
-      pick(
-        config.llmOptions ?? {},
-        'model',
-        'weakModel',
-        'temperature',
-        'apiBaseUrl'
-      )
-    ),
-
-    linterOptions: pruneUndefined(pick(config.linterOptions ?? {}, 'noGrit'))
-  })
-
-  return hashObject(cacheKeySource)
-}
-
 /** Polyfill for `Promise.withResolvers()` */
 export function createPromiseWithResolvers<
   T = unknown
@@ -385,6 +323,7 @@ export async function resolveGlobFilePatterns(
 
   // TODO: workaround this `globby` restriction
   // TODO: this will involve returning absolute file paths from this function
+  // TODO: this will likely involve using `multimatch` directly
   for (const pattern of absolutePatterns) {
     if (/\*/.test(pattern)) {
       throw new Error(
@@ -410,4 +349,31 @@ export async function resolveGlobFilePatterns(
 
 export function dirname(meta = import.meta) {
   return meta.dirname ?? path.dirname(fileURLToPath(meta.url))
+}
+
+export function fileMatchesIncludeExclude(
+  file: types.SourceFile,
+  {
+    include,
+    exclude
+  }: {
+    include?: string[]
+    exclude?: string[]
+  }
+) {
+  if (include) {
+    const matches = multimatch(file.fileRelativePath, include)
+    if (!matches.length) {
+      return false
+    }
+  }
+
+  if (exclude?.length) {
+    const matches = multimatch(file.fileRelativePath, exclude)
+    if (matches.length) {
+      return false
+    }
+  }
+
+  return true
 }

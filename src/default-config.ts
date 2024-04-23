@@ -43,14 +43,16 @@ const ruleSettings: types.LinterConfigRuleSettings = Object.fromEntries(
 export const defaultConfig: types.GPTLintConfig = [
   {
     // include: ['**/*.{js,ts,jsx,tsx,cjs,mjs}'],
+    ruleDefinitions,
     rules: ruleSettings,
-    ruleDefinitions
-  },
-  {
-    // include: ['**/*.{md,mdx}'],
-    rules: {
-      'use-correct-english': 'error'
-    }
+    overrides: [
+      {
+        // include: ['**/*.{md,mdx}'],
+        rules: {
+          'use-correct-english': 'error'
+        }
+      }
+    ]
   }
 ]
 

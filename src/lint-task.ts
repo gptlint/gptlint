@@ -1,7 +1,10 @@
-import multimatch from 'multimatch'
-
 import type * as types from './types.js'
-import { assert, createCacheKey, createPromiseWithResolvers } from './utils.js'
+import { createCacheKey } from './cache.js'
+import {
+  assert,
+  createPromiseWithResolvers,
+  fileMatchesIncludeExclude
+} from './utils.js'
 
 export function createLintTask({
   rule,
@@ -17,18 +20,14 @@ export function createLintTask({
   if (scope === 'file') {
     assert(file)
 
-    if (rule.include) {
-      const matches = multimatch(file.fileRelativePath, rule.include)
-      if (!matches.length) {
-        return null
-      }
+    if (!fileMatchesIncludeExclude(file, rule)) {
+      return null
     }
 
-    if (rule.exclude) {
-      const matches = multimatch(file.fileRelativePath, rule.exclude)
-      if (matches.length) {
-        return null
-      }
+    const fileRuleSettings = config.getRuleSettingsForFile(file)
+
+    if (fileRuleSettings[rule.name] === 'off') {
+      return null
     }
   }
 

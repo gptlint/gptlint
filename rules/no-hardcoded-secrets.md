@@ -6,25 +6,16 @@ languages: [all]
 ---
 
 ```grit
-// TODO: filter out short strings
-and {
-  or { string(), template_string() },
-  not within import_statement(),
+or { string(), template_string() } as $str where {
+  $str <: not within import_statement(),
+  $length = length($str),
   not or {
-    `'.'`,
-    `'..'`,
-    `' '`,
-    `'  '`,
-    `'+'`,
-    `'-'`,
-    `'*'`,
-    `'\n'`,
-    `'\n\n'`,
-    `'path'`,
-    `'name'`,
-    `'id'`,
-    `'_id'`,
-    `'file'`,
+    $length <: 1,
+    $length <: 2,
+    $length <: 3,
+    $length <: 4,
+    $length <: 5,
+    $length <: 6,
   }
 }
 ```
