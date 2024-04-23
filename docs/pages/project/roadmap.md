@@ -11,8 +11,7 @@
   - finish `effective-tsconfig`
 - docs
   - update demo svg
-  - update config examples w/ updated format
-  - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
+  - update config examples w/ new format
 - project
   - stress test w/ real-world repos
   - social image for docs and launch
