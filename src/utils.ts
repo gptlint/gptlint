@@ -311,6 +311,13 @@ export async function resolveGlobFilePatterns(
     ? (patternOrPatterns as readonly string[])
     : [patternOrPatterns as string]
 
+  const invalidPatterns = patterns.filter((pattern) => !pattern)
+  if (invalidPatterns.length) {
+    throw new Error(
+      `Invalid file glob empty pattern: "${invalidPatterns.join(', ')}"`
+    )
+  }
+
   const cwd = (options?.cwd as string) ?? process.cwd()
   const absolutePatterns = patterns
     .filter((pattern) => path.isAbsolute(pattern) || pattern.startsWith('..'))

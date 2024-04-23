@@ -22,10 +22,6 @@ export async function resolveFiles({
     cwd
   })
 
-  if (!sourceFiles.length) {
-    throw new Error('No source files found')
-  }
-
   return readSourceFiles(sourceFiles, {
     concurrency: config.linterOptions.concurrency
   })
@@ -45,10 +41,6 @@ export async function resolveEvalFiles({
       .concat(['node_modules', 'dist', 'docs', '.env', '.next']),
     cwd
   })
-
-  if (!sourceFiles.length) {
-    throw new Error('No source files found')
-  }
 
   return readSourceFiles(sourceFiles, {
     concurrency: config.linterOptions.concurrency

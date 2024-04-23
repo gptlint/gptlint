@@ -8,10 +8,11 @@ import {
   parseLinterConfig,
   ResolvedLinterConfig
 } from './config.js'
+import { recommendedConfig } from './default-config.js'
 import { assert } from './utils.js'
 
 export async function resolveLinterConfig(
-  cliConfigOverride: types.FullyResolvedLinterConfig,
+  cliConfigOverride: types.LinterConfig,
   opts: {
     cwd: string
     configFilePath?: string
@@ -25,11 +26,13 @@ export async function resolveLinterConfig(
     'gptlint.config.cjs'
   ].filter(Boolean)
 
-  const configs: types.LinterConfig[] = []
+  let configs: types.LinterConfig[] = []
   if (opts.linterConfigDefaults) {
     configs.push(opts.linterConfigDefaults)
   }
   configs.push(defaultLinterConfig)
+
+  let hasProjectConfig = false
 
   for (const configFileRelativePath of configsToCheck) {
     const configFilePath = path.resolve(opts.cwd, configFileRelativePath)
@@ -60,7 +63,12 @@ export async function resolveLinterConfig(
     }
 
     // Break after we find the first project config file
+    hasProjectConfig = true
     break
+  }
+
+  if (!hasProjectConfig) {
+    configs = configs.concat(recommendedConfig)
   }
 
   return new ResolvedLinterConfig({ configs, cliConfigOverride })

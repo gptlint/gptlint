@@ -258,8 +258,9 @@ export const defaultLLMOptions: Readonly<LLMOptions> = {
 export const defaultLinterConfig: Readonly<
   SetRequired<LinterConfig, 'linterOptions' | 'llmOptions'>
 > = {
+  files: [],
+  ignores: [],
   ruleFiles: ['.gptlint/**/*.md'],
-  // ruleFiles: [],
   linterOptions: defaultLinterOptions,
   llmOptions: defaultLLMOptions
 }
@@ -299,15 +300,25 @@ export function mergeLinterConfigs<
     ...pruneUndefined(configB),
     files:
       configA.files || configB.files
-        ? dedupe([...(configA.files ?? []), ...(configB.files ?? [])])
+        ? dedupe(
+            [...(configA.files ?? []), ...(configB.files ?? [])].filter(Boolean)
+          )
         : undefined,
     ignores:
       configA.ignores || configB.ignores
-        ? dedupe([...(configA.ignores ?? []), ...(configB.ignores ?? [])])
+        ? dedupe(
+            [...(configA.ignores ?? []), ...(configB.ignores ?? [])].filter(
+              Boolean
+            )
+          )
         : undefined,
     ruleFiles:
       configA.ruleFiles || configB.ruleFiles
-        ? dedupe([...(configA.ruleFiles ?? []), ...(configB.ruleFiles ?? [])])
+        ? dedupe(
+            [...(configA.ruleFiles ?? []), ...(configB.ruleFiles ?? [])].filter(
+              Boolean
+            )
+          )
         : undefined,
     ruleDefinitions:
       configA.ruleDefinitions || configB.ruleDefinitions
@@ -345,6 +356,24 @@ export function mergeLinterConfigs<
           }
         : undefined
   }) as any
+}
+
+export function resolveLinterConfig(
+  config: Partial<LinterConfig>
+): FullyResolvedLinterConfig {
+  return mergeLinterConfigs(
+    {
+      files: [],
+      ignores: [],
+      ruleFiles: [],
+      ruleDefinitions: [],
+      rules: {},
+      linterOptions: defaultLinterOptions,
+      llmOptions: defaultLLMOptions,
+      overrides: {} as LinterConfigOverrides
+    },
+    config
+  ) as FullyResolvedLinterConfig
 }
 
 /**
@@ -412,25 +441,35 @@ export class ResolvedLinterConfig
     >
 {
   readonly config: FullyResolvedLinterConfig
-  readonly cliConfigOverride: FullyResolvedLinterConfig
 
   constructor({
     configs,
     cliConfigOverride
   }: {
     configs: LinterConfig[]
-    cliConfigOverride: FullyResolvedLinterConfig
+    cliConfigOverride: LinterConfig
   }) {
-    let linterConfig: types.LinterConfig = defaultLinterConfig
+    let linterConfig: types.LinterConfig = {}
 
     for (const config of configs) {
-      linterConfig = mergeLinterConfigs(config, linterConfig)
+      linterConfig = mergeLinterConfigs(linterConfig, config)
     }
 
     linterConfig = mergeLinterConfigsOverride(linterConfig, cliConfigOverride)
-    this.config = linterConfig as types.FullyResolvedLinterConfig
+    this.config = resolveLinterConfig(linterConfig)
 
-    this.cliConfigOverride = cliConfigOverride
+    console.log(
+      'config',
+      JSON.stringify(
+        {
+          configs: configs.map((c) => sanitizeConfig(c)),
+          cliConfigOverride: sanitizeConfig(cliConfigOverride),
+          resolvedConfig: sanitizeConfig(this.config)
+        },
+        null,
+        2
+      )
+    )
   }
 
   get files(): string[] {

@@ -1,11 +1,11 @@
 import 'dotenv/config'
+import { recommendedConfig } from './dist/src/index.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
+  // ...recommendedConfig,
   {
-    // TODO: need a way to disable built-in rules
-    // ruleFiles: ['rules/**/*.md'],
-    // ruleFiles: [],
+    ruleFiles: ['rules/prefer-*.md'],
     llmOptions: {
       model: 'gpt-4-turbo-preview',
       weakModel: 'gpt-3.5-turbo'
@@ -16,6 +16,7 @@ export default [
 // This example uses Anthropic Claude.
 /** @type {import('gptlint').GPTLintConfig} */
 // export default [
+//   ...recommendedConfig,
 //   {
 //     llmOptions: {
 //       apiBaseUrl: 'https://openrouter.ai/api/v1',
@@ -39,6 +40,7 @@ export default [
 // This example uses LLama3 via Groq.
 /** @type {import('gptlint').GPTLintConfig} */
 // export default [
+//   ...recommendedConfig,
 //   {
 //     llmOptions: {
 //       apiBaseUrl: 'https://api.groq.com/openai/v1',

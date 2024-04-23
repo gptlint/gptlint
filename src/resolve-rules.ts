@@ -101,10 +101,6 @@ export async function resolveRules({
     return true
   })
 
-  if (!rules.length) {
-    throw new Error('No rules found')
-  }
-
   if (config.rules) {
     // Remove rules which have been disabled in the config
     // TODO: should this happen here or in `lintFiles`?

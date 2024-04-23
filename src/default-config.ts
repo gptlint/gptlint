@@ -5,6 +5,8 @@ import * as customRuleDefinitions from '../rules/custom/index.js'
 import { parseRuleFilePath } from './parse-rule-file.js'
 import { dirname } from './utils.js'
 
+// TODO: optimize this so we're not parsing the built-in rules on every
+// program run
 const builtInRuleDir = path.resolve(dirname(import.meta), '..', 'rules')
 const builtInRuleNames = [
   'always-handle-promises',
@@ -38,22 +40,12 @@ const ruleSettings: types.LinterConfigRuleSettings = Object.fromEntries(
   ruleDefinitions.map((rule) => [rule.name, 'error'])
 )
 
-// TODO: add 'recommended'
-
-export const defaultConfig: types.GPTLintConfig = [
+export const recommendedConfig: types.GPTLintConfig = [
   {
-    // include: ['**/*.{js,ts,jsx,tsx,cjs,mjs}'],
+    files: ['**/*.{js,ts,jsx,tsx,cjs,mjs}'],
     ruleDefinitions,
-    rules: ruleSettings,
-    overrides: [
-      {
-        // include: ['**/*.{md,mdx}'],
-        rules: {
-          'use-correct-english': 'error'
-        }
-      }
-    ]
+    rules: ruleSettings
   }
 ]
 
-console.log(JSON.stringify(defaultConfig, null, 2))
+// console.log(JSON.stringify(recommendedConfig, null, 2))

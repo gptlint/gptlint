@@ -13,7 +13,7 @@
   },
   "type": "module",
   "source": "./bin/gptlint.ts",
-  "types": "./dist/gptlint.d.ts",
+  "types": "./dist/src/index.d.ts",
   "bin": {
     "gptlint": "./dist/bin/gptlint.js"
   },
@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "postbuild": "cp -f rules/custom/*.md dist/rules/custom",
+    "postbuild": "cp -f rules/custom/*.md dist/src && cp -f rules/*.md dist/rules",
     "build:docs": "tsx bin/cp-rules-to-docs.ts",
     "dev": "tsup --watch",
     "clean": "del dist",

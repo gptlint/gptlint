@@ -79,11 +79,12 @@ async function main() {
     rules = await resolveRules({ cwd, config })
   } catch (err: any) {
     console.error('Error:', err.message, '\n')
+    console.error(err.stack)
     args.showHelp()
     return gracefulExit(1)
   }
 
-  // TODO
+  // TODO: support non-file rules
   rules = rules.filter(
     (rule) => rule.scope === 'file' && rule.description?.trim()
   )
@@ -91,6 +92,11 @@ async function main() {
   if (config.linterOptions.printConfig) {
     logDebugConfig({ rules, config })
     return gracefulExit(0)
+  }
+
+  if (!rules.length) {
+    console.error('No rules enabled; run with --print-config to debug\n')
+    return gracefulExit(1)
   }
 
   const chatModel = createChatModel(config)

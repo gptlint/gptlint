@@ -37,6 +37,7 @@ async function main() {
     ])
   } catch (err: any) {
     console.error('Error:', err.message, '\n')
+    console.error(err.stack)
     args.showHelp()
     return gracefulExit(1)
   }
@@ -44,6 +45,16 @@ async function main() {
   if (config.linterOptions.printConfig) {
     logDebugConfig({ files, rules, config })
     return gracefulExit(0)
+  }
+
+  if (!files.length) {
+    console.error('No source files found; run with --print-config to debug\n')
+    return gracefulExit(1)
+  }
+
+  if (!rules.length) {
+    console.error('No rules enabled; run with --print-config to debug\n')
+    return gracefulExit(1)
   }
 
   const chatModel = createChatModel(config)
