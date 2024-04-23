@@ -5,13 +5,14 @@ import { pathExists } from 'path-exists'
 import type * as types from './types.js'
 import {
   defaultLinterConfig,
-  mergeLinterConfigs,
-  parseLinterConfig
+  parseLinterConfig,
+  ResolvedLinterConfig
 } from './config.js'
+import { recommendedConfig } from './default-config.js'
 import { assert } from './utils.js'
 
 export async function resolveLinterConfig(
-  linterConfig: types.LinterConfig,
+  cliConfigOverride: types.LinterConfig,
   opts: {
     cwd: string
     configFilePath?: string
@@ -24,6 +25,14 @@ export async function resolveLinterConfig(
     'gptlint.config.mjs',
     'gptlint.config.cjs'
   ].filter(Boolean)
+
+  let configs: types.LinterConfig[] = []
+  if (opts.linterConfigDefaults) {
+    configs.push(opts.linterConfigDefaults)
+  }
+  configs.push(defaultLinterConfig)
+
+  let hasProjectConfig = false
 
   for (const configFileRelativePath of configsToCheck) {
     const configFilePath = path.resolve(opts.cwd, configFileRelativePath)
@@ -47,21 +56,20 @@ export async function resolveLinterConfig(
       `Config file "${configFilePath}" must have a default export containing a valid config array`
     )
 
-    // TODO: each of these sub-configs should only be enabled if `files` + `ignores` match, so it's not a strict merge
     for (const rawConfig of rawConfigs) {
-      const config = parseLinterConfig(rawConfig)
+      const config = parseLinterConfig(rawConfig as Partial<types.LinterConfig>)
 
-      linterConfig = mergeLinterConfigs(config, linterConfig)
+      configs.push(config)
     }
 
     // Break after we find the first project config file
+    hasProjectConfig = true
     break
   }
 
-  if (opts.linterConfigDefaults) {
-    linterConfig = mergeLinterConfigs(opts.linterConfigDefaults, linterConfig)
+  if (!hasProjectConfig) {
+    configs = configs.concat(recommendedConfig)
   }
 
-  linterConfig = mergeLinterConfigs(defaultLinterConfig, linterConfig)
-  return linterConfig as types.ResolvedLinterConfig
+  return new ResolvedLinterConfig({ configs, cliConfigOverride })
 }

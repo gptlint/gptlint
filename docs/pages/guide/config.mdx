@@ -78,7 +78,7 @@ You can override this with the `ruleFiles` config setting or with the `--rules` 
 
 You can also specify code-based custom [RuleDefinition](https://github.com/gptlint/gptlint/tree/main/src/rule.ts) objects which are normal JS/TS objects with hooks for fully customizing linting behavior.
 
-An example of a code-based rule (the equivalent of a plugin in `eslint`) is [effective-tsconfig](https://github.com/gptlint/gptlint/tree/main/.gptlint/custom/effective-tsconfig.ts), which has a `project` `scope` and uses the `preProcessProject` hook to resolve a project's `tsconfig.json` file and check for best practices.
+An example of a code-based rule (the equivalent of a plugin in `eslint`) is [effective-tsconfig](https://github.com/gptlint/gptlint/tree/main/rules/custom/effective-tsconfig.ts), which has a `project` `scope` and uses the `preProcessProject` hook to resolve a project's `tsconfig.json` file and check for best practices.
 
 Here's an example:
 

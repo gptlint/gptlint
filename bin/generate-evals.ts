@@ -21,8 +21,8 @@ import { resolveRules } from '../src/resolve-rules.js'
 import { stringifyRuleForModel } from '../src/rule-utils.js'
 import {
   inferBestPossibleCodeFileExtension,
-  logDebugConfig,
-  omit
+  omit,
+  validateLinterInputs
 } from '../src/utils.js'
 
 /**
@@ -79,18 +79,18 @@ async function main() {
     rules = await resolveRules({ cwd, config })
   } catch (err: any) {
     console.error('Error:', err.message, '\n')
+    console.error(err.stack)
     args.showHelp()
     return gracefulExit(1)
   }
 
-  // TODO
+  // TODO: support non-file rules
   rules = rules.filter(
     (rule) => rule.scope === 'file' && rule.description?.trim()
   )
 
-  if (config.linterOptions.printConfig) {
-    logDebugConfig({ rules, config })
-    return gracefulExit(0)
+  if (!validateLinterInputs({ rules, config })) {
+    return
   }
 
   const chatModel = createChatModel(config)

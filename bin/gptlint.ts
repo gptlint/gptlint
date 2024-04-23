@@ -11,7 +11,7 @@ import { lintFiles } from '../src/lint-files.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { resolveFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
-import { logDebugConfig, logLintResultStats } from '../src/utils.js'
+import { logLintResultStats, validateLinterInputs } from '../src/utils.js'
 
 /**
  * Main CLI entrypoint.
@@ -19,6 +19,7 @@ import { logDebugConfig, logLintResultStats } from '../src/utils.js'
 async function main() {
   const cwd = process.cwd()
 
+  const startMs = performance.now()
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
     process.argv,
     {
@@ -37,14 +38,17 @@ async function main() {
     ])
   } catch (err: any) {
     console.error('Error:', err.message, '\n')
+    console.error(err.stack)
     args.showHelp()
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.printConfig) {
-    logDebugConfig({ files, rules, config })
-    return gracefulExit(0)
+  if (!validateLinterInputs({ files, rules, config })) {
+    return
   }
+
+  const endMs = performance.now()
+  console.log('startup', endMs - startMs)
 
   const chatModel = createChatModel(config)
   const cache = await createLinterCache(config)

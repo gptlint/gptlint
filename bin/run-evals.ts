@@ -17,11 +17,11 @@ import { readSourceFiles, resolveEvalFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
 import {
   createEvalStats,
-  logDebugConfig,
   logEvalStats,
   logLintResultStats,
   mergeEvalStats,
-  resolveGlobFilePatterns
+  resolveGlobFilePatterns,
+  validateLinterInputs
 } from '../src/utils.js'
 
 /**
@@ -88,18 +88,18 @@ async function main() {
     }
   } catch (err: any) {
     console.error(chalk.bold('Error:'), err.message, '\n')
+    console.error(err.stack)
     args.showHelp()
     return gracefulExit(1)
   }
 
-  // TODO
+  // TODO: support non-file rules
   rules = rules.filter(
     (rule) => rule.scope === 'file' && rule.description?.trim()
   )
 
-  if (config.linterOptions.printConfig) {
-    logDebugConfig({ rules, config })
-    return gracefulExit(0)
+  if (!validateLinterInputs({ rules, config })) {
+    return
   }
 
   const chatModel = createChatModel(config)

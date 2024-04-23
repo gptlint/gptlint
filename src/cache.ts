@@ -4,10 +4,11 @@ import path from 'node:path'
 
 import { asyncExitHook } from 'exit-hook'
 import stableStringify from 'fast-json-stable-stringify'
+import hashObject from 'hash-object'
 import { pathExists } from 'path-exists'
 
 import type * as types from './types.js'
-import { assert } from './utils.js'
+import { assert, pick, pruneUndefined } from './utils.js'
 
 /**
  * Content-based cache of previous linter results.
@@ -135,4 +136,59 @@ export async function createLinterCache<
   })
   await cache.init()
   return cache
+}
+
+export function createCacheKey({
+  rule,
+  file,
+  config,
+  ...extra
+}: {
+  rule: types.Rule
+  file?: types.SourceFile
+  config: types.LinterConfig
+} & Record<string, unknown>): string {
+  // TODO: add linter major version to the cache key
+  const cacheKeySource = pruneUndefined({
+    ...extra,
+
+    file: file
+      ? // Only keep the relative file path, content, and detected language
+        pruneUndefined(pick(file, 'fileRelativePath', 'content', 'language'))
+      : undefined,
+
+    // Only keep the rule fields which affect the linting logic
+    rule: pruneUndefined(
+      pick(
+        rule,
+        'name',
+        'title',
+        'description',
+        'positiveExamples',
+        'negativeExamples',
+        'level',
+        'scope',
+        'model',
+        'languages',
+        'gritql',
+        'gritqlNumLinesContext'
+        // TODO: include / exclude? languages?
+      )
+    ),
+
+    // Ensure the cache key depends on how the LLM is parameterized
+    llmOptions: pruneUndefined(
+      pick(
+        config.llmOptions ?? {},
+        'model',
+        'weakModel',
+        'temperature',
+        'apiBaseUrl'
+      )
+    ),
+
+    linterOptions: pruneUndefined(pick(config.linterOptions ?? {}, 'noGrit'))
+  })
+
+  return hashObject(cacheKeySource)
 }

@@ -10,17 +10,14 @@
   - rewrite `prefer-types-always-valid-states`
   - finish `effective-eslint-config`
   - finish `effective-tsconfig`
-- config
-  - refactor config resolution - needs a major cleanup
-    - reconsider rule `scope`
-  - support rule overrides for specific file globs like eslint
-  - support rule-specific settings like eslint
-  - ensure precheck tasks are properly reported as cached
 - project
+  - **bundling default rules**
   - stress test w/ real-world repos
+  - add a why doc
+  - add a contributing doc
   - add a [security policy](https://docs.github.com/en/code-security/getting-started/adding-a-security-policy-to-your-repository) ([example](https://github.com/Portkey-AI/gateway/blob/main/SECURITY.md))
   - social image for docs and launch
-  - demo video
+    - twitter thread
   - publish to NPM
   - public launch! 🚀
 
@@ -54,3 +51,10 @@
   - **improve evals**
   - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
   - add additional unit tests to evals for edge cases
+- demo video
+- config
+  - refactor config resolution - needs a major cleanup
+    - reconsider rule `scope`
+  - support rule overrides for specific file globs like eslint
+  - support rule-specific settings like eslint
+  - ensure precheck tasks are properly reported as cached

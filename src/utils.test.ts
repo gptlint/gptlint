@@ -3,6 +3,7 @@ import path from 'node:path'
 import { expect, test } from 'vitest'
 
 import {
+  dirname,
   inferBestPossibleCodeFileExtension,
   omit,
   pick,
@@ -67,4 +68,16 @@ test('resolveGlobFilePatterns', async () => {
   ])
   expect(res.length).toEqual(1)
   expect(path.basename(res[0]!)).toEqual('utils.test.ts')
+
+  expect(
+    resolveGlobFilePatterns(['../gptlint/src/**/*.test.ts'], {
+      cwd: path.resolve(dirname(), '..')
+    })
+  ).rejects.toThrowError()
+
+  expect(
+    resolveGlobFilePatterns(['../gptlint/src/parse-rule-file.test.ts'], {
+      cwd: path.resolve(dirname(), '..')
+    })
+  ).resolves.toMatchSnapshot()
 })

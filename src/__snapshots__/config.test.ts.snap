@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parseLinterConfig - valid 1`] = `{}`;
+
+exports[`parseLinterConfig - valid 2`] = `
+{
+  "llmOptions": {
+    "model": "gpt-4-turbo-preview",
+    "weakModel": "gpt-3.5-turbo",
+  },
+  "ruleFiles": [
+    "rules/**/*.md",
+  ],
+}
+`;
+
+exports[`parseLinterConfig - valid 3`] = `
+{
+  "files": [
+    "src/**/*.{ts,tsx,js,jsx}",
+  ],
+  "llmOptions": {
+    "apiBaseUrl": "https://openrouter.ai/api/v1",
+    "kyOptions": {
+      "headers": {
+        "HTTP-Referer": "https://gptlint.dev",
+        "X-Title": "gptlint",
+      },
+    },
+    "model": "anthropic/claude-3-opus:beta",
+    "weakModel": "anthropic/claude-3-haiku:beta",
+  },
+}
+`;

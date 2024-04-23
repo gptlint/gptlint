@@ -1,5 +1,24 @@
 # FAQ
 
+### How does GPTLint compare to ESLint?
+
+GPTLint is not intended to replace AST-based linting tools like [eslint](https://eslint.org) (or [biome](https://biomejs.dev/linter/), [ruff](https://docs.astral.sh/ruff/), etc).
+
+_We absolutely love `eslint`_ and strongly recommend that you use an AST-based linter in all of your projects.
+
+**The power of GPTLint comes in enforcing higher-level rules that are difficult or impossible to capture with AST-based linters like `eslint`**. GPTLint is therefore _intended to augment AST-based linters_ like `eslint` to catch potential issues and enforce project-specific standards as early as possible without having to rely solely on PRs from human reviewers.
+
+| AST-based linting (`eslint`) | LLM-based linting (`gptlint`)                                                          |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
+| deterministic                | mostly deterministic                                                                   |
+| fast                         | slow                                                                                   |
+| low-level                    | low-level or high-level                                                                |
+| mature tooling & standards   | nascent tooling & standards                                                            |
+| free                         | [expensive](./cost.md) or [cheap using local LLMs](./guide/llm-providers#local-models) |
+| low-impact                   | **high-impact**                                                                        |
+
+So what does a higher-level linting rule look like, and when should you use an AST-based linting rule versus an LLM-based linting rule? We answer this in-depth in our [rule guidelines](../extend/rule-guidelines.mdx), but the short answer is that we recommend using deterministic, AST-based linting wherever possible and augmenting this with LLM-based linting and code reviews to provide a _defense-in-depth approach to code quality_. LLM-based linting helps to minimize the need for human code reviews, but we believe they are fundamentally complementary as opposed to replacing replacing human code reviews entirely.
+
 ### How accurate / reliable is gptlint?
 
 See [accuracy](./accuracy.md).
@@ -61,7 +80,7 @@ Linting can be disabled at the file-level using an inline comment:
 
 ### How can I customize a built-in rule?
 
-Since rules are just markdown files, copy the rule's markdown file from [.gptlint/](https://github.com/gptlint/gptlint/tree/main/.gptlint) into your project and customize it to suit your project's needs.
+Since rules are just markdown files, copy the rule's markdown file from [rules/](https://github.com/gptlint/gptlint/tree/main/rules) into your project and customize it to suit your project's needs.
 
 You'll want to [disable the original rule](#how-can-i-disable-a-rule) and change your custom rule's name to a project-specific name. Make sure your local config includes your custom rule's markdown file in its `ruleFiles` field.
 
@@ -89,24 +108,13 @@ These filters are similar to [github code search's limits](https://docs.github.c
 
 See [limitations](./limitations.md), [accuracy](./accuracy.md), and [cost](./cost.md).
 
-### How does GPTLint compare to ESLint?
+### How does privacy work with GPTLint?
 
-GPTLint is not intended to replace AST-based linting tools like [eslint](https://eslint.org) (or [biome](https://biomejs.dev/linter/), [ruff](https://docs.astral.sh/ruff/), etc).
+GPTLint is a free, open source project which you can run on any codebase.
 
-_We absolutely love `eslint`_ and strongly recommend that you use an AST-based linter in all of your projects.
+The only external service GPTLint relies on is an [LLM provider](../guide/llm-providers.md), which defaults to [OpenAI](https://openai.com/enterprise-privacy). [OpenAI's enterprise privacy](https://openai.com/enterprise-privacy) is to never store, log, or train your code, and their API is fully SOC 2 compliant.
 
-**The power of GPTLint comes in enforcing higher-level rules that are difficult or impossible to capture with AST-based linters like `eslint`**. GPTLint is therefore _intended to augment AST-based linters_ like `eslint` to catch potential issues and enforce project-specific standards as early as possible without having to rely solely on PRs from human reviewers.
-
-| AST-based linting (`eslint`) | LLM-based linting (`gptlint`)                                                          |
-| ---------------------------- | -------------------------------------------------------------------------------------- |
-| deterministic                | mostly deterministic                                                                   |
-| fast                         | slow                                                                                   |
-| low-level                    | low-level or high-level                                                                |
-| mature tooling & standards   | nascent tooling & standards                                                            |
-| free                         | [expensive](./cost.md) or [cheap using local LLMs](./guide/llm-providers#local-models) |
-| low-impact                   | **high-impact**                                                                        |
-
-So what does a higher-level linting rule look like, and when should you use an AST-based linting rule versus an LLM-based linting rule? We answer this in-depth in our [rule guidelines](../extend/rule-guidelines.mdx), but the short answer is that we recommend using deterministic, AST-based linting wherever possible and augmenting this AST-based linting with LLM-based linting and code reviews to provide a _defense-in-depth approach to code quality_.
+If you need stronger privacy & security guarantees, GPTLint supports using any [LLM provider](../guide/llm-providers.md), including [local models](../guide/llm-providers.md#local-models) which can be self-hosted to guarantee that no data is ever transmitted to any external services.
 
 ### What about fine-tuning?
 

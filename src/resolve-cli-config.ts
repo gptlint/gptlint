@@ -162,10 +162,10 @@ export async function resolveLinterCLIConfig(
     throw new Error(message)
   }
 
-  let files = args._.fileDirGlob.slice(2)
-  if (files.length === 0) {
-    files = ['**/*.{js,ts,jsx,tsx,cjs,mjs}']
-  }
+  const files = args._.fileDirGlob.slice(2)
+  // if (files.length === 0) {
+  //   files = ['**/*.{js,ts,jsx,tsx,cjs,mjs}']
+  // }
 
   let ignores = args.flags.noIgnore ? [] : args.flags.ignorePattern
   if (args.flags.ignoreFile && !args.flags.noIgnore) {
@@ -185,10 +185,10 @@ export async function resolveLinterCLIConfig(
   }
 
   // Resolve the linter config from the command-line only
-  let linterConfig = parseLinterConfig({
-    files,
-    ignores,
-    ruleFiles: args.flags.rules,
+  const cliLinterConfig = parseLinterConfig({
+    files: files.length > 0 ? files : undefined,
+    ignores: ignores.length > 0 ? ignores : undefined,
+    ruleFiles: args.flags.rules.length > 0 ? args.flags.rules : undefined,
     linterOptions: {
       noInlineConfig: args.flags.noInlineConfig,
       earlyExit: args.flags.earlyExit,
@@ -216,8 +216,8 @@ export async function resolveLinterCLIConfig(
     }
   })
 
-  // Resolve any file-based linter config and merge it with the CLI-based config
-  linterConfig = await resolveLinterConfig(linterConfig, {
+  // Resolve file-based linter config and merge it with the CLI-based config
+  const linterConfig = await resolveLinterConfig(cliLinterConfig, {
     cwd,
     configFilePath: args.flags.config,
     linterConfigDefaults
@@ -225,6 +225,6 @@ export async function resolveLinterCLIConfig(
 
   return {
     args,
-    linterConfig: linterConfig as types.ResolvedLinterConfig
+    linterConfig
   }
 }

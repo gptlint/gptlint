@@ -3,6 +3,7 @@
 exports[`resolveGlobFilePatterns 1`] = `
 [
   "src/cache.test.ts",
+  "src/config.test.ts",
   "src/custom-rule.test.ts",
   "src/gritql.test.ts",
   "src/is-binary-file.test.ts",
@@ -10,6 +11,13 @@ exports[`resolveGlobFilePatterns 1`] = `
   "src/parse-rule-file.test.ts",
   "src/parse-structured-output.test.ts",
   "src/rule-utils.test.ts",
+  "src/rule-violations.test.ts",
   "src/utils.test.ts",
+]
+`;
+
+exports[`resolveGlobFilePatterns 2`] = `
+[
+  "src/parse-rule-file.test.ts",
 ]
 `;

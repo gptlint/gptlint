@@ -22,10 +22,6 @@ export async function resolveFiles({
     cwd
   })
 
-  if (!sourceFiles.length) {
-    throw new Error('No source files found')
-  }
-
   return readSourceFiles(sourceFiles, {
     concurrency: config.linterOptions.concurrency
   })
@@ -41,14 +37,10 @@ export async function resolveEvalFiles({
   const sourceFiles = await resolveGlobFilePatterns(config.files, {
     gitignore: false,
     ignore: config.ignores
-      .filter((ignore) => !/fixtures/.test(ignore))
+      .filter((pattern) => !/fixtures/.test(pattern))
       .concat(['node_modules', 'dist', 'docs', '.env', '.next']),
     cwd
   })
-
-  if (!sourceFiles.length) {
-    throw new Error('No source files found')
-  }
 
   return readSourceFiles(sourceFiles, {
     concurrency: config.linterOptions.concurrency

@@ -63,7 +63,7 @@ gptlint --dry-run
 
 ```sh
 # enable debugging and only enable a single rule
-gptlint -d -r .gptlint/semantic-variable-names.md
+gptlint -d -r rules/semantic-variable-names.md
 ```
 
 ```sh
@@ -74,5 +74,5 @@ gptlint -C -d src/utils.ts
 Oftentimes, it's useful when iterating on custom rules to only run the linter with a single rule enabled on a single soruce file and with caching disabled:
 
 ```sh
-gptlint -C -d -r .gptlint/semantic-variable-names.md src/utils.ts
+gptlint -C -d -r rules/semantic-variable-names.md src/utils.ts
 ```

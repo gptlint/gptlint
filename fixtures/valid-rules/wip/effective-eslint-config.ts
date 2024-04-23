@@ -1,5 +1,4 @@
 import type { ESLint, Linter } from 'eslint'
-import * as eslintLib from 'eslint'
 
 import type { RuleDefinition } from '../../src/index.js'
 
@@ -7,7 +6,7 @@ export type RuleMetadata = {
   eslint?: ESLint
 }
 
-const rule: Readonly<RuleDefinition<RuleMetadata>> = {
+export const effectiveESLintConfig: Readonly<RuleDefinition<RuleMetadata>> = {
   name: 'effective-eslint-config',
   title: 'Follow eslint best practices.',
   level: 'error',
@@ -17,9 +16,15 @@ const rule: Readonly<RuleDefinition<RuleMetadata>> = {
   init: async ({ rule, cwd }) => {
     // Types are missing `loadESLint` so this is a workaround
     // TODO: make this robust if no eslint config is found
-    const DefaultESLint = await (eslintLib as any).loadESLint({ cwd })
-    const eslint: ESLint = new DefaultESLint()
-    rule.metadata.eslint = eslint
+    try {
+      const eslintLib = await import('eslint')
+      const DefaultESLint = await (eslintLib as any).loadESLint({ cwd })
+      const eslint: ESLint = new DefaultESLint()
+      rule.metadata.eslint = eslint
+    } catch (err: any) {
+      console.error('Failed to load eslint library', err.message)
+      console.error(err)
+    }
   },
 
   processFile: async ({ file, rule }) => {
@@ -62,5 +67,3 @@ const rule: Readonly<RuleDefinition<RuleMetadata>> = {
     }
   }
 }
-
-export default rule

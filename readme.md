@@ -29,7 +29,7 @@
 ## Features
 
 - ✅️ _enforce higher-level best practices that are impossible with ast-based approaches_
-- ✅️ simple markdown format for rules ([example](./.gptlint/prefer-array-at-negative-indexing.md), [spec](https://gptlint.dev/extend/rule-spec))
+- ✅️ simple markdown format for rules ([example](./rules/prefer-array-at-negative-indexing.md), [spec](https://gptlint.dev/extend/rule-spec))
 - ✅️ easy to [disable](https://gptlint.dev/project/faq#how-can-i-disable-a-rule) or [customize](https://gptlint.dev/project/faq#how-can-i-customize-a-built-in-rule) rules
 - ✅️ add custom, [project-specific rules](https://gptlint.dev/guide/rule-guidelines#project-specific-rules)
 - ✅️ same cli and config format as `eslint`

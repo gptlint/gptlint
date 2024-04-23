@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig([
   {
-    entry: ['bin/gptlint.ts', 'src/index.ts', '.gptlint/custom/index.ts'],
+    entry: ['bin/gptlint.ts', 'src/index.ts'],
     outDir: 'dist',
     target: 'node16',
     platform: 'node',
