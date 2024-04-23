@@ -10,9 +10,9 @@
   - rewrite `prefer-types-always-valid-states`
   - finish `effective-tsconfig`
 - docs
-  - update demo svg
   - update config examples w/ new format
 - project
+  - investigate start up lag
   - stress test w/ real-world repos
   - social image for docs and launch
     - twitter thread
