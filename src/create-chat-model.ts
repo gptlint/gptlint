@@ -68,6 +68,7 @@ This is a fake LLM response because the \`dryRun\` option was set. No actual API
     choices: [
       {
         finish_reason: 'stop',
+        logprobs: null,
         index: 0,
         message: {
           role: 'assistant',
