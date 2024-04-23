@@ -22,7 +22,14 @@ async function main() {
     files,
     async (file) => {
       const srcPath = path.resolve(file)
-      return parseRuleFilePath(srcPath)
+
+      try {
+        const rule = await parseRuleFilePath(srcPath)
+        return rule
+      } catch (err: any) {
+        console.error(`Error parsing built-in rule file "${srcPath}":`, err)
+        throw err
+      }
     },
     {
       concurrency: 16
