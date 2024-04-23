@@ -31,9 +31,7 @@
     "dist",
     "package.json",
     "readme.md",
-    "license",
-    "docs",
-    "media"
+    "license"
   ],
   "scripts": {
     "build": "run-s build:*",
