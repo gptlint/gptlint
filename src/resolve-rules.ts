@@ -5,7 +5,6 @@ import pMap from 'p-map'
 
 import type * as types from './types.js'
 import { parseRuleFile } from './parse-rule-file.js'
-import { RuleDefinitionSchema } from './rule.js'
 import { isValidRuleName, validateRule } from './rule-utils.js'
 import { assert, resolveGlobFilePatterns } from './utils.js'
 
@@ -61,27 +60,15 @@ export async function resolveRules({
 
   const customRules: types.Rule[] = (config.ruleDefinitions ?? []).map(
     (ruleDefinition) => {
-      const parsedRule = RuleDefinitionSchema.safeParse(ruleDefinition)
-
-      if (parsedRule.success) {
-        const rule: types.Rule = {
-          ...parsedRule.data,
-          source: 'custom',
-          cacheable: true,
-          metadata: {}
-        }
-
-        assert(
-          isValidRuleName(rule.name),
-          `Invalid custom rule name "${rule.name}"`
-        )
-
-        return rule
-      } else {
-        throw new Error(
-          `Error parsing custom rule "${ruleDefinition.name}": ${parsedRule.error.message}`
-        )
+      const rule: types.Rule = {
+        source: 'custom',
+        cacheable: true,
+        ...ruleDefinition,
+        metadata: {}
       }
+
+      assert(isValidRuleName(rule.name), `Invalid rule name "${rule.name}"`)
+      return rule
     }
   )
 

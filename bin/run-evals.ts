@@ -6,6 +6,7 @@ import path from 'node:path'
 import chalk from 'chalk'
 import { gracefulExit } from 'exit-hook'
 import pMap from 'p-map'
+import restoreCursor from 'restore-cursor'
 
 import type * as types from '../src/types.js'
 import { createLinterCache } from '../src/cache.js'
@@ -30,6 +31,7 @@ import {
  * and recall.
  */
 async function main() {
+  restoreCursor()
   const cwd = process.cwd()
 
   const { args, linterConfig: config } = await resolveLinterCLIConfig(

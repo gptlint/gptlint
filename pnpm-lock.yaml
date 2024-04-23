@@ -92,6 +92,9 @@ importers:
       remark-parse:
         specifier: ^11.0.0
         version: 11.0.0
+      restore-cursor:
+        specifier: ^5.0.0
+        version: 5.0.0
       tasuku:
         specifier: ^2.0.1
         version: 2.0.1
@@ -8130,6 +8133,14 @@ packages:
       onetime: 5.1.2
       signal-exit: 3.0.7
     dev: true
+
+  /restore-cursor@5.0.0:
+    resolution: {integrity: sha512-Hp93f349DvdEqJFHiPyzNzVjT7lDDFtQJWRotQVQNl3CHr4j7oMHStQB9UH/CJSHTrevAZXFvomgzy8lXjrK0w==}
+    engines: {node: '>=18'}
+    dependencies:
+      onetime: 6.0.0
+      signal-exit: 4.1.0
+    dev: false
 
   /retext-latin@3.1.0:
     resolution: {integrity: sha512-5MrD1tuebzO8ppsja5eEu+ZbBeUNCjoEarn70tkXOS7Bdsdf6tNahsv2bY0Z8VooFF6cw7/6S+d3yI/TMlMVVQ==}

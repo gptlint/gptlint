@@ -94,87 +94,27 @@ export async function lintFiles({
 
   // Preprocess the file / rule tasks so we have a clear indication of how many
   // non-cached, non-disabled tasks need to be processed.
-  const preProcessedLintTasks: types.LintTask[] = (
-    await pMap(
-      initialLintTasks,
-      async (lintTask) => {
-        if (earlyExitTripped) {
-          return
-        }
-
-        try {
-          const { rule, scope } = lintTask
-          const model =
-            rule.model ?? config.llmOptions.weakModel ?? config.llmOptions.model
-
-          if (rule.preProcessProject) {
-            const partialProjectLintResult = await Promise.resolve(
-              rule.preProcessProject({
-                ...lintTask,
-                chatModel,
-                cache,
-                retryOptions,
-                cwd
-              })
-            )
-
-            if (partialProjectLintResult) {
-              const { lintErrors, skipped } = partialProjectLintResult
-
-              lintTask.lintResult = resolvePartialLintResult(
-                lintErrors || skipped
-                  ? {
-                      ...partialProjectLintResult,
-                      skipped: true,
-                      skipReason: 'pre-process-project'
-                    }
-                  : partialProjectLintResult,
-                {
-                  model,
-                  rule,
-                  filePath: cwd
-                }
-              )
-            }
+  const preProcessTaskRunner = await task(
+    `Preprocessing ${files.length} files and ${rules.length} rules`,
+    async () =>
+      pMap<types.LintTask, types.LintTask | undefined>(
+        initialLintTasks,
+        async (lintTask) => {
+          if (earlyExitTripped) {
+            return
           }
 
-          if (lintTask.lintResult) {
-            return lintTask
-          }
+          try {
+            const { rule, scope } = lintTask
+            const model =
+              rule.model ??
+              config.llmOptions.weakModel ??
+              config.llmOptions.model
 
-          // Always run the built-in pre-processing logic for caching and validation
-          // purposes. Then run any custom, rule-specific pre-processing logic if
-          // it exists.
-          lintTask = await preProcessTask(lintTask, { cache })
-
-          if (lintTask.lintResult) {
-            return lintTask
-          }
-
-          if (scope === 'file') {
-            const file = lintTask.file
-            assert(file)
-
-            if (rule.gritql) {
-              const maybeFileLintResult = await preProcessFileWithGrit({
-                file,
-                files,
-                rule,
-                config,
-                ruleNameToPartialSourceFileMap
-              })
-
-              if (maybeFileLintResult) {
-                lintTask.lintResult = maybeFileLintResult
-                return lintTask
-              }
-            }
-
-            if (rule.preProcessFile) {
-              const partialFileLintResult = await Promise.resolve(
-                rule.preProcessFile({
+            if (rule.preProcessProject) {
+              const partialProjectLintResult = await Promise.resolve(
+                rule.preProcessProject({
                   ...lintTask,
-                  file,
                   chatModel,
                   cache,
                   retryOptions,
@@ -182,54 +122,120 @@ export async function lintFiles({
                 })
               )
 
-              if (partialFileLintResult) {
-                const { lintErrors, skipped } = partialFileLintResult
+              if (partialProjectLintResult) {
+                const { lintErrors, skipped } = partialProjectLintResult
 
                 lintTask.lintResult = resolvePartialLintResult(
                   lintErrors || skipped
                     ? {
-                        ...partialFileLintResult,
+                        ...partialProjectLintResult,
                         skipped: true,
-                        skipReason: 'pre-process-file'
+                        skipReason: 'pre-process-project'
                       }
-                    : partialFileLintResult,
+                    : partialProjectLintResult,
                   {
                     model,
                     rule,
-                    file
+                    filePath: cwd
                   }
                 )
               }
             }
-          }
 
-          return lintTask
-        } catch (err: any) {
-          const error = new Error(
-            `${stringifyLintTask(lintTask)} unexpected preProcess error: ${err.message}`,
-            { cause: err }
-          )
-          console.warn(error.message)
-          warnings.push(error)
-        } finally {
-          if (lintTask.lintResult) {
-            lintResult = mergeLintResults(lintResult, lintTask.lintResult)
-          }
+            if (lintTask.lintResult) {
+              return lintTask
+            }
 
-          if (
-            config.linterOptions.earlyExit &&
-            lintResult.lintErrors.length > 0
-          ) {
-            earlyExitTripped = true
+            // Always run the built-in pre-processing logic for caching and validation
+            // purposes. Then run any custom, rule-specific pre-processing logic if
+            // it exists.
+            lintTask = await preProcessTask(lintTask, { cache })
+
+            if (lintTask.lintResult) {
+              return lintTask
+            }
+
+            if (scope === 'file') {
+              const file = lintTask.file
+              assert(file)
+
+              if (rule.gritql) {
+                const maybeFileLintResult = await preProcessFileWithGrit({
+                  file,
+                  files,
+                  rule,
+                  config,
+                  ruleNameToPartialSourceFileMap
+                })
+
+                if (maybeFileLintResult) {
+                  lintTask.lintResult = maybeFileLintResult
+                  return lintTask
+                }
+              }
+
+              if (rule.preProcessFile) {
+                const partialFileLintResult = await Promise.resolve(
+                  rule.preProcessFile({
+                    ...lintTask,
+                    file,
+                    chatModel,
+                    cache,
+                    retryOptions,
+                    cwd
+                  })
+                )
+
+                if (partialFileLintResult) {
+                  const { lintErrors, skipped } = partialFileLintResult
+
+                  lintTask.lintResult = resolvePartialLintResult(
+                    lintErrors || skipped
+                      ? {
+                          ...partialFileLintResult,
+                          skipped: true,
+                          skipReason: 'pre-process-file'
+                        }
+                      : partialFileLintResult,
+                    {
+                      model,
+                      rule,
+                      file
+                    }
+                  )
+                }
+              }
+            }
+
+            return lintTask
+          } catch (err: any) {
+            const error = new Error(
+              `${stringifyLintTask(lintTask)} unexpected preProcess error: ${err.message}`,
+              { cause: err }
+            )
+            console.warn(error.message)
+            warnings.push(error)
+          } finally {
+            if (lintTask.lintResult) {
+              lintResult = mergeLintResults(lintResult, lintTask.lintResult)
+            }
+
+            if (
+              config.linterOptions.earlyExit &&
+              lintResult.lintErrors.length > 0
+            ) {
+              earlyExitTripped = true
+            }
           }
+        },
+        {
+          concurrency: config.linterOptions.concurrency
         }
-      },
-      {
-        concurrency: config.linterOptions.concurrency
-      }
-    )
-  ).filter(Boolean)
+      )
+  )
 
+  const preProcessedLintTasks: types.LintTask[] =
+    preProcessTaskRunner.result.filter(Boolean)
   const outstandingLintTasks = preProcessedLintTasks.filter(
     (r) => !r.lintResult?.skipped && !r.lintResult?.lintErrors
   )
@@ -259,6 +265,8 @@ export async function lintFiles({
   console.log(
     'Linter tasks',
     pruneUndefined({
+      numFiles: files.length,
+      numRules: rules.length,
       numTasks: outstandingLintTasks.length,
       numTasksCached: numTasksCached || undefined,
       numTasksFilteredPrecheck: numTasksFilteredPrecheck || undefined,

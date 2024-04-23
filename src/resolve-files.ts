@@ -18,17 +18,19 @@ export async function resolveFiles({
 }) {
   // console.log('resolveFiles', config.files, config.ignores, { cwd })
 
-  const sourceFiles = await resolveGlobFilePatterns(config.files, {
+  const sourceFilePaths = await resolveGlobFilePatterns(config.files, {
     gitignore: true,
     ignore: config.ignores,
     cwd
   })
 
-  // console.log({ sourceFiles })
+  // console.log({ sourceFilePaths })
 
-  return readSourceFiles(sourceFiles, {
+  const sourceFiles = await readSourceFiles(sourceFilePaths, {
     concurrency: config.linterOptions.concurrency
   })
+
+  return sourceFiles
 }
 
 export async function resolveEvalFiles({

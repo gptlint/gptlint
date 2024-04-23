@@ -42,7 +42,10 @@ export function stringifyExamples(examples?: types.RuleExample[]): string {
 
 export function validateRule(rule: types.Rule) {
   const parsedRule = RuleDefinitionSchema.passthrough().safeParse(rule)
-  assert(parsedRule.success, `Invalid rule "${rule.name}"`)
+  assert(
+    parsedRule.success,
+    `Invalid rule "${rule.name}": ${parsedRule.error?.message}`
+  )
 
   rule = parsedRule.data as types.Rule
   assert(isValidRuleName(rule.name), `Invalid rule name "${rule.name}"`)

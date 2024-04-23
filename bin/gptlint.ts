@@ -3,6 +3,7 @@ import 'dotenv/config'
 
 import { gracefulExit } from 'exit-hook'
 import plur from 'plur'
+import restoreCursor from 'restore-cursor'
 
 import type * as types from '../src/types.js'
 import { createLinterCache } from '../src/cache.js'
@@ -17,6 +18,7 @@ import { logLintResultStats, validateLinterInputs } from '../src/utils.js'
  * Main CLI entrypoint.
  */
 async function main() {
+  restoreCursor()
   const cwd = process.cwd()
 
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
@@ -47,6 +49,7 @@ async function main() {
   }
 
   const chatModel = createChatModel(config)
+
   const cache = await createLinterCache(config)
 
   const lintResult = await lintFiles({

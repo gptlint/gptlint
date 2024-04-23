@@ -80,6 +80,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
+    "restore-cursor": "^5.0.0",
     "tasuku": "^2.0.1",
     "tiny-invariant": "^1.3.3",
     "type-fest": "^4.16.0",

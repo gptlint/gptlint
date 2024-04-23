@@ -8,6 +8,7 @@ import { Msg } from '@dexaai/dexter'
 import { gracefulExit } from 'exit-hook'
 import hashObject from 'hash-object'
 import pMap from 'p-map'
+import restoreCursor from 'restore-cursor'
 
 import type * as types from '../src/types.js'
 import { createChatModel } from '../src/create-chat-model.js'
@@ -29,6 +30,7 @@ import {
  * Internal CLI to generate synthetic eval data (code snippets) for rules.
  */
 async function main() {
+  restoreCursor()
   const cwd = process.cwd()
 
   const { args, linterConfig: config } = await resolveLinterCLIConfig(
