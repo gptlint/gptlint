@@ -1,16 +1,17 @@
 import { Callout, Steps } from 'nextra/components'
+import Image from 'next/image'
 
 # Quick Start
 
+Getting started with `gptlint` is easy and should only take a few minutes to set up with a new codebase.
+
 <Steps>
 
-### Install
+### Prerequisites
 
-<Callout type='error' emoji='⚠️'>
-  This tool is not public yet and is therefore not published to `npm`, so use
-  `tsx bin/gptlint.ts` instead of using the `gptlint` binary. This requires you
-  to checkout the code locally and install deps with `pnpm i`.
-</Callout>
+- Node.js >= 18
+
+### Install
 
 ```sh npm2yarn
 npm i -D gptlint
@@ -22,7 +23,10 @@ We recommended installing `gptlint` as a dev dependency just like `eslint`.
 
 GPTLint defaults to using the OpenAI API, so you'll need to sign up for an [OpenAI API key](https://platform.openai.com/docs/quickstart?context=node). Add your `OPENAI_API_KEY` as an environment variable or store it in a `.env` file in your project's root.
 
-_GPTLint supports all LLM providers including local LLMs_, so if you don't want to use OpenAI, [see here](./llm-providers.md).
+<Callout>
+  **GPTLint supports local LLMs and other providers**, so if you don't want to
+  use OpenAI, [see here](./llm-providers.md).
+</Callout>
 
 ### Dry Run
 
@@ -30,7 +34,7 @@ _GPTLint supports all LLM providers including local LLMs_, so if you don't want 
 npx gptlint --help
 ```
 
-By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files. `.gitignore` will be respected optionally `.gptlintignore` as well if it exists.
+By default, `gptlint` uses `**/*.{js,ts,jsx,tsx,cjs,mjs}` to match source files. `.gitignore` will be respected, and optionally `.gptlintignore` as well if it exists.
 
 Now let's try running `gptlint` with the `--dry-run` flag:
 
@@ -38,7 +42,14 @@ Now let's try running `gptlint` with the `--dry-run` flag:
 npx gptlint --dry-run
 ```
 
-The `--dry-run` flag causes `gptlint` to mock any LLM API calls and instead output an _estimate_ of how much it would cost to run the linter for real. Since [LLM costs can add up quickly](../project/cost.md) for large codebases, it's always a good idea to make sure you understand the projected costs before running `gptlint` on a new project.
+<Callout type='warning'>
+    The `--dry-run` flag is very useful for estimating how much it would cost to run the linter for real.
+
+    Since [LLM costs can add up quickly](../project/cost.md) for large codebases,
+    it's always a good idea to make sure you understand the projected costs before
+    running `gptlint` on a new project.
+
+</Callout>
 
 If you want to try out `gptlint` without worrying about the cost, you can run `gptlint` on a single source file like this:
 
@@ -46,8 +57,41 @@ If you want to try out `gptlint` without worrying about the cost, you can run `g
 npx gptlint --dry-run src/utils.ts
 ```
 
+If you're ever not sure about what will be run, you can use the `--print-config` flag to view all of the resolved rules, settings, and source files that will be processed:
+
+```sh
+npx gptlint --print-config
+```
+
+If there are source files being picked up by `gptlint` that you'd like to ignore, you can add glob patterns to a `.gptlintignore` file at the root of your project to ignore them.
+
 ### Real Run
 
-<Callout type='warning'>TODO: This doc is a WIP.</Callout>
+Oooooohhhh now comes the fun part! Let's run `gptlint` for real and see what it finds...
+
+```sh
+npx gptlint
+```
+
+Depending on the size of your codebase, this could take anywhere from a few seconds to a few minutes. It'll display a summary of the linter tasks as it runs.
+
+Once it completes, you should see something resembling this output:
+
+<p align='center' style={{ padding: '1rem' }}>
+  <Image
+    src='/example-output-0.png'
+    alt='Example output'
+    width={1133}
+    height={845}
+  />
+</p>
+
+This example output comes from running `gptlint` fresh on it's own codebase with
+caching disabled. It cost a total of _$0.83 USD_ and made _351 LLM calls_
+to OpenAI, with the vast majority of them using `gpt-3.5-turbo`.
+
+More than likely, you'll see some lint errors that you should consider addressing. Just keep in mind that since `gptlint` isn't 100% accurate (like a human code reviewer), it's possible for `gptlint` to report _false positives_ and miss _false negatives_, but we're working hard to improve the accuracy of the core linting engine and built-in rules over time.
+
+For more details on how to interpret the output, see [usage](./usage) and our [faq](/project/faq).
 
 </Steps>
