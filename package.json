@@ -3,11 +3,12 @@
   "description": "A linter with superpowers! Use LLMs to enforce best practices across your codebase in a standardized, configurable, scalable manner.",
   "author": "Travis Fischer <travis@transitivebullsh.it>",
   "license": "MIT",
+  "homepage": "https://gptlint.dev",
   "repository": {
     "type": "git",
     "url": "gptlint/gptlint"
   },
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@8.15.7",
   "engines": {
     "node": ">=18"
   },
@@ -102,6 +103,7 @@
     "eslint": "^8.57.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
+    "np": "^10.0.5",
     "npm-run-all2": "^6.1.2",
     "prettier": "^3.2.5",
     "tsup": "^8.0.2",
