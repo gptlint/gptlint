@@ -1,15 +1,4 @@
-# How It Works <!-- omit from toc -->
-
-- [Overview](#overview)
-- [Single-Pass Linting](#single-pass-linting)
-- [Two-Pass Linting](#two-pass-linting)
-- [Single-Pass vs Two-Pass Linting](#single-pass-vs-two-pass-linting)
-- [LLM Output Format](#llm-output-format)
-  - [RuleViolation Schema](#ruleviolation-schema)
-- [GritQL](#gritql)
-- [Evals](#evals)
-- [Fine-Tuning](#fine-tuning)
-- [More Info](#more-info)
+# How It Works
 
 ## Overview
 
