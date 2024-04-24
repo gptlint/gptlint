@@ -6,6 +6,7 @@
 - [Single-Pass vs Two-Pass Linting](#single-pass-vs-two-pass-linting)
 - [LLM Output Format](#llm-output-format)
   - [RuleViolation Schema](#ruleviolation-schema)
+- [GritQL](#gritql)
 - [Evals](#evals)
 - [Fine-Tuning](#fine-tuning)
 - [More Info](#more-info)
@@ -19,10 +20,11 @@ To lint a codebase, GPTLint takes the following steps:
 1. Resolves a set of markdown rule definitions along with optional few-shot examples for each rule (defaults to `.gptlint/**/*.md`)
 2. Resolves a set of input source files to lint (defaults to `**/*.{js,ts,jsx,tsx,cjs,mjs}`)
 3. For each `[rule, file]` pair, creates a **linter task**
-4. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file
-5. For each non-cached linter task, runs it through an LLM classifier pipeline which the goal of identifying rule violations
+4. For each `rule` with a [gritql pattern](https://github.com/getgrit/gritql), filters the source files to only contain matched lines of text
+5. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file
+6. For each non-cached linter task, runs it through an LLM classifier pipeline which the goal of identifying rule violations
 
-All of the magic happens in step 5, and GPTLint supports two approaches for this core linting logic: [single-pass linting](#single-pass-linting) and [two-pass linting](#two-pass-linting), both of which have their own pros & cons.
+All of the magic happens in step 7, and GPTLint supports two approaches for this core linting logic: [single-pass linting](#single-pass-linting) and [two-pass linting](#two-pass-linting), both of which have their own pros & cons.
 
 The core linting logic lives in [src/lint-file.ts](https://github.com/gptlint/gptlint/tree/main/src/lint-file.ts).
 
@@ -120,6 +122,16 @@ interface RuleViolation {
 This [`RuleViolation` schema](https://github.com/gptlint/gptlint/tree/main/src/rule-violations.ts) has gone through many iterations, and it's worth taking a look at the descriptions of each field that are passed to the model as context.
 
 In particular, `codeSnippetSource`, `reasoning`, `violation`, and `confidence` were all added empirically to increase the LLM's accuracy and to mitigate common issues. Even with these fields, false positives are still possible, but forcing the model to fill out these additional fields has proven very effective at increasing the linter's accuracy.
+
+## GritQL
+
+[GritQL](https://github.com/getgrit/gritql) is a query language for matching patterns in code. It is built on top of [tree-sitter](https://tree-sitter.github.io/tree-sitter/) and is mostly programming language agnostic.
+
+Most of the built-in rules use `gritql` patterns to filter down the source code to only the most relevant portions before using an LLM to analyze the code for potential rule violations. This helps to drastically reduce the number of files and tokens that the linter uses, resulting in cheaper, faster, and more accurate predictions.
+
+Here is a [comparison](https://github.com/gptlint/gptlint/pull/12#issuecomment-2055042424) of the linter being run with the default rules – with and without GritQL. The GritQL version has been improved further since this benchmark, but it uses roughly 25-30% less tokens.
+
+Note that `grit` is an optional dependency and `gptlint` is designed to work if it fails to install.
 
 ## Evals
 

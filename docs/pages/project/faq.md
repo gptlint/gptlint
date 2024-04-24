@@ -21,11 +21,11 @@ So what does a higher-level linting rule look like, and when should you use an A
 
 ### How accurate / reliable is gptlint?
 
-See [accuracy](./accuracy.md).
+See [accuracy](./accuracy).
 
 ### How much will it cost to run gptlint on my codebase?
 
-See [cost](./cost.md).
+See [cost](./cost).
 
 ### How can I use GPTLint with a custom, local model?
 
@@ -109,7 +109,7 @@ These filters are similar to [github code search's limits](https://docs.github.c
 
 ### What limitations does GPTLint have?
 
-See [limitations](./limitations.md), [accuracy](./accuracy.md), and [cost](./cost.md).
+See [limitations](./limitations.md), [cost](./cost), and [accuracy](./accuracy).
 
 ### How does privacy work with GPTLint?
 

@@ -1,8 +1,8 @@
 export default {
   'how-it-works': 'How It Works',
-  accuracy: 'Accuracy',
-  cost: 'Cost',
   limitations: 'Limitations',
-  faq: 'FAQ',
-  roadmap: 'Roadmap'
+  cost: 'Cost',
+  accuracy: 'Accuracy',
+  roadmap: 'Roadmap',
+  faq: 'FAQ'
 }

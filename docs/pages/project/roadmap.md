@@ -30,6 +30,7 @@
   - experiment with using bin packing to optimize context usage, but that's still same `O(tokens)`
 - basic eval graphs and blog post
 - demo video
+- [SARIF support](https://sarifweb.azurewebsites.net/) ([github notes](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/sarif-support-for-code-scanning))
 - linter engine
   - add support for git diffs
   - track eval results across multiple llm configs during CI

@@ -1,7 +1,5 @@
 # Limitations
 
-See also our notes on [accuracy](./accuracy.md) and [cost](./cost.md).
-
 ### Rules in the MVP are single-file only
 
 Many of the higher-level best practices we'd like to support span multiple files, but we also wanted to keep the MVP scoped, so we made the decision to restrict rules to the context of a single file _for now_.
@@ -22,4 +20,6 @@ This is a feature we have planned in the near future once we'e validated that we
 
 ---
 
-See the [project roadmap](./roadmap.md) for more details.
+See also our notes on [accuracy](./accuracy) and [cost](./cost).
+
+See the [project roadmap](./roadmap.md) for more details on our plans to address these limitations.
