@@ -24,7 +24,7 @@ To lint a codebase, GPTLint takes the following steps:
 5. Filters any linter tasks which are cached from previous runs based on the contents of the rule and file
 6. For each non-cached linter task, runs it through an LLM classifier pipeline which the goal of identifying rule violations
 
-All of the magic happens in step 7, and GPTLint supports two approaches for this core linting logic: [single-pass linting](#single-pass-linting) and [two-pass linting](#two-pass-linting), both of which have their own pros & cons.
+All of the magic happens in step 6, and GPTLint supports two approaches for this core linting logic: [single-pass linting](#single-pass-linting) and [two-pass linting](#two-pass-linting), both of which have their own pros & cons.
 
 The core linting logic lives in [src/lint-file.ts](https://github.com/gptlint/gptlint/tree/main/src/lint-file.ts).
 
