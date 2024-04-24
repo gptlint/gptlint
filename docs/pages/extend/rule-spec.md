@@ -2,7 +2,7 @@
 
 <table>
 <tr><td>Version</td><td>0.1.0</td></tr>
-<tr><td>Last Updated</td><td>April 11, 2024</td></tr>
+<tr><td>Last Updated</td><td>April 24, 2024</td></tr>
 <tr><td>Author</td><td><a href="https://twitter.com/transitive_bs">Travis Fischer</a></td></tr>
 </table>
 
@@ -119,7 +119,7 @@ Here is a breakdown of the supported metadata fields and their expected types.
 | include               | `string[]`                | Array of file glob patterns to include when enforcing this rule. If not specified, will operate on all input source files not excluded by `exclude`. |
 | exclude               | `string[]`                | Array of file glob patterns to ignore when enforcing this rule.                                                                                      |
 | resources             | `string[]`                | Array of URLs with more info on the rule's intent. Very useful for linking to blog posts and internal docs.                                          |
-| gritqlNumLinesContext | `number`                  | Number of lines before & after GritQL matches to include in the context sent to the LLM. Defaults to 3.                                              |
+| gritqlNumLinesContext | `number`                  | Number of lines before & after GritQL matches to include in the context sent to the LLM. Defaults to `0`.                                            |
 
 All metadata keys are case-sensitive, and all metadata values must match their expected types if present.
 

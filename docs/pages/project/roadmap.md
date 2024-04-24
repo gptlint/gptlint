@@ -2,10 +2,7 @@
 
 ## MVP Public Release
 
-- rule file format
-  - add support for `bad ⇒ good` examples for autofixing
 - rules
-  - **add new rules**
   - rewrite `liberal-accept-strict-produce` to be less verbose and have better examples ([WIP](https://github.com/gptlint/gptlint/pull/14))
   - rewrite `prefer-types-always-valid-states`
   - finish `effective-tsconfig`
@@ -23,6 +20,7 @@
   - add DRY rule for detecting near duplicates
 - add support for different programming languages
 - add support for applying autofixes to linter errors
+  - add support for `bad ⇒ good` examples for autofixing
 - track the positive instances where we see rule conformance as well?
   - could help us output a better picture of overall code health
 - fine-tuning pipeline for core linting task
@@ -47,6 +45,7 @@
   - double-check against [openai best practices](https://platform.openai.com/docs/guides/prompt-engineering)
   - add additional unit tests to evals for edge cases
 - rules
+  - **add new rules**
   - finish `effective-eslint-config`
 - config
   - refactor config resolution - needs a major cleanup
