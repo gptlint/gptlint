@@ -20,7 +20,7 @@ async function main() {
   const destDir = path.join('docs', 'pages', 'rules')
   const ruleFiles = await globby(['rules/*.md', '!rules/readme.md'])
   const metadata: Record<string, any> = {
-    index: 'Overview'
+    index: 'Built-in Rules'
   }
   const rules: types.Rule[] = []
 

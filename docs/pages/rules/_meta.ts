@@ -1,5 +1,5 @@
 export default {
-  index: 'Overview',
+  index: 'Built-in Rules',
   'always-handle-promises': {
     title: 'always-handle-promises',
     display: 'hidden'
