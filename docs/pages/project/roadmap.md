@@ -15,25 +15,26 @@
 
 ## Post-MVP
 
-- cross-file linting (likely using [tree-sitter](https://tree-sitter.github.io/tree-sitter/); see my [initial exploration](https://twitter.com/transitive_bs/status/1776353458813112353))
+- **cross-file linting** (likely using [tree-sitter](https://tree-sitter.github.io/tree-sitter/); see my [initial exploration](https://twitter.com/transitive_bs/status/1776353458813112353))
   - add embedding support for files and functions ([PoC](https://github.com/gptlint/gptlint/pull/6))
-  - add DRY rule for detecting near duplicates
-- add support for different programming languages
-- add support for applying autofixes to linter errors
+  - **add DRY rule for detecting near duplicates**
+- **add support for different programming languages**
+- **add support for applying autofixes to linter errors**
   - add support for `bad ⇒ good` examples for autofixing
 - track the positive instances where we see rule conformance as well?
   - could help us output a better picture of overall code health
-- fine-tuning pipeline for core linting task
-- fine-tuning pipeline for individual rules
+- **fine-tuning pipeline**
+  - for core linting engine
+  - for individual rules
 - explore reinforcement learning with continuous fine-tuning so rule accuracy improves over time
-- explore generating rule definitions from an existing repo (PRs, unique code patterns, etc)
+- **explore generating rule definitions from an existing repo** (PRs, unique code patterns, etc)
 - experiment with ways of making the number of LLM calls sublinear w.r.t. the number of files
   - experiment with using bin packing to optimize context usage, but that's still same `O(tokens)`
 - basic eval graphs and blog post
 - demo video
 - [SARIF support](https://sarifweb.azurewebsites.net/) ([github notes](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/sarif-support-for-code-scanning))
 - linter engine
-  - add support for git diffs
+  - **add support for git diffs**
   - track eval results across multiple llm configs during CI
   - add `--dry-run` support for non-openai llm providers
   - move built-in configs into a separate package
@@ -49,8 +50,6 @@
   - **add new rules**
   - finish `effective-eslint-config`
 - config
-  - refactor config resolution - needs a major cleanup
-    - reconsider rule `scope`
-  - support rule overrides for specific file globs like eslint
+  - reconsider rule `scope` now that we have `overrides`
   - support rule-specific settings like eslint
   - ensure precheck tasks are properly reported as cached

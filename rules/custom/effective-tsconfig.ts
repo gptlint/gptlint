@@ -10,7 +10,7 @@ const tsConfigCache = new Map<string, any>()
 
 export const effectiveTSConfig: Readonly<RuleDefinition> = {
   name: 'effective-tsconfig',
-  title: 'Follow tsconfig best practices.',
+  title: 'Follow tsconfig best practices',
   level: 'error',
   scope: 'project',
   resources: [
