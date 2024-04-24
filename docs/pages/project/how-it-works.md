@@ -129,7 +129,7 @@ In particular, `codeSnippetSource`, `reasoning`, `violation`, and `confidence` w
 
 Most of the built-in rules use `gritql` patterns to filter down the source code to only the most relevant portions before using an LLM to analyze the code for potential rule violations. This helps to drastically reduce the number of files and tokens that the linter uses, resulting in cheaper, faster, and more accurate predictions.
 
-Here is a [comparison](https://github.com/gptlint/gptlint/pull/12#issuecomment-2055042424) of the linter being run with the default rules – with and without GritQL. The GritQL version has been improved further since this benchmark, but it uses roughly 25-30% less tokens.
+Here is a [comparison](https://github.com/gptlint/gptlint/pull/12#issuecomment-2055042424) of the linter being run using the default rules – with and without GritQL. The GritQL version has been improved further since this benchmark, but it uses roughly 25-30% less tokens.
 
 Note that `grit` is an optional dependency and `gptlint` is designed to work if it fails to install.
 

@@ -4,7 +4,7 @@ Suggestions and pull requests are very welcome. 😊
 
 ## Prerequisites
 
-- `Node.js >= 18`
+- `node >= 18`
 - `pnpm >= 8`
 - `OPENAI_API_KEY` exported from `.env`
 
