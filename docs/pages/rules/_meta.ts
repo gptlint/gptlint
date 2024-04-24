@@ -47,5 +47,13 @@ export default {
   'use-correct-english': {
     title: 'use-correct-english',
     display: 'hidden'
+  },
+  'effective-tsconfig': {
+    title: 'effective-tsconfig',
+    display: 'hidden'
+  },
+  'prefer-fetch-over-axios': {
+    title: 'prefer-fetch-over-axios',
+    display: 'hidden'
   }
 }

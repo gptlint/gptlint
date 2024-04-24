@@ -1,5 +1,8 @@
 [
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/always-handle-promises.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "always-handle-promises",
     "title": "Always handle Promises",
     "description": "Promises (and `async` functions which implicitly create Promises) must always be handled at some level of the program, either via:\n\n- using `await` to wait for the Promise to resolve successfully\n- using `.then` or `.catch` to handle Promise resolution\n- returning a Promise to a calling function which itself has to handle the Promise\n\nCreating a Promise or calling an `async` function and NOT awaiting or propagating the resulting Promise using one of these approaches is a code smell and violates this rule.\n\n**Important**: This rule should only apply to function calls which you are 100% sure return a `Promise`. If you do not know for sure that a function returns a `Promise`, then disregard it.\n",
@@ -24,7 +27,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -33,11 +35,12 @@
     ],
     "tags": [
       "best practices"
-    ],
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/always-handle-promises.md",
-    "metadata": {}
+    ]
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/avoid-type-info-in-docs.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "avoid-type-info-in-docs",
     "title": "Don’t repeat type information in documentation",
     "description": "Avoid repeating type information in comments and variable names. In the best case it is duplicative of type declarations, and in the worst it will lead to conflicting information.\n\nConsider including units in variable names if they aren’t clear from the type (e.g., timeMs or temperatureC).\n\nHere is an example of incorrect code:\n\n```ts\n/**\n * Returns a string with the foreground color.\n * Takes zero or one arguments. With no arguments, returns the standard\n * foreground color. With one argument, returns the foreground color for a\n * particular page.\n */\nfunction getForegroundColor(page?: string) {\n  return page === 'login' ? { r: 127, g: 127, b: 127 } : { r: 0, g: 0, b: 0 }\n}\n```\n\nThis is a VIOLATION because the comment describes the types of the function parameters and return type which duplicates the more precise TS definition. Even worse, this example is a VIOLATION because the code and the comment contradict each other.\n\nLet’s assume that the code represents the desired behavior. There are a few issues with this comment:\n\n- It says that the function returns the color as a string when it actually returns an `{r, g, b}` object.\n- It explains that the function takes zero or one arguments, which is already clear from the type signature.\n- It’s needlessly wordy: the comment is longer than the function declaration and implementation.\n\nSince your type annotations are checked by the TypeScript compiler, they’ll never get out of sync with the implementation.\n\nA better comment might look like this:\n\n```ts\n/** Get the foreground color for the application or a specific page. */\nfunction getForegroundColor(page?: string): Color {\n  // ...\n}\n```\n\nComments about a lack of mutation are also suspect. Don’t just say that you don’t modify a parameter:\n\n```ts\n/** Does not modify nums */\nfunction sort(nums: number[]) {\n  /* ... */\n}\n```\n\nInstead, declare the parameter as `readonly` and let TypeScript enforce the contract:\n\n```ts\nfunction sort(nums: readonly number[]) {\n  /* ... */\n}\n```\n\n## Caveats\n\nNote that you do NOT have to include JSDoc comments for a function, and you do NOT have to include `@param` or `@returns` JSDoc properties. These are purely optional, but if they are included, they should not discuss the types of function parameters because TypeScript does a better job of capturing this info in the function definition itself.\n\nIf a comment is providing useful context or clarifying what a parameter is used for, then it should be ignored. This rule is only aimed at comments which duplicate type info or comments which imply immutability.\n",
@@ -57,7 +60,6 @@
     ],
     "negativeExamples": [],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -73,11 +75,12 @@
       "**/*\\.test\\.{js,ts,jsx,tsx,cjs,mjs}"
     ],
     "gritql": "comment",
-    "gritqlNumLinesContext": 3,
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/avoid-type-info-in-docs.md",
-    "metadata": {}
+    "gritqlNumLinesContext": 3
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/consistent-identifier-casing.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "consistent-identifier-casing",
     "title": "Be consistent with identifier casing",
     "description": "Identifiers of the same type should try to use consistent casing.\n\nVariable names should use camelCase.\nGlobal const variable names should either use camelCase, PascalCase, or CONSTANT\\_CASE.\nType names should use PascalCase.\nClass names should use PascalCase.\nFunction names should use camelCase.\n\nExamples of camelCase identifiers include: foo, fooBar, h1RuleNodes, cwd, apiBaseUrl, apiBaseURL, validRuleTableKeysL, and \\_getKey.\n\n## Caveats\n\nThird-party APIs may use inconsistent casing, which is an exception to this rule.\n\nKeys in JSON objects, JS objects, and TypeScript objects may use inconsistent casing, so they are exceptions to this rule.\n\nIgnore identifiers which mix PascalCase with camelCase.\n\nIgnore the casing of common acronyms like API, IP, HTTP, and LLM.\n\nIgnore the casing of identifiers which start with acronyms like `LLMOptionsSchema`.\n\nIgnore parameter names used in inline functions.\n\nIgnore string literals and module names for this rule.\n\nClass member variables and functions may include `_` prefixes.\n",
@@ -106,7 +109,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -120,18 +122,18 @@
       "@typescript-eslint/naming-convention",
       "camelcase"
     ],
-    "gritql": "or {\n  type_identifier() as $id where {\n    and {\n      $id <: within or {\n        type_alias_declaration($name),\n        interface_declaration($name),\n        class_declaration($name)\n      },\n      $id <: $name\n    }\n  },\n\n  identifier() as $id where {\n    or {\n      and {\n        $id <: within or {\n          variable_declarator($name),\n          function_declaration($name),\n          class_declaration($name),\n          method_signature($name),\n          method_definition($name),\n          required_parameter($name),\n          optional_parameter($name)\n        },\n        $id <: $name\n      },\n\n      or {\n        and {\n          $id <: within `function $func($props): $ret {$body}`,\n          $id <: not or { within $body, within $func }\n        },\n        and {\n          $id <: within `function $func($props) {$body}`,\n          $id <: not or { within $body, within $func }\n        },\n        and {\n          $id <: within `($props) => $body`,\n          $id <: not or { within $body }\n        }\n      }\n    }\n  },\n\n  property_identifier() as $id where {\n    and {\n      $id <: within or { method_signature($name), method_definition($name) },\n      $id <: $name\n    }\n  }\n}",
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/consistent-identifier-casing.md",
-    "metadata": {}
+    "gritql": "or {\n  type_identifier() as $id where {\n    and {\n      $id <: within or {\n        type_alias_declaration($name),\n        interface_declaration($name),\n        class_declaration($name)\n      },\n      $id <: $name\n    }\n  },\n\n  identifier() as $id where {\n    or {\n      and {\n        $id <: within or {\n          variable_declarator($name),\n          function_declaration($name),\n          class_declaration($name),\n          method_signature($name),\n          method_definition($name),\n          required_parameter($name),\n          optional_parameter($name)\n        },\n        $id <: $name\n      },\n\n      or {\n        and {\n          $id <: within `function $func($props): $ret {$body}`,\n          $id <: not or { within $body, within $func }\n        },\n        and {\n          $id <: within `function $func($props) {$body}`,\n          $id <: not or { within $body, within $func }\n        },\n        and {\n          $id <: within `($props) => $body`,\n          $id <: not or { within $body }\n        }\n      }\n    }\n  },\n\n  property_identifier() as $id where {\n    and {\n      $id <: within or { method_signature($name), method_definition($name) },\n      $id <: $name\n    }\n  }\n}"
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/liberal-accept-strict-produce.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "liberal-accept-strict-produce",
     "title": "Be liberal in what you accept and strict in what you produce",
     "description": "This idea is known as the robustness principle or Postel’s Law.\n\nAs a general best practice, input types should be broader than output types. Optional properties and union types are more common in parameter types than return types.\n\nTo reuse types between parameters and return types, it's often useful to introduce a canonical form (for return types) and a looser form (for parameters).\n\n---\n\nAs an example, a 3D mapping API might provide a way to position the camera and to calculate a viewport for a bounding box:\n\n```ts\ndeclare function setCamera(camera: CameraOptions): void\ndeclare function viewportForBounds(bounds: LngLatBounds): CameraOptions\n```\n\nIt is convenient that the result of `viewportForBounds` can be passed directly to `setCamera` to position the camera.\n\nLet’s look at the definitions of these types:\n\n```ts\ninterface CameraOptions {\n  center?: LngLat\n  zoom?: number\n  bearing?: number\n  pitch?: number\n}\n\ntype LngLat =\n  | { lng: number; lat: number }\n  | { lon: number; lat: number }\n  | [number, number]\n```\n\nThe fields in `CameraOptions` are all optional because you might want to set just the center or zoom without changing the bearing or pitch. The `LngLat` type also makes `setCamera` liberal in what it accepts: you can pass in a `{lng, lat}` object, a `{lon, lat}` object, or a `[lng, lat]` pair if you’re confident you got the order right. These accommodations make the function easy to call.\n\nThe viewportForBounds function takes in another “liberal” type:\n\n```ts\ntype LngLatBounds =\n  | { northeast: LngLat; southwest: LngLat }\n  | [LngLat, LngLat]\n  | [number, number, number, number]\n```\n\nYou can specify the bounds either using named corners, a pair of lat/lngs, or a four- tuple if you’re confident you got the order right. Since LngLat already accommodates three forms, there are no fewer than 19 possible forms for LngLatBounds. Liberal indeed!\n\nNow let’s write a function that adjusts the viewport to accommodate a GeoJSON Fea‐ ture and stores the new viewport in the URL:\n\n```ts\nfunction focusOnFeature(f: Feature) {\n  const bounds = calculateBoundingBox(f)\n  const camera = viewportForBounds(bounds)\n  setCamera(camera)\n  const {\n    center: { lat, lng },\n    zoom\n  } = camera\n  // ~~~ Property 'lat' does not exist on type ...\n  // ~~~ Property 'lng' does not exist on type ... zoom; // Type is number | undefined\n  window.location.search = `?v=@${lat},${lng}z${zoom}`\n}\n```\n\nWhoops! Only the zoom property exists, but its type is inferred as `number|undefined`, which is also problematic. The issue is that the type declaration for `viewportFor Bounds` indicates that it is liberal not just in what it accepts but also in what it pro‐ duces. The only type-safe way to use the camera result is to introduce a code branch for each component of the union type.\n\nThe return type with lots of optional properties and union types makes `viewportFor Bounds` difficult to use. **Its broad parameter type is convenient, but its broad return type is not. A more convenient API would be strict in what it produces.**\n\nOne way to do this is to distinguish a canonical format for coordinates. Following JavaScript’s convention of distinguishing “Array” and “Array-like”, you can draw a distinction between `LngLat` and `LngLatLike`. You can also distinguish between a fully defined Camera type and the partial version accepted by setCamera:\n\n```ts\ninterface LngLat {\n  lng: number\n  lat: number\n}\ntype LngLatLike = LngLat | { lon: number; lat: number } | [number, number]\ninterface Camera {\n  center: LngLat\n  zoom: number\n  bearing: number\n  pitch: number\n}\ninterface CameraOptions extends Omit<Partial<Camera>, 'center'> {\n  center?: LngLatLike\n}\ntype LngLatBounds =\n  | { northeast: LngLatLike; southwest: LngLatLike }\n  | [LngLatLike, LngLatLike]\n  | [number, number, number, number]\n\ndeclare function setCamera(camera: CameraOptions): void\ndeclare function viewportForBounds(bounds: LngLatBounds): Camera\n```\n\nThe loose `CameraOptions` type adapts the stricter `Camera` type.\n\nUsing `Partial<Camera>` as the parameter type in `setCamera` would not work here since you do want to allow `LngLatLike` objects for the `center` property. And you can’t write `\"CameraOptions extends Partial<Camera>\"` since `LngLatLike` is a superset of `LngLat`, not a subset. If this seems too complicated, you could also write the type out explicitly at the cost of some repetition:\n\n```ts\ninterface CameraOptions {\n  center?: LngLatLike\n  zoom?: number\n  bearing?: number\n  pitch?: number\n}\n```\n\nIn either case, with these new type declarations the `focusOnFeature` function passes the type checker:\n\n```ts\nfunction focusOnFeature(f: Feature) {\n  const bounds = calculateBoundingBox(f)\n  const camera = viewportForBounds(bounds)\n  setCamera(camera)\n\n  const {\n    center: { lat, lng },\n    zoom\n  } = camera // OK zoom; // Type is number\n  window.location.search = `?v=@${lat},${lng}z${zoom}`\n}\n```\n\nThis time the type of zoom is number, rather than `number|undefined`. The `viewport ForBounds` function is now much easier to use. If there were any other functions that produced bounds, you would also need to introduce a canonical form and a distinction between `LngLatBounds` and `LngLatBoundsLike`.\n\nIs allowing 19 possible forms of bounding box a good design? Perhaps not. But if you’re writing type declarations for a library that does this, you need to model its behavior. Just don’t have 19 return types.\n",
     "positiveExamples": [],
     "negativeExamples": [],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -147,11 +149,12 @@
       "**/*\\.test\\.{js,ts,jsx,tsx,cjs,mjs}"
     ],
     "gritql": "function_declaration",
-    "gritqlNumLinesContext": 3,
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/liberal-accept-strict-produce.md",
-    "metadata": {}
+    "gritqlNumLinesContext": 3
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/no-hardcoded-secrets.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "no-hardcoded-secrets",
     "title": "No hardcoded secrets",
     "description": "Sensitive secrets should never be hardcoded in git because they represent a serious security risk.\n\nCommon use cases for secrets include:\n\n- private API keys and tokens\n- authentication and authorization\n- third-party service config\n- private encryption keys\n- cryptographic secrets for signing requests\n\nThe most common solution is to only access secrets from environment variables so they aren't committed as code.\n",
@@ -184,7 +187,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -194,11 +196,12 @@
       "security"
     ],
     "gritql": "or { string(), template_string() } as $str where {\n  $str <: not within import_statement(),\n  $length = length($str),\n  not or {\n    $length <: 1,\n    $length <: 2,\n    $length <: 3,\n    $length <: 4,\n    $length <: 5,\n    $length <: 6,\n  }\n}",
-    "gritqlNumLinesContext": 3,
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/no-hardcoded-secrets.md",
-    "metadata": {}
+    "gritqlNumLinesContext": 3
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-array-at-negative-indexing.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "prefer-array-at-negative-indexing",
     "title": "Prefer using Array.at when indexing from the end of an array",
     "description": "When accessing items in an array from the end, like the last item, prefer using `Array.at` with a negative index because it is less error-prone. Note that using `Array.at` with a positive index is equivalent to indexing into the array normally, and if `Array.at` references a non-existing index, it will return `undefined`.\n",
@@ -223,7 +226,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -240,11 +242,12 @@
       "https://twitter.com/housecor/status/1768622518179369036"
     ],
     "gritql": "subscript_expression",
-    "gritqlNumLinesContext": 3,
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-array-at-negative-indexing.md",
-    "metadata": {}
+    "gritqlNumLinesContext": 3
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-loose-array-bounds-checks-in-loops.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "prefer-loose-array-bounds-checks-in-loops",
     "title": "Prefer loose array bounds checks in loops",
     "description": "Array bounds checks within loops should verify if a variable is `>=` or `<=` the array length instead of exactly equal to the array length. Performing strict bound checks on arrays in loops is brittle and a common cause of subtle bugs.\n\n```js\nfunction handleTasks() {\n  const tasks = [\n    // ...\n  ]\n  let currentTaskIndex = 0\n\n  do {\n    const currentTask = tasks[currentTaskIndex]\n\n    // process task\n    // ...\n\n    currentTaskIndex++\n  } while (currentTaskIndex !== tasks.length)\n}\n```\n\nThis example has two bugs:\n\n- if `tasks` is empty, the first iteration of the while loop will throw an error\n- the `while` loop guard is very brittle which is a code smell. if `currentTaskIndex` somehow gets changed in an unexpected way with future code changes, then the `while` loop guard could end up going past the end of the tasks array!\n\nAn improved version of this code which fixes these buse looks like:\n\n```js\nfunction handleTasks() {\n  const tasks = [\n    // ...\n  ]\n  let currentTaskIndex = 0\n\n  while (currentTaskIndex < tasks.length) {\n    const currentTask = tasks[currentTaskIndex]\n\n    // process task\n    // ...\n\n    currentTaskIndex++\n  }\n}\n```\n",
@@ -281,7 +284,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -294,18 +296,18 @@
     "exclude": [
       "**/*.test\\.{js,ts,jsx,tsx,cjs,mjs}"
     ],
-    "gritql": "or {\n  any_equals(a = `$foo.length`, $b),\n  any_not_equals(a = `$foo.length`, $b)\n} as $op where {\n  $op <: within or {\n    do_statement(),\n    while_statement(),\n    for_statement()\n  }\n}",
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-loose-array-bounds-checks-in-loops.md",
-    "metadata": {}
+    "gritql": "or {\n  any_equals(a = `$foo.length`, $b),\n  any_not_equals(a = `$foo.length`, $b)\n} as $op where {\n  $op <: within or {\n    do_statement(),\n    while_statement(),\n    for_statement()\n  }\n}"
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-types-always-valid-states.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "prefer-types-always-valid-states",
     "title": "Prefer types that always represent valid states",
     "description": "A key to effective type design is crafting types that can only represent a valid state. This rule walks through a few examples of how this can go wrong and shows you how to fix them.\n\nAs an example, suppose you’re building a web application that lets you select a page, loads the con‐ tent of that page, and then displays it. You might write the state like this:\n\n```ts\ninterface State {\n  pageText: string\n  isLoading: boolean\n  error?: string\n}\n```\n\nWhen you write your code to render the page, you need to consider all of these fields:\n\n```ts\nfunction renderPage(state: State) {\n  if (state.error) {\n    return `Error! Unable to load ${currentPage}: ${state.error}`\n  } else if (state.isLoading) {\n    return `Loading ${currentPage}...`\n  }\n  return `<h1>${currentPage}</h1>\\n${state.pageText}`\n}\n```\n\nIs this right, though? What if `isLoading` and `error` are both set? What would that mean? Is it better to display the loading message or the error message? It’s hard to say! There’s not enough information available.\n\nOr what if you’re writing a `changePage` function? Here’s an attempt:\n\n```ts\nasync function changePage(state: State, newPage: string) {\n  state.isLoading = true\n  try {\n    const response = await fetch(getUrlForPage(newPage))\n    if (!response.ok) {\n      throw new Error(`Unable to load ${newPage}: ${response.statusText}`)\n    }\n    const text = await response.text()\n    state.isLoading = false\n    state.pageText = text\n  } catch (e) {\n    state.error = '' + e\n  }\n}\n```\n\nThere are many problems with this! Here are a few:\n\n- We forgot to set `state.isLoading` to `false` in the error case.\n- We didn’t clear out `state.error`, so if the previous request failed, then you’ll keep seeing that error message instead of a loading message.\n- If the user changes pages again while the page is loading, who knows what will happen. They might see a new page and then an error, or the first page and not the second depending on the order in which the responses come back.\n\nThe problem is that the state includes both too little information (which request failed? which is loading?) and too much: the `State` type allows both `isLoading` and `error` to be set, **even though this represents an invalid state**. This makes both `render()` and `changePage()` impossible to implement well.\n\nHere’s a better way to represent the application state:\n\n```ts\ninterface RequestPending {\n  state: 'pending'\n}\ninterface RequestError {\n  state: 'error'\n  error: string\n}\ninterface RequestSuccess {\n  state: 'ok'\n  pageText: string\n}\ntype RequestState = RequestPending | RequestError | RequestSuccess\ninterface State {\n  currentPage: string\n  requests: { [page: string]: RequestState }\n}\n```\n\nThis uses a tagged union (also known as a “discriminated union”) to explicitly model the different states that a network request can be in. This version of the state is three to four times longer, but it has the enormous advantage of not admitting invalid states. The current page is modeled explicitly, as is the state of every request that you issue. As a result, the `renderPage` and `changePage` functions are easy to implement:\n\n```ts\nfunction renderPage(state: State) {\n  const { currentPage } = state\n  const requestState = state.requests[currentPage]\n\n  switch (requestState.state) {\n    case 'pending':\n      return `Loading ${currentPage}...`\n    case 'error':\n      return `Error! Unable to load ${currentPage}: ${requestState.error}`\n    case 'ok':\n      return `<h1>${currentPage}</h1>\\n${requestState.pageText}`\n  }\n}\n\nasync function changePage(state: State, newPage: string) {\n  state.requests[newPage] = { state: 'pending' }\n  state.currentPage = newPage\n\n  try {\n    const response = await fetch(getUrlForPage(newPage))\n    if (!response.ok) {\n      throw new Error(`Unable to load ${newPage}: ${response.statusText}`)\n    }\n    const pageText = await response.text()\n    state.requests[newPage] = { state: 'ok', pageText }\n  } catch (e) {\n    state.requests[newPage] = { state: 'error', error: '' + e }\n  }\n}\n```\n\nThe ambiguity from the first implementation is entirely gone: it’s clear what the cur‐ rent page is, and every request is in exactly one state. If the user changes the page after a request has been issued, that’s no problem either. The old request still com‐ pletes, but it doesn’t affect the UI.\n\n---\n\nOftentimes this rule pairs with the ideal of having as little mutable state as possible and preferring to derive state based on a small source of truth which is always valid.\n\nFor example, let's say you have a product resource:\n\n```ts\nclass Product {\n  isInStock: boolean\n  quantityAvailable: number\n}\n```\n\n`Product` has a few problems here:\n\n- `isInStock` can be false with `quantityAvailable > 0` which doesn't make any sense\n- `isInStock` can be true with `quantityAvailable === 0` which doesn't make any sense\n\nThe problem comes from `Product.isInStock` and `Product.quantityAvailable` both representing different aspects of the same underling data: in this case, how much of a product is currently available.\n\nA better solution would be to only store the minimal state necessary to model the `Product`'s valid states, and then derive any additional fields based on the model's minimal, valid state:\n\n```ts\nclass Product {\n  quantityAvailable: number\n\n  get isInStock() {\n    // Derived based on `quantityAvailable` which guarantees that the product's\n    // state is always valid.\n    return this.quantityAvailable > 0\n  }\n}\n```\n\n## Caveats\n\nWhen working with external APIs and data sources, it's not always possible to work with types which only represent valid state. So this rule should ignore any data coming from external dependencies and focus instead on types used internally within this project.\n\n## Key Takeaways\n\nTypes that represent both valid and invalid states are likely to lead to confusing and error-prone code.\n\nPrefer types that only represent valid states. Even if they are longer or harder to express, they will save you time and pain in the end.\n\nIf a field is useful, but adding it to a type could result the type representing invalid states, then consider whether that field can be derived from a minimal set of state that is always valid.\n",
     "positiveExamples": [],
     "negativeExamples": [],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -322,11 +324,12 @@
       "**/*\\.{js,cjs,mjs,json}"
     ],
     "gritql": "or {\n  type_alias_declaration(),\n  interface_declaration()\n}",
-    "gritqlNumLinesContext": 3,
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-types-always-valid-states.md",
-    "metadata": {}
+    "gritqlNumLinesContext": 3
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/react-avoid-class-components.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "react-avoid-class-components",
     "title": "Don't use React class components",
     "description": "React class components are deprecated. Use React functions and hooks instead.\n\nNote that uses `classes` is fine for non-react components.\n",
@@ -351,7 +354,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -367,11 +369,12 @@
     "include": [
       "**/*.{jsx,tsx}"
     ],
-    "gritql": "react_class_component",
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/react-avoid-class-components.md",
-    "metadata": {}
+    "gritql": "react_class_component"
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/semantic-variable-names.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "semantic-variable-names",
     "title": "Use semantic variable names",
     "description": "Variable names should be descriptive and capture the semantics of the value they represent. This makes it easier to read and understand code. It also makes it clearer when variables are being misused.\n\n## Caveats\n\nAn exception to this rule is that it is acceptable to use simple variable names like `i` in `for` loops.\n\nAn exception to this rule is that math-heavy code may use simple variable names within the scope of a mathematically dense function.\n\nCommon acronyms like `api`, `ast`, and `llm` are fine even though they aren't as descriptive.\n\n`res`, `result`, and `data` are common exceptions that are okay to ignore.\n\nVariables names which mirror the corresponding type name are okay to ignore.\n\nKeys in objects and JS/TS strings are not variable names, so they should be ignored.\n\nIf a value isn't a variable name, then it should be ignored.\n\nThis rule should be ignored in test files.\n\nThe names of file imports from third-party APIs and modules should be ignored because we have no control over them.\n\nIf you are unsure whether or not a variable name is descriptive enough, err on the side of caution by setting `confidence` to `low`.\n",
@@ -408,7 +411,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -422,11 +424,12 @@
       "**/*\\.test\\.{js,ts,jsx,tsx,cjs,mjs}"
     ],
     "gritql": "identifier() as $id where {\n  or {\n    and {\n      $id <: within or {\n        variable_declarator($name),\n        required_parameter($name),\n        optional_parameter($name)\n      },\n      $id <: $name\n    },\n\n    or {\n      and {\n        $id <: within `function $func($props): $ret {$body}`,\n        $id <: not or { within $body, within $func }\n      },\n      and {\n        $id <: within `function $func($props) {$body}`,\n        $id <: not or { within $body, within $func }\n      },\n      and {\n        $id <: within `($props) => $body`,\n        $id <: not within $body\n      }\n    }\n  }\n}",
-    "gritqlNumLinesContext": 2,
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/semantic-variable-names.md",
-    "metadata": {}
+    "gritqlNumLinesContext": 2
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/soc2-no-leak-user-data.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "soc2-no-leak-user-data",
     "title": "SOC2 Don't leak user data",
     "description": "Don't log potentially sensitive customer data or we'll lose our SOC2 certification.\n\nNon-identifying user data such as internal IDs or other internal models related to a user are fine to log and expose.\n",
@@ -471,7 +474,6 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "languages": [
@@ -482,11 +484,12 @@
       "security"
     ],
     "gritql": "or {\n  `console.$method($args)`,\n  `logger.$method($args)`,\n  `log.$method($args)`,\n  `throw new $Error($msg)`\n}",
-    "gritqlNumLinesContext": 2,
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/soc2-no-leak-user-data.md",
-    "metadata": {}
+    "gritqlNumLinesContext": 2
   },
   {
+    "source": "/Users/tfischer/dev/modules/gptlint/rules/use-correct-english.md",
+    "cacheable": true,
+    "metadata": {},
     "name": "use-correct-english",
     "title": "Docs should use correct English spelling and grammar",
     "description": "All comments and documentation should use correct English spelling and grammar. Obvious spelling errors should be repoted as violations.\n\nThis rule applies to code comments, JSDoc comments, and markdown documentation.\n\n## Caveats\n\nThis rule does *not* apply to code identifiers (variable names, function names, type names, etc) which often use shorthand.\n\nThis rule also does not apply to `TODO` comments.\n",
@@ -502,14 +505,11 @@
       }
     ],
     "fixable": false,
-    "cacheable": true,
     "level": "error",
     "scope": "file",
     "tags": [
       "best practices"
     ],
-    "gritql": "comment",
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/use-correct-english.md",
-    "metadata": {}
+    "gritql": "comment"
   }
 ]

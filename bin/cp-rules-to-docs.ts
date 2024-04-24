@@ -5,34 +5,32 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 
 import { gracefulExit } from 'exit-hook'
-import { globby } from 'globby'
 import pMap from 'p-map'
 
 import type * as types from '../src/types.js'
+import { recommendedConfig } from '../src/default-config.js'
 import { formatSource } from '../src/formatter.js'
-import { parseRuleFilePath } from '../src/parse-rule-file.js'
-import { stringifyExamples } from '../src/rule-utils.js'
+import { stringifyExamples, validateRule } from '../src/rule-utils.js'
+import { assert } from '../src/utils.js'
 
 /**
  * Internal script for copying built-in rules to docs.
  */
 async function main() {
   const destDir = path.join('docs', 'pages', 'rules')
-  const ruleFiles = await globby(['rules/*.md', '!rules/readme.md'])
+  const builtInRuleDefinitions = recommendedConfig[0]!.ruleDefinitions!
+  assert(builtInRuleDefinitions)
   const metadata: Record<string, any> = {
     index: 'Built-in Rules'
   }
-  const rules: types.Rule[] = []
 
-  await pMap(
-    ruleFiles,
-    async (file) => {
-      const srcPath = path.resolve(file)
-      const fileName = file.split('/').pop()!
+  const rules: types.Rule[] = await pMap(
+    builtInRuleDefinitions,
+    async (ruleDefinition) => {
+      const rule = validateRule(ruleDefinition)
+      const fileName = `${rule.name}.md`
       const destPath = path.join(destDir, fileName)
-      const rule = await parseRuleFilePath(srcPath)
 
-      rules.push(rule)
       metadata[rule.name] = {
         title: rule.name,
         display: 'hidden'
@@ -86,6 +84,7 @@ async function main() {
       })
 
       await fs.writeFile(destPath, formattedRuleSource)
+      return rule
     },
     {
       concurrency: 1

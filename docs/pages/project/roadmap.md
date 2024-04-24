@@ -8,6 +8,7 @@
   - finish `effective-tsconfig`
 - project
   - stress test w/ real-world repos
+  - finish `usage.md` doc
   - social image for docs and launch
     - twitter thread
   - public launch! 🚀
