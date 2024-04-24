@@ -180,6 +180,11 @@ export const LinterConfigSchema = z
         'An optional array of glob patterns for the files to process. If not specified, the configuration object applies to all files matched by any other configuration object.'
       ),
 
+    dotenvPath: z
+      .string()
+      .optional()
+      .describe('An optional custom path to the .env file'),
+
     ignores: z
       .array(z.string())
       .optional()

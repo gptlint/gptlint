@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import 'dotenv/config'
+
+import '../src/dotenv-config.js'
 
 import { gracefulExit } from 'exit-hook'
 import plur from 'plur'

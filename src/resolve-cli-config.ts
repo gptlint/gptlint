@@ -74,6 +74,10 @@ export async function resolveLinterCLIConfig(
           type: String,
           description: 'Customize the path to the cache directory'
         },
+        dotenvPath: {
+          type: String,
+          description: 'Customize the path to the .env file'
+        },
         concurrency: {
           type: Number,
           description: 'Limits the maximum number of concurrent tasks'
@@ -189,6 +193,7 @@ export async function resolveLinterCLIConfig(
     files: files.length > 0 ? files : undefined,
     ignores: ignores.length > 0 ? ignores : undefined,
     ruleFiles: args.flags.rules.length > 0 ? args.flags.rules : undefined,
+    dotenvPath: args.flags.dotenvPath,
     linterOptions: {
       noInlineConfig: args.flags.noInlineConfig,
       earlyExit: args.flags.earlyExit,
