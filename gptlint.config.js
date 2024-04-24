@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { recommendedConfig } from './dist/src/index.js'
+import { recommendedConfig } from 'gptlint'
 
 /** @type {import('gptlint').GPTLintConfig} */
 export default [

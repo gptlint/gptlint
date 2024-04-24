@@ -5,6 +5,5 @@ export default {
   limitations: 'Limitations',
   faq: 'FAQ',
   support: 'Support',
-  roadmap: 'Roadmap',
-  license: 'License'
+  roadmap: 'Roadmap'
 }

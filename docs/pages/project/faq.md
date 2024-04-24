@@ -40,7 +40,10 @@ See [LLM providers](../guide/llm-providers.md).
 You can disable a rule for a project by adding a config file at the root:
 
 ```js filename="gptlint.config.js"
+import { recommendedConfig } from 'gptlint'
+
 export default [
+  ...recommendedConfig,
   {
     rules: {
       'prefer-fetch-over-axios': 'off'

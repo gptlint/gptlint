@@ -19,6 +19,16 @@ You can always run `gptlint --print-config` to print out exactly what rules, fil
 
 **The `--print-config` option is extremely useful** for making sure your project is set up correctly and for validating your understanding of how the linter works under the hood.
 
+## Default Config
+
+The default config is available like so:
+
+```ts
+import { recommendedConfig } from 'gptlint'
+```
+
+`recommendedConfig` is an array of `LinterConfig` objects which enable the [default rule set](/rules). If you do not specify a custom config file, then the recommended config will be applied by default. If you do specify a custom config file, then you must manually opt-in to the default rules like in the examples below. This design makes it easy to add support for third-party NPM packages and reusable bundles of custom configs instead of treating the built-in rules specially.
+
 ## Config File
 
 The GPTLint configuration file may be named any of the following:
@@ -30,7 +40,10 @@ The GPTLint configuration file may be named any of the following:
 It should be placed in the root directory of your project and export an array of [configuration objects](#linterconfig-objects). Here’s an example:
 
 ```js filename="gptlint.config.js"
+import { recommendedConfig } from 'gptlint'
+
 export default [
+  ...recommendedConfig,
   {
     rules: {
       'always-handle-promises': 'warn',
@@ -104,10 +117,12 @@ export default {
 ```
 
 ```js filename="gptlint.config.js"
+import { recommendedConfig } from 'gptlint'
 import myCustomRule from './my-custom-rule.js'
 
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
+  ...recommendedConfig,
   {
     ruleDefinitions: [myCustomRule]
   }
@@ -119,8 +134,11 @@ export default [
 **Using `gpt-4-turbo-preview`** as the strong model:
 
 ```js filename="gptlint.config.js"
+import { recommendedConfig } from 'gptlint'
+
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
+  ...recommendedConfig,
   {
     llmOptions: {
       model: 'gpt-4-turbo-preview',
@@ -135,8 +153,11 @@ export default [
 See [Using Anthropic](./llm-providers.md#anthropic) for more info.
 
 ```js filename="gptlint.config.js"
+import { recommendedConfig } from 'gptlint'
+
 /** @type {import('gptlint').GPTLintConfig} */
 export default [
+  ...recommendedConfig,
   {
     llmOptions: {
       apiBaseUrl: 'https://openrouter.ai/api/v1',
@@ -146,7 +167,7 @@ export default [
       kyOptions: {
         headers: {
           // Optional, for including your app on openrouter.ai rankings.
-          'HTTP-Referer': 'https://github.com/gptlint/gptlint',
+          'HTTP-Referer': 'https://gptlint.dev',
           // Optional, shows in rankings on openrouter.ai.
           'X-Title': 'gptlint'
         }
@@ -158,9 +179,7 @@ export default [
 
 ## Differences from ESLint Config Format
 
-Currently, all `gptlint` config objects are merged together into a single, flat, final config. This differs from ESLint's config array in that individual ESLint config objects can target different files with different config settings.
-
-Our goal is to match `gptlint`'s flat file config behavior 1:1 in the future, with the current solution being a compromise that seems to work well in practice.
+Currently, all `gptlint` config objects are merged together into a single, flat, final config. This differs from ESLint's config array in that individual ESLint config objects can target different files with different config settings. Here we chose to use an optional `overrides` field so you can customize rule settings for specific files.
 
 <Callout>
   If you're ever not sure how your config is being resolved or why you're seeing
