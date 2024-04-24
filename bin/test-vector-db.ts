@@ -8,7 +8,7 @@ import { createEmbeddingModel } from '../src/create-embedding-model.js'
 import { resolveLinterCLIConfig } from '../src/resolve-cli-config.js'
 import { resolveFiles } from '../src/resolve-files.js'
 import { resolveRules } from '../src/resolve-rules.js'
-import { logDebugConfig, omit } from '../src/utils.js'
+import { omit, validateLinterInputs } from '../src/utils.js'
 import { connectToVectorDB, getFileTable } from '../src/vector-db.js'
 
 /**
@@ -39,11 +39,9 @@ async function main() {
     return gracefulExit(1)
   }
 
-  if (config.linterOptions.printConfig) {
-    logDebugConfig({ rules, files, config })
-    return gracefulExit(0)
+  if (!validateLinterInputs({ files, rules, config })) {
+    return
   }
-
   const embeddingModel = createEmbeddingModel(config)
 
   const db = await connectToVectorDB(config.lanceDBOptions)
@@ -78,7 +76,6 @@ async function main() {
 
   const fileIndex = files.findIndex((file) => file.fileName === 'utils.test.ts')
   const vector = embeddingsBatch.embeddings[fileIndex]!
-  fileTable.display()
 
   const results0 = (await fileTable
     .vectorSearch(vector)

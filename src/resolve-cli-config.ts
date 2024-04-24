@@ -163,9 +163,6 @@ export async function resolveLinterCLIConfig(
   }
 
   const files = args._.fileDirGlob.slice(2)
-  // if (files.length === 0) {
-  //   files = ['**/*.{js,ts,jsx,tsx,cjs,mjs}']
-  // }
 
   let ignores = args.flags.noIgnore ? [] : args.flags.ignorePattern
   if (args.flags.ignoreFile && !args.flags.noIgnore) {

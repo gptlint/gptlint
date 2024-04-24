@@ -488,6 +488,7 @@ export class ResolvedLinterConfig
       | 'rules'
       | 'linterOptions'
       | 'llmOptions'
+      | 'lanceDBOptions'
     >
 {
   readonly config: FullyResolvedLinterConfig
@@ -556,6 +557,10 @@ export class ResolvedLinterConfig
 
   get llmOptions(): ResolvedLLMOptions {
     return this.config.llmOptions
+  }
+
+  get lanceDBOptions(): ResolvedLanceDBOptions {
+    return this.config.lanceDBOptions
   }
 
   getRuleSettingsForFile(
