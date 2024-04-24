@@ -20,6 +20,8 @@ async function main() {
   const destDir = path.join('docs', 'pages', 'rules')
   const builtInRuleDefinitions = recommendedConfig[0]!.ruleDefinitions!
   assert(builtInRuleDefinitions)
+  builtInRuleDefinitions.sort((a, b) => a.name.localeCompare(b.name))
+
   const metadata: Record<string, any> = {
     index: 'Built-in Rules'
   }

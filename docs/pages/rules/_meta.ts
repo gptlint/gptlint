@@ -12,6 +12,10 @@ export default {
     title: 'consistent-identifier-casing',
     display: 'hidden'
   },
+  'effective-tsconfig': {
+    title: 'effective-tsconfig',
+    display: 'hidden'
+  },
   'liberal-accept-strict-produce': {
     title: 'liberal-accept-strict-produce',
     display: 'hidden'
@@ -22,6 +26,10 @@ export default {
   },
   'prefer-array-at-negative-indexing': {
     title: 'prefer-array-at-negative-indexing',
+    display: 'hidden'
+  },
+  'prefer-fetch-over-axios': {
+    title: 'prefer-fetch-over-axios',
     display: 'hidden'
   },
   'prefer-loose-array-bounds-checks-in-loops': {
@@ -46,14 +54,6 @@ export default {
   },
   'use-correct-english': {
     title: 'use-correct-english',
-    display: 'hidden'
-  },
-  'effective-tsconfig': {
-    title: 'effective-tsconfig',
-    display: 'hidden'
-  },
-  'prefer-fetch-over-axios': {
-    title: 'prefer-fetch-over-axios',
     display: 'hidden'
   }
 }
