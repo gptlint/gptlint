@@ -100,6 +100,6 @@ These will generally happen because of the following reasons:
   - If you still think your rule would be a better fit for `gptlint`, then feel free to open an issue in the repo to discuss.
 - The rule still isn't performing well enough in practice.
   - There are any number of potential solutions, including improving `gptlint`'s core linter engine and/or fine-tuning.
-  - **Solution**: [Reach out to us for support](https://gptlint.dev/project/support).
+  - **Solution**: [Reach out to us for support](https://gptlint.dev/project/faq#where-can-i-get-support).
 
 **NOTE**: If you're trying to get a rule working consistently, double check that it fits the [rule guidelines](https://gptlint.dev/extend/rule-guidelines) before spending too much time iterating on it.

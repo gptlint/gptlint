@@ -4,6 +4,5 @@ export default {
   cost: 'Cost',
   limitations: 'Limitations',
   faq: 'FAQ',
-  support: 'Support',
   roadmap: 'Roadmap'
 }

@@ -10,7 +10,6 @@
   - stress test w/ real-world repos
   - social image for docs and launch
     - twitter thread
-  - publish to NPM
   - public launch! 🚀
 
 ## Post-MVP
