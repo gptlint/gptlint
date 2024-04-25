@@ -49,6 +49,7 @@
 - rules
   - **add new rules**
   - finish `effective-eslint-config`
+  - add http link to rule when reporting violation
 - config
   - reconsider rule `scope` now that we have `overrides`
   - support rule-specific settings like eslint

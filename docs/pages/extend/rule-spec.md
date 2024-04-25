@@ -125,6 +125,6 @@ All metadata keys are case-sensitive, and all metadata values must match their e
 
 ## Example Rules
 
-Documentation for all built-in rules is available [here](../rules/index) and their source is available [here](https://github.com/gptlint/gptlint/tree/main/rules).
+Documentation for all built-in rules is available [here](/rules) and their source is available [here](https://github.com/gptlint/gptlint/tree/main/rules).
 
-Parsing-wise, [fixtures/rules](https://github.com/gptlint/gptlint/tree/main/fixtures/rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules](https://github.com/gptlint/gptlint/tree/main/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
+Parsing-wise, [fixtures/valid-rules](https://github.com/gptlint/gptlint/tree/main/fixtures/valid-rules) contains valid rules which test different parts of the spec, and [fixtures/invalid-rules](https://github.com/gptlint/gptlint/tree/main/fixtures/invalid-rules) contains invalid rules which violate the spec and should fail parsing.
