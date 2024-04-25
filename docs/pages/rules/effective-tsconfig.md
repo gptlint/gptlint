@@ -1,4 +1,4 @@
-# Follow tsconfig best practices.
+# Follow tsconfig best practices
 
 ## Metadata
 

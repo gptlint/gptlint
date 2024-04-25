@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import 'dotenv/config'
 
+import chalk from 'chalk'
 import { gracefulExit } from 'exit-hook'
 import plur from 'plur'
 import restoreCursor from 'restore-cursor'
@@ -71,20 +72,22 @@ async function main() {
 
   if (lintResult.lintErrors.length > 0) {
     console.log(
-      `\nlint errors:`,
+      `\n${chalk.bold('lint errors:')}`,
       JSON.stringify(lintResult.lintErrors, undefined, 2)
     )
 
     console.log(
-      `\nfound ${lintResult.lintErrors.length} lint ${plur(
-        'error',
-        lintResult.lintErrors.length
+      `\n${chalk.bold(
+        `found ${lintResult.lintErrors.length} lint ${plur(
+          'error',
+          lintResult.lintErrors.length
+        )}`
       )}`
     )
 
     return gracefulExit(1)
   } else {
-    console.log('\nno lint errors 🎉')
+    console.log(`\n${chalk.bold('no lint errors')} 🎉`)
     return gracefulExit(0)
   }
 }
