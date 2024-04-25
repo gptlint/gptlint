@@ -44,8 +44,7 @@ export type RuleDefinition<Metadata extends RuleMetadata = RuleMetadata> = {
 export type Rule<Metadata extends RuleMetadata = RuleMetadata> =
   RuleDefinition<Metadata> & {
     // internal metadata
-    source: string
-    metadata: Metadata
+    metadata?: Metadata
   }
 
 export const RuleDefinitionExampleSchema = z
@@ -216,9 +215,7 @@ export const RuleDefinitionSchema = z
       .optional()
       .describe(
         'Optional post-processing linter logic specific to this rule. Will be run after the built-in post-processing logic. Useful for customizing the linting results in a rule-specific way such as pruning common false positives.'
-      ),
-
-    source: z.string().optional()
+      )
   })
   // It is important for this to be a `passthrough` because we use additional
   // properties on the rule object which are not defined in the rule definition

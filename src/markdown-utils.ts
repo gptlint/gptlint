@@ -82,7 +82,6 @@ export function parseRuleNode({
     cacheable: true,
     level: 'error',
     scope: 'file',
-    source: filePath,
     metadata: {},
     ...partialRule
   })

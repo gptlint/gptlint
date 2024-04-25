@@ -52,7 +52,6 @@ export function validateRule(
   )
 
   const rule: types.Rule = {
-    source: 'custom',
     cacheable: true,
     metadata: {},
     ...parsedRule.data

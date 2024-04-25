@@ -61,10 +61,9 @@ export async function resolveRules({
   const customRules: types.Rule[] = (config.ruleDefinitions ?? []).map(
     (ruleDefinition) => {
       const rule: types.Rule = {
-        source: 'custom',
         cacheable: true,
-        ...ruleDefinition,
-        metadata: {}
+        metadata: {},
+        ...ruleDefinition
       }
 
       assert(isValidRuleName(rule.name), `Invalid rule name "${rule.name}"`)

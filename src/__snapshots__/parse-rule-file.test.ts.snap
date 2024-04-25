@@ -11,7 +11,6 @@ exports[`parseRuleFile - fixtures/valid-rules/empty-examples.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/valid-rules/empty-examples.md",
   "title": "Example",
 }
 `;
@@ -59,7 +58,6 @@ type Query {
     },
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/force-list-pagination.md",
   "tags": [
     "graphql",
   ],
@@ -87,7 +85,6 @@ exports[`parseRuleFile - fixtures/valid-rules/metadata-0.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/valid-rules/metadata-0.md",
   "tags": [
     "general",
   ],
@@ -115,7 +112,6 @@ exports[`parseRuleFile - fixtures/valid-rules/metadata-1.md 1`] = `
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/valid-rules/metadata-1.md",
   "tags": [
     "general",
   ],
@@ -175,7 +171,6 @@ type Mutation {
     },
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/mutations.md",
   "tags": [
     "graphql",
   ],
@@ -240,7 +235,6 @@ type Query {
     },
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/prefer-edge-node.md",
   "title": "Prefer Edges & Nodes",
 }
 `;
@@ -312,7 +306,6 @@ function handleTasks() {
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/valid-rules/prefer-loose-array-bounds-checks-in-loops.md",
   "tags": [
     "best practices",
   ],
@@ -384,7 +377,6 @@ export default gql\`
     },
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/prefer-page-queries.md",
   "title": "Prefer page queries",
 }
 `;
@@ -428,7 +420,6 @@ exports[`parseRuleFile - fixtures/valid-rules/prefer-strapi-env-vars.md 1`] = `
     },
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/prefer-strapi-env-vars.md",
   "title": "Use Strapi Environment Variables",
 }
 `;
@@ -454,7 +445,6 @@ exports[`parseRuleFile - fixtures/valid-rules/wip/format-comments-like-sentences
     },
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/wip/format-comments-like-sentences.md",
   "title": "Format comments like sentences",
 }
 `;
@@ -622,7 +612,6 @@ Prefer wrapping potentially error-prone operations (e.g., network requests, file
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/valid-rules/wip/prefer-defensive-programming.md",
   "tags": [
     "best practices",
   ],
@@ -722,7 +711,6 @@ Ignore \`if\` statements which include a \`return\` or \`throw\` in their body.
     "https://gomakethings.com/the-early-return-pattern-in-javascript/",
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/wip/prefer-early-return.md",
   "tags": [
     "best practices",
   ],
@@ -743,7 +731,6 @@ TODO
   "negativeExamples": [],
   "positiveExamples": [],
   "scope": "file",
-  "source": "fixtures/valid-rules/wip/react-prefer-derived-state.md",
   "title": "Prefer derived state in React",
 }
 `;
@@ -780,7 +767,6 @@ export function bar() {}",
     },
   ],
   "scope": "file",
-  "source": "fixtures/valid-rules/wip/use-esm.md",
   "title": "Use ESM instead of CommonJS",
 }
 `;
@@ -849,7 +835,6 @@ await Promise.all([saveFile(), saveFile()])",
     },
   ],
   "scope": "file",
-  "source": "rules/always-handle-promises.md",
   "tags": [
     "best practices",
   ],
@@ -987,7 +972,6 @@ export function parseStructuredOutput<T>(
     "https://effectivetypescript.com",
   ],
   "scope": "file",
-  "source": "rules/avoid-type-info-in-docs.md",
   "tags": [
     "best practices",
   ],
@@ -1133,7 +1117,6 @@ const res = [1, 2, 3].filter((i) => i >= 0)",
     },
   ],
   "scope": "file",
-  "source": "rules/consistent-identifier-casing.md",
   "tags": [
     "best practices",
   ],
@@ -1288,7 +1271,6 @@ Is allowing 19 possible forms of bounding box a good design? Perhaps not. But if
     "https://effectivetypescript.com",
   ],
   "scope": "file",
-  "source": "rules/liberal-accept-strict-produce.md",
   "tags": [
     "best practices",
   ],
@@ -1368,7 +1350,6 @@ const openai = new OpenAI({
     },
   ],
   "scope": "file",
-  "source": "rules/no-hardcoded-secrets.md",
   "tags": [
     "security",
   ],
@@ -1427,7 +1408,6 @@ const item = items[index]",
     "https://twitter.com/housecor/status/1768622518179369036",
   ],
   "scope": "file",
-  "source": "rules/prefer-array-at-negative-indexing.md",
   "tags": [
     "best practices",
   ],
@@ -1551,7 +1531,6 @@ while (i !== length) {
     },
   ],
   "scope": "file",
-  "source": "rules/prefer-loose-array-bounds-checks-in-loops.md",
   "tags": [
     "best practices",
   ],
@@ -1741,7 +1720,6 @@ If a field is useful, but adding it to a type could result the type representing
     "https://effectivetypescript.com",
   ],
   "scope": "file",
-  "source": "rules/prefer-types-always-valid-states.md",
   "tags": [
     "best practices",
   ],
@@ -1811,7 +1789,6 @@ class Foo extends EventEmitter {
     },
   ],
   "scope": "file",
-  "source": "rules/react-avoid-class-components.md",
   "tags": [
     "react",
   ],
@@ -1949,7 +1926,6 @@ import { z } from 'zod'",
     },
   ],
   "scope": "file",
-  "source": "rules/semantic-variable-names.md",
   "tags": [
     "best practices",
   ],
@@ -2029,7 +2005,6 @@ console.log(user.posts)",
     },
   ],
   "scope": "file",
-  "source": "rules/soc2-no-leak-user-data.md",
   "tags": [
     "security",
   ],
@@ -2067,7 +2042,6 @@ This rule also does not apply to \`TODO\` comments.
   ],
   "positiveExamples": [],
   "scope": "file",
-  "source": "rules/use-correct-english.md",
   "tags": [
     "best practices",
   ],

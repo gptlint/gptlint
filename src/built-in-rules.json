@@ -1,6 +1,5 @@
 [
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/always-handle-promises.md",
     "cacheable": true,
     "metadata": {},
     "name": "always-handle-promises",
@@ -38,7 +37,6 @@
     ]
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/avoid-type-info-in-docs.md",
     "cacheable": true,
     "metadata": {},
     "name": "avoid-type-info-in-docs",
@@ -78,7 +76,6 @@
     "gritqlNumLinesContext": 3
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/consistent-identifier-casing.md",
     "cacheable": true,
     "metadata": {},
     "name": "consistent-identifier-casing",
@@ -125,7 +122,6 @@
     "gritql": "or {\n  type_identifier() as $id where {\n    and {\n      $id <: within or {\n        type_alias_declaration($name),\n        interface_declaration($name),\n        class_declaration($name)\n      },\n      $id <: $name\n    }\n  },\n\n  identifier() as $id where {\n    or {\n      and {\n        $id <: within or {\n          variable_declarator($name),\n          function_declaration($name),\n          class_declaration($name),\n          method_signature($name),\n          method_definition($name),\n          required_parameter($name),\n          optional_parameter($name)\n        },\n        $id <: $name\n      },\n\n      or {\n        and {\n          $id <: within `function $func($props): $ret {$body}`,\n          $id <: not or { within $body, within $func }\n        },\n        and {\n          $id <: within `function $func($props) {$body}`,\n          $id <: not or { within $body, within $func }\n        },\n        and {\n          $id <: within `($props) => $body`,\n          $id <: not or { within $body }\n        }\n      }\n    }\n  },\n\n  property_identifier() as $id where {\n    and {\n      $id <: within or { method_signature($name), method_definition($name) },\n      $id <: $name\n    }\n  }\n}"
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/liberal-accept-strict-produce.md",
     "cacheable": true,
     "metadata": {},
     "name": "liberal-accept-strict-produce",
@@ -152,7 +148,6 @@
     "gritqlNumLinesContext": 3
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/no-hardcoded-secrets.md",
     "cacheable": true,
     "metadata": {},
     "name": "no-hardcoded-secrets",
@@ -199,7 +194,6 @@
     "gritqlNumLinesContext": 3
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-array-at-negative-indexing.md",
     "cacheable": true,
     "metadata": {},
     "name": "prefer-array-at-negative-indexing",
@@ -245,7 +239,6 @@
     "gritqlNumLinesContext": 3
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-loose-array-bounds-checks-in-loops.md",
     "cacheable": true,
     "metadata": {},
     "name": "prefer-loose-array-bounds-checks-in-loops",
@@ -299,7 +292,6 @@
     "gritql": "or {\n  any_equals(a = `$foo.length`, $b),\n  any_not_equals(a = `$foo.length`, $b)\n} as $op where {\n  $op <: within or {\n    do_statement(),\n    while_statement(),\n    for_statement()\n  }\n}"
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/prefer-types-always-valid-states.md",
     "cacheable": true,
     "metadata": {},
     "name": "prefer-types-always-valid-states",
@@ -327,7 +319,6 @@
     "gritqlNumLinesContext": 3
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/react-avoid-class-components.md",
     "cacheable": true,
     "metadata": {},
     "name": "react-avoid-class-components",
@@ -372,7 +363,6 @@
     "gritql": "react_class_component"
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/semantic-variable-names.md",
     "cacheable": true,
     "metadata": {},
     "name": "semantic-variable-names",
@@ -427,7 +417,6 @@
     "gritqlNumLinesContext": 2
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/soc2-no-leak-user-data.md",
     "cacheable": true,
     "metadata": {},
     "name": "soc2-no-leak-user-data",
@@ -487,7 +476,6 @@
     "gritqlNumLinesContext": 2
   },
   {
-    "source": "/Users/tfischer/dev/modules/gptlint/rules/use-correct-english.md",
     "cacheable": true,
     "metadata": {},
     "name": "use-correct-english",
