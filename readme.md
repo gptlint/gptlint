@@ -39,7 +39,7 @@
 - ✅️ built-in rules are extensively tested w/ [evals](https://gptlint.dev/project/how-it-works#evals)
 - ✅️ supports all major [LLM providers](https://gptlint.dev/guide/llm-providers) and [local models](https://gptlint.dev/guide/llm-providers#local-models)
 - ✅️ augments `eslint` instead of trying to replace it (_we love eslint!_)
-- ✅️ includes [guidelines](https://gptlint.dev/guide/rule-guidelines) for creating your own rules
+- ✅️ includes [guidelines](https://gptlint.dev/extend/rule-guidelines) for creating your own rules
 - ❌ MVP rules are [JS/TS only](https://gptlint.dev/project/limitations#rules-in-the-mvp-are-jsts-only) _for now_
 - ❌ MVP rules are [single-file context only](https://gptlint.dev/project/limitations#rules-in-the-mvp-are-single-file-only) _for now_
 - ❌ MVP does not support [autofixing](https://gptlint.dev/project/limitations#the-mvp-does-not-support-autofixing-lint-errors) _for now_
