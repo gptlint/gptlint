@@ -1,9 +1,9 @@
 export default {
   index: 'Overview',
   guide: 'Guide',
+  rules: 'Rules',
   extend: 'Extending GPTLint',
   project: 'Project',
-  rules: 'Rules',
   github: {
     title: 'GitHub',
     href: 'https://github.com/gptlint/gptlint',
