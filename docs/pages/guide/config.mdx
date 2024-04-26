@@ -61,8 +61,8 @@ LinterConfig objects are validated against a [LinterConfigSchema](https://github
 
 ```ts
 export type LinterConfig = {
-  files?: string[] // array of glob to search for source files
-  ignores?: [] // array of glob to ignore for source files
+  files?: string[] // array of globs to search for source files
+  ignores?: [] // array of globs to ignore for source files
 
   ruleFiles?: [] // array of globs to find project-specific rule md files
   ruleDefinitions?: RuleDefinition[] // custom rules (extensible to non-md formats)
@@ -76,6 +76,13 @@ export type LinterConfig = {
   // customize LLM model and provider options
   // most important are: model, weakModel, apiKey, and apiBaseUrl
   llmOptions?: LLMOptions
+
+  // optional, file/folder/glob-specific rule overrides
+  overrides?: Array<{
+    include?: string[] // array of glob files to apply this override to
+    exclude?: string[] // array of glob files to exclude from this override
+    rules?: Record<string, 'error' | 'warn' | 'off'>
+  }>
 }
 ```
 
