@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="How it works" src="/docs/public/gptlint-logo.png" width="256">
+  <a href="https://gptlint.dev"><img alt="How it works" src="/docs/public/gptlint-logo.png" width="256"></a>
 </p>
 
 <p align="center">
