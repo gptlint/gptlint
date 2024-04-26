@@ -8,6 +8,9 @@ export default [
     llmOptions: {
       model: 'gpt-4-turbo-preview',
       weakModel: 'gpt-3.5-turbo'
+    },
+    linterOptions: {
+      concurrency: 16
     }
   }
 ]
