@@ -456,6 +456,9 @@ export function validateLinterInputs({
     console.error(
       `\n${chalk.bold('Error: no rules enabled')} (${chalk.italic('run with --print-config to debug')})\n`
     )
+    console.error(
+      '\nNote: If you want to use the built-in rules with a custom config file, you must enable tem explicitly: https://gptlint.dev/guide/config#config-file\n'
+    )
     gracefulExit(1)
     return false
   }

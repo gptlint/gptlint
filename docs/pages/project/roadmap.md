@@ -12,6 +12,9 @@
   - social image for docs and launch
     - twitter thread
   - public launch! 🚀
+  - fix confusing rules with empty config
+  - fix cache being in `.gptlint`
+  - fix dry-run should never be cached
 
 ## Post-MVP
 

@@ -18,6 +18,7 @@ export class LinterCache<
   TValue extends object = types.LintResult
 > {
   noCache: boolean
+  dryRun: boolean
   cacheDir?: string
   cacheFile?: string
   cache?: Record<string, string>
@@ -27,14 +28,17 @@ export class LinterCache<
   constructor({
     cacheDir,
     cacheFileName = 'cache.json',
-    noCache = false
+    noCache = false,
+    dryRun = false
   }: {
     cacheDir?: string
     cacheFileName?: string
     noCache?: boolean
+    dryRun?: boolean
   }) {
     this.cacheDir = cacheDir
     this.noCache = !!noCache
+    this.dryRun = !!dryRun
     this.cacheFile = this.cacheDir
       ? path.join(this.cacheDir, cacheFileName)
       : undefined
@@ -112,7 +116,7 @@ export class LinterCache<
   }
 
   async flush() {
-    if (!this.cache) return
+    if (!this.cache || this.dryRun) return
 
     const cacheFile = this.cacheFile
     if (cacheFile) {
@@ -132,7 +136,8 @@ export async function createLinterCache<
 >(config: types.ResolvedLinterConfig): Promise<LinterCache<TKey, TValue>> {
   const cache = new LinterCache<TKey, TValue>({
     cacheDir: config.linterOptions.cacheDir,
-    noCache: config.linterOptions.noCache
+    noCache: config.linterOptions.noCache,
+    dryRun: config.linterOptions.dryRun
   })
   await cache.init()
   return cache

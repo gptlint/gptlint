@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import type { MergeDeep, SetRequired, Simplify } from 'type-fest'
 import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
 import findCacheDirectory from 'find-cache-dir'
@@ -27,7 +29,7 @@ export type LinterConfigRuleSettings = z.infer<
 >
 
 export const defaultCacheDir =
-  findCacheDirectory({ name: 'gptlint' }) ?? '.gptlint'
+  findCacheDirectory({ name: 'gptlint' }) ?? path.join('.gptlint', 'cache')
 
 export const LLMOptionsSchema = z
   .object({
