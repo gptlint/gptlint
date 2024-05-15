@@ -213,7 +213,7 @@ export async function lintFiles({
               `${stringifyLintTask(lintTask)} unexpected preProcess error: ${err.message}`,
               { cause: err }
             )
-            console.warn(error.message)
+            console.warn(error)
             warnings.push(error)
           } finally {
             if (lintTask.lintResult) {
@@ -525,7 +525,7 @@ export async function lintFiles({
               `${stringifyLintTask(lintTask)} unexpected error: ${err.message}`,
               { cause: err }
             )
-            console.warn(error.message)
+            console.warn(error)
             taskLintError = error
             warnings.push(error)
             task.setError(err.message)

@@ -39,8 +39,11 @@ async function main() {
       resolveRules({ cwd, config })
     ])
   } catch (err: any) {
-    console.error('Error:', err.message, '\n')
-    console.error(err.stack)
+    console.error(
+      'Unexpected error initializing linter via config',
+      err,
+      '\n\n'
+    )
     args.showHelp()
     return gracefulExit(1)
   }
