@@ -12,4 +12,7 @@ test('isBinaryFile non-binary files', async () => {
   expect(isBinaryFile('readme.md')).resolves.toBe(false)
   expect(isBinaryFile('license')).resolves.toBe(false)
   expect(isBinaryFile('.editorconfig')).resolves.toBe(false)
+  expect(isBinaryFile('fixtures/files/langchain_examples.ipynb')).resolves.toBe(
+    false
+  )
 })
