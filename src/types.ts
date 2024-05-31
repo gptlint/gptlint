@@ -18,6 +18,7 @@ export type {
   LLMOptions,
   ResolvedLinterConfig
 } from './config.js'
+export type { FileModel } from './vector-db.js'
 
 export type MaybePromise<T> = T | Promise<T>
 

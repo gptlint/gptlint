@@ -35,5 +35,5 @@
     // "declarationMap": true
   },
   "include": ["src", "bin", "rules"],
-  "exclude": ["fixtures"]
+  "exclude": ["fixtures", "node_modules", "dist"]
 }
