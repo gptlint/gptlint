@@ -1,7 +1,6 @@
 import path from 'node:path'
 
-import type { MergeDeep, SetRequired, Simplify } from 'type-fest'
-import type { SimplifyDeep } from 'type-fest/source/merge-deep.js'
+import type { MergeDeep, SetRequired, Simplify, SimplifyDeep } from 'type-fest'
 import findCacheDirectory from 'find-cache-dir'
 import { z } from 'zod'
 
