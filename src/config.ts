@@ -253,7 +253,7 @@ export const defaultLinterOptions: Readonly<LinterOptions> = {
 export const defaultLLMOptions: Readonly<LLMOptions> = {
   apiKey: getEnv('OPENAI_API_KEY'),
   apiBaseUrl: 'https://api.openai.com/v1',
-  model: 'gpt-4-turbo',
+  model: 'gpt-4o',
   weakModel: 'gpt-3.5-turbo',
   temperature: 0
 }

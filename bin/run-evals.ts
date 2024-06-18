@@ -42,7 +42,7 @@ async function main() {
       linterConfigDefaults: {
         llmOptions: {
           // Use GPT-4 as the default for evals
-          model: 'gpt-4-turbo-preview'
+          model: 'gpt-4o'
         }
       },
       flagsToAdd: {
