@@ -12,6 +12,7 @@ jobs:
         node-version:
           - 20
           - 21
+          - 22
 
     steps:
       - name: Checkout
@@ -26,7 +27,7 @@ jobs:
         uses: pnpm/action-setup@v3
         id: pnpm-install
         with:
-          version: 8
+          version: 9.4.0
           run_install: false
 
       - name: Get pnpm store directory

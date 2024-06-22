@@ -9,7 +9,7 @@
     "type": "git",
     "url": "gptlint/gptlint"
   },
-  "packageManager": "pnpm@8.15.7",
+  "packageManager": "pnpm@9.4.0",
   "engines": {
     "node": ">=18"
   },
