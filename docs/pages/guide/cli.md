@@ -35,7 +35,7 @@ Flags:
       --temperature <number>                LLM temperature parameter
   -M, --weak-model <string>                 Which weak LLM to use for assessing rule conformance (optional; used for
                                             multi-pass linting; set to "none" to disable two-pass linting). Defaults to
-                                            gpt-3.5-turbo.
+                                            gpt-4o-mini.
 ```
 
 ## Important Flags

@@ -525,7 +525,7 @@
 [16.855779, "o", "\u001b[2K\u001b[1A\u001b[2K\u001b[1A\u001b[2K\u001b[G\r\n"]
 [16.855881, "o", "\u001b[?25h"]
 [16.855929, "o", "\u001b[?25h"]
-[16.856437, "o", "Linter stats; total cost $0.31 {\r\n  model: \u001b[32m'gpt-4-turbo-preview'\u001b[39m,\r\n  weakModel: \u001b[32m'gpt-3.5-turbo'\u001b[39m,\r\n  numModelCalls: \u001b[33m0\u001b[39m,\r\n  numModelCallsCached: \u001b[33m136\u001b[39m,\r\n  numPromptTokens: \u001b[33m245119\u001b[39m,\r\n  numCompletionTokens: \u001b[33m66542\u001b[39m,\r\n  numTotalTokens: \u001b[33m311661\u001b[39m,\r\n  lintDuration: \u001b[32m'15s'\u001b[39m\r\n}\r\n"]
+[16.856437, "o", "Linter stats; total cost $0.31 {\r\n  model: \u001b[32m'gpt-4-turbo-preview'\u001b[39m,\r\n  weakModel: \u001b[32m'gpt-4o-mini'\u001b[39m,\r\n  numModelCalls: \u001b[33m0\u001b[39m,\r\n  numModelCallsCached: \u001b[33m136\u001b[39m,\r\n  numPromptTokens: \u001b[33m245119\u001b[39m,\r\n  numCompletionTokens: \u001b[33m66542\u001b[39m,\r\n  numTotalTokens: \u001b[33m311661\u001b[39m,\r\n  lintDuration: \u001b[32m'15s'\u001b[39m\r\n}\r\n"]
 [16.856487, "o", "\r\nno lint errors 🎉\r\n"]
 [16.856701, "o", "\u001b[?25h"]
 [16.89229, "o", "\u001b[?2004h\u001b[G\u001b[1mmain*\u001b[38;5;256m\u001b(B\u001b[m in \u001b[1m\u001b[38;5;172m~/dev/modules/gptlint\u001b[38;5;256m $ \u001b(B\u001b[m"]

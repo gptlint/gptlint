@@ -6,7 +6,7 @@ exports[`parseLinterConfig - valid 2`] = `
 {
   "llmOptions": {
     "model": "gpt-4-turbo-preview",
-    "weakModel": "gpt-3.5-turbo",
+    "weakModel": "gpt-4o-mini",
   },
   "ruleFiles": [
     "rules/**/*.md",

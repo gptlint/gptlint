@@ -44,7 +44,7 @@ In the first pass, the weak model is used to generate a set of potential `RuleVi
 
 **Two-Pass linting is significantly faster, cheaper, and more accurate than single-pass linting**, and is currently the default strategy used by GPTLint.
 
-Here is a [side-by-side comparison](https://github.com/gptlint/gptlint/pull/4#issuecomment-2033395717) of the two strategies using both OpenAI (`gpt-3.5-turbo` as the weak model and `gpt-4-turbo-preview` as the strong model) and Anthropic Claude (`haiku` as the weak model and `opus` as the strong model).
+Here is a [side-by-side comparison](https://github.com/gptlint/gptlint/pull/4#issuecomment-2033395717) of the two strategies using both OpenAI (`gpt-4o-mini` as the weak model and `gpt-4-turbo-preview` as the strong model) and Anthropic Claude (`haiku` as the weak model and `opus` as the strong model).
 
 Note that one potential downside of two-pass linting is that it increases the chance for false negatives (cases where the linter should trigger an error but it doesn't). Currently, I'm a lot more worried about mitigating false positives because a noisy linter that you end up ignoring isn't useful to anybody, and I haven't seen too many false negatives in my testing.
 

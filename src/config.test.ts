@@ -9,7 +9,7 @@ test('parseLinterConfig - valid', () => {
       ruleFiles: ['rules/**/*.md'],
       llmOptions: {
         model: 'gpt-4-turbo-preview',
-        weakModel: 'gpt-3.5-turbo'
+        weakModel: 'gpt-4o-mini'
       }
     })
   ).toMatchSnapshot()

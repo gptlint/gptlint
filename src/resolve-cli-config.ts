@@ -139,7 +139,7 @@ export async function resolveLinterCLIConfig(
         weakModel: {
           type: String,
           description:
-            'Which weak LLM to use for assessing rule conformance (optional; used for multi-pass linting; set to "none" to disable two-pass linting). Defaults to gpt-3.5-turbo.',
+            'Which weak LLM to use for assessing rule conformance (optional; used for multi-pass linting; set to "none" to disable two-pass linting). Defaults to gpt-4o-mini.',
           alias: 'M'
         },
         temperature: {
