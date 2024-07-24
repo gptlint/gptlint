@@ -1,6 +1,6 @@
 {
   "name": "gptlint",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "A linter with superpowers! Use LLMs to enforce best practices across your codebase in a standardized, configurable, scalable manner.",
   "author": "Travis Fischer <travis@transitivebullsh.it>",
   "license": "MIT",
