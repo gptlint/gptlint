@@ -93,7 +93,7 @@ These will generally happen because of the following reasons:
 - The rule definition is too vague or strict.
   - **Solution**: Use prompt engineering and few-shot examples in your rule to guide the underlying LLM.
 - The rule identifies violations some issues but misses others.
-  - **Solution**: In addition to prompt engineering the rule itself, consider using a [gritql](https://github.com/getgrit/gritql) pattern to focus the rule on just the parts of your source files which are relvant.
+  - **Solution**: In addition to prompt engineering the rule itself, consider using a [gritql](https://github.com/getgrit/gritql) pattern to focus the rule on just the parts of your source files which are relevant.
 - The rule makes more sense as an AST-based rule.
   - If it's possible to represent your rule using a deterministic, AST-based linter like `eslint`, and you're not seeing the consistency in enforcing the rule using `gptlint`, then consider using an `eslint` custom rule.
   - Tools like `eslint` have massive communities, so be sure to check NPM / github before building new rules from scratch.
